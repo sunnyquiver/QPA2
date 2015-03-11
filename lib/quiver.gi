@@ -5,7 +5,7 @@ DeclareRepresentation( "IsArrowRep", IsComponentObjectRep,
 DeclareRepresentation( "IsCompositePathRep", IsComponentObjectRep,
                        [ "arrows" ] );
 DeclareRepresentation( "IsQuiverRep", IsComponentObjectRep,
-		       [ "name", "vertices", "arrows",
+		       [ "name", "vertices", "arrows", "primitivePaths",
 		         "vertices_desc", "arrows_desc"] );
 
 InstallMethod( Quiver, "for function, string, positive integer and list",
@@ -58,6 +58,8 @@ function( quiverCat, name, num_vertices, arrows_desc )
     arrows := ListN( arrows_desc, [ 1 .. Length( arrows_desc ) ],
     	      	     makeArrow );
     Q!.arrows := arrows;
+
+    Q!.primitivePaths := Concatenation( vertices, arrows );
 
     return Q;
 end );
@@ -564,6 +566,13 @@ InstallMethod( Arrows,
 	       [ IsQuiver and IsQuiverRep ],
 function( Q )
   return Q!.arrows;
+end );
+
+InstallMethod( PrimitivePaths,
+               "for quiver",
+	       [ IsQuiver and IsQuiverRep ],
+function( Q )
+  return Q!.primitivePaths;
 end );
 
 InstallMethod( Vertex, "for quiver and int",

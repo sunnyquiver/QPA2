@@ -19,8 +19,8 @@ Q := LeftQuiver( "Q", 6,
                    [ 'e', 2, 3 ],
                    [ 'f', 3, 6 ],
                    [ 'g', 5, 6 ] ] );
-A := PathAlgebra( Rationals, Q );
-rels := [ A.dc - A.ba, A.gd - A.fe ];
+kQ := PathAlgebra( Rationals, Q );
+rels := [ kQ.dc - kQ.ba, kQ.gd - kQ.fe ];
 
 Q1 := LeftQuiver( "Q1", 3, [['a', 1, 2], ['b', 2, 3]] );
 Q2 := LeftQuiver( "Q2", 1, [['a', 1, 1]] );
@@ -29,6 +29,6 @@ Q3 := LeftQuiver( "Q3", 3,
                     [ 'b', 2, 3 ],
                     [ 'c', 3, 1 ],
                     [ 'd', 1, 1 ] ] );
-A1 := PathAlgebra( Rationals, Q1 );
-A2 := PathAlgebra( Rationals, Q2 );
-A3 := PathAlgebra( Rationals, Q3 );
+kQ1 := PathAlgebra( Rationals, Q1 );
+kQ2 := PathAlgebra( Rationals, Q2 );
+kQ3 := PathAlgebra( Rationals, Q3 );

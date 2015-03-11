@@ -26,6 +26,7 @@ DeclareOperation( "LeadingCoefficient", [ IsPathAlgebraElement ] );
 DeclareAttribute( "LeadingTerm", IsPathAlgebraElement );
 DeclareAttribute( "NonLeadingTerms", IsPathAlgebraElement );
 DeclareOperation( "DivideByList", [ IsPathAlgebraElement, IsList ] );
+DeclareOperation( "Reduce", [ IsPathAlgebraElement, IsList ] );
 DeclareOperation( "OverlapRelation",
                   [ IsPathAlgebraElement, IsPathAlgebraElement,
                     IsPath, IsPath ] );
@@ -33,9 +34,15 @@ DeclareOperation( "OverlapRelations",
                   [ IsPathAlgebraElement, IsPathAlgebraElement ] );
 DeclareOperation( "ComputeGroebnerBasis", [ IsList ] );
 
+# Ideals
+DeclareCategory( "IsPathIdeal", IsRing );
+DeclareAttribute( "GroebnerBasis", IsPathIdeal );
+
 # Quotients of path algebras
 DeclareCategory( "IsQuotientOfPathAlgebra", IsQuiverAlgebra );
-DeclareGlobalFunction( "QuotientOfPathAlgebra" );
+DeclareOperation( "QuotientOfPathAlgebra", [ IsPathAlgebra, IsObject ] );
+DeclareOperation( "\/", [ IsPathAlgebra, IsObject ] );
+DeclareAttribute( "IdealOfQuotient", IsQuotientOfPathAlgebra );
 
 # Elements of quotients
 DeclareCategory( "IsQuotientOfPathAlgebraElement", IsQuiverAlgebraElement );
