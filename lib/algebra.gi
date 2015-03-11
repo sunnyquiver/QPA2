@@ -321,6 +321,19 @@ function( k, Q )
   return A;
 end );
 
+InstallMethod( PrintObj, "for path algebra",
+               [ IsPathAlgebra ],
+function( A )
+  Print( "<path algebra ", LeftActingDomain( A ), " * ",
+         QuiverOfAlgebra( A ), ">" );
+end );
+
+InstallMethod( ViewObj, "for path algebra",
+               [ IsPathAlgebra ],
+function( A )
+  Print( LeftActingDomain( A ), " * ", Name( QuiverOfAlgebra( A ) ) );
+end );
+
 InstallMethod( QuiverOfAlgebra, "for path algebra",
                [ IsPathAlgebra and IsPathAlgebraRep ],
 function( A )
@@ -473,6 +486,20 @@ function( A, I )
                          relations := GeneratorsOfIdeal( I ),
                          ideal := I ) );
 end );  
+
+InstallMethod( PrintObj, "for quotient of path algebra",
+               [ IsQuotientOfPathAlgebra ],
+function( A )
+  Print( "<quotient of path algebra ", LeftActingDomain( A ), " * ",
+         QuiverOfAlgebra( A ), " / ", RelationsOfAlgebra( A ), ">" );
+end );
+
+InstallMethod( ViewObj, "for quotient of path algebra",
+               [ IsQuotientOfPathAlgebra ],
+function( A )
+  Print( "( ", LeftActingDomain( A ), " * ", Name( QuiverOfAlgebra( A ) ),
+         " ) / ", RelationsOfAlgebra( A ) );
+end );
 
 InstallMethod( \/, "for path algebra and path ideal",
                [ IsPathAlgebra, IsPathIdeal ],
