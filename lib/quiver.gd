@@ -1,27 +1,46 @@
 DeclareCategory( "IsPath", IsMultiplicativeElement );
-#DeclareCategory( "IsPath", IsPathExpr );
+DeclareCategory( "IsLeftPath", IsPath );
+DeclareCategory( "IsRightPath", IsPath );
 DeclareCategory( "IsPrimitivePath", IsPath );  # vertex or arrow
 DeclareCategory( "IsNontrivialPath", IsPath ); # not vertex
 DeclareCategory( "IsVertex", IsPrimitivePath );
 DeclareCategory( "IsArrow", IsNontrivialPath and IsPrimitivePath );
 DeclareCategory( "IsCompositePath", IsNontrivialPath );
 DeclareCategory( "IsQuiver", CategoryCollections( IsPath ) );
+DeclareCategory( "IsLeftQuiver", IsQuiver );
+DeclareCategory( "IsRightQuiver", IsQuiver );
 
-DeclareAttribute( "ContainingQuiver", IsPath );
+DeclareAttribute( "QuiverOfPath", IsPath );
 DeclareAttribute( "Source", IsPath );
 DeclareAttribute( "Target", IsPath );
+DeclareAttribute( "LeftEnd", IsPath );
+DeclareAttribute( "RightEnd", IsPath );
 DeclareAttribute( "Length", IsPath );
 DeclareAttribute( "ArrowList", IsPath );
+DeclareAttribute( "ArrowListLR", IsPath );
 DeclareAttribute( "AsList", IsPath );
+DeclareAttribute( "AsListLR", IsPath );
 DeclareAttribute( "Label", IsArrow );
 DeclareAttribute( "VertexNumber", IsVertex );
 DeclareAttribute( "ArrowNumber", IsArrow );
 DeclareOperation( "Composable", [ IsPath, IsPath ] );
-#DeclareOperation( "\*", [ IsPath, IsPath ] );
+DeclareOperation( "ComposableLR", [ IsPath, IsPath ] );
+DeclareOperation( "ComposePaths2", [ IsPath, IsPath ] );
+DeclareGlobalFunction( "ComposePaths" );
 DeclareOperation( "PathFromArrowList", [ IsList ] );
+DeclareOperation( "PathFromArrowListLR", [ IsList ] );
+DeclareOperation( "PathFromArrowListNC", [ IsList ] );
 DeclareOperation( "Subpath", [ IsPath, IsInt, IsInt ] );
+DeclareOperation( "SubpathLR", [ IsPath, IsInt, IsInt ] );
+DeclareOperation( "SubpathIndex", [ IsPath, IsPath ] );
+DeclareOperation( "SubpathIndexLR", [ IsPath, IsPath ] );
+DeclareOperation( "ExtractSubpath", [ IsPath, IsPath ] );
+DeclareOperation( "\/", [ IsPath, IsPath ] );
+DeclareOperation( "PathOverlaps", [ IsPath, IsPath ] );
 
-DeclareGlobalFunction( "Quiver" );
+DeclareOperation( "Quiver", [ IsFunction, IsString, IsPosInt, IsList ] );
+DeclareOperation( "LeftQuiver", [ IsString, IsPosInt, IsList ] );
+DeclareOperation( "RightQuiver", [ IsString, IsPosInt, IsList ] );
 DeclareAttribute( "Vertices", IsQuiver );
 DeclareAttribute( "Arrows", IsQuiver );
 DeclareOperation( "Vertex", [ IsQuiver, IsInt ] );
@@ -30,6 +49,3 @@ DeclareOperation( "Arrow", [ IsQuiver, IsObject ] );
 DeclareOperation( "\^", [ IsQuiver, IsObject ] );
 DeclareOperation( "PathFromString", [ IsQuiver, IsString ] );
 #DeclareOperation( "\.", [ IsQuiver, IsPosInt ] );
-
-DeclareOperation( "\/", [ IsPath, IsPath ] );
-DeclareOperation( "PathOverlaps", [ IsPath, IsPath ] );

@@ -478,11 +478,3 @@ function( e1, e2 )
          ( AlgebraOfElement( e1 ),
            Representative( e1 ) * Representative( e2 ) );
 end );
-
-
-
-# test
-
-A1 := PathAlgebra( Rationals, Q1 );
-A2 := PathAlgebra( Rationals, Q2 );
-A3 := PathAlgebra( Rationals, Q3 );
