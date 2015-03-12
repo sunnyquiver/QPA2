@@ -148,6 +148,41 @@ function( e1, e2 )
            Ps{ nonzeros } );
 end );
 
+InstallMethod( \*, "for path and element of quiver algebra",
+               [ IsPath, IsQuiverAlgebraElement ],
+function( p, e )
+  return PathAsAlgebraElement( AlgebraOfElement( e ), p ) * e;
+end );
+
+InstallMethod( \*, "for element of quiver algebra and path",
+               [ IsQuiverAlgebraElement, IsPath ],
+function( e, p )
+  return e * PathAsAlgebraElement( AlgebraOfElement( e ), p );
+end );
+
+InstallMethod( \*, "for multiplicative element and element of path algebra",
+               [ IsMultiplicativeElement, IsPathAlgebraElement ],
+function( c, e )
+  if c in LeftActingDomain( AlgebraOfElement( e ) ) then
+    return PathAlgebraElement
+           ( AlgebraOfElement( e ),
+             c * Coefficients( e ),
+             Paths( e ) );
+  else
+    TryNextMethod();
+  fi;
+end );
+
+InstallMethod( \*, "for element of quiver algebra and multiplicative element",
+               [ IsQuiverAlgebraElement, IsMultiplicativeElement ],
+function( e, c )
+  if c in LeftActingDomain( AlgebraOfElement( e ) ) then
+    return c * e;
+  else
+    TryNextMethod();
+  fi;
+end );
+
 InstallMethod( LeadingPath, "for element of path algebra",
                [ IsPathAlgebraElement ],
 function( e )
@@ -634,4 +669,16 @@ function( e1, e2 )
   return QuotientOfPathAlgebraElement
          ( AlgebraOfElement( e1 ),
            Representative( e1 ) * Representative( e2 ) );
+end );
+
+InstallMethod( \*, "for multiplicative element and element of quotient of path algebra",
+               [ IsMultiplicativeElement, IsQuotientOfPathAlgebraElement ],
+function( c, e )
+  if c in LeftActingDomain( AlgebraOfElement( e ) ) then
+    return QuotientOfPathAlgebraElement
+           ( AlgebraOfElement( e ),
+             c * Representative( e ) );
+  else
+    TryNextMethod();
+  fi;
 end );
