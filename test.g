@@ -32,3 +32,17 @@ Q3 := LeftQuiver( "Q3", 3,
 kQ1 := PathAlgebra( Rationals, Q1 );
 kQ2 := PathAlgebra( Rationals, Q2 );
 kQ3 := PathAlgebra( Rationals, Q3 );
+
+Q4 := LeftQuiver( "Q4", 7,
+                  [ ['a', 2, 1],
+                    ['b', 7, 1],
+                    ['c', 4, 2],
+                    ['d', 5, 4],
+                    ['e', 3, 2],
+                    ['f', 5, 3],
+                    ['g', 6, 5],
+                    ['h', 6, 7] ] );
+kQ4 := PathAlgebra( Rationals, Q4 );
+rels4 := [ kQ4.aefg - kQ4.bh,
+           kQ4.ef - kQ4.cd ];
+A4 := kQ4 / Ideal( kQ4, rels4 );
