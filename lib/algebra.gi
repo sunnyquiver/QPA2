@@ -297,13 +297,44 @@ function( f, g )
   return overlapRelations;
 end );
 
+InstallMethod( TipReduce, "for collection",
+               [ IsCollection ],
+function( relations )
+  local len, reduced, didReductions, i, j, q, lc_i, lc_j, r;
+  len := Length( relations );
+  while true do
+    reduced := ShallowCopy( relations );
+    didReductions := false;
+    for i in [ 1 .. len ] do
+      for j in [ 1 .. len ] do
+        q := LeadingPath( relations[ i ] ) / LeadingPath( relations[ j ] );
+        if i = j or q = fail then
+          continue;
+        else
+          lc_i := LeadingCoefficient( relations[ i ] );
+          lc_j := LeadingCoefficient( relations[ j ] );
+          r := relations[ i ] - ( lc_i / lc_j ) * ( q[ 1 ] * relations[ j ] * q[ 2 ] );
+          reduced[ i ] := r;
+          didReductions := true;
+        fi;
+      od;
+    od;
+    if not didReductions then
+      break;
+    else
+      relations := reduced;
+    fi;
+  od;
+  return reduced;
+end );
+
 InstallMethod( ComputeGroebnerBasis, "for list",
                [ IsList ],
 function( relations )
   local basis, newRelations, basisLen, i, j, overlapRelations, r,
         remainder, qr,
         limit, iteration;
-  basis := ShallowCopy( relations );
+  basis := TipReduce( relations );
   iteration := 0;
   #limit := 100;
   #for iteration in [ 1 .. limit ] do
@@ -328,6 +359,7 @@ function( relations )
     od;
     if Length( newRelations ) > 0 then
       Append( basis, newRelations );
+      basis := TipReduce( basis );
     else
       break;
     fi;

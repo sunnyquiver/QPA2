@@ -32,6 +32,7 @@ DeclareOperation( "OverlapRelation",
                     IsPath, IsPath ] );
 DeclareOperation( "OverlapRelations",
                   [ IsPathAlgebraElement, IsPathAlgebraElement ] );
+DeclareOperation( "TipReduce", [ IsCollection ] );
 DeclareOperation( "ComputeGroebnerBasis", [ IsList ] );
 
 # Ideals
