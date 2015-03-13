@@ -3,7 +3,7 @@ DeclareRepresentation( "IsPathAlgebraElementRep", IsComponentObjectRep,
 
 InstallGlobalFunction( PathAlgebraElement,
 function( algebra, coefficients, paths )
-  local Cs, Ps, Cs_, Ps_, p, i;
+  local Cs, Ps, Cs_, Ps_, p, i, nonzeroIndices;
   Cs_ := ShallowCopy( coefficients );
   Ps_ := ShallowCopy( paths );
   SortParallel( Ps_, Cs_ );
@@ -17,7 +17,11 @@ function( algebra, coefficients, paths )
       Add( Ps, Ps_[ i ], 1 );
       Add( Cs, Cs_[ i ], 1 );
     fi;
+    p := Ps_[ i ];
   od;
+  nonzeroIndices := PositionsProperty( Cs, c -> not IsZero( c ) );
+  Cs := Cs{ nonzeroIndices };
+  Ps := Ps{ nonzeroIndices };
   return PathAlgebraElementNC( algebra, Cs, Ps );
 end );
 
