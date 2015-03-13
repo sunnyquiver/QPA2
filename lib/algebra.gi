@@ -308,11 +308,11 @@ function( relations )
   len := Length( relations );
   relations := ShallowCopy( relations );
   iteration := 0;
-  limit := 20;
+  limit := 0;
   #Print( "TipReduce\n" );
   while true do
     iteration := iteration + 1;
-    if iteration > limit then
+    if limit > 0 and iteration > limit then
       Error( "TipReduce iteration limit reached" );
     fi;
     #Print( "TipReduce iteration ", iteration, "\n" );
