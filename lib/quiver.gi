@@ -399,6 +399,8 @@ function( p1, p2 )
     for i in [ 1 .. Length( a1 ) ] do
       if a1[ i ] < a2[ i ] then
         return true;
+      elif a1[ i ] > a2[ i ] then
+        return false;
       fi;
     od;
     return false;
