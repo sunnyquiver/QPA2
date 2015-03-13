@@ -304,32 +304,42 @@ end );
 InstallMethod( TipReduce, "for collection",
                [ IsCollection ],
 function( relations )
-  local len, reduced, didReductions, i, j, q, lc_i, lc_j, r;
+  local iteration, limit, len, didReductions, i, j, q, lc_i, lc_j, r;
   len := Length( relations );
+  relations := ShallowCopy( relations );
+  iteration := 0;
+  limit := 20;
+  #Print( "TipReduce\n" );
   while true do
-    reduced := ShallowCopy( relations );
+    iteration := iteration + 1;
+    if iteration > limit then
+      Error( "TipReduce iteration limit reached" );
+    fi;
+    #Print( "TipReduce iteration ", iteration, "\n" );
+    #Print( "relations:\n" ); for i in [ 1 .. len ] do Print( "  ", relations[ i ], "\n" ); od;
     didReductions := false;
     for i in [ 1 .. len ] do
       for j in [ 1 .. len ] do
-        q := LeadingPath( relations[ i ] ) / LeadingPath( relations[ j ] );
-        if i = j or q = fail then
+        #Print( "TipReduce i = ", i, ", j = ", j, "\n" );
+        if i = j or IsZero( relations[ i ] ) or IsZero( relations[ j ] ) then
           continue;
-        else
+        fi;
+        q := LeadingPath( relations[ i ] ) / LeadingPath( relations[ j ] );
+        if q <> fail then
           lc_i := LeadingCoefficient( relations[ i ] );
           lc_j := LeadingCoefficient( relations[ j ] );
           r := relations[ i ] - ( lc_i / lc_j ) * ( q[ 1 ] * relations[ j ] * q[ 2 ] );
-          reduced[ i ] := r;
+          relations[ i ] := r;
+          #if IsZero( r ) then Print( "!!!!!! r = 0 !!!!!!\n" ); fi;
           didReductions := true;
         fi;
       od;
     od;
     if not didReductions then
       break;
-    else
-      relations := reduced;
     fi;
   od;
-  return reduced;
+  return Filtered( relations, e -> not IsZero( e ) );
 end );
 
 InstallMethod( ComputeGroebnerBasis, "for list",
