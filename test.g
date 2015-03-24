@@ -1,9 +1,10 @@
 Read( "lib/quiver.gd" );
 Read( "lib/algebra.gd" );
+Read( "lib/module.gd" );
 
 Read( "lib/quiver.gi" );
 Read( "lib/algebra.gi" );
-
+Read( "lib/module.gi" );
 
 # Q:=Quiver("Q", 1, [['z',1,1],['y',1,1],['x',1,1]]);
 # A:=PathAlgebra(Rationals,Q);
