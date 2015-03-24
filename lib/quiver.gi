@@ -702,3 +702,8 @@ InstallMethod( \=,
 function( p1, p2 )
   return ArrowList( p1 ) = ArrowList( p2 );
 end );
+
+InstallMethod( \in, "for path and quiver",
+               IsElmsColls,
+               [ IsPath, IsQuiver ],
+               ReturnTrue );
