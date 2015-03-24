@@ -2,7 +2,7 @@ DeclareRepresentation( "IsQuiverRepresentationElementRep", IsComponentObjectRep,
                        [ "representation", "vectors" ] );
 
 InstallMethod( QuiverRepresentationElement, "for quiver representation and collection",
-               [ IsQuiverRepresentation, IsCollection ],
+               [ IsQuiverRepresentation, IsDenseList ],
 function( rep, vectors )
   local field, Q, numVertices, i, v;
   vectors := Immutable( vectors );
@@ -32,7 +32,7 @@ function( rep, vectors )
 end );
 
 InstallMethod( QuiverRepresentationElementNC, "for quiver representation and collection",
-               [ IsQuiverRepresentation, IsCollection ],
+               [ IsQuiverRepresentation, IsDenseList ],
 function( rep, vectors )
   local elemType;
   elemType := NewType( ElementsFamily( FamilyObj( rep ) ),
@@ -122,6 +122,9 @@ InstallMethod( PathAction,
 function( e, p )
   local R, M, source_vec, target_vec;
   R := RepresentationOfElement( e );
+  if VertexDimension( R, Target( p ) ) = 0 then
+    return Zero( R );
+  fi;
   M := MatrixForPath( R, p );
   source_vec := ElementVector( e, Source( p ) );
   if IsLeftPath( p ) then
@@ -226,8 +229,8 @@ function( A, dimensions, matrices )
       Error( "Not a matrix: ", matrices[ i ] );
     fi;
     arrow := arrows[ i ];
-    dim_src := dimensions[ VertexNumber( Source( arrow ) ) ];
-    dim_tgt := dimensions[ VertexNumber( Target( arrow ) ) ];
+    dim_src := Maximum( 1, dimensions[ VertexNumber( Source( arrow ) ) ] );
+    dim_tgt := Maximum( 1, dimensions[ VertexNumber( Target( arrow ) ) ] );
     if IsLeftQuiver( Q ) then
       expected_dim := [ dim_tgt, dim_src ];
     else

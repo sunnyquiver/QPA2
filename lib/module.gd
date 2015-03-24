@@ -1,8 +1,8 @@
 DeclareCategory( "IsQuiverRepresentationElement", IsVector );
 DeclareCategory( "IsQuiverRepresentation", IsVectorSpace and CategoryCollections( IsQuiverRepresentationElement ) );
 
-DeclareOperation( "QuiverRepresentationElement", [ IsQuiverRepresentation, IsCollection ] );
-DeclareOperation( "QuiverRepresentationElementNC", [ IsQuiverRepresentation, IsCollection ] );
+DeclareOperation( "QuiverRepresentationElement", [ IsQuiverRepresentation, IsDenseList ] );
+DeclareOperation( "QuiverRepresentationElementNC", [ IsQuiverRepresentation, IsDenseList ] );
 DeclareOperation( "QuiverRepresentationElementByVertices", [ IsQuiverRepresentation, IsDenseList, IsDenseList ] );
 DeclareAttribute( "RepresentationOfElement", IsQuiverRepresentationElement );
 DeclareAttribute( "ElementVectors", IsQuiverRepresentationElement );
