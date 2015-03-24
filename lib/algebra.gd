@@ -11,6 +11,7 @@ DeclareOperation( "\[\]", [ IsQuiverAlgebra, IsInt ] );
 DeclareAttribute( "Coefficients", IsQuiverAlgebraElement );
 DeclareAttribute( "Paths", IsQuiverAlgebraElement );
 DeclareAttribute( "AlgebraOfElement", IsQuiverAlgebraElement );
+DeclareProperty( "IsUniform", IsQuiverAlgebraElement );
 
 # Path algebras
 DeclareCategory( "IsPathAlgebra", IsQuiverAlgebra );

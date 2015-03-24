@@ -75,6 +75,19 @@ function( e )
   return e!.paths;
 end );
 
+InstallMethod( IsUniform, "for element of path algebra",
+               [ IsPathAlgebraElement ],
+function( e )
+  local s, t;
+  if IsZero( e ) then
+    return true; # TODO: is the zero element regarded as uniform?
+  fi;
+  s := Source( LeadingPath( e ) );
+  t := Target( LeadingPath( e ) );
+  return ForAll( Paths( e ),
+                 p -> ( Source( e ) = s and Target( e ) = t ) );
+end );
+
 InstallMethod( Zero, "for element of quiver algebra",
                [ IsQuiverAlgebraElement ],
 function( e )
@@ -679,6 +692,12 @@ InstallMethod( Paths, "for element of quotient of path algebra",
                [ IsQuotientOfPathAlgebraElement ],
 function( e )
   return Paths( Representative( e ) );
+end );
+
+InstallMethod( IsUniform, "for element of quotient of path algebra",
+               [ IsQuotientOfPathAlgebraElement ],
+function( e )
+  return IsUniform( Representative( e ) );
 end );
 
 InstallMethod( \in, "for element of quotient of path algebra and quotient of path algebra",
