@@ -12,6 +12,12 @@ DeclareOperation( "PathAction", [ IsQuiverRepresentationElement, IsPath ] );
 DeclareOperation( "QuiverAlgebraAction", [ IsQuiverRepresentationElement, IsQuiverAlgebraElement ] );
 
 DeclareOperation( "QuiverRepresentation", [ IsQuiverAlgebra, IsDenseList, IsDenseList ] );
+DeclareOperation( "QuiverRepresentationNC", [ IsQuiverAlgebra, IsDenseList, IsDenseList ] );
+DeclareOperation( "QuiverRepresentationByArrows",
+                  [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
+DeclareOperation( "AsRepresentationOfQuotientAlgebra",
+                  [ IsQuiverRepresentation, IsQuotientOfPathAlgebra ] );
+DeclareAttribute( "ZeroRepresentation", IsQuiverAlgebra );
 DeclareAttribute( "AlgebraOfRepresentation", IsQuiverRepresentation );
 DeclareAttribute( "QuiverOfRepresentation", IsQuiverRepresentation );
 DeclareAttribute( "FieldOfRepresentation", IsQuiverRepresentation );

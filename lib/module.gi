@@ -242,7 +242,14 @@ function( A, dimensions, matrices )
              " (dimensions are ", matrix_dim, ", should be ", expected_dim, ")" );
     fi;
   od;
+  return QuiverRepresentationNC( A, dimensions, matrices );
+end );
 
+InstallMethod( QuiverRepresentationNC, "for quiver algebra and dense lists",
+               [ IsQuiverAlgebra, IsDenseList, IsDenseList ],
+function( A, dimensions, matrices )
+  local Q, elementFam, repFam, repType, R;
+  Q := QuiverOfAlgebra( A );
   # TODO: representation should have its own elements family
   elementFam := ElementsFamily( FamilyObj( Q ) );
   repFam := CollectionsFamily( elementFam );
@@ -253,6 +260,23 @@ function( A, dimensions, matrices )
   return R;
 end );
 
+InstallMethod( AsRepresentationOfQuotientAlgebra,
+               "for quiver representation and quotient of path algebra",
+               [ IsQuiverRepresentation, IsQuotientOfPathAlgebra ],
+function( R, A )
+  local kQ, rels, rel;
+  kQ := PathAlgebra( A );
+  rels := RelationsOfAlgebra( A );
+  for rel in rels do
+    if not IsZero( MatrixForAlgebraElement( R, rel ) ) then
+      Error( "Not a well-defined representation of the algebra ", A,
+             "; does not respect the relation ", rel );
+    fi;
+  od;
+  return QuiverRepresentationNC( A, VertexDimensions( R ),
+                                 MatricesOfRepresentation( R ) );
+end );
+
 InstallMethod( QuiverRepresentation, "for quotient of path algebra and dense lists",
                [ IsQuotientOfPathAlgebra, IsDenseList, IsDenseList ],
 function( A, dimensions, matrices )
@@ -260,14 +284,56 @@ function( A, dimensions, matrices )
   kQ := PathAlgebra( A );
   rels := RelationsOfAlgebra( A );
   kQrep := QuiverRepresentation( kQ, dimensions, matrices );
-  for rel in rels do
-    if not IsZero( MatrixForAlgebraElement( kQrep, rel ) ) then
-      Error( "Not a well-defined representation over the algebra ", A,
-             "; does not respect the relation ", rel );
-    fi;
-  od;
-  #TODO
+  return AsRepresentationOfQuotientAlgebra( kQrep, A );
 end );
+
+InstallMethod( QuiverRepresentationByArrows, "for quiver algebra and dense lists",
+               [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ],
+function( A, dimensions, arrows, matrices )
+  local field, Q, all_arrows, all_matrices, num_specified_arrows, i;
+  field := LeftActingDomain( A );
+  Q := QuiverOfAlgebra( A );
+  all_arrows := Arrows( Q );
+  all_matrices :=
+    List( all_arrows,
+          a ->
+          NullMat( Maximum( 1, dimensions[ VertexNumber( LeftEnd( a ) ) ] ),
+                   Maximum( 1, dimensions[ VertexNumber( RightEnd( a ) ) ] ),
+                   field ) );
+  num_specified_arrows := Length( arrows );
+  if num_specified_arrows <> Length( matrices ) then
+    Error( "Length of arrow list not the same as length of matrix list" );
+  fi;
+  for i in [ 1 .. num_specified_arrows ] do
+    if DimensionsMat( matrices[ i ] ) <>
+       DimensionsMat( all_matrices[ ArrowNumber( arrows[ i ] ) ] ) then
+      Error( "Wrong dimensions of matrix for arrow ", arrows[ i ],
+             " (dimensions are ", DimensionsMat( matrices[ i ] ),
+             ", should be ",
+             DimensionsMat( all_matrices[ ArrowNumber( arrows[ i ] ) ] ),
+             ")" );
+    fi;
+    all_matrices[ ArrowNumber( arrows[ i ] ) ] := matrices[ i ];
+  od;
+  if IsPathAlgebra( A ) then
+    return QuiverRepresentationNC( A, dimensions, all_matrices );
+  else
+    return QuiverRepresentation( A, dimensions, all_matrices );
+  fi;
+end );
+
+InstallMethod( ZeroRepresentation, "for quiver algebra",
+               [ IsQuiverAlgebra ],
+function( A )
+  local numVertices, field;
+  numVertices := NumberOfVertices( QuiverOfAlgebra( A ) );
+  field := LeftActingDomain( A );
+  return QuiverRepresentationByArrows( A,
+                                       List( [ 1 .. numVertices ],
+                                             i -> Zero( field ) ),
+                                       [], [] );
+end );
+
 
 InstallMethod( PrintObj, "for quiver representation",
                [ IsQuiverRepresentation ],
@@ -279,10 +345,17 @@ function( R )
          ">" );
 end );
 
+InstallMethod( String, "for quiver representation",
+               [ IsQuiverRepresentation ],
+function( R )
+  return JoinStringsWithSeparator( VertexDimensions( R ),
+                                   "," );
+end );
+
 InstallMethod( ViewObj, "for quiver representation",
                [ IsQuiverRepresentation ],
 function( R )
-  PrintObj( R );
+  Print( "<", String( R ), ">" );
 end );
 
 InstallMethod( Zero, "for quiver representation",
