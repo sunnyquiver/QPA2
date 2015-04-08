@@ -3,7 +3,15 @@ DeclareRepresentation( "IsPathAlgebraElementRep", IsComponentObjectRep,
 
 InstallGlobalFunction( PathAlgebraElement,
 function( algebra, coefficients, paths )
-  local Cs, Ps, Cs_, Ps_, p, i, nonzeroIndices;
+  local field, Q, Cs, Ps, Cs_, Ps_, p, i, nonzeroIndices;
+  field := LeftActingDomain( algebra );
+  Q := QuiverOfAlgebra( algebra );
+  if not ForAll( coefficients, c -> c in field ) then
+    Error( "Coefficients not in field" );
+  fi;
+  if not ForAll( paths, p -> p in Q ) then
+    Error( "Paths not in quiver" );
+  fi;
   Cs_ := ShallowCopy( coefficients );
   Ps_ := ShallowCopy( paths );
   SortParallel( Ps_, Cs_ );
