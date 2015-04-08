@@ -23,7 +23,7 @@ function( quiverCat, name, num_vertices, arrows_desc )
       Error( "First argument to Quiver must be either IsLeftQuiver or IsRightQuiver" );
     fi;
 
-    pathFam := NewFamily( Concatenation( "paths of ", name ), pathCat );
+    pathFam := NewFamily( Concatenation( "paths of ", name ) );
     quiverFam := CollectionsFamily( pathFam );
 
     quiverType := NewType( quiverFam, quiverCat and IsQuiverRep );
@@ -33,7 +33,7 @@ function( quiverCat, name, num_vertices, arrows_desc )
 			 vertices_desc := num_vertices,
 			 arrows_desc := arrows_desc ) );
 
-    vertexType := NewType( pathFam, IsVertex and IsVertexRep );
+    vertexType := NewType( pathFam, IsVertex and IsVertexRep and pathCat );
     makeVertex := i -> Objectify( vertexType,
                                   rec( quiver := Q, number := i ) );
     vertices := List( [ 1 .. num_vertices ], makeVertex );
@@ -46,7 +46,7 @@ function( quiverCat, name, num_vertices, arrows_desc )
     # od;
     Q!.vertices := vertices;
 
-    arrowType := NewType( pathFam, IsArrow and IsArrowRep );
+    arrowType := NewType( pathFam, IsArrow and IsArrowRep and pathCat );
     makeArrow := function( a, i )
       return Objectify( arrowType,
              		rec( quiver := Q,
@@ -570,6 +570,20 @@ function( Q )
   return Q!.arrows;
 end );
 
+InstallMethod( NumberOfVertices,
+               "for quiver",
+	       [ IsQuiver and IsQuiverRep ],
+function( Q )
+  return Length( Q!.vertices );
+end );
+
+InstallMethod( NumberOfArrows,
+               "for quiver",
+	       [ IsQuiver and IsQuiverRep ],
+function( Q )
+  return Length( Q!.arrows );
+end );
+
 InstallMethod( PrimitivePaths,
                "for quiver",
 	       [ IsQuiver and IsQuiverRep ],
@@ -702,6 +716,10 @@ InstallMethod( \=,
 function( p1, p2 )
   return ArrowList( p1 ) = ArrowList( p2 );
 end );
+
+InstallMethod( \in, "for object and quiver",
+               [ IsObject, IsQuiver ],
+               ReturnFalse );
 
 InstallMethod( \in, "for path and quiver",
                IsElmsColls,

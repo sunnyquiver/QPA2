@@ -43,6 +43,8 @@ DeclareOperation( "LeftQuiver", [ IsString, IsPosInt, IsList ] );
 DeclareOperation( "RightQuiver", [ IsString, IsPosInt, IsList ] );
 DeclareAttribute( "Vertices", IsQuiver );
 DeclareAttribute( "Arrows", IsQuiver );
+DeclareAttribute( "NumberOfVertices", IsQuiver );
+DeclareAttribute( "NumberOfArrows", IsQuiver );
 DeclareAttribute( "PrimitivePaths", IsQuiver );
 DeclareOperation( "Vertex", [ IsQuiver, IsInt ] );
 DeclareOperation( "\[\]", [ IsQuiver, IsInt ] );
