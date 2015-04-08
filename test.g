@@ -1,10 +1,12 @@
 Read( "lib/quiver.gd" );
 Read( "lib/algebra.gd" );
 Read( "lib/module.gd" );
+Read( "lib/modulehom.gd" );
 
 Read( "lib/quiver.gi" );
 Read( "lib/algebra.gi" );
 Read( "lib/module.gi" );
+Read( "lib/modulehom.gi" );
 
 # Q:=Quiver("Q", 1, [['z',1,1],['y',1,1],['x',1,1]]);
 # A:=PathAlgebra(Rationals,Q);
@@ -63,3 +65,25 @@ kQ5 := PathAlgebra( Rationals, Q5 );
 rels5 := [ kQ5.abc + kQ5.di, kQ5.id + kQ5.iaf, kQ5.f * kQ5.i + kQ5.fgc + kQ5.bhi,
            kQ5.cab + kQ5.hg, kQ5.ef + kQ5.ebh, kQ5.dg + kQ5.deb + kQ5.afg,
            kQ5.bca + kQ5.fe, kQ5.gh + kQ5.gcd, kQ5.he + kQ5.hia + kQ5.cde ];
+
+
+P1 := QuiverRepresentation( kQ1, [ 1, 1, 1 ],
+                            [ [ [ 1 ] ],
+                              [ [ 1 ] ] ] );
+P2 := QuiverRepresentation( kQ1, [ 0, 1, 1 ],
+                            [ [ [ 0 ] ],
+                              [ [ 1 ] ] ] );
+P3 := QuiverRepresentation( kQ1, [ 0, 0, 1 ],
+                            [ [ [ 0 ] ],
+                              [ [ 0 ] ] ] );
+I1 := QuiverRepresentation( kQ1, [ 1, 0, 0 ],
+                            [ [ [ 0 ] ],
+                              [ [ 0 ] ] ] );
+I2 := QuiverRepresentation( kQ1, [ 1, 1, 0 ],
+                            [ [ [ 1 ] ],
+                              [ [ 0 ] ] ] );
+I3 := P1;
+
+f := QuiverRepresentationHomomorphism( P2, P1, [ [[0]], [[1]], [[1]] ] );
+
+ZZ := ZeroRepresentation( kQ1 );
