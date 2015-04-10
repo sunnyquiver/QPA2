@@ -10,8 +10,8 @@ ArchiveFormats := ".tar.gz",
 
 Persons := [
   rec( 
-    LastName      := "Skartsæterhagen",
-    FirstNames    := "Øystein",
+    LastName      := "SkartsÃ¦terhagen",
+    FirstNames    := "Ã˜ystein",
     IsAuthor      := true,
     IsMaintainer  := true,
     Email         := "oysteini@math.ntnu.no",
