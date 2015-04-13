@@ -1,3 +1,5 @@
+#! @Chapter Quivers
+
 DeclareRepresentation( "IsVertexRep", IsComponentObjectRep,
                        [ "quiver", "number" ] );
 DeclareRepresentation( "IsArrowRep", IsComponentObjectRep,
@@ -272,11 +274,23 @@ function( arg )
   return composition;
 end );
 
+#! @Section Operations for paths
+
+#! @BeginChunk PathMultiplication
+#! @Description
+#!  Compose the paths <A>p1</A> and <A>p2</A> in the multiplication order
+#!  of the quiver.
+#!  In a left-oriented quiver, we have <C>p * q = ComposePaths( q, p )</C>
+#!  for any paths <C>p</C> and <C>q</C>.
+#!  In a right-oriented quiver, we have <C>p * q = ComposePaths( p, q )</C>
+#!  for any paths <C>p</C> and <C>q</C>.
+#! @Returns <C>IsPath</C> or <C>fail</C>
 InstallMethod( \*, "for two left paths",
                [ IsLeftPath, IsLeftPath ],
 function( p1, p2 )
   return ComposePaths2( p2, p1 );
 end );
+#! @EndChunk PathMultiplication
 
 InstallMethod( \*, "for two right paths",
                [ IsRightPath, IsRightPath ],
