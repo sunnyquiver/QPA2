@@ -270,6 +270,9 @@ function( arg )
   composition := arg[ 1 ];
   for i in [ 2 .. Length( arg ) ] do
     composition := ComposePaths2( composition, arg[ i ] );
+    if composition = fail then
+      return fail;
+    fi;
   od;
   return composition;
 end );
