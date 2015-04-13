@@ -274,7 +274,7 @@ function( arg )
   return composition;
 end );
 
-#! @Section Operations for paths
+#! @Section Composition of paths
 
 #! @BeginChunk PathMultiplication
 #! @Description

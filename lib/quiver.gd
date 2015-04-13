@@ -44,7 +44,7 @@ DeclareCategory( "IsRightQuiver", IsQuiver );
 #! @EndGroup
 
 
-#! @Section Operations for paths
+#! @Section Information about a path
 
 #! @Arguments p
 #! @Returns IsQuiver
@@ -69,26 +69,6 @@ DeclareAttribute( "RightEnd", IsPath );
 #! @Returns integer
 DeclareAttribute( "Length", IsPath );
 
-#! @BeginGroup ArrowList
-#! @Arguments p
-#! @Description
-#!  The path <A>p</A> decomposed as a list of arrows.
-#! @Returns list of arrows
-DeclareAttribute( "ArrowList", IsPath );
-#! @Arguments p
-DeclareAttribute( "ArrowListLR", IsPath );
-#! @EndGroup
-
-#! @BeginGroup DecomposePath
-#! @Arguments p
-#! @Description
-#!  The path <A>p</A> decomposed as a list of primitive paths.
-#! @Returns list of primitive paths
-DeclareAttribute( "AsList", IsPath );
-DeclareAttribute( "AsListLR", IsPath );
-#! @EndGroup
-#! @InsertChunk Example_Decompose
-
 #! @Arguments a
 #! @Description
 #!  The label of the arrow <A>a</A>.
@@ -110,6 +90,9 @@ DeclareAttribute( "VertexNumber", IsVertex );
 #!  In a quiver with $m$ arrows, the arrows are assigned
 #!  numbers $1, \ldots, m$ when the quiver is constructed.
 DeclareAttribute( "ArrowNumber", IsArrow );
+
+
+#! @Section Composition of paths
 
 #! @BeginGroup Composable
 #! @Arguments p1, p2
@@ -153,6 +136,32 @@ DeclareOperation( "PathFromArrowListLR", [ IsList ] );
 #!  the arrows are composable.
 DeclareOperation( "PathFromArrowListNC", [ IsList ] );
 #! @EndGroup
+
+
+#! @Section Decomposition of paths
+
+#! @BeginGroup ArrowList
+#! @Arguments p
+#! @Description
+#!  The path <A>p</A> decomposed as a list of arrows.
+#! @Returns list of arrows
+DeclareAttribute( "ArrowList", IsPath );
+#! @Arguments p
+DeclareAttribute( "ArrowListLR", IsPath );
+#! @EndGroup
+
+#! @BeginGroup DecomposePath
+#! @Arguments p
+#! @Description
+#!  The path <A>p</A> decomposed as a list of primitive paths.
+#! @Returns list of primitive paths
+DeclareAttribute( "AsList", IsPath );
+DeclareAttribute( "AsListLR", IsPath );
+#! @EndGroup
+#! @InsertChunk Example_Decompose
+
+
+#! @Section Subpaths and path division
 
 #! @BeginGroup Subpath
 #! @Description
