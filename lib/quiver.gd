@@ -44,15 +44,110 @@ DeclareCategory( "IsRightQuiver", IsQuiver );
 #! @EndGroup
 
 
+#! @Section Constructing quivers
+
+#! @BeginGroup QuiverConstructors
+#! @Arguments name, num_vertices, arrows_desc
+DeclareOperation( "LeftQuiver", [ IsString, IsPosInt, IsList ] );
+DeclareOperation( "RightQuiver", [ IsString, IsPosInt, IsList ] );
+#! @EndGroup
+
+DeclareOperation( "Quiver", [ IsFunction, IsString, IsPosInt, IsList ] );
+
+
+#! @Section Accessing paths in a quiver
+
+#! @Description
+#!  Returns the vertices of the quiver <A>Q</A> as a list.
+#!  <P/>
+#!  The ordering of the list corresponds to the ordering of the vertices
+#!  in the quiver.
+#!  That is, the vertex at position <C>i</C> in the list has number <C>i</C>
+#!  (see <C>VertexNumber</C>) and is the vertex which is returned by
+#!  <C>Vertex( <A>Q</A>, i )</C>.
+#! @Arguments Q
+#! @Returns list of <C>IsVertex</C>
+DeclareAttribute( "Vertices", IsQuiver );
+
+#! @Description
+#!  Returns the arrows of the quiver <A>Q</A> as a list.
+#!  <P/>
+#!  The ordering of the list corresponds to the ordering of the arrows
+#!  in the quiver.
+#!  That is, the arrow at position <C>i</C> in the list has number <C>i</C>
+#!  (see <C>ArrowNumber</C>) and is the arrow which is returned by
+#!  <C>Arrow( <A>Q</A>, i )</C>.
+#! @Arguments Q
+#! @Returns list of <C>IsArrow</C>
+DeclareAttribute( "Arrows", IsQuiver );
+
+#! @Description
+#!  The number of vertices in the quiver <A>Q</A>.
+#! @Arguments Q
+#! @Returns integer
+DeclareAttribute( "NumberOfVertices", IsQuiver );
+
+#! @Description
+#!  The number of arrows in the quiver <A>Q</A>.
+#! @Arguments Q
+#! @Returns integer
+DeclareAttribute( "NumberOfArrows", IsQuiver );
+
+#! @Description
+#!  Returns the primitive paths of the quiver <A>Q</A> as a list.
+#!  <P/>
+#!  This list contains the vertices first and then the arrows,
+#!  all ordered in the usual way.  That is, we have
+#!  <C>PrimitivePaths( <A>Q</A> ) =
+#!     Concatenation( Vertices( <A>Q</A> ), Arrows( <A>Q</A> ) )</C>.
+#! @Arguments Q
+#! @Returns list of <C>IsPrimitivePath</C>
+DeclareAttribute( "PrimitivePaths", IsQuiver );
+
+#! @BeginGroup Vertex
+#! @Description
+#!  The vertex with number <A>i</A> in the quiver <A>Q</A>.
+#! @Arguments Q, i
+#! @Returns <C>IsVertex</C>
+DeclareOperation( "Vertex", [ IsQuiver, IsInt ] );
+#! @Arguments Q, i
+DeclareOperation( "\[\]", [ IsQuiver, IsInt ] );
+#! @EndGroup
+
+#! @Description
+#!  The arrow with number <A>i</A> in the quiver <A>Q</A>.
+#! @Arguments Q, i
+#! @Returns <C>IsArrow</C>
+DeclareOperation( "Arrow", [ IsQuiver, IsObject ] );
+
+#!
+DeclareOperation( "\^", [ IsQuiver, IsObject ] );
+
+#!
+DeclareOperation( "PathFromString", [ IsQuiver, IsString ] );
+#DeclareOperation( "\.", [ IsQuiver, IsPosInt ] );
+
+
 #! @Section Information about a path
 
 #! @Arguments p
 #! @Returns IsQuiver
 #! @Description
-#!   The quiver containing the path <A>p</A>.
+#!  The quiver containing the path <A>p</A>.
 DeclareAttribute( "QuiverOfPath", IsPath );
 
 #! @BeginGroup PathEnds
+#! @Description
+#!  The **source** of a path is the vertex where the path starts;
+#!  the **target** of a path is the vertex where the path ends.
+#!  The **left end** and **right end** of a path <A>p</A> are defined
+#!  as the vertices with the property
+#!  <C>LeftEnd( <A>p</A> ) * <A>p</A> * RightEnd( <A>p</A> ) = <A>p</A></C>.
+#!  <P/>
+#!  In a left-oriented quiver, the left end of a path is the target
+#!  and the right end is the source.
+#!  In a right-oriented quiver, the left end of a path is the source
+#!  and the right end is the target.
 #! @Arguments p
 DeclareAttribute( "Source", IsPath );
 #! @Arguments p
@@ -66,7 +161,7 @@ DeclareAttribute( "RightEnd", IsPath );
 #! @Arguments p
 #! @Description
 #!  The length of the path <A>p</A>.
-#! @Returns integer
+#! @Returns nonnegative integer
 DeclareAttribute( "Length", IsPath );
 
 #! @Arguments a
@@ -99,6 +194,7 @@ DeclareAttribute( "ArrowNumber", IsArrow );
 #! @Returns <C>true</C> or <C>false</C>
 #! @Description
 #!  Checks if the paths <A>p1</A> and <A>p2</A> can be composed.
+#!  <P/>
 #!  If <C>Composable( p1, p2 )</C> returns <C>true</C>,
 #!  then the operation <C>ComposePaths( p1, p2 )</C> succeeds.
 #!  If <C>ComposableLR( p1, p2 )</C> returns <C>true</C>,
@@ -112,6 +208,13 @@ DeclareOperation( "ComposableLR", [ IsPath, IsPath ] );
 #! @Returns <C>IsPath</C> or <C>fail</C>
 #! @Description
 #!  Compose the paths <A>p_1</A>, <A>p_2</A>, ..., <A>p_n</A>, if possible.
+#!  <P/>
+#!  The paths are given in source-to-target order.
+#!  For composition in multiplication order, use the <C>*</C> operator.
+#!  <P/>
+#!  The function <C>ComposePaths</C>, which takes an arbitrary number
+#!  of arguments, is implemented by repeated calls to the
+#!  two-argument operation <C>ComposePaths2</C>.
 DeclareGlobalFunction( "ComposePaths" );
 #! @Arguments p1, p2
 DeclareOperation( "ComposePaths2", [ IsPath, IsPath ] );
@@ -166,6 +269,7 @@ DeclareAttribute( "AsListLR", IsPath );
 #! @BeginGroup Subpath
 #! @Description
 #!  Extract a subpath of the path <A>p</A>.
+#!  <P/>
 #!  The integers <A>from</A> and <A>to</A> identify vertices
 #!  that the path passes through, counted from 0 to <C>Length( <A>p</A> )</C>.
 #!  The operation <C>Subpath</C> counts the vertices from the source
@@ -173,10 +277,11 @@ DeclareAttribute( "AsListLR", IsPath );
 #!  the vertices from left to right in multiplication order.
 #!  The resulting subpath is the part of <A>p</A> between vertices
 #!  <A>from</A> and <A>to</A>.
+#!  <P/>
 #!  This is a path of length <C><A>to</A> - <A>from</A></C>.
 #!  In particular, if <C><A>from</A> = <A>to</A></C>, then the result
 #!  is a vertex.
-#! @Returns IsPath
+#! @Returns <C>IsPath</C>
 #! @Arguments p, from to
 DeclareOperation( "Subpath", [ IsPath, IsInt, IsInt ] );
 #! @Arguments p, from to
@@ -189,14 +294,14 @@ DeclareOperation( "SubpathLR", [ IsPath, IsInt, IsInt ] );
 #! @Description
 #!  Finds the first position (if any) in the path <A>p</A>
 #!  where <A>q</A> appears as a subpath.
-#!
+#!  <P/>
 #!  If <A>q</A> is not a subpath of <A>p</A>, then <C>fail</C> is returned.
 #!  If <A>q</A> is a subpath of <A>p</A>, then
 #!  <C>SubpathIndex( <A>p</A>, <A>q</A> )</C> returns an integer <C>i</C> such that
 #!  <C>Subpath( <A>p</A>, i, i + Length( <A>q</A> ) ) = <A>q</A></C>, and
 #!  <C>SubpathIndexLR( <A>p</A>, <A>q</A> )</C> returns an integer <C>j</C> such that
 #!  <C>SubpathLR( <A>p</A>, j, j + Length( <A>q</A> ) ) = <A>q</A></C>.
-#!
+#!  <P/>
 #!  Both <C>SubpathIndex</C> and <C>SubpathIndexLR</C> search through the path <A>p</A>
 #!  from source to target for the first occurence of <A>q</A>.
 #!  This means that in a left-oriented quiver, the rightmost occurence is found,
@@ -211,12 +316,12 @@ DeclareOperation( "SubpathIndexLR", [ IsPath, IsPath ] );
 
 #! @Description
 #!  Finds the paths that remain if we remove the subpath <A>q</A> from the path <A>p</A>.
-#!
+#!  <P/>
 #!  If <A>q</A> is not a subpath of <A>p</A>, then <C>fail</C> is returned.
 #!  If <A>q</A> is a subpath of <A>p</A>, then the result is a list
 #!  <C>[ r1, r2 ]</C> of two paths such that
 #!  <C>ComposePaths( r1, <A>q</A>, r2 ) = <A>p</A></C>.
-#!
+#!  <P/>
 #!  If <A>q</A> occurs more than once as a subpath of <A>p</A>, then
 #!  the first occurence (in source-to-target order) is used; that is, the
 #!  same occurence that would be found by <C>SubpathIndex( <A>p</A>, <A>q</A> )</C>.
@@ -228,12 +333,12 @@ DeclareOperation( "ExtractSubpath", [ IsPath, IsPath ] );
 
 #! @Description
 #!  Divide the path <A>p</A> by the path <A>q</A>, if possible.
-#!
+#!  <P/>
 #!  If <A>q</A> is not a subpath of <A>p</A>, then <C>fail</C> is returned.
 #!  If <A>q</A> is a subpath of <A>p</A>, then the result is a list
 #!  <C>[ r1, r2 ]</C> of two paths such that
 #!  <C>r1 * <A>q</A> * r2 = <A>p</A></C>.
-#!
+#!  <P/>
 #!  In a right-oriented quiver, this operation is exactly the same
 #!  as <C>ExtractSubpath</C>.
 #!  In a left-oriented quiver, this operation is the same
@@ -247,7 +352,7 @@ DeclareOperation( "\/", [ IsPath, IsPath ] );
 
 #! @Description
 #!  Finds overlaps between the paths <A>p</A> and <A>q</A>.
-#!
+#!  <P/>
 #!  Returns a list of all pairs <C>[ b, c ]</C> of paths such that
 #!  <C><A>p</A> * c = b * <A>q</A></C>.
 #! @Arguments p, q
@@ -255,18 +360,3 @@ DeclareOperation( "\/", [ IsPath, IsPath ] );
 DeclareOperation( "PathOverlaps", [ IsPath, IsPath ] );
 
 #! @InsertChunk Example_PathOverlaps
-
-DeclareOperation( "Quiver", [ IsFunction, IsString, IsPosInt, IsList ] );
-DeclareOperation( "LeftQuiver", [ IsString, IsPosInt, IsList ] );
-DeclareOperation( "RightQuiver", [ IsString, IsPosInt, IsList ] );
-DeclareAttribute( "Vertices", IsQuiver );
-DeclareAttribute( "Arrows", IsQuiver );
-DeclareAttribute( "NumberOfVertices", IsQuiver );
-DeclareAttribute( "NumberOfArrows", IsQuiver );
-DeclareAttribute( "PrimitivePaths", IsQuiver );
-DeclareOperation( "Vertex", [ IsQuiver, IsInt ] );
-DeclareOperation( "\[\]", [ IsQuiver, IsInt ] );
-DeclareOperation( "Arrow", [ IsQuiver, IsObject ] );
-DeclareOperation( "\^", [ IsQuiver, IsObject ] );
-DeclareOperation( "PathFromString", [ IsQuiver, IsString ] );
-#DeclareOperation( "\.", [ IsQuiver, IsPosInt ] );
