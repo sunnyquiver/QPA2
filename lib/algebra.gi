@@ -433,7 +433,7 @@ end );
 InstallMethod( ViewObj, "for path algebra",
                [ IsPathAlgebra ],
 function( A )
-  Print( LeftActingDomain( A ), " * ", Name( QuiverOfAlgebra( A ) ) );
+  Print( LeftActingDomain( A ), " * ", Label( QuiverOfAlgebra( A ) ) );
 end );
 
 InstallMethod( QuiverOfAlgebra, "for path algebra",
@@ -599,7 +599,7 @@ end );
 InstallMethod( ViewObj, "for quotient of path algebra",
                [ IsQuotientOfPathAlgebra ],
 function( A )
-  Print( "( ", LeftActingDomain( A ), " * ", Name( QuiverOfAlgebra( A ) ),
+  Print( "( ", LeftActingDomain( A ), " * ", Label( QuiverOfAlgebra( A ) ),
          " ) / ", RelationsOfAlgebra( A ) );
 end );
 

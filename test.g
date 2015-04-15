@@ -79,3 +79,10 @@ I3 := P1;
 f := QuiverRepresentationHomomorphism( P2, P1, [ [[0]], [[1]], [[1]] ] );
 
 ZZ := ZeroRepresentation( kQ1 );
+
+QxQ := LeftQuiver( "QxQ",
+                   [ [1,1],[1,2],[2,1],[2,2] ],
+                   [ [['a',1],[1,1],[2,1]],
+                     [['a',2],[1,2],[2,2]],
+                     [[1,'a'],[1,1],[1,2]],
+                     [[2,'a'],[2,1],[2,2]] ] );

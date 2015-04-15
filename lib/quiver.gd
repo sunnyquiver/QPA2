@@ -3,7 +3,12 @@
 #! @Section Categories for paths and quivers
 
 #! @BeginGroup IsPath
-#!
+#! @Description
+#!  Every path is in the category <C>IsPath</C>.
+#!  Additionally, every path in a left-oriented quiver is in
+#!  the category <C>IsLeftPath</C>, and
+#!  every path in a right-oriented quiver is in
+#!  the category <C>IsRightPath</C>.
 DeclareCategory( "IsPath", IsMultiplicativeElement );
 #!
 DeclareCategory( "IsLeftPath", IsPath );
@@ -35,7 +40,10 @@ DeclareCategory( "IsVertex", IsPrimitivePath );
 DeclareCategory( "IsArrow", IsNontrivialPath and IsPrimitivePath );
 
 #! @BeginGroup IsQuiver
-#!
+#! @Description
+#!  Every quiver is in the category <C>IsQuiver</C>.
+#!  Additionally, a left-oriented quiver is in the category <C>IsLeftQuiver</C>,
+#!  and a right-oriented quiver is in the category <C>IsRightQuiver</C>.
 DeclareCategory( "IsQuiver", CategoryCollections( IsPath ) );
 #!
 DeclareCategory( "IsLeftQuiver", IsQuiver );
@@ -46,13 +54,52 @@ DeclareCategory( "IsRightQuiver", IsQuiver );
 
 #! @Section Constructing quivers
 
-#! @BeginGroup QuiverConstructors
-#! @Arguments name, num_vertices, arrows_desc
-DeclareOperation( "LeftQuiver", [ IsString, IsPosInt, IsList ] );
-DeclareOperation( "RightQuiver", [ IsString, IsPosInt, IsList ] );
+#! @BeginGroup LeftQuiver
+#! @Description
+#!  Constructor for left-oriented quivers.
+#! @Arguments label, num_vertices, arrows
+DeclareOperation( "LeftQuiver", [ IsString, IsPosInt, IsDenseList ] );
+#! @Arguments label, vertices, arrows
+DeclareOperation( "LeftQuiver", [ IsString, IsDenseList, IsDenseList ] );
+#! @Arguments description
+DeclareOperation( "LeftQuiver", [ IsString ] );
 #! @EndGroup
 
-DeclareOperation( "Quiver", [ IsFunction, IsString, IsPosInt, IsList ] );
+#! @BeginGroup RightQuiver
+#! @Description
+#!  Constructor for right-oriented quivers.
+#! @Arguments label, num_vertices, arrows
+DeclareOperation( "RightQuiver", [ IsString, IsPosInt, IsDenseList ] );
+#! @Arguments label, vertices, arrows
+DeclareOperation( "RightQuiver", [ IsString, IsDenseList, IsDenseList ] );
+#! @Arguments description
+DeclareOperation( "RightQuiver", [ IsString ] );
+#! @EndGroup
+
+DeclareOperation( "MakeQuiver", [ IsFunction, IsString, IsDenseList, IsDenseList ] );
+DeclareOperation( "Quiver", [ IsFunction, IsString, IsDenseList, IsDenseList ] );
+DeclareOperation( "Quiver", [ IsFunction, IsString, IsPosInt, IsDenseList ] );
+DeclareOperation( "Quiver", [ IsFunction, IsString ] );
+
+DeclareOperation( "DecomposeQuiverDescriptionString", [ IsString ] );
+DeclareOperation( "ParseLabelPatternString", [ IsString ] );
+DeclareOperation( "ApplyLabelPattern", [ IsDenseList, IsPosInt ] );
+DeclareOperation( "ParseStringAsLabel", [ IsString ] );
+DeclareOperation( "ParseQuiverLabelString", [ IsString ] );
+DeclareOperation( "ParseVerticesDescriptionString", [ IsString ] );
+DeclareOperation( "ParseArrowDescriptionString", [ IsString ] );
+DeclareOperation( "ParseQuiverDescriptionString", [ IsString ] );
+
+DeclareOperation( "SplitStringSubstring", [ IsString, IsString ] );
+
+
+#! @Section Information about a quiver
+
+#! @Description
+#!  The label of the quiver <A>Q</A>.
+#! @Arguments Q
+#! @Returns <C>IsString</C>
+DeclareAttribute( "Label", IsQuiver );
 
 
 #! @Section Accessing paths in a quiver
@@ -109,19 +156,30 @@ DeclareAttribute( "PrimitivePaths", IsQuiver );
 #!  The vertex with number <A>i</A> in the quiver <A>Q</A>.
 #! @Arguments Q, i
 #! @Returns <C>IsVertex</C>
-DeclareOperation( "Vertex", [ IsQuiver, IsInt ] );
+DeclareOperation( "Vertex", [ IsQuiver, IsPosInt ] );
 #! @Arguments Q, i
-DeclareOperation( "\[\]", [ IsQuiver, IsInt ] );
+DeclareOperation( "\[\]", [ IsQuiver, IsObject ] );
 #! @EndGroup
 
 #! @Description
 #!  The arrow with number <A>i</A> in the quiver <A>Q</A>.
 #! @Arguments Q, i
 #! @Returns <C>IsArrow</C>
-DeclareOperation( "Arrow", [ IsQuiver, IsObject ] );
+DeclareOperation( "Arrow", [ IsQuiver, IsPosInt ] );
 
-#!
+#! @BeginGroup PrimitivePathByLabel
+#! @Description
+#!  Returns the primitive path (vertex or arrow) of the quiver <A>Q</A>
+#!  which has <A>label</A> as label, if any.
+#!  If no such path exists, then <C>fail</C> is returned.
+#!  The operation <C><A>Q</A>^<A>label</A></C> is equivalent to
+#!  <C>PrimitivePathByLabel( <A>Q</A>, <A>label</A> )</C>.
+#! @Returns <C>IsPrimitivePath</C> or <C>fail</C>
+#! @Arguments Q, label
+DeclareOperation( "PrimitivePathByLabel", [ IsQuiver, IsObject ] );
+#! @Arguments Q, label
 DeclareOperation( "\^", [ IsQuiver, IsObject ] );
+#! @EndGroup
 
 #!
 DeclareOperation( "PathFromString", [ IsQuiver, IsString ] );
@@ -164,13 +222,21 @@ DeclareAttribute( "RightEnd", IsPath );
 #! @Returns nonnegative integer
 DeclareAttribute( "Length", IsPath );
 
-#! @Arguments a
+#! @Arguments p
 #! @Description
-#!  The label of the arrow <A>a</A>.
+#!  The label of the primitive path <A>p</A>.
 #!  This is normally a character (such as 'a' or 'b')
 #!  or a string (such as "alpha"),
 #!  but can be any object.
-DeclareAttribute( "Label", IsArrow );
+DeclareAttribute( "Label", IsPrimitivePath );
+
+#! @Arguments p
+#! @Description
+#!  The label of the primitive path <A>p</A>, as a string.
+#! @Returns <C>IsString</C>
+DeclareAttribute( "LabelAsString", IsPrimitivePath );
+
+DeclareGlobalFunction( "QPA_LABEL_TO_STRING" );
 
 #! @Arguments v
 #! @Description
@@ -203,24 +269,28 @@ DeclareOperation( "Composable", [ IsPath, IsPath ] );
 DeclareOperation( "ComposableLR", [ IsPath, IsPath ] );
 #! @EndGroup
 
-#! @BeginGroup ComposePaths
+#! @BeginGroup ComposePathsGroup
 #! @Arguments p_1, p_2, ..., p_n
 #! @Returns <C>IsPath</C> or <C>fail</C>
 #! @Description
 #!  Compose the paths <A>p_1</A>, <A>p_2</A>, ..., <A>p_n</A>, if possible.
 #!  <P/>
-#!  The paths are given in source-to-target order.
-#!  For composition in multiplication order, use the <C>*</C> operator.
+#!  For the operation <C>ComposePaths</C>, the paths should be given in source-to-target order.
+#!  For the operation <C>ComposePathsLR</C>, the paths should be given in multiplication order.
 #!  <P/>
 #!  The function <C>ComposePaths</C>, which takes an arbitrary number
 #!  of arguments, is implemented by repeated calls to the
 #!  two-argument operation <C>ComposePaths2</C>.
 DeclareGlobalFunction( "ComposePaths" );
+#! @Arguments p_1, p_2, ..., p_n
+DeclareGlobalFunction( "ComposePathsLR" );
 #! @Arguments p1, p2
 DeclareOperation( "ComposePaths2", [ IsPath, IsPath ] );
 #! @EndGroup
 
 #! @InsertChunk PathMultiplication
+
+DeclareOperation( "FoldLeft", [ IsList, IsFunction ] );
 
 #! @BeginGroup PathFromArrowList
 #! @Arguments list
