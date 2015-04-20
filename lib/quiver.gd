@@ -180,6 +180,24 @@ DeclareAttribute( "NumberOfVertices", IsQuiver );
 DeclareAttribute( "NumberOfArrows", IsQuiver );
 
 #! @Description
+#!  Returns the sources of all arrows in the quiver,
+#!  given as a list <C>L</C> of positive integers,
+#!  such that <C>L[i]</C> is the index of the source vertex
+#!  of the arrow with index <C>i</C>.
+#! @Arguments Q
+#! @Returns list of positive integers
+DeclareAttribute( "ArrowSourceIndices", IsQuiver );
+
+#! @Description
+#!  Returns the targets of all arrows in the quiver,
+#!  given as a list <C>L</C> of positive integers,
+#!  such that <C>L[i]</C> is the index of the target vertex
+#!  of the arrow with index <C>i</C>.
+#! @Arguments Q
+#! @Returns list of positive integers
+DeclareAttribute( "ArrowTargetIndices", IsQuiver );
+
+#! @Description
 #!  Returns the primitive paths of the quiver <A>Q</A> as a list.
 #!  <P/>
 #!  This list contains the vertices first and then the arrows,

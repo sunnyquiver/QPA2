@@ -1097,6 +1097,18 @@ function( Q )
   return Length( Q!.arrows );
 end );
 
+InstallMethod( ArrowSourceIndices, "for quiver",
+               [ IsQuiver ],
+function( Q )
+  return List( Arrows( Q ), a -> VertexNumber( Source( a ) ) );
+end );
+
+InstallMethod( ArrowTargetIndices, "for quiver",
+               [ IsQuiver ],
+function( Q )
+  return List( Arrows( Q ), a -> VertexNumber( Target( a ) ) );
+end );
+
 InstallMethod( PrimitivePaths,
                "for quiver",
 	       [ IsQuiver and IsQuiverRep ],
@@ -1273,6 +1285,16 @@ InstallMethod( \=,
 	       [ IsCompositePath, IsCompositePath ],
 function( p1, p2 )
   return ArrowList( p1 ) = ArrowList( p2 );
+end );
+
+InstallMethod( \=, "for quivers",
+               [ IsQuiver, IsQuiver ],
+function( Q1, Q2 )
+  return Label( Q1 ) = Label( Q2 )
+         and List( Vertices( Q1 ), Label ) = List( Vertices( Q2 ), Label )
+         and List( Arrows( Q1 ), Label ) = List( Arrows( Q2 ), Label )
+         and ArrowSourceIndices( Q1 ) = ArrowSourceIndices( Q2 )
+         and ArrowTargetIndices( Q1 ) = ArrowTargetIndices( Q2 );
 end );
 
 InstallMethod( \in, "for object and quiver",
