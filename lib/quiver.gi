@@ -7,7 +7,7 @@ DeclareRepresentation( "IsArrowRep", IsComponentObjectRep,
 DeclareRepresentation( "IsCompositePathRep", IsComponentObjectRep,
                        [ "arrows" ] );
 DeclareRepresentation( "IsQuiverRep", IsComponentObjectRep,
-		       [ "label", "vertices", "arrows", "primitivePaths",
+		       [ "label", "vertices", "arrows", "primitive_paths",
 		         "vertices_desc", "arrows_desc"] );
 
 InstallMethod( DecomposeQuiverDescriptionString,
@@ -143,6 +143,27 @@ function( pattern, i )
   fi;
 end );
 
+InstallMethod( MakeLabelsFromPatternObj,
+               [ IsDenseList, IsPosInt, IsList ],
+function( pattern, n, given_labels )
+  local make_label;
+  make_label := function( i )
+    if IsBound( given_labels[ i ] ) then
+      return given_labels[ i ];
+    else
+      return ApplyLabelPattern( pattern, i );
+    fi;
+  end;
+  return List( [ 1 .. n ], make_label );
+end );
+
+InstallMethod( MakeLabelsFromPattern,
+               [ IsString, IsPosInt, IsList ],
+function( pattern, n, given_labels )
+  return MakeLabelsFromPatternObj( ParseLabelPatternString( pattern ),
+                                   n, given_labels );
+end );
+
 InstallMethod( ParseQuiverLabelString,
                [ IsString ],
 function( string )
@@ -239,147 +260,177 @@ function( string, sep )
   return split;
 end );
 
-InstallMethod( MakeQuiver, "for function, string and lists",
-               [ IsFunction, IsString, IsDenseList, IsDenseList ],
-function( quiverCat, label, vertices_spec, arrows_spec )
-    local pathCat, pathFam, quiverFam, vertexType, arrowType, quiverType,
-    	  makeVertex, makeArrow,
-          num_vertices, vertices, arrows, Q, i, v, a;
-
-    num_vertices := Length( vertices_spec );
-    if quiverCat = IsLeftQuiver then
-      pathCat := IsLeftPath;
-    elif quiverCat = IsRightQuiver then
-      pathCat := IsRightPath;
-    else
-      Error( "First argument to MakeQuiver must be either IsLeftQuiver or IsRightQuiver" );
-    fi;
-    if num_vertices = 0 then
-      Error( "Quiver must have at least one vertex" );
-    fi;
-    if Length( label ) = 0 then
-      Error( "Empty quiver label" );
-    fi;
-
-    pathFam := NewFamily( Concatenation( "paths of ", label ) );
-    quiverFam := CollectionsFamily( pathFam );
-
-    quiverType := NewType( quiverFam, quiverCat and IsQuiverRep );
-    Q := Objectify( quiverType,
-                    rec( label := label,
-#		         vertices := vertices, arrows := arrows,
-			 vertices_desc := vertices_spec,
-			 arrows_desc := arrows_spec ) );
-
-    vertexType := NewType( pathFam, IsVertex and IsVertexRep and pathCat );
-    makeVertex := function( num, label )
-      return Objectify( vertexType,
-                        rec( quiver := Q,
-                             number := num,
-                             label := label ) );
-    end;
-    vertices := ListN( [ 1 .. num_vertices ], vertices_spec,
-                       makeVertex );
-    # vertices := [];
-    # for i in [ 1 .. Length( vertices_desc ) ] do
-    #   v := Objectify( vertexType,
-    #                   rec( number := i,
-    # 		           label := vertices_desc[ i ] ) );
-    #   Add( vertices, v);
-    # od;
-    Q!.vertices := vertices;
-
-    arrowType := NewType( pathFam, IsArrow and IsArrowRep and pathCat );
-    makeArrow := function( num, a )
-      if ( not IsList( a ) ) or Length( a ) <> 3 then
-        Error( "Bad arrow specification (should be list of length 3): ", a );
-      fi;
-      if ( not IsPosInt( a[ 2 ] ) ) or a[ 2 ] > num_vertices then
-        Error( "Bad arrow specification (source not int in correct range): ", a );
-      fi;
-      if ( not IsPosInt( a[ 3 ] ) ) or a[ 3 ] > num_vertices then
-        Error( "Bad arrow specification (target not int in correct range): ", a );
-      fi;
-      return Objectify( arrowType,
-             		rec( quiver := Q,
-			     number := num,
-			     label := a[ 1 ],
- 			     source := vertices[ a[ 2 ] ],
- 			     target := vertices[ a[ 3 ] ] ) );
-    end;
-    arrows := ListN( [ 1 .. Length( arrows_spec ) ], arrows_spec,
-    	      	     makeArrow );
-    Q!.arrows := arrows;
-
-    Q!.primitivePaths := Concatenation( vertices, arrows );
-
-    return Q;
-end );
-
-InstallMethod( Quiver, "for function, string, and lists",
-               [ IsFunction, IsString, IsDenseList, IsDenseList ],
-function( quiverCat, label, vertices, arrows )
-  local num_for_label, arrow_with_numbers;
-  num_for_label := function( label )
-    local i;
-    for i in [ 1 .. Length( vertices ) ] do
-      if vertices[ i ] = label then
-        return i;
-      fi;
-    od;
-    if IsPosInt( label ) then
-      return label;
-    fi;
-    Error( "No vertex with label ", label );
-  end;
-  arrow_with_numbers := function( arrow )
-    if ( not IsList( arrow ) ) or Length( arrow ) <> 3 then
-      Error( "Bad arrow specification: ", arrow );
-    fi;
-    return [ arrow[ 1 ], num_for_label( arrow[ 2 ] ), num_for_label( arrow[ 3 ] ) ];
-  end;
-  return MakeQuiver( quiverCat, label, vertices, List( arrows, arrow_with_numbers ) );
-end );
-  
-InstallMethod( Quiver, "for function, string, positive integer and list",
+InstallMethod( Quiver,
                [ IsFunction, IsString, IsPosInt, IsDenseList ],
-function( quiverCat, label_with_patterns, num_vertices, arrows )
-  local label, vertex_label_pattern, arrow_label_pattern, tmp,
-        vertices, arrows_with_labels, set_arrow_label;
-  tmp := ParseQuiverLabelString( label_with_patterns );
+function( quiver_cat, label_with_patterns, num_vertices, arrows )
+  local tmp, label, vertex_label_pattern, arrow_label_pattern;
+  tmp := DecomposeQuiverDescriptionString( label_with_patterns );
   label := tmp[ 1 ];
-  if tmp[ 2 ] <> fail then
-    vertex_label_pattern := tmp[ 2 ];
-  else
-    vertex_label_pattern := [ IsInt, 0 ];
-  fi;
+  vertex_label_pattern := tmp[ 2 ];
   arrow_label_pattern := tmp[ 3 ];
-  vertices := List( [ 1 .. num_vertices ],
-                    i -> ApplyLabelPattern( vertex_label_pattern, i ) );
-  set_arrow_label := function( i, arrow )
-    if Length( arrow ) = 3 then
-      return arrow;
-    elif Length( arrow ) = 2 then
-      if arrow_label_pattern = fail then
-        Error( "Arrow without label and no arrow label pattern given" );
-      fi;
-      return [ ApplyLabelPattern( arrow_label_pattern, i ),
-               arrow[ 1 ], arrow[ 2 ] ];
-    else
-      Error( "Bad arrow specification: ", arrow );
-    fi;
-  end;
-  arrows_with_labels := ListN( [ 1 .. Length( arrows ) ], arrows,
-                               set_arrow_label );
-  return Quiver( quiverCat, label, vertices, arrows_with_labels );
+  return Quiver( quiver_cat,
+                 [ label, vertex_label_pattern, arrow_label_pattern ],
+                 num_vertices, [], arrows );
+end );
+
+InstallMethod( Quiver,
+               [ IsFunction, IsString, IsDenseList, IsDenseList ],
+function( quiver_cat, label_with_patterns, vertex_labels, arrows )
+  local tmp, label, vertex_label_pattern, arrow_label_pattern;
+  tmp := DecomposeQuiverDescriptionString( label_with_patterns );
+  label := tmp[ 1 ];
+  vertex_label_pattern := tmp[ 2 ];
+  arrow_label_pattern := tmp[ 3 ];
+  return Quiver( quiver_cat,
+                 [ label, vertex_label_pattern, arrow_label_pattern ],
+                 Length( vertex_labels ), vertex_labels, arrows );
 end );
 
 InstallMethod( Quiver, "for function and string",
                [ IsFunction, IsString ],
-function( quiverCat, description )
+function( quiver_cat, description )
   return CallFuncList( Quiver,
-                       Concatenation( [ quiverCat ],
+                       Concatenation( [ quiver_cat ],
                                       ParseQuiverDescriptionString( description ) ) );
+end );
+
+InstallMethod( Quiver,
+               [ IsFunction, IsDenseList,
+                 IsPosInt, IsList, IsDenseList ],
+function( quiver_cat, label_with_patterns_list,
+          num_vertices, vertex_labels, arrows )
+  local label, vertex_pattern, arrow_pattern, vertex_pattern_str, arrow_pattern_str,
+        make_vertex_label, all_vertex_labels,  
+        set_arrow_label, arrows_with_labels, arrow_labels, get_vertex_index,  
+        source_indices, target_indices;
+  if Length( label_with_patterns_list ) <> 3 or
+     ( not ForAll( label_with_patterns_list, IsString ) ) then
+    Error( "Argument 'label_with_patterns_list' must be a list of three strings" );
+  fi;
+  label := label_with_patterns_list[ 1 ];
+  vertex_pattern_str := label_with_patterns_list[ 2 ];
+  arrow_pattern_str := label_with_patterns_list[ 3 ];
+  if vertex_pattern_str = "" then
+    vertex_pattern := [ IsInt, 0 ]; # gives labels 1, 2, 3, ...
+  else
+    vertex_pattern := ParseLabelPatternString( vertex_pattern_str );
+  fi;
+  if arrow_pattern_str = "" then
+    arrow_pattern := fail;
+  else
+    arrow_pattern := ParseLabelPatternString( arrow_pattern_str );
+  fi;
+  make_vertex_label := function( i )
+    if IsBound( vertex_labels[ i ] ) then
+      return vertex_labels[ i ];
+    else
+      return ApplyLabelPattern( vertex_pattern, i );
+    fi;
+  end;
+  all_vertex_labels := List( [ 1 .. num_vertices ], make_vertex_label );
+  set_arrow_label := function( i )
+    if Length( arrows[ i ] ) = 3 then
+      return arrows[ i ];
+    elif Length( arrows[ i ] ) <> 2 then
+      Error( "Bad arrow specification (should be list of length two or three): ",
+             arrows[ i ] );
+    elif arrow_pattern = fail then
+      Error( "Arrow ", arrows[ i ],
+             " without label and no arrow label pattern given" );
+    else
+      return [ ApplyLabelPattern( arrow_pattern, i ),
+               arrows[ i ][ 1 ], arrows[ i ][ 2 ] ];
+    fi;
+  end;
+  arrows_with_labels := List( [ 1 .. Length( arrows ) ], set_arrow_label );
+  arrow_labels := List( arrows_with_labels, a -> a[ 1 ] );
+  get_vertex_index := function( obj )
+    local i;
+    for i in [ 1 .. num_vertices ] do
+      if all_vertex_labels[ i ] = obj then
+        return i;
+      fi;
+    od;
+    if IsPosInt( obj ) and obj <= num_vertices then
+      return obj;
+    fi;
+    Error( "No vertex named ", obj );
+  end;
+  source_indices := List( arrows_with_labels, a -> get_vertex_index( a[ 2 ] ) );
+  target_indices := List( arrows_with_labels, a -> get_vertex_index( a[ 3 ] ) );
+  return Quiver( quiver_cat, label, all_vertex_labels, arrow_labels,
+                 source_indices, target_indices );
+end );
+
+InstallMethod( Quiver,
+               [ IsFunction, IsString, IsDenseList, IsDenseList,
+                 IsDenseList, IsDenseList ],
+function( quiver_cat, label, vertex_labels, arrow_labels,
+          source_indices, target_indices )
+  local num_vertices, num_arrows, path_cat, path_fam, quiver_fam, quiver_type,
+        Q, vertex_type, make_vertex, arrow_type, make_arrow;
+  num_vertices := Length( vertex_labels );
+  num_arrows := Length( arrow_labels );
+  if quiver_cat = IsLeftQuiver then
+    path_cat := IsLeftPath;
+  elif quiver_cat = IsRightQuiver then
+    path_cat := IsRightPath;
+  else
+    Error( "First argument to Quiver must be either IsLeftQuiver or IsRightQuiver" );
+  fi;
+  if num_vertices = 0 then
+    Error( "Quiver must have at least one vertex" );
+  fi;
+  if Length( source_indices ) <> num_arrows then
+    Error( "Wrong number of source indices",
+           " (is ", Length( source_indices ), ", should be ", num_arrows, ")" );
+  fi;
+  if Length( target_indices ) <> num_arrows then
+    Error( "Wrong number of target indices",
+           " (is ", Length( target_indices ), ", should be ", num_arrows, ")" );
+  fi;
+  if Length( label ) = 0 then
+    Error( "Empty quiver label" );
+  fi;
+
+  path_fam := NewFamily( Concatenation( "paths of ", label ) );
+  quiver_fam := CollectionsFamily( path_fam );
+
+  quiver_type := NewType( quiver_fam, quiver_cat and IsQuiverRep );
+  Q := Objectify( quiver_type,
+                  rec( label := label ) );
+
+  vertex_type := NewType( path_fam, IsVertex and IsVertexRep and path_cat );
+  make_vertex := function( num, label )
+    return Objectify( vertex_type,
+                      rec( quiver := Q,
+                           number := num,
+                           label := label ) );
+  end;
+  Q!.vertices := ListN( [ 1 .. num_vertices ], vertex_labels,
+                        make_vertex );
+
+  arrow_type := NewType( path_fam, IsArrow and IsArrowRep and path_cat );
+  make_arrow := function( num, label, source_index, target_index )
+    if ( not IsPosInt( source_index ) ) or source_index > num_vertices then
+      Error( "Source of arrow ", label, " is not int in correct range" );
+    fi;
+    if ( not IsPosInt( target_index ) ) or target_index > num_vertices then
+      Error( "Target of arrow ", label, " is not int in correct range" );
+    fi;
+    return Objectify( arrow_type,
+                      rec( quiver := Q,
+                           number := num,
+                           label := label,
+                           source := Q!.vertices[ source_index ],
+                           target := Q!.vertices[ target_index ] ) );
+  end;
+  Q!.arrows := ListN( [ 1 .. num_arrows ], arrow_labels, source_indices, target_indices,
+                      make_arrow );
+
+  Q!.primitive_paths := Concatenation( Q!.vertices, Q!.arrows );
+
+  return Q;
 end );
 
 CallFuncList(
@@ -393,7 +444,9 @@ function()
   end;
   filter_lists := [ [ IsString, IsPosInt, IsDenseList ],
                     [ IsString, IsDenseList, IsDenseList ],
-                    [ IsString ] ];
+                    [ IsString ],
+                    [ IsDenseList, IsPosInt, IsList, IsDenseList ],
+                    [ IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] ];
   for fl in filter_lists do
     InstallMethod( LeftQuiver, fl, left_quiver_func );
     InstallMethod( RightQuiver, fl, right_quiver_func );
@@ -1048,7 +1101,7 @@ InstallMethod( PrimitivePaths,
                "for quiver",
 	       [ IsQuiver and IsQuiverRep ],
 function( Q )
-  return Q!.primitivePaths;
+  return Q!.primitive_paths;
 end );
 
 InstallMethod( Vertex, "for quiver and positive integer",

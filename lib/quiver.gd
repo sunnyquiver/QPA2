@@ -57,33 +57,72 @@ DeclareCategory( "IsRightQuiver", IsQuiver );
 #! @BeginGroup LeftQuiver
 #! @Description
 #!  Constructor for left-oriented quivers.
-#! @Arguments label, num_vertices, arrows
+#! @Arguments label_with_patterns, num_vertices, arrows
 DeclareOperation( "LeftQuiver", [ IsString, IsPosInt, IsDenseList ] );
-#! @Arguments label, vertices, arrows
+#! @Arguments label_with_patterns, vertex_labels, arrows
 DeclareOperation( "LeftQuiver", [ IsString, IsDenseList, IsDenseList ] );
 #! @Arguments description
 DeclareOperation( "LeftQuiver", [ IsString ] );
+#! @Arguments label_with_patterns_list, num_vertices, vertex_labels, arrows
+DeclareOperation( "LeftQuiver", [ IsDenseList, IsPosInt, IsList, IsDenseList ] );
+#! @Arguments label, vertex_labels, arrow_labels, source_indices, target_indices
+DeclareOperation( "LeftQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup
 
 #! @BeginGroup RightQuiver
 #! @Description
 #!  Constructor for right-oriented quivers.
-#! @Arguments label, num_vertices, arrows
+#! @Arguments label_with_patterns, num_vertices, arrows
 DeclareOperation( "RightQuiver", [ IsString, IsPosInt, IsDenseList ] );
-#! @Arguments label, vertices, arrows
+#! @Arguments label_with_patterns, vertex_labels, arrows
 DeclareOperation( "RightQuiver", [ IsString, IsDenseList, IsDenseList ] );
 #! @Arguments description
 DeclareOperation( "RightQuiver", [ IsString ] );
+#! @Arguments label_with_patterns_list, num_vertices, vertex_labels, arrows
+DeclareOperation( "RightQuiver", [ IsDenseList, IsPosInt, IsList, IsDenseList ] );
+#! @Arguments label, vertex_labels, arrow_labels, source_indices, target_indices
+DeclareOperation( "RightQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup
 
-DeclareOperation( "MakeQuiver", [ IsFunction, IsString, IsDenseList, IsDenseList ] );
-DeclareOperation( "Quiver", [ IsFunction, IsString, IsDenseList, IsDenseList ] );
+#! @BeginGroup Quiver
+#! @Description
+#!  Constructor for quivers.
+#!  <P/>
+#!  These operations are exactly the same as <C>LeftQuiver</C>
+#!  and <C>RightQuiver</C>, except that they have an additional
+#!  first argument <A>quiver_cat</A>, which specifies whether the
+#!  quiver should be left- or right-oriented.
+#!  The value of this argument should be either <C>IsLeftQuiver</C>
+#!  or <C>IsRightQuiver</C>.
+#! @Arguments quiver_cat, label_with_patterns, num_vertices, arrows
 DeclareOperation( "Quiver", [ IsFunction, IsString, IsPosInt, IsDenseList ] );
+#! @Arguments quiver_cat, label_with_patterns, vertex_labels, arrows
+DeclareOperation( "Quiver", [ IsFunction, IsString, IsDenseList, IsDenseList ] );
+#! @Arguments quiver_cat, description
 DeclareOperation( "Quiver", [ IsFunction, IsString ] );
+#! @Arguments quiver_cat, label_with_patterns_list, num_vertices, vertex_labels, arrows
+DeclareOperation( "Quiver", [ IsFunction, IsDenseList, IsPosInt, IsList, IsDenseList ] );
+#! @Arguments quiver_cat, label, vertex_labels, arrow_labels, source_indices, target_indices
+DeclareOperation( "Quiver", [ IsFunction, IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
+#! @EndGroup Quiver
 
 DeclareOperation( "DecomposeQuiverDescriptionString", [ IsString ] );
 DeclareOperation( "ParseLabelPatternString", [ IsString ] );
 DeclareOperation( "ApplyLabelPattern", [ IsDenseList, IsPosInt ] );
+DeclareOperation( "MakeLabelsFromPatternObj", [ IsDenseList, IsPosInt, IsList ] );
+
+#! @BeginGroup MakeLabelsFromPattern
+#! @Description
+#!  Make a list of <A>n</A> labels (for vertices or arrows)
+#!  from the pattern <A>pattern</A>.
+#!  The argument <A>fixed_labels</A> may be used to specify some
+#!  labels that deviate from the pattern.
+#! @Arguments pattern, n
+DeclareOperation( "MakeLabelsFromPattern", [ IsString, IsPosInt ] );
+#! @Arguments pattern, n, fixed_labels
+DeclareOperation( "MakeLabelsFromPattern", [ IsString, IsPosInt, IsList ] );
+#! @EndGroup MakeLabelsFromPattern
+
 DeclareOperation( "ParseStringAsLabel", [ IsString ] );
 DeclareOperation( "ParseQuiverLabelString", [ IsString ] );
 DeclareOperation( "ParseVerticesDescriptionString", [ IsString ] );
