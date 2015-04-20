@@ -1,5 +1,8 @@
 #! @Chapter Quivers
 
+BindGlobal( "FamilyOfPaths", NewFamily( "paths" ) );
+BindGlobal( "FamilyOfQuivers", CollectionsFamily( FamilyOfPaths ) );
+
 DeclareRepresentation( "IsVertexRep", IsComponentObjectRep,
                        [ "quiver", "number" ] );
 DeclareRepresentation( "IsArrowRep", IsComponentObjectRep,
@@ -367,7 +370,7 @@ InstallMethod( Quiver,
                  IsDenseList, IsDenseList ],
 function( quiver_cat, label, vertex_labels, arrow_labels,
           source_indices, target_indices )
-  local num_vertices, num_arrows, path_cat, path_fam, quiver_fam, quiver_type,
+  local num_vertices, num_arrows, path_cat, quiver_type,
         Q, vertex_type, make_vertex, arrow_type, make_arrow;
   num_vertices := Length( vertex_labels );
   num_arrows := Length( arrow_labels );
@@ -393,14 +396,11 @@ function( quiver_cat, label, vertex_labels, arrow_labels,
     Error( "Empty quiver label" );
   fi;
 
-  path_fam := NewFamily( Concatenation( "paths of ", label ) );
-  quiver_fam := CollectionsFamily( path_fam );
-
-  quiver_type := NewType( quiver_fam, quiver_cat and IsQuiverRep );
+  quiver_type := NewType( FamilyOfQuivers, quiver_cat and IsQuiverRep );
   Q := Objectify( quiver_type,
                   rec( label := label ) );
 
-  vertex_type := NewType( path_fam, IsVertex and IsVertexRep and path_cat );
+  vertex_type := NewType( FamilyOfPaths, IsVertex and IsVertexRep and path_cat );
   make_vertex := function( num, label )
     return Objectify( vertex_type,
                       rec( quiver := Q,
@@ -410,7 +410,7 @@ function( quiver_cat, label, vertex_labels, arrow_labels,
   Q!.vertices := ListN( [ 1 .. num_vertices ], vertex_labels,
                         make_vertex );
 
-  arrow_type := NewType( path_fam, IsArrow and IsArrowRep and path_cat );
+  arrow_type := NewType( FamilyOfPaths, IsArrow and IsArrowRep and path_cat );
   make_arrow := function( num, label, source_index, target_index )
     if ( not IsPosInt( source_index ) ) or source_index > num_vertices then
       Error( "Source of arrow ", label, " is not int in correct range" );
@@ -1302,6 +1302,7 @@ InstallMethod( \in, "for object and quiver",
                ReturnFalse );
 
 InstallMethod( \in, "for path and quiver",
-               IsElmsColls,
                [ IsPath, IsQuiver ],
-               ReturnTrue );
+function( p, Q )
+  return QuiverOfPath( p ) = Q;
+end );
