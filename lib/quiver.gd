@@ -39,17 +39,18 @@ DeclareCategory( "IsVertex", IsPrimitivePath );
 #!
 DeclareCategory( "IsArrow", IsNontrivialPath and IsPrimitivePath );
 
-#! @BeginGroup IsQuiver
 #! @Description
 #!  Every quiver is in the category <C>IsQuiver</C>.
-#!  Additionally, a left-oriented quiver is in the category <C>IsLeftQuiver</C>,
+#!  Additionally, a left-oriented quiver is in the category
+#!  <Ref Filt="IsLeftQuiver"/>,
 #!  and a right-oriented quiver is in the category <C>IsRightQuiver</C>.
 DeclareCategory( "IsQuiver", CategoryCollections( IsPath ) );
-#!
+#! @Description
+#!  Category for left-oriented quivers.
 DeclareCategory( "IsLeftQuiver", IsQuiver );
-#!
+#! @Description
+#!  Category for right-oriented quivers.
 DeclareCategory( "IsRightQuiver", IsQuiver );
-#! @EndGroup
 
 
 #! @Section Constructing quivers
@@ -57,6 +58,172 @@ DeclareCategory( "IsRightQuiver", IsQuiver );
 #! @BeginGroup LeftQuiver
 #! @Description
 #!  Constructor for left-oriented quivers.
+#!  <P/>
+#!  The three first forms of the constructor are the most useful ones for
+#!  interactive use and for creating specific quivers in programs.
+#!  The two last forms are mainly intended for use in programmatic generation
+#!  of quivers, that is, for functions that create quivers based on some
+#!  dynamic data.
+#!  <P/>
+#!  In the first form, the quiver is specified by a label (an arbitrary name for the quiver),
+#!  the number of vertices, and a list of lists describing the arrows;
+#!  for example <C>LeftQuiver( "Q", 2, [ [ 'a', 1, 2 ], [ 'b', 2, 1 ] ] )</C>.
+#!  The first argument can optionally contain patterns for automatic labelling
+#!  of vertices and arrows, for example:
+#!  <C>LeftQuiver( "Q(u1)[a]", 2, [ [ "u1", "u2" ], [ "u2", "u1" ] ] )</C>.
+#!  <P/>
+#!  In the second form of the constructor, the vertices are specified by
+#!  a list of labels instead of just a number.
+#!  The number of vertices is determined by the length of this list.
+#!  For example: <C>LeftQuiver( "Q", [ 'u', 'v' ], [ [ 'a', 'u', 'v' ], [ 'b', 'v', 'u' ] ] )</C>.
+#!  <P/>
+#!  In the third form, the quiver is described by just one string,
+#!  for example: <C>LeftQuiver( "Q(u,v)[a:u->v,b:v->u]" )</C>.
+#!  <P/>
+#!  In the fourth form, the number of vertices and the labels for vertices are
+#!  given as separate arguments.
+#!  This makes it possible to assign labels to only some of the vertices,
+#!  and let the rest be labelled automatically.
+#!  Additionally, this form of the constructor takes the quiver label
+#!  and the patterns for labels of vertices and arrows as a list of three strings,
+#!  instead of a single string.
+#!  <P/>
+#!  In the last form of the constructor, the source and target vertices of each arrow
+#!  must be specified by indices, and not by labels
+#!  (all other forms of the constructor accept both labels and indices).
+#!  This makes it possible to unambigously use indices even if
+#!  the vertices have integers as labels.
+#!  <P/>
+#!  The arguments to the <C>LeftQuiver</C> constructor have the following meanings:
+#!  <List>
+#!  <Mark><A>label_with_patterns</A></Mark>
+#!  <Item>
+#!  A string containing a label for the quiver (this is just an arbitrary
+#!  name decided by the user or program who creates the quiver),
+#!  optionally followed by patterns for labelling the vertices and arrows.
+#!  The pattern for vertices, if present, is enclosed by parentheses: ();
+#!  the pattern for arrows, if present, is enclosed by brackets: [].
+#!  If both patterns are present, then the pattern for vertices should appear
+#!  before the one for arrows.
+#!  <P/>
+#!  For example, the value can be <C>"Q"</C> to give the quiver the label <Q>Q</Q>
+#!  and use the default pattern for vertices and no pattern for arrows;
+#!  or <C>"Q(0)"</C> to give the vertices labels 0, 1, 2, ...;
+#!  or <C>"Q[a]"</C> to give the arrows labels 'a', 'b', 'c', ...;
+#!  or <C>"Q(u1)[alpha_1]"</C> to give the vertices labels "u1", "u2", "u3", ...,
+#!  and the arrows labels "alpha_1", "alpha_2", "alpha_3", ....
+#!  <P/>
+#!  For vertices, the default pattern is <C>"1"</C>, which means that the
+#!  vertices are labelled with positive integers 1, 2, 3, ....
+#!  For arrows, there is no default pattern;
+#!  if the arrow pattern is not specified, then every arrow must be assigned a label explicitly.
+#!  <P/>
+#!  Writing an empty string as a pattern is equivalent to not specifying the pattern
+#!  (for example, <C>"Q()[]"</C> is equivalent to <C>"Q"</C>).
+#!  </Item>
+#!  <Mark><A>num_vertices</A></Mark>
+#!  <Item>
+#!  The number of vertices in the quiver.
+#!  </Item>
+#!  <Mark><A>arrows</A></Mark>
+#!  <Item>
+#!  A list of arrow descriptions.
+#!  Each arrow is described by either a list
+#!  <C>[ label, source, target ]</C>
+#!  or a list
+#!  <C>[ source, target ]</C>,
+#!  where <C>label</C> is the label of the arrow (an arbitrary object),
+#!  source is the label or index of the source vertex,
+#!  and target is the label or index of the target vertex.
+#!  If the second form (without label) is used for some arrows,
+#!  then a pattern for labelling the arrows must be specified in
+#!  the argument <A>label_with_patterns</A> (or <A>label_with_patterns_list</A>).
+#!  </Item>
+#!  <Mark><A>vertex_labels</A></Mark>
+#!  <Item>
+#!  A list of labels for the vertices, given in the order of the vertices.
+#!  Each label is an arbitrary object.
+#!  All the labels should be distinct, and they should also be different from
+#!  all arrow labels.
+#!  <P/>
+#!  When the argument <A>num_vertices</A> is not used, the number of vertices
+#!  is determined by the length of the list <A>vertex_labels</A>.
+#!  In this case, the list must be dense.
+#!  <P/>
+#!  When used together with the argument <A>num_vertices</A>, the list <A>vertex_labels</A>
+#!  must not be longer than <A>num_vertices</A>, but it may be shorter, and it may
+#!  contain holes.
+#!  In this case, the vertices which are not present in the list are assigned
+#!  labels automatically according to the vertex label pattern specified
+#!  (if no pattern is specified, then they are labelled 1, 2, 3, ...).
+#!  </Item>
+#!  <Mark><A>description</A></Mark>
+#!  <Item>
+#!  A string containing all the information needed for creating the quiver.
+#!  The string contains first the label for the quiver,
+#!  then a specification of the vertices, enclosed in parentheses,
+#!  then a specification of the arrows, enclosed in brackets.
+#!  <P/>
+#!  The specification of the vertices has one of the following forms:
+#!  <List>
+#!  <Item>
+#!  A positive integer, which is the number of vertices.
+#!  With this form, the vertices are labelled in the default way, with integers 1, 2, 3, ... .
+#!  </Item>
+#!  <Item>
+#!  A label for each vertex, separated by commas.
+#!  </Item>
+#!  <Item>
+#!  Two patterns of the same form, separated by <Q>..</Q>, specifying a range.
+#!  For example, the vertex specification <C>"u1..u4"</C> produces
+#!  four vertices labelled <C>"u1"</C>, <C>"u2"</C>, <C>"u3"</C>, <C>"u4"</C>.
+#!  The vertex specification <C>"g..k"</C> produces five vertices labelled
+#!  <C>'g'</C>, <C>'h'</C>, <C>'i'</C>, <C>'j'</C>, <C>'k'</C>.
+#!  </Item>
+#!  </List>
+#!  The specification of the arrows contains descriptions of the form
+#!  <C>"label:source->target"</C> for each arrow, separated by commas.
+#!  <P/>
+#!  As an example of a complete quiver description string, the string
+#!  <C>"Q(3)[a:1->2,b:2->3]"</C>
+#!  describes a quiver named <Q>Q</Q>,
+#!  with three vertices labelled 1, 2, 3,
+#!  and two arrows 'a' and 'b'.
+#!  </Item>
+#!  <Mark><A>label_with_patterns_list</A></Mark>
+#!  <Item>
+#!  Contains the same information as the argument <A>label_with_patterns</A>,
+#!  but as a list <C>[ label, vertex_pattern, arrow_pattern ]</C>
+#!  of three strings.
+#!  Each of the strings <C>vertex_pattern</C> and <C>arrow_pattern</C> may be
+#!  the empty string.
+#!  For the vertex pattern, the empty string is equivalent to the string "1",
+#!  meaning that the vertices are labelled with positive integers 1, 2, 3, ....
+#!  For the arrow pattern, the empty string means that no pattern is used,
+#!  and thus every arrow needs to be labelled explicitly.
+#!  </Item>
+#!  <Mark><A>label</A></Mark>
+#!  <Item>
+#!  The label for the quiver.
+#!  </Item>
+#!  <Mark><A>arrow_labels</A></Mark>
+#!  <Item>
+#!  A dense list containing labels for all the arrows.
+#!  The number of arrows is determined by the length of this list,
+#!  which must be the same as the lengths of the lists
+#!  <A>source_indices</A> and <A>target_indices</A>.
+#!  </Item>
+#!  <Mark><A>source_indices</A></Mark>
+#!  <Item>
+#!  A dense list containing the source vertex of each arrow,
+#!  given as a positive integer (the index of the vertex).
+#!  </Item>
+#!  <Mark><A>target_indices</A></Mark>
+#!  <Item>
+#!  A dense list containing the target vertex of each arrow,
+#!  given as a positive integer (the index of the vertex).
+#!  </Item>
+#!  </List>
 #! @Arguments label_with_patterns, num_vertices, arrows
 DeclareOperation( "LeftQuiver", [ IsString, IsPosInt, IsDenseList ] );
 #! @Arguments label_with_patterns, vertex_labels, arrows
@@ -72,6 +239,10 @@ DeclareOperation( "LeftQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseLis
 #! @BeginGroup RightQuiver
 #! @Description
 #!  Constructor for right-oriented quivers.
+#!  <P/>
+#!  This works exactly like <Ref Oper="LeftQuiver"/>, except that the quiver
+#!  is right-oriented (that is, the convention for order in multiplication of
+#!  paths is the opposite of that used for left-oriented quivers).
 #! @Arguments label_with_patterns, num_vertices, arrows
 DeclareOperation( "RightQuiver", [ IsString, IsPosInt, IsDenseList ] );
 #! @Arguments label_with_patterns, vertex_labels, arrows
@@ -88,12 +259,12 @@ DeclareOperation( "RightQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseLi
 #! @Description
 #!  Constructor for quivers.
 #!  <P/>
-#!  These operations are exactly the same as <C>LeftQuiver</C>
-#!  and <C>RightQuiver</C>, except that they have an additional
+#!  These operations are exactly the same as <Ref Oper="LeftQuiver"/>
+#!  and <Ref Oper="RightQuiver"/>, except that they have an additional
 #!  first argument <A>quiver_cat</A>, which specifies whether the
 #!  quiver should be left- or right-oriented.
-#!  The value of this argument should be either <C>IsLeftQuiver</C>
-#!  or <C>IsRightQuiver</C>.
+#!  The value of this argument should be either <Ref Filt="IsLeftQuiver"/>
+#!  or <Ref Filt="IsRightQuiver"/>.
 #! @Arguments quiver_cat, label_with_patterns, num_vertices, arrows
 DeclareOperation( "Quiver", [ IsFunction, IsString, IsPosInt, IsDenseList ] );
 #! @Arguments quiver_cat, label_with_patterns, vertex_labels, arrows
@@ -149,7 +320,7 @@ DeclareAttribute( "Label", IsQuiver );
 #!  The ordering of the list corresponds to the ordering of the vertices
 #!  in the quiver.
 #!  That is, the vertex at position <C>i</C> in the list has number <C>i</C>
-#!  (see <C>VertexNumber</C>) and is the vertex which is returned by
+#!  (see <Ref Attr="VertexNumber" Label="for IsVertex"/>) and is the vertex which is returned by
 #!  <C>Vertex( <A>Q</A>, i )</C>.
 #! @Arguments Q
 #! @Returns list of <C>IsVertex</C>
