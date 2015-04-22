@@ -529,8 +529,6 @@ DeclareOperation( "Composable", [ IsPath, IsPath ] );
 #!  then <C><A>p1</A> * <A>p2</A></C> will return <C>fail</C>.
 DeclareOperation( "ComposableLR", [ IsPath, IsPath ] );
 
-DeclareOperation( "FoldLeft", [ IsList, IsFunction ] );
-
 #! @BeginGroup PathFromArrowList
 #! @Arguments list
 #! @Description

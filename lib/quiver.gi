@@ -730,7 +730,7 @@ function( arg )
   else
     list := arg;
   fi;
-  return FoldLeft( list, ComposePaths2 );
+  return Iterated( list, ComposePaths2 );
 end );
 
 InstallGlobalFunction( ComposePathsLR,
@@ -741,18 +741,7 @@ function( arg )
   else
     list := arg;
   fi;
-  return FoldLeft( list, \* );
-end );
-
-InstallMethod( FoldLeft, "for list and function",
-               [ IsList, IsFunction ],
-function( list, f )
-  local result, i;
-  result := list[ 1 ];
-  for i in [ 2 .. Length( list ) ] do
-    result := f( result, list[ i ] );
-  od;
-  return result;
+  return Iterated( list, \* );
 end );
 
 #! @Section Composition of paths
