@@ -379,15 +379,11 @@ DeclareAttribute( "ArrowTargetIndices", IsQuiver );
 #! @Returns list of <C>IsPrimitivePath</C>
 DeclareAttribute( "PrimitivePaths", IsQuiver );
 
-#! @BeginGroup Vertex
 #! @Description
 #!  The vertex with number <A>i</A> in the quiver <A>Q</A>.
 #! @Arguments Q, i
 #! @Returns <C>IsVertex</C>
 DeclareOperation( "Vertex", [ IsQuiver, IsPosInt ] );
-#! @Arguments Q, i
-DeclareOperation( "\[\]", [ IsQuiver, IsObject ] );
-#! @EndGroup
 
 #! @Description
 #!  The arrow with number <A>i</A> in the quiver <A>Q</A>.
@@ -400,13 +396,13 @@ DeclareOperation( "Arrow", [ IsQuiver, IsPosInt ] );
 #!  Returns the primitive path (vertex or arrow) of the quiver <A>Q</A>
 #!  which has <A>label</A> as label, if any.
 #!  If no such path exists, then <C>fail</C> is returned.
-#!  The operation <C><A>Q</A>^<A>label</A></C> is equivalent to
+#!  The operation <C><A>Q</A>[ <A>label</A> ]</C> is equivalent to
 #!  <C>PrimitivePathByLabel( <A>Q</A>, <A>label</A> )</C>.
 #! @Returns <C>IsPrimitivePath</C> or <C>fail</C>
 #! @Arguments Q, label
 DeclareOperation( "PrimitivePathByLabel", [ IsQuiver, IsObject ] );
 #! @Arguments Q, label
-DeclareOperation( "\^", [ IsQuiver, IsObject ] );
+DeclareOperation( "\[\]", [ IsQuiver, IsObject ] );
 #! @EndGroup
 
 #!

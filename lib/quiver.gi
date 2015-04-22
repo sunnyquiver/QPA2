@@ -1131,13 +1131,7 @@ end );
 
 InstallMethod( \[\], "for quiver and object",
 	       [ IsQuiver, IsObject ],
-function( Q, label )
-  return PrimitivePathByLabel( Q, label );
-end );
-
-InstallMethod( \^, "for quiver and object",
-	       [ IsQuiver, IsObject ],
-	       PrimitivePathByLabel );
+               PrimitivePathByLabel );
 
 InstallMethod( PathFromString, "for quiver and string",
 	       [ IsQuiver, IsString ],
