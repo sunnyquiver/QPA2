@@ -483,20 +483,6 @@ DeclareAttribute( "ArrowNumber", IsArrow );
 
 #! @Section Composition of paths
 
-#! @BeginGroup Composable
-#! @Arguments p1, p2
-#! @Returns <C>true</C> or <C>false</C>
-#! @Description
-#!  Checks if the paths <A>p1</A> and <A>p2</A> can be composed.
-#!  <P/>
-#!  If <C>Composable( p1, p2 )</C> returns <C>true</C>,
-#!  then the operation <C>ComposePaths( p1, p2 )</C> succeeds.
-#!  If <C>ComposableLR( p1, p2 )</C> returns <C>true</C>,
-#!  then the operation <C>p1 * p2</C> succeeds.
-DeclareOperation( "Composable", [ IsPath, IsPath ] );
-DeclareOperation( "ComposableLR", [ IsPath, IsPath ] );
-#! @EndGroup
-
 #! @BeginGroup ComposePathsGroup
 #! @Arguments p_1, p_2, ..., p_n
 #! @Returns <C>IsPath</C> or <C>fail</C>
@@ -517,6 +503,31 @@ DeclareOperation( "ComposePaths2", [ IsPath, IsPath ] );
 #! @EndGroup
 
 #! @InsertChunk PathMultiplication
+
+#! @Arguments p1, p2
+#! @Returns <C>true</C> or <C>false</C>
+#! @Description
+#!  Checks if the paths <A>p1</A> and <A>p2</A> can be composed
+#!  in source-to-target order;
+#!  that is, if the target of <A>p1</A> equals the source of <A>p2</A>.
+#!  <P/>
+#!  If this operation returns <C>true</C>,
+#!  then calling <C>Compose( <A>p1</A>, <A>p2</A> )</C> will produce a path.
+#!  If this operation returns <C>false</C>,
+#!  then <C>Compose( <A>p1</A>, <A>p2</A> )</C> will return <C>fail</C>.
+DeclareOperation( "Composable", [ IsPath, IsPath ] );
+
+#! @Arguments p1, p2
+#! @Returns <C>true</C> or <C>false</C>
+#! @Description
+#!  Checks if the paths <A>p1</A> and <A>p2</A> can be composed
+#!  in multiplication order.
+#!  <P/>
+#!  If this operation returns <C>true</C>,
+#!  then <C><A>p1</A> * <A>p2</A></C> will produce a path.
+#!  If this operation returns <C>false</C>,
+#!  then <C><A>p1</A> * <A>p2</A></C> will return <C>fail</C>.
+DeclareOperation( "ComposableLR", [ IsPath, IsPath ] );
 
 DeclareOperation( "FoldLeft", [ IsList, IsFunction ] );
 
