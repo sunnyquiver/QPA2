@@ -406,8 +406,8 @@ end );
 DeclareRepresentation( "IsPathAlgebraRep", IsComponentObjectRep,
                        [ "field", "quiver" ] );
 
-InstallOtherMethod( PathAlgebra, "for field and quiver",
-                    [ IsField, IsQuiver ],
+InstallMethod( PathAlgebra, "for field and quiver",
+               [ IsField, IsQuiver ],
 function( k, Q )
   local elementFam, algebraFam, algebraType, A;
   # TODO: algebra should have its own elements family,
@@ -581,8 +581,8 @@ end );
 DeclareRepresentation( "IsQuotientOfPathAlgebraRep", IsComponentObjectRep,
                        [ "pathAlgebra", "relations", "ideal" ] );
 
-InstallMethod( QuotientOfPathAlgebra, "for path algebra and collection",
-               [ IsPathAlgebra, IsCollection ],
+InstallMethod( QuotientOfPathAlgebra, "for path algebra and homogeneous list",
+               [ IsPathAlgebra, IsHomogeneousList ],
 function( A, relations )
   local I;
   I := TwoSidedIdealByGenerators( A, relations );
@@ -615,6 +615,10 @@ end );
 
 InstallMethod( \/, "for path algebra and path ideal",
                [ IsPathAlgebra, IsPathIdeal ],
+               QuotientOfPathAlgebra );
+
+InstallMethod( \/, "for path algebra and path ideal",
+               [ IsPathAlgebra, IsHomogeneousList ],
                QuotientOfPathAlgebra );
 
 InstallMethod( QuiverOfAlgebra, "for quotient of path algebra",
