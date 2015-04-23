@@ -490,17 +490,27 @@ function( A )
                              vertices );
 end );
 
+InstallMethod( AlgebraElementFromString, "for quiver algebra and string",
+               [ IsQuiverAlgebra, IsString ],
+function( A, string )
+  return PathAsAlgebraElement( A, PathFromString( QuiverOfAlgebra( A ), string ) );
+end );
+
 InstallMethod( \., "for quiver algebra and positive integer",
 	       [ IsQuiverAlgebra, IsPosInt ],
 function( A, string_as_int )
   return PathAsAlgebraElement( A, \.( QuiverOfAlgebra( A ), string_as_int ) );
 end );
 
-InstallMethod( \[\], "for quiver algebra and int",
-	       [ IsQuiverAlgebra, IsInt ],
-function( A, i )
-  return PathAsAlgebraElement( A, QuiverOfAlgebra( A )[ i ] );
+InstallMethod( AlgebraElementByLabel, "for quiver algebra and object",
+               [ IsQuiverAlgebra, IsObject ],
+function( A, label )
+  return PathAsAlgebraElement( A, PrimitivePathByLabel( QuiverOfAlgebra( A ), label ) );
 end );
+
+InstallMethod( \[\], "for quiver algebra and int",
+	       [ IsQuiverAlgebra, IsObject ],
+               AlgebraElementByLabel );
 
 
 DeclareRepresentation( "IsPathIdealRep", IsComponentObjectRep,
