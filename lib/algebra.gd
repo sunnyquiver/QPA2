@@ -43,6 +43,8 @@ DeclareCategory( "IsQuotientOfPathAlgebra", IsQuiverAlgebra );
 #!  using the quiver <A>Q</A>.
 DeclareOperation( "PathAlgebra", [ IsField, IsQuiver ] );
 
+#! @InsertChunk Example_PathAlgebra
+
 #! @BeginGroup QuotientOfPathAlgebra
 #! @Description
 #!  Constructs a quotient of a path algebra.
@@ -69,6 +71,7 @@ DeclareOperation( "\/", [ IsPathAlgebra, IsPathIdeal ] );
 DeclareOperation( "\/", [ IsPathAlgebra, IsHomogeneousList ] );
 #! @EndGroup
 
+#! @InsertChunk Example_QuotientOfPathAlgebra
 
 #! @Section Information about an algebra
 
