@@ -1220,6 +1220,16 @@ function( Q )
     vertices := String( NumberOfVertices( Q ) );
   else
     vertices := JoinStringsWithSeparator( Vertices( Q ), "," );
+    if NumberOfVertices( Q ) = 1 and IsPosInt( Label( Vertex( Q, 1 ) ) ) then
+      # When we have only one vertex, and it has a positive integer as label,
+      # we add a comma to make it clear that this is in fact a listing of labels
+      # and not the number of vertices.
+      vertices := Concatenation( vertices, "," );
+      # For example, consider the following two quivers:
+      #   LeftQuiver("Q",4,[['a',4,4]]);
+      #   LeftQuiver("Q",[4],[['a',4,4]]);
+      # (the first has four vertices, the second has one vertex labelled 4)
+    fi;
   fi;
   arrows := JoinStringsWithSeparator( Arrows( Q ), "," );
   return Concatenation( Label( Q ), "(", vertices, ")[", arrows, "]" );
