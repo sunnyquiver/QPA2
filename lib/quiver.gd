@@ -2,7 +2,7 @@
 
 #! @Section Categories for paths and quivers
 
-#! @BeginGroup IsPath
+#! @BeginGroup IsPathGroup
 #! @Description
 #!  Every path is in the category <C>IsPath</C>.
 #!  Additionally, every path in a left-oriented quiver is in
@@ -56,6 +56,7 @@ DeclareCategory( "IsRightQuiver", IsQuiver );
 #! @Section Constructing quivers
 
 #! @BeginGroup LeftQuiver
+#! @Returns <Ref Filt="IsLeftQuiver"/>
 #! @Description
 #!  Constructor for left-oriented quivers.
 #!  <P/>
@@ -239,6 +240,7 @@ DeclareOperation( "LeftQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseLis
 #! @InsertChunk Example_LeftQuiver
 
 #! @BeginGroup RightQuiver
+#! @Returns <Ref Filt="IsLeftQuiver"/>
 #! @Description
 #!  Constructor for right-oriented quivers.
 #!  <P/>
@@ -260,6 +262,7 @@ DeclareOperation( "RightQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseLi
 #! @InsertChunk Example_RightQuiver
 
 #! @BeginGroup Quiver
+#! @Returns <Ref Filt="IsQuiver"/>
 #! @Description
 #!  Constructor for quivers.
 #!  <P/>
@@ -289,6 +292,7 @@ DeclareOperation( "ApplyLabelPattern", [ IsDenseList, IsPosInt ] );
 DeclareOperation( "MakeLabelsFromPatternObj", [ IsDenseList, IsPosInt, IsList ] );
 
 #! @BeginGroup MakeLabelsFromPattern
+#! @Returns list
 #! @Description
 #!  Make a list of <A>n</A> labels (for vertices or arrows)
 #!  from the pattern <A>pattern</A>.
@@ -337,7 +341,7 @@ DeclareAttribute( "Label", IsQuiver );
 #!  (see <Ref Attr="VertexNumber" Label="for IsVertex"/>) and is the vertex which is returned by
 #!  <C>Vertex( <A>Q</A>, i )</C>.
 #! @Arguments Q
-#! @Returns list of <C>IsVertex</C>
+#! @Returns list of <Ref Filt="IsVertex"/>
 DeclareAttribute( "Vertices", IsQuiver );
 
 #! @Description
@@ -349,7 +353,7 @@ DeclareAttribute( "Vertices", IsQuiver );
 #!  (see <C>ArrowNumber</C>) and is the arrow which is returned by
 #!  <C>Arrow( <A>Q</A>, i )</C>.
 #! @Arguments Q
-#! @Returns list of <C>IsArrow</C>
+#! @Returns list of <Ref Filt="IsArrow"/>
 DeclareAttribute( "Arrows", IsQuiver );
 
 #! @Description
@@ -390,7 +394,7 @@ DeclareAttribute( "ArrowTargetIndices", IsQuiver );
 #!  <C>PrimitivePaths( <A>Q</A> ) =
 #!     Concatenation( Vertices( <A>Q</A> ), Arrows( <A>Q</A> ) )</C>.
 #! @Arguments Q
-#! @Returns list of <C>IsPrimitivePath</C>
+#! @Returns list of <Ref Filt="IsPrimitivePath"/>
 DeclareAttribute( "PrimitivePaths", IsQuiver );
 
 #! @Description
@@ -402,7 +406,7 @@ DeclareOperation( "Vertex", [ IsQuiver, IsPosInt ] );
 #! @Description
 #!  The arrow with number <A>i</A> in the quiver <A>Q</A>.
 #! @Arguments Q, i
-#! @Returns <C>IsArrow</C>
+#! @Returns <Ref Filt="IsArrow"/>
 DeclareOperation( "Arrow", [ IsQuiver, IsPosInt ] );
 
 #! @BeginGroup PrimitivePathByLabel
@@ -412,7 +416,7 @@ DeclareOperation( "Arrow", [ IsQuiver, IsPosInt ] );
 #!  If no such path exists, then <C>fail</C> is returned.
 #!  The operation <C><A>Q</A>[ <A>label</A> ]</C> is equivalent to
 #!  <C>PrimitivePathByLabel( <A>Q</A>, <A>label</A> )</C>.
-#! @Returns <C>IsPrimitivePath</C> or <C>fail</C>
+#! @Returns <Ref Filt="IsPrimitivePath"/> or <C>fail</C>
 #! @Arguments Q, label
 DeclareOperation( "PrimitivePathByLabel", [ IsQuiver, IsObject ] );
 #! @Arguments Q, label
@@ -427,12 +431,13 @@ DeclareOperation( "PathFromString", [ IsQuiver, IsString ] );
 #! @Section Information about a path
 
 #! @Arguments p
-#! @Returns IsQuiver
+#! @Returns <Ref Filt="IsQuiver"/>
 #! @Description
 #!  The quiver containing the path <A>p</A>.
 DeclareAttribute( "QuiverOfPath", IsPath );
 
 #! @BeginGroup PathEnds
+#! @Returns <Ref Filt="IsVertex"/>
 #! @Description
 #!  The **source** of a path is the vertex where the path starts;
 #!  the **target** of a path is the vertex where the path ends.
@@ -477,6 +482,7 @@ DeclareAttribute( "LabelAsString", IsPrimitivePath );
 DeclareGlobalFunction( "QPA_LABEL_TO_STRING" );
 
 #! @Arguments v
+#! @Returns positive integer
 #! @Description
 #!  The number of the vertex <A>v</A>.
 #!  In a quiver with $n$ vertices, the vertices are assigned
@@ -484,6 +490,7 @@ DeclareGlobalFunction( "QPA_LABEL_TO_STRING" );
 DeclareAttribute( "VertexNumber", IsVertex );
 
 #! @Arguments a
+#! @Returns positive integer
 #! @Description
 #!  The number of the arrow <A>a</A>.
 #!  In a quiver with $m$ arrows, the arrows are assigned
@@ -495,7 +502,7 @@ DeclareAttribute( "ArrowNumber", IsArrow );
 
 #! @BeginGroup ComposePathsGroup
 #! @Arguments p_1, p_2, ..., p_n
-#! @Returns <C>IsPath</C> or <C>fail</C>
+#! @Returns <Ref Filt="IsPath"/> or <C>fail</C>
 #! @Description
 #!  Compose the paths <A>p_1</A>, <A>p_2</A>, ..., <A>p_n</A>, if possible.
 #!  <P/>
@@ -541,6 +548,7 @@ DeclareOperation( "ComposableLR", [ IsPath, IsPath ] );
 
 #! @BeginGroup PathFromArrowList
 #! @Arguments list
+#! @Returns <Ref Filt="IsPath"/>
 #! @Description
 #!  Combine the arrows in the list <A>list</A> to a path.
 #!  This operation is used internally.
@@ -561,6 +569,7 @@ DeclareOperation( "PathFromArrowListNC", [ IsList ] );
 #! @Section Decomposition of paths
 
 #! @BeginGroup ArrowList
+#! @Returns list of <Ref Filt="IsArrow"/>
 #! @Arguments p
 #! @Description
 #!  The path <A>p</A> decomposed as a list of arrows.
@@ -571,6 +580,7 @@ DeclareAttribute( "ArrowListLR", IsPath );
 #! @EndGroup
 
 #! @BeginGroup DecomposePath
+#! @Returns list of <Ref Filt="IsPrimitivePath"/>
 #! @Arguments p
 #! @Description
 #!  The path <A>p</A> decomposed as a list of primitive paths.
@@ -598,7 +608,7 @@ DeclareAttribute( "AsListLR", IsPath );
 #!  This is a path of length <C><A>to</A> - <A>from</A></C>.
 #!  In particular, if <C><A>from</A> = <A>to</A></C>, then the result
 #!  is a vertex.
-#! @Returns <C>IsPath</C>
+#! @Returns <Ref Filt="IsPath"/>
 #! @Arguments p, from to
 DeclareOperation( "Subpath", [ IsPath, IsInt, IsInt ] );
 #! @Arguments p, from to
@@ -624,7 +634,7 @@ DeclareOperation( "SubpathLR", [ IsPath, IsInt, IsInt ] );
 #!  This means that in a left-oriented quiver, the rightmost occurence is found,
 #!  while in a right-oriented quiver, the leftmost occurence is found.
 #! @Arguments p, q
-#! @Returns integer or <C>fail</C>
+#! @Returns nonnegative integer or <C>fail</C>
 DeclareOperation( "SubpathIndex", [ IsPath, IsPath ] );
 DeclareOperation( "SubpathIndexLR", [ IsPath, IsPath ] );
 #! @EndGroup
