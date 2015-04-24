@@ -167,6 +167,12 @@ function( pattern, n, given_labels )
                                    n, given_labels );
 end );
 
+InstallMethod( MakeLabelsFromPattern,
+               [ IsString, IsPosInt ],
+function( pattern, n )
+  return MakeLabelsFromPattern( pattern, n, [] );
+end );
+
 InstallMethod( ParseQuiverLabelString,
                [ IsString ],
 function( string )
