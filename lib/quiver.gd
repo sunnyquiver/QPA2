@@ -236,6 +236,8 @@ DeclareOperation( "LeftQuiver", [ IsDenseList, IsPosInt, IsList, IsDenseList ] )
 DeclareOperation( "LeftQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup
 
+#! @InsertChunk Example_LeftQuiver
+
 #! @BeginGroup RightQuiver
 #! @Description
 #!  Constructor for right-oriented quivers.
@@ -254,6 +256,8 @@ DeclareOperation( "RightQuiver", [ IsDenseList, IsPosInt, IsList, IsDenseList ] 
 #! @Arguments label, vertex_labels, arrow_labels, source_indices, target_indices
 DeclareOperation( "RightQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup
+
+#! @InsertChunk Example_RightQuiver
 
 #! @BeginGroup Quiver
 #! @Description
@@ -277,6 +281,8 @@ DeclareOperation( "Quiver", [ IsFunction, IsDenseList, IsPosInt, IsList, IsDense
 DeclareOperation( "Quiver", [ IsFunction, IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup Quiver
 
+#! @InsertChunk Example_Quiver
+
 DeclareOperation( "DecomposeQuiverDescriptionString", [ IsString ] );
 DeclareOperation( "ParseLabelPatternString", [ IsString ] );
 DeclareOperation( "ApplyLabelPattern", [ IsDenseList, IsPosInt ] );
@@ -288,11 +294,19 @@ DeclareOperation( "MakeLabelsFromPatternObj", [ IsDenseList, IsPosInt, IsList ] 
 #!  from the pattern <A>pattern</A>.
 #!  The argument <A>fixed_labels</A> may be used to specify some
 #!  labels that deviate from the pattern.
+#!  <P/>
+#!  This is useful in combination with the quiver constructors
+#!  that have the arguments
+#!  <A>vertex_labels</A>, <A>arrow_labels</A>, <A>source_indices</A>, and <A>target_indices</A>.
+#!  This operation gives a convenient way to produce the lists
+#!  <A>vertex_labels</A> and <A>arrow_labels</A>.
 #! @Arguments pattern, n
 DeclareOperation( "MakeLabelsFromPattern", [ IsString, IsPosInt ] );
 #! @Arguments pattern, n, fixed_labels
 DeclareOperation( "MakeLabelsFromPattern", [ IsString, IsPosInt, IsList ] );
 #! @EndGroup MakeLabelsFromPattern
+
+#! @InsertChunk Example_MakeLabelsFromPattern
 
 DeclareOperation( "ParseStringAsLabel", [ IsString ] );
 DeclareOperation( "ParseQuiverLabelString", [ IsString ] );
