@@ -21,3 +21,15 @@ kQ / TwoSidedIdealByGenerators( kQ, [ kQ.ca - kQ.ba ] );
 #! ( Rationals * Q ) / [ 1*(c*a) + -1*(b*a) ]
 #! @EndExample
 #! @EndChunk
+
+#! @BeginChunk Example_PathAlgebraElement
+#! @BeginExample
+kQ := PathAlgebra( Rationals, LeftQuiver( "Q(3)[a:1->2,b:2->3,c:2->3]" ) );
+#! Rationals * Q
+PathAlgebraElement( kQ, [ 2, -1, 1/5 ], [ Q.a, Q.ba, Q[1] ] );
+#! -1*(b*a) + 2*(a:1->2) + 1/5*(1)
+PathAlgebraElement( kQ, [ 2, 3/2 ], [ Q.a, Q.a ] );
+#! 7/2*(a:1->2)
+#! @EndExample
+#! @EndChunk
+

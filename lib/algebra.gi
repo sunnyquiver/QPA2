@@ -1,7 +1,9 @@
 DeclareRepresentation( "IsPathAlgebraElementRep", IsComponentObjectRep,
                        [ "algebra", "paths", "coefficients" ] );
 
-InstallGlobalFunction( PathAlgebraElement,
+InstallMethod( PathAlgebraElement,
+               "for path algebra and homogeneous lists",
+               [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ],
 function( algebra, coefficients, paths )
   local field, Q, Cs, Ps, Cs_, Ps_, p, i, nonzeroIndices;
   field := LeftActingDomain( algebra );
@@ -33,7 +35,9 @@ function( algebra, coefficients, paths )
   return PathAlgebraElementNC( algebra, Cs, Ps );
 end );
 
-InstallGlobalFunction( PathAlgebraElementNC,
+InstallMethod( PathAlgebraElementNC,
+               "for path algebra and homogeneous lists",
+               [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ],
 function( algebra, coefficients, paths )
   return Objectify( NewType( ElementsFamily( FamilyObj( algebra ) ),
                              IsPathAlgebraElement and IsPathAlgebraElementRep ),

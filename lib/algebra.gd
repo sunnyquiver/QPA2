@@ -110,13 +110,33 @@ DeclareAttribute( "PathAlgebra", IsQuiverAlgebra );
 #! @Section Accessing algebra elements
 
 #! @BeginGroup PathAlgebraElement
+#! @Returns <Ref Filt="IsPathAlgebraElement"/>
 #! @Description
 #!  Creates an element of a path algebra.
+#!  <P/>
+#!  The argument <A>kQ</A> is a path algebra,
+#!  <A>paths</A> is a list of paths in the quiver of <A>kQ</A>,
+#!  and <A>coefficients</A> a list of coefficients.
+#!  The lists <A>paths</A> and <A>coefficients</A> must have the same length.
+#!  If the paths are $p_1, \ldots, p_n$
+#!  and the coefficients are $c_1, \ldots, c_n$,
+#!  then the result is the linear combination
+#!  $\sum_{i=1}^n c_i p_i$.
+#!  <P/>
+#!  For the operation <C>PathAlgebraElement</C>,
+#!  the elements in <A>paths</A> may be listed in any order,
+#!  and the same paths can occur several times in the list.
+#!  The operation <C>PathAlgebraElementNC</C> assumes that
+#!  the list of paths is sorted in decreasing order
+#!  (by the path ordering of the quiver)
+#!  and does not have any duplicates.
 #! @Arguments kQ, coefficients, paths
-DeclareGlobalFunction( "PathAlgebraElement" );
+DeclareOperation( "PathAlgebraElement", [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ] );
 #! @Arguments kQ, coefficients, paths
-DeclareGlobalFunction( "PathAlgebraElementNC" );
+DeclareOperation( "PathAlgebraElementNC", [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ] );
 #! @EndGroup
+
+#! @InsertChunk Example_PathAlgebraElement
 
 #! @Arguments A, e
 #! @Description
