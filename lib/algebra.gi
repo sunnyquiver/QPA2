@@ -49,6 +49,9 @@ end );
 InstallMethod( PathAsAlgebraElement, "for path algebra and path",
                [ IsPathAlgebra, IsPath ],
 function( A, p )
+  if QuiverOfPath( p ) <> QuiverOfAlgebra( A ) then
+    Error( "Path from wrong quiver" );
+  fi;
   return PathAlgebraElementNC( A, [ One( LeftActingDomain( A ) ) ], [ p ] );
 end );
 
@@ -326,8 +329,8 @@ function( f, g )
   return overlapRelations;
 end );
 
-InstallMethod( TipReduce, "for collection",
-               [ IsCollection ],
+InstallMethod( TipReduce, "for list",
+               [ IsHomogeneousList ],
 function( relations )
   local iteration, limit, len, didReductions, i, j, q, lc_i, lc_j, r;
   len := Length( relations );
@@ -368,7 +371,7 @@ function( relations )
 end );
 
 InstallMethod( ComputeGroebnerBasis, "for list",
-               [ IsList ],
+               [ IsHomogeneousList ],
 function( relations )
   local basis, newRelations, basisLen, i, j, overlapRelations, r,
         remainder, qr,
