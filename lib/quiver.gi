@@ -9,7 +9,7 @@ DeclareRepresentation( "IsArrowRep", IsComponentObjectRep,
                        [ "quiver", "label", "number", "source", "target" ] );
 DeclareRepresentation( "IsCompositePathRep", IsComponentObjectRep,
                        [ "arrows" ] );
-DeclareRepresentation( "IsQuiverRep", IsComponentObjectRep,
+DeclareRepresentation( "IsQuiverRep", IsComponentObjectRep and IsAttributeStoringRep,
 		       [ "label", "vertices", "arrows", "primitive_paths",
 		         "vertices_desc", "arrows_desc"] );
 
@@ -1064,6 +1064,9 @@ end );
 
 
 
+InstallMethod( QuiverCategory, [ IsLeftQuiver ], Q -> IsLeftQuiver );
+InstallMethod( QuiverCategory, [ IsRightQuiver ], Q -> IsRightQuiver );
+
 InstallMethod( Vertices,
                "for quiver",
 	       [ IsQuiver and IsQuiverRep ],
@@ -1077,6 +1080,9 @@ InstallMethod( Arrows,
 function( Q )
   return Q!.arrows;
 end );
+
+InstallMethod( VertexLabels, [ IsQuiver ], Q -> List( Vertices( Q ), Label ) );
+InstallMethod( ArrowLabels, [ IsQuiver ], Q -> List( Arrows( Q ), Label ) );
 
 InstallMethod( NumberOfVertices,
                "for quiver",
@@ -1255,14 +1261,29 @@ function( Q )
   return Q!.label;
 end );
 
-InstallMethod( \=,
-               "for vertices",
+InstallMethod( \=, "for vertices",
  	       [ IsVertex and IsVertexRep, IsVertex and IsVertexRep ],
-	       IsIdenticalObj );
+function( v1, v2 )
+  return QuiverOfPath( v1 ) = QuiverOfPath( v2 )
+         and VertexNumber( v1 ) = VertexNumber( v2 );
+end );
+
 InstallMethod( \=,
                "for arrows",
  	       [ IsArrow and IsArrowRep, IsArrow and IsArrowRep ],
-	       IsIdenticalObj );
+function( a1, a2 )
+  return QuiverOfPath( a1 ) = QuiverOfPath( a2 )
+         and ArrowNumber( a1 ) = ArrowNumber( a2 );
+end );
+
+# InstallMethod( \=, "for vertices",
+#                [ IsVertex and IsVertexRep, IsVertex and IsVertexRep ],
+#                IsIdenticalObj );
+
+# InstallMethod( \=, "for arrows",
+#                [ IsArrow and IsArrowRep, IsArrow and IsArrowRep ],
+#                IsIdenticalObj );
+
 InstallMethod( \=,
                "for vertex and nontrivial path",
  	       [ IsVertex, IsNontrivialPath ],
@@ -1304,4 +1325,57 @@ InstallMethod( \in, "for path and quiver",
                [ IsPath, IsQuiver ],
 function( p, Q )
   return QuiverOfPath( p ) = Q;
+end );
+
+
+InstallMethod( OppositeQuiver,
+               [ IsQuiver ],
+function( Q )
+  return Quiver( QuiverCategory( Q ),
+                 Concatenation( Label( Q ), "_op" ),
+                 VertexLabels( Q ),
+                 ArrowLabels( Q ),
+                 ArrowTargetIndices( Q ),
+                 ArrowSourceIndices( Q ) );
+end );
+
+InstallMethod( OppositePath,
+               [ IsVertex ],
+function( v )
+  return Vertex( OppositeQuiver( QuiverOfPath( v ) ), VertexNumber( v ) );
+end );
+
+InstallMethod( OppositePath,
+               [ IsArrow ],
+function( a )
+  return Arrow( OppositeQuiver( QuiverOfPath( a ) ), ArrowNumber( a ) );
+end );
+
+InstallMethod( OppositePath,
+               [ IsCompositePath ],
+function( p )
+  return PathFromArrowListNC( Reversed( List( ArrowList( p ), OppositePath ) ) );
+end );
+
+InstallMethod( QuiverProduct,
+               [ IsQuiver, IsQuiver ],
+function( Q, R )
+  local nQ, nR, make_index;
+  if QuiverCategory( Q ) <> QuiverCategory( R ) then
+    Error( "Quivers in quiver product must have same orientation" );
+  fi;
+  nQ := NumberOfVertices( Q );
+  nR := NumberOfVertices( R );
+  make_index := L -> nQ * ( L[ 1 ] - 1 ) + L[ 2 ];
+  return Quiver( QuiverCategory( Q ),
+                 Concatenation( Label( Q ), "_X_", Label( R ) ),
+                 Cartesian( VertexLabels( Q ), VertexLabels( R ) ),
+                 Concatenation( Cartesian( VertexLabels( Q ), ArrowLabels( R ) ),
+                                Cartesian( ArrowLabels( Q ), VertexLabels( R ) ) ),
+                 List( Concatenation( Cartesian( [ 1 .. nQ ], ArrowSourceIndices( R ) ),
+                                      Cartesian( ArrowSourceIndices( Q ), [ 1 .. nR ] ) ),
+                       make_index ),
+                 List( Concatenation( Cartesian( [ 1 .. nQ ], ArrowTargetIndices( R ) ),
+                                      Cartesian( ArrowTargetIndices( Q ), [ 1 .. nR ] ) ),
+                       make_index ) );
 end );

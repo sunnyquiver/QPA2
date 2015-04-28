@@ -124,10 +124,11 @@ function( e )
            Paths( e ) );
 end );
 
-InstallMethod( \=, "for elements of path algebra", IsIdenticalObj,
+InstallMethod( \=, "for elements of path algebra",
                [ IsPathAlgebraElement, IsPathAlgebraElement ],
 function( e1, e2 )
-  return Paths( e1 ) = Paths( e2 )
+  return AlgebraOfElement( e1 ) = AlgebraOfElement( e2 )
+         and Paths( e1 ) = Paths( e2 )
          and Coefficients( e1 ) = Coefficients( e2 );
 end );
 
@@ -410,7 +411,7 @@ function( relations )
 end );
 
 
-DeclareRepresentation( "IsPathAlgebraRep", IsComponentObjectRep,
+DeclareRepresentation( "IsPathAlgebraRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "field", "quiver" ] );
 
 InstallMethod( PathAlgebra, "for field and quiver",
@@ -520,7 +521,7 @@ InstallMethod( \[\], "for quiver algebra and int",
                AlgebraElementByLabel );
 
 
-DeclareRepresentation( "IsPathIdealRep", IsComponentObjectRep,
+DeclareRepresentation( "IsPathIdealRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "algebra", "generators", "groebnerBasis" ] );
 
 InstallMethod( TwoSidedIdealByGenerators, "for path algebra and collection",
@@ -585,7 +586,7 @@ function( e, I )
 end );
 
 
-DeclareRepresentation( "IsQuotientOfPathAlgebraRep", IsComponentObjectRep,
+DeclareRepresentation( "IsQuotientOfPathAlgebraRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "pathAlgebra", "relations", "ideal" ] );
 
 InstallMethod( QuotientOfPathAlgebra, "for path algebra and homogeneous list",
@@ -735,10 +736,11 @@ function( e, A )
   return A = AlgebraOfElement( e );
 end );
 
-InstallMethod( \=, "for elements of quotient of path algebra", IsIdenticalObj,
+InstallMethod( \=, "for elements of quotient of path algebra",
                [ IsQuotientOfPathAlgebraElement, IsQuotientOfPathAlgebraElement ],
 function( e1, e2 )
-  return Representative( e1 ) = Representative( e2 );
+  return AlgebraOfElement( e1 ) = AlgebraOfElement( e2 )
+         and Representative( e1 ) = Representative( e2 );
 end );
 
 InstallMethod( AdditiveInverse, "for element of quotient of path algebra",
@@ -775,4 +777,55 @@ function( c, e )
   else
     TryNextMethod();
   fi;
+end );
+
+InstallMethod( \=, "for path algebras",
+               [ IsPathAlgebra, IsPathAlgebra ],
+function( A, B )
+  return ( LeftActingDomain( A ) = LeftActingDomain( B ) )
+         and ( QuiverOfAlgebra( A ) = QuiverOfAlgebra( B ) );
+end );
+
+InstallMethod( \=, "for quotients of path algebras",
+               [ IsQuotientOfPathAlgebra, IsQuotientOfPathAlgebra ],
+function( A, B )
+  return ( PathAlgebra( A ) = PathAlgebra( B ) )
+         and ( RelationsOfAlgebra( A ) = RelationsOfAlgebra( B ) );
+end );
+
+InstallMethod( \=, "for path algebra and quotient of path algebra",
+               [ IsPathAlgebra, IsQuotientOfPathAlgebra ],
+               ReturnFalse );
+
+InstallMethod( \=, "for quotient of path algebra and path algebra",
+               [ IsQuotientOfPathAlgebra, IsPathAlgebra ],
+               ReturnFalse );
+
+InstallMethod( OppositeAlgebra,
+               [ IsPathAlgebra ],
+function( A )
+  return PathAlgebra( LeftActingDomain( A ), OppositeQuiver( QuiverOfAlgebra( A ) ) );
+end );
+
+InstallMethod( OppositeAlgebra,
+               [ IsQuotientOfPathAlgebra ],
+function( A )
+  return QuotientOfPathAlgebra( OppositeAlgebra( PathAlgebra( A ) ),
+                                List( RelationsOfAlgebra( A ), OppositeAlgebraElement ) );
+end );
+
+InstallMethod( OppositeAlgebraElement,
+               [ IsPathAlgebraElement ],
+function( e )
+  return PathAlgebraElement( OppositeAlgebra( AlgebraOfElement( e ) ),
+                             Coefficients( e ),
+                             List( Paths( e ), OppositePath ) );
+end );
+
+InstallMethod( OppositeAlgebraElement,
+               [ IsQuotientOfPathAlgebraElement ],
+function( e )
+  return QuotientOfPathAlgebraElement
+         ( OppositeAlgebra( AlgebraOfElement( e ) ),
+           OppositeAlgebraElement( Representative( e ) ) );
 end );

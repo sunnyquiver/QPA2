@@ -329,6 +329,13 @@ DeclareOperation( "SplitStringSubstring", [ IsString, IsString ] );
 #! @Returns <C>IsString</C>
 DeclareAttribute( "Label", IsQuiver );
 
+#! @Arguments Q
+#! @Returns category
+#! @Description
+#!  Returns the category <A>Q</A> belongs to;
+#!  either <Ref Filt="IsLeftQuiver"/> or <Ref Filt="IsRightQuiver"/>.
+DeclareAttribute( "QuiverCategory", IsQuiver );
+
 
 #! @Section Accessing paths in a quiver
 
@@ -355,6 +362,24 @@ DeclareAttribute( "Vertices", IsQuiver );
 #! @Arguments Q
 #! @Returns list of <Ref Filt="IsArrow"/>
 DeclareAttribute( "Arrows", IsQuiver );
+
+#! @Description
+#!  Returns the labels of the vertices of the quiver <A>Q</A> as a list.
+#!  <P/>
+#!  The ordering of the list corresponds to the ordering of the vertices
+#!  in the quiver.
+#! @Arguments Q
+#! @Returns list
+DeclareAttribute( "VertexLabels", IsQuiver );
+
+#! @Description
+#!  Returns the arrows of the quiver <A>Q</A> as a list.
+#!  <P/>
+#!  The ordering of the list corresponds to the ordering of the arrows
+#!  in the quiver.
+#! @Arguments Q
+#! @Returns list
+DeclareAttribute( "ArrowLabels", IsQuiver );
 
 #! @Description
 #!  The number of vertices in the quiver <A>Q</A>.
@@ -687,3 +712,24 @@ DeclareOperation( "\/", [ IsPath, IsPath ] );
 DeclareOperation( "PathOverlaps", [ IsPath, IsPath ] );
 
 #! @InsertChunk Example_PathOverlaps
+
+
+#! @Section Quiver constructions
+
+#! @Arguments Q
+#! @Returns <Ref Filt="IsQuiver"/>
+#! @Description
+#!  Returns the opposite quiver of <A>Q</A>.
+DeclareAttribute( "OppositeQuiver", IsQuiver );
+
+#! @Arguments p
+#! @Returns <Ref Filt="IsPath"/>
+#! @Description
+#!  Returns the path corresponding to <A>p</A> in the opposite quiver.
+DeclareAttribute( "OppositePath", IsPath );
+
+#! @Arguments Q, R
+#! @Returns <Ref Filt="IsQuiver"/>
+#! @Description
+#!  Returns the product quiver of <A>Q</A> and <A>R</A>.
+DeclareOperation( "QuiverProduct", [ IsQuiver, IsQuiver ] );

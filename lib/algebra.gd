@@ -382,4 +382,24 @@ DeclareOperation( "ComputeGroebnerBasis", [ IsHomogeneousList ] );
 #!  A Groebner basis for the ideal <A>I</A>.
 DeclareAttribute( "GroebnerBasis", IsPathIdeal );
 
+#! @Section Algebra constructions
+
+#! @Arguments A
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+#! @Description
+#!  Returns the opposite algebra of <A>A</A>.
+DeclareAttribute( "OppositeAlgebra", IsQuiverAlgebra );
+
+#! @Arguments e
+#! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
+#! @Description
+#!  Returns the element corresponding to <A>e</A> in the opposite algebra.
+DeclareAttribute( "OppositeAlgebraElement", IsQuiverAlgebraElement );
+
+#! @Arguments A, B
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+#! @Description
+#!  Returns the tensor product of the quiver algebras <A>A</A> and <A>B</A>.
+DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
+
 #
