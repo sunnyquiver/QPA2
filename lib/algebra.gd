@@ -253,6 +253,17 @@ DeclareProperty( "IsUniform", IsQuiverAlgebraElement );
 DeclareAttribute( "Representative", IsQuotientOfPathAlgebraElement );
 
 
+#! @Section Manipulation of elements
+
+#! @Arguments e, A, f
+#! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
+#! @Description
+#!  Translate the element <A>e</A> to an element in the
+#!  quiver algebra <A>A</A> by using the function <A>f</A>
+#!  on each path.
+DeclareOperation( "TranslateAlgebraElement", [ IsQuiverAlgebraElement, IsQuiverAlgebra, IsFunction ] );
+
+
 #! @Section Operations related to Groebner basis theory
 
 #! @Arguments e
@@ -401,5 +412,7 @@ DeclareAttribute( "OppositeAlgebraElement", IsQuiverAlgebraElement );
 #! @Description
 #!  Returns the tensor product of the quiver algebras <A>A</A> and <A>B</A>.
 DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
+
+DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 
 #

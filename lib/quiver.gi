@@ -609,6 +609,18 @@ function( v )
   return v!.label;
 end );
 
+InstallMethod( TranslatePath,
+               [ IsPrimitivePath, IsFunction ],
+function( p, f )
+  return f( p );
+end );
+
+InstallMethod( TranslatePath,
+               [ IsCompositePath, IsFunction ],
+function( p, f )
+  return PathFromArrowList( List( ArrowList( p ), f ) );
+end );
+
 InstallMethod( Label,
                "for arrow",
 	       [ IsArrow and IsArrowRep ],
@@ -1177,25 +1189,30 @@ function( Q, string_as_int )
   return PathFromString( Q, NameRNam( string_as_int ) );
 end );
 
-InstallMethod( String, "for vertex",
-               [ IsVertex ],
+InstallMethod( String, "for primitive path",
+               [ IsPrimitivePath ],
                LabelAsString );
 
-InstallMethod( ViewObj,
-               "for vertex",
-	       [ IsVertex ],
-function( v )
-  Print( "(", String( v ), ")" );
+InstallMethod( String, "for composite path",
+               [ IsCompositePath ],
+function( p )
+  return JoinStringsWithSeparator( List( ArrowListLR( p ), LabelAsString ), "*" );
+end );
+
+InstallMethod( ViewObj, "for path",
+	       [ IsPath ],
+function( p )
+  Print( "(", String( p ), ")" );
 end );
 
 InstallMethod( PrintObj,
                "for vertex",
-	       [ IsVertex and IsVertexRep ],
+	       [ IsVertex ],
 function( v )
-  Print( "<vertex ", Label( v ), " in ", Label( QuiverOfPath( v ) ), ">" );
+  Print( "<vertex ", Label( v ), " in ", LabelAsString( QuiverOfPath( v ) ), ">" );
 end );
 
-InstallMethod( String, "for arrow",
+InstallMethod( ArrowString, "for arrow",
                [ IsArrow ],
 function( a )
   return Concatenation( LabelAsString( a ), ":",
@@ -1203,30 +1220,20 @@ function( a )
                         String( Target( a ) ) );
 end );
 
-InstallMethod( ViewObj,
-               "for arrow",
-	       [ IsArrow and IsArrowRep ],
-function( a )
-#  Print( "(", [Label( a )], ": ", VertexNumber( Source( a ) ), " -> ", VertexNumber( Target( a ) ), ")" );
-  Print( "(", String( a ), ")" );
-end );
-
 InstallMethod( PrintObj,
                "for arrow",
-	       [ IsArrow and IsArrowRep ],
+	       [ IsArrow ],
 function( a )
   Print( "<arrow ", String( a ),
-         " in ", Label( QuiverOfPath( a ) ), ">" );
+         " in ", LabelAsString( QuiverOfPath( a ) ), ">" );
 end );
 
 InstallMethod( PrintObj,
                "for composite path",
-	       [ IsCompositePath and IsCompositePathRep ],
+	       [ IsCompositePath ],
 function( p )
-  Print( "(",
-         Iterated( List( ArrowListLR( p ), LabelAsString ),
-                   function( a1, a2 ) return Concatenation( a1, "*", a2 ); end ),
-         ")" );
+  Print( "<composite path ", String( p ), " in ",
+         LabelAsString( QuiverOfPath( p ) ), ">" );
 end );
 
 InstallMethod( String, "for quiver",
@@ -1249,7 +1256,7 @@ function( Q )
       # (the first has four vertices, the second has one vertex labelled 4)
     fi;
   fi;
-  arrows := JoinStringsWithSeparator( Arrows( Q ), "," );
+  arrows := JoinStringsWithSeparator( List( Arrows( Q ), ArrowString ), "," );
   return Concatenation( LabelAsString( Q ), "(", vertices, ")[", arrows, "]" );
 end );
 
@@ -1366,15 +1373,15 @@ end );
 InstallMethod( QuiverProduct,
                [ IsQuiver, IsQuiver ],
 function( Q, R )
-  local nQ, nR, make_index;
+  local nQ, nR, make_index, QxR;
   if QuiverCategory( Q ) <> QuiverCategory( R ) then
     Error( "Quivers in quiver product must have same orientation" );
   fi;
   nQ := NumberOfVertices( Q );
   nR := NumberOfVertices( R );
-  make_index := L -> nQ * ( L[ 1 ] - 1 ) + L[ 2 ];
-  return Quiver( QuiverCategory( Q ),
-                 Concatenation( Label( Q ), "_X_", Label( R ) ),
+  make_index := L -> nR * ( L[ 1 ] - 1 ) + L[ 2 ];
+  QxR := Quiver( QuiverCategory( Q ),
+                 [ Label( Q ), Label( R ) ],
                  Cartesian( VertexLabels( Q ), VertexLabels( R ) ),
                  Concatenation( Cartesian( VertexLabels( Q ), ArrowLabels( R ) ),
                                 Cartesian( ArrowLabels( Q ), VertexLabels( R ) ) ),
@@ -1384,4 +1391,254 @@ function( Q, R )
                  List( Concatenation( Cartesian( [ 1 .. nQ ], ArrowTargetIndices( R ) ),
                                       Cartesian( ArrowTargetIndices( Q ), [ 1 .. nR ] ) ),
                        make_index ) );
+  SetIsProductQuiver( QxR, true );
+  SetProductQuiverFactors( QxR, [ Q, R ] );
+  return QxR;
+end );
+
+InstallMethod( QuiverProduct,
+               [ IsHomogeneousList ],
+function( L )
+  if Length( L ) = 2 then
+    return QuiverProduct( L[ 1 ], L[ 2 ] );
+  fi;
+  Error( "not implemented" );
+end );
+
+InstallMethod( IsProductQuiver,
+               [ IsQuiver ],
+function( Q )
+  return ProductQuiverFactors( Q ) <> fail;
+end );
+
+InstallMethod( ProductQuiverFactors,
+               [ IsQuiver ],
+function( Q )
+  local num_factors, vertex_labels, num_vertices, num_arrows,
+        arrow_part_sizes, arrow_labels, sources, targets, p, s,
+        vertex_index, source_index, target_index, n, na, i, Qs;
+
+  if not IsList( Label( Q ) ) then
+    return fail;
+  fi;
+
+  num_factors := Length( Label( Q ) );
+  if not ForAll( PrimitivePaths( Q ),
+                 p -> IsList( Label( p ) ) and
+                      Length( Label( p ) ) = num_factors ) then
+    return fail;
+  fi;
+
+  vertex_labels := Decartesian( List( Vertices( Q ), Label ) );
+  num_vertices := List( vertex_labels, Length );
+  num_arrows := [];
+  arrow_part_sizes := [];
+  arrow_labels := List( [ 1 .. num_factors ], i -> [] );
+  sources := List( [ 1 .. num_factors ], i -> [] );
+  targets := List( [ 1 .. num_factors ], i -> [] );
+  p := 1;
+  s := 0;
+  vertex_index := function( label, n )
+    local i;
+    for i in [ 1 .. num_vertices[ n ] ] do
+      if vertex_labels[ n ][ i ] = label then
+        return i;
+      fi;
+    od;
+    Print( "No vertex with label ", label, " (labels are ", vertex_labels[n], ")\n" );
+    return fail; # or Error?
+  end;
+  source_index := function( i, n )
+    return vertex_index( Label( Source( Arrow( Q, i ) ) )[ n ], n );
+  end;
+  target_index := function( i, n )
+    return vertex_index( Label( Target( Arrow( Q, i ) ) )[ n ], n );
+  end;
+  for n in [ num_factors, num_factors - 1 .. 1 ] do
+    na := 0;
+    for i in [ s + p, s + 2 * p .. NumberOfArrows( Q ) ] do
+      if i > s + p and Label( Arrow( Q, i ) )[ n ] = arrow_labels[ n ][ 1 ] then
+        break;
+      else
+        na := na + 1;
+        arrow_labels[ n ][ na ] := Label( Arrow( Q, i ) )[ n ];
+        sources[ n ][ na ] := source_index( i, n );
+        targets[ n ][ na ] := target_index( i, n );
+      fi;
+    od;
+    num_arrows[ n ] := na;
+    arrow_part_sizes[ n ] := NumberOfVertices( Q ) / num_vertices[ n ] * na;
+    p := p * num_vertices[ n ];
+    s := s + arrow_part_sizes[ n ];
+  od;
+
+  Qs := ListN( List( [ 1 .. num_factors ], i -> QuiverCategory( Q ) ),
+               Label( Q ),
+               vertex_labels,
+               arrow_labels,
+               sources,
+               targets,
+               Quiver );
+
+  if QuiverProduct( Qs ) = Q then
+    return Qs;
+  else
+    return fail;
+  fi;
+end );
+
+InstallMethod( ProductQuiverFactor,
+               [ IsProductQuiver, IsPosInt ],
+function( PQ, n )
+  return ProductQuiverFactors( PQ )[ n ];
+end );
+
+InstallMethod( Decartesian,
+               [ IsList ],
+function( L )
+  local num_factors, lengths, length_products, p, total_length,
+        n, e, len, i, lists;
+  total_length := Length( L );
+  if total_length = 0 then
+    return fail;
+  fi;
+  num_factors := Length( L[ 1 ] );
+  if not ForAll( L, l -> IsList( l ) and Length( l ) = num_factors ) then
+    #Print( "Different types of elements\n" );
+    return fail;
+  fi;
+  lengths := [];
+  length_products := [];
+  p := 1;
+  for n in [ num_factors, ( num_factors - 1 ) .. 1 ] do
+    e := L[ p ][ n ];
+    len := 1;
+    for i in [ 2 * p, 3 * p .. total_length ] do
+      if L[ i ][ n ] = L[ p ][ n ] then
+        break;
+      else
+        len := len + 1;
+      fi;
+    od;
+    lengths[ n ] := len;
+    #Print( "lengths[", n, "] = ", len, "\n" );
+    length_products[ n ] := p;
+    p := p * len;
+    if total_length mod p <> 0 then
+      #Print( "Bad length\n" );
+      return fail;
+    fi;
+  od;
+  if p <> total_length then
+    #Print( "Product of lengths not equal to total length\n" );
+    return fail;
+  fi;
+  lists := List( [ 1 .. num_factors ], i -> [] );
+  for n in [ 1 .. num_factors ] do
+    for i in [ 1 .. lengths[ n ] ] do
+      #Print( "(", n, ",", i, ")\n" );
+      lists[ n ][ i ] := L[ ( i - 1 ) * length_products[ n ] + 1 ][ n ];
+    od;
+  od;
+  for i in [ 1 .. total_length ] do
+    for n in [ 1 .. num_factors ] do
+      if lists[ n ][ ( QuoInt( i - 1, length_products[ n ] ) mod lengths[ n ] ) + 1 ]
+         <> L[ i ][ n ] then
+        # Print( "Wrong value at position ", [i,n], ", is ",
+        #        L[ i ][ n ],
+        #        ", should be ",
+        #        lists[ n ][ ( QuoInt( i - 1, length_products[ n ] ) mod lengths[ n ] ) + 1 ],
+        #        "\n" );
+        return fail;
+      fi;
+    od;
+  od;
+  return lists;
+end );
+
+InstallMethod( ProjectPathFromProductQuiver,
+               [ IsPosInt, IsPrimitivePath ],
+function( n, p )
+  local PQ;
+  PQ := QuiverOfPath( p );
+  if not IsProductQuiver( PQ ) then
+    Error( "The path ", p, " is not in a product quiver" );
+  fi;
+  return PrimitivePathByLabel( ProductQuiverFactor( PQ, n ),
+                               Label( p )[ n ] );
+end );
+
+InstallMethod( ProjectPathFromProductQuiver,
+               [ IsPosInt, IsCompositePath ],
+function( n, p )
+  return PathFromArrowList
+         ( List( ArrowList( p ),
+                 a -> ProjectPathFromProductQuiver( n, a ) ) );
+end );
+
+InstallMethod( IncludePathInProductQuiver,
+               [ IsProductQuiver, IsPosInt, IsList, IsPrimitivePath ],
+function( PQ, n, vertices, p )
+  local label, i;
+  if ProductQuiverFactor( PQ, n ) <> QuiverOfPath( p ) then
+    Error( "The path ", p, " is not in factor ", n, " of the product quiver" );
+  fi;
+  label := [];
+  label[ n ] := Label( p );
+  for i in [ 1 .. Length( ProductQuiverFactors( PQ ) ) ] do
+    if i = n then
+      continue;
+    elif not IsBound( vertices[ i ] ) then
+      Error( "Vertex ", i, " missing" );
+    elif not IsVertex( vertices[ i ] ) then
+      Error( "Element ", i, " in vertex list is not a vertex" );
+    elif ProductQuiverFactor( PQ, i ) <> QuiverOfPath( vertices[ i ] ) then
+      Error( "Vertex ", i, " is not in factor ", i, " of the product quiver" );
+    fi;
+    label[ i ] := Label( vertices[ i ] );
+  od;
+  return PrimitivePathByLabel( PQ, label );
+end );
+
+InstallMethod( IncludePathInProductQuiver,
+               [ IsProductQuiver, IsPosInt, IsList, IsCompositePath ],
+function( PQ, n, vertices, p )
+  return TranslatePath( p, a -> IncludePathInProductQuiver( PQ, n, vertices, a ) );
+end );
+
+InstallMethod( PathInProductQuiver,
+               [ IsProductQuiver, IsHomogeneousList, IsPerm ],
+function( PQ, paths, permutation )
+  local n, i, num_factors, sources, targets, included_paths, vertices, pos;
+  num_factors := Length( ProductQuiverFactors( PQ ) );
+  if Length( paths ) <> num_factors then
+    Error( "Product quiver has ", num_factors,
+           " factors, but ", Length( paths ), " paths were given" );
+  fi;
+  for n in [ 1 .. num_factors ] do
+    if ProductQuiverFactor( PQ, n ) <> QuiverOfPath( paths[ n ] ) then
+      Error( "Path ", n, " is not in factor ", n, " of the product quiver" );
+    fi;
+  od;
+  sources := List( paths, Source );
+  targets := List( paths, Target );
+  included_paths := [];
+  for n in [ 1 .. num_factors ] do
+    vertices := [];
+    pos := n^permutation;
+    for i in [ 1 .. ( pos - 1 ) ] do
+      vertices[ i/permutation ] := targets[ i/permutation ];
+    od;
+    for i in [ ( pos + 1 ) .. num_factors ] do
+      vertices[ i/permutation ] := sources[ i/permutation ];
+    od;
+    included_paths[ n ] := IncludePathInProductQuiver( PQ, n, vertices, paths[ n ] );
+  od;
+  return ComposePaths( Permuted( included_paths, permutation ) );
+end );
+
+InstallMethod( PathInProductQuiver,
+               [ IsProductQuiver, IsHomogeneousList ],
+function( PQ, paths )
+  return PathInProductQuiver( PQ, paths, () );
 end );

@@ -55,21 +55,37 @@ function( A, p )
   return PathAlgebraElementNC( A, [ One( LeftActingDomain( A ) ) ], [ p ] );
 end );
 
-InstallMethod( PrintObj, "for element of path algebra",
+InstallMethod( String, "for element of path algebra",
                [ IsPathAlgebraElement ],
 function( e )
-  local Cs, Ps, i;
+  local Cs, Ps, i, s;
   Cs := Coefficients( e );
   Ps := Paths( e );
   if Length( Ps ) = 0 then
-    Print( "0" );
-    return;
+    return "0";
   fi;
-  for i in [ 1 .. Length( Cs ) ] do
-    if i > 1 then Print( " + " ); fi;
-    Print( Cs[ i ], "*");
-    View( Ps[ i ] );
+  s := Concatenation( String( Cs[ 1 ] ), "*(", String( Ps[ 1 ] ), ")" );
+  for i in [ 2 .. Length( Cs ) ] do
+    if IsNegRat( Cs[ i ] ) then
+      s := Concatenation( s, " - ", String( - Cs[ i ] ) );
+    else
+      s := Concatenation( s, " + ", String( Cs[ i ] ) );
+    fi;
+    s := Concatenation( s, "*(", String( Ps[ i ] ), ")" );
   od;
+  return s;
+end );
+
+InstallMethod( PrintObj, "for element of path algebra",
+               [ IsPathAlgebraElement ],
+function( e )
+  Print( String( e ) );
+end );
+
+InstallMethod( ViewObj, "for element of path algebra",
+               [ IsPathAlgebraElement ],
+function( e )
+  Print( String( e ) );
 end );
 
 InstallMethod( AlgebraOfElement, "for element of path algebra",
@@ -214,6 +230,20 @@ function( e, c )
   else
     TryNextMethod();
   fi;
+end );
+
+InstallMethod( TranslateAlgebraElement,
+               [ IsQuiverAlgebraElement, IsPathAlgebra, IsFunction ],
+function( e, A, f )
+  return PathAlgebraElement( A, Coefficients( e ),
+                             List( Paths( e ), f ) );
+end );
+
+InstallMethod( TranslateAlgebraElement,
+               [ IsQuiverAlgebraElement, IsQuotientOfPathAlgebra, IsFunction ],
+function( e, A, f )
+  return QuotientOfPathAlgebraElement
+         ( A, TranslateAlgebraElement( e, PathAlgebra( A ), f ) );
 end );
 
 InstallMethod( LeadingPath, "for element of path algebra",
@@ -438,10 +468,17 @@ function( A )
          QuiverOfAlgebra( A ), ">" );
 end );
 
+InstallMethod( String, "for path algebra",
+               [ IsPathAlgebra ],
+function( A )
+  return Concatenation( String( LeftActingDomain( A ) ), " * ",
+                        LabelAsString( QuiverOfAlgebra( A ) ) );
+end );
+
 InstallMethod( ViewObj, "for path algebra",
                [ IsPathAlgebra ],
 function( A )
-  Print( LeftActingDomain( A ), " * ", Label( QuiverOfAlgebra( A ) ) );
+  Print( String( A ) );
 end );
 
 InstallMethod( QuiverOfAlgebra, "for path algebra",
@@ -614,11 +651,17 @@ function( A )
          QuiverOfAlgebra( A ), " / ", RelationsOfAlgebra( A ), ">" );
 end );
 
+InstallMethod( String, "for quotient of path algebra",
+               [ IsQuotientOfPathAlgebra ],
+function( A )
+  return Concatenation( "(", String( PathAlgebra( A ) ), ") / ",
+                        String( RelationsOfAlgebra( A ) ) );
+end );
+
 InstallMethod( ViewObj, "for quotient of path algebra",
                [ IsQuotientOfPathAlgebra ],
 function( A )
-  Print( "( ", LeftActingDomain( A ), " * ", Label( QuiverOfAlgebra( A ) ),
-         " ) / ", RelationsOfAlgebra( A ) );
+  Print( String( A ) );
 end );
 
 InstallMethod( \/, "for path algebra and path ideal",
@@ -828,4 +871,35 @@ function( e )
   return QuotientOfPathAlgebraElement
          ( OppositeAlgebra( AlgebraOfElement( e ) ),
            OppositeAlgebraElement( Representative( e ) ) );
+end );
+
+InstallMethod( TensorProductOfAlgebras,
+               [ IsQuiverAlgebra, IsQuiverAlgebra ],
+function( A, B )
+  local Qa, Qb, Q, kQ, commutativity_relations, rels_a, rels_b,
+        make_commutativity_relation, inc_rel_a, inc_rel_b;
+  if LeftActingDomain( A ) <> LeftActingDomain( B ) then
+    Error( "Algebras over different fields" );
+  fi;
+  Qa := QuiverOfAlgebra( A );
+  Qb := QuiverOfAlgebra( B );
+  Q := QuiverProduct( Qa, Qb );
+  kQ := PathAlgebra( LeftActingDomain( A ), Q );
+  make_commutativity_relation := function( list )
+    local comp1, comp2;
+    comp1 := PathAsAlgebraElement( kQ, PathInProductQuiver( Q, list, () ) );
+    comp2 := PathAsAlgebraElement( kQ, PathInProductQuiver( Q, list, (1,2) ) );
+    return comp1 - comp2;
+  end;
+  commutativity_relations := List( Cartesian( Arrows( Qa ), Arrows( Qb ) ),
+                                   make_commutativity_relation );
+  inc_rel_a := function( list )
+    return TranslateAlgebraElement( list[ 1 ], kQ, p -> PathInProductQuiver( Q, [ p, list[ 2 ] ] ) );
+  end;
+  inc_rel_b := function( list )
+    return TranslateAlgebraElement( list[ 2 ], kQ, p -> PathInProductQuiver( Q, [ list[ 1 ], p ] ) );
+  end;
+  rels_a := List( RelationsOfAlgebra( A ), inc_rel_a );
+  rels_b := List( RelationsOfAlgebra( B ), inc_rel_b );
+  return kQ / Concatenation( commutativity_relations, rels_a, rels_b );
 end );

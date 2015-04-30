@@ -505,6 +505,8 @@ DeclareAttribute( "Label", IsPrimitivePath );
 #! @Returns <C>IsString</C>
 DeclareAttribute( "LabelAsString", IsPrimitivePath );
 
+DeclareAttribute( "ArrowString", IsArrow );
+
 #! @Arguments Q
 #! @Description
 #!  The label of the quiver <A>Q</A>, as a string.
@@ -544,6 +546,9 @@ DeclareAttribute( "ArrowNumber", IsArrow );
 #!  The function <C>ComposePaths</C>, which takes an arbitrary number
 #!  of arguments, is implemented by repeated calls to the
 #!  two-argument operation <C>ComposePaths2</C>.
+#!  <P/>
+#!  The functions <C>ComposePaths</C> and <C>ComposePathsLR</C> can also
+#!  be called with a single argument, which is a list of paths.
 DeclareGlobalFunction( "ComposePaths" );
 #! @Arguments p_1, p_2, ..., p_n
 DeclareGlobalFunction( "ComposePathsLR" );
@@ -621,6 +626,12 @@ DeclareAttribute( "AsList", IsPath );
 DeclareAttribute( "AsListLR", IsPath );
 #! @EndGroup
 #! @InsertChunk Example_Decompose
+
+
+#! @Section Path manipulation
+
+#! @Arguments p, f
+DeclareOperation( "TranslatePath", [ IsPath, IsFunction ] );
 
 
 #! @Section Subpaths and path division
@@ -740,3 +751,29 @@ DeclareAttribute( "OppositePath", IsPath );
 #! @Description
 #!  Returns the product quiver of <A>Q</A> and <A>R</A>.
 DeclareOperation( "QuiverProduct", [ IsQuiver, IsQuiver ] );
+
+#! @Arguments L
+#! @Returns <Ref Filt="IsQuiver"/>
+#! @Description
+#!  Returns the product quiver of the quivers in the list <A>L</A>.
+DeclareOperation( "QuiverProduct", [ IsHomogeneousList ] );
+
+DeclareProperty( "IsProductQuiver", IsQuiver );
+
+DeclareAttribute( "ProductQuiverFactors", IsQuiver );
+
+DeclareOperation( "ProductQuiverFactor", [ IsProductQuiver, IsPosInt ] );
+
+#! @Arguments n, p
+DeclareOperation( "ProjectPathFromProductQuiver", [ IsPosInt, IsPath ] );
+
+#! @Arguments PQ, n, vertices, p
+DeclareOperation( "IncludePathInProductQuiver", [ IsProductQuiver, IsPosInt, IsList, IsPath ] );
+
+#! @Arguments PQ, paths, permutation
+DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsHomogeneousList, IsPerm ] );
+
+#! @Arguments PQ, paths
+DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsHomogeneousList ] );
+
+DeclareOperation( "Decartesian", [ IsList ] );
