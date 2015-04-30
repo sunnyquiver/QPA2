@@ -372,7 +372,7 @@ function( quiver_cat, label_with_patterns_list,
 end );
 
 InstallMethod( Quiver,
-               [ IsFunction, IsString, IsDenseList, IsDenseList,
+               [ IsFunction, IsObject, IsDenseList, IsDenseList,
                  IsDenseList, IsDenseList ],
 function( quiver_cat, label, vertex_labels, arrow_labels,
           source_indices, target_indices )
@@ -452,7 +452,7 @@ function()
                     [ IsString, IsDenseList, IsDenseList ],
                     [ IsString ],
                     [ IsDenseList, IsPosInt, IsList, IsDenseList ],
-                    [ IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] ];
+                    [ IsObject, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] ];
   for fl in filter_lists do
     InstallMethod( LeftQuiver, fl, left_quiver_func );
     InstallMethod( RightQuiver, fl, right_quiver_func );
@@ -634,6 +634,12 @@ InstallMethod( LabelAsString, "for primitive path",
                [ IsPrimitivePath ],
 function( p )
   return QPA_LABEL_TO_STRING( Label( p ) );
+end );
+
+InstallMethod( LabelAsString, "for quiver",
+               [ IsQuiver ],
+function( Q )
+  return QPA_LABEL_TO_STRING( Label( Q ) );
 end );
 
 InstallMethod( VertexNumber,
@@ -1244,7 +1250,7 @@ function( Q )
     fi;
   fi;
   arrows := JoinStringsWithSeparator( Arrows( Q ), "," );
-  return Concatenation( Label( Q ), "(", vertices, ")[", arrows, "]" );
+  return Concatenation( LabelAsString( Q ), "(", vertices, ")[", arrows, "]" );
 end );
 
 InstallMethod( PrintObj,

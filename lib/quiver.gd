@@ -94,6 +94,8 @@ DeclareCategory( "IsRightQuiver", IsQuiver );
 #!  (all other forms of the constructor accept both labels and indices).
 #!  This makes it possible to unambigously use indices even if
 #!  the vertices have integers as labels.
+#!  This form also allows the quiver label to be any object,
+#!  not necessarily a string.
 #!  <P/>
 #!  The arguments to the <C>LeftQuiver</C> constructor have the following meanings:
 #!  <List>
@@ -234,7 +236,7 @@ DeclareOperation( "LeftQuiver", [ IsString ] );
 #! @Arguments label_with_patterns_list, num_vertices, vertex_labels, arrows
 DeclareOperation( "LeftQuiver", [ IsDenseList, IsPosInt, IsList, IsDenseList ] );
 #! @Arguments label, vertex_labels, arrow_labels, source_indices, target_indices
-DeclareOperation( "LeftQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
+DeclareOperation( "LeftQuiver", [ IsObject, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup
 
 #! @InsertChunk Example_LeftQuiver
@@ -256,7 +258,7 @@ DeclareOperation( "RightQuiver", [ IsString ] );
 #! @Arguments label_with_patterns_list, num_vertices, vertex_labels, arrows
 DeclareOperation( "RightQuiver", [ IsDenseList, IsPosInt, IsList, IsDenseList ] );
 #! @Arguments label, vertex_labels, arrow_labels, source_indices, target_indices
-DeclareOperation( "RightQuiver", [ IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
+DeclareOperation( "RightQuiver", [ IsObject, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup
 
 #! @InsertChunk Example_RightQuiver
@@ -281,7 +283,7 @@ DeclareOperation( "Quiver", [ IsFunction, IsString ] );
 #! @Arguments quiver_cat, label_with_patterns_list, num_vertices, vertex_labels, arrows
 DeclareOperation( "Quiver", [ IsFunction, IsDenseList, IsPosInt, IsList, IsDenseList ] );
 #! @Arguments quiver_cat, label, vertex_labels, arrow_labels, source_indices, target_indices
-DeclareOperation( "Quiver", [ IsFunction, IsString, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
+DeclareOperation( "Quiver", [ IsFunction, IsObject, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup Quiver
 
 #! @InsertChunk Example_Quiver
@@ -326,7 +328,6 @@ DeclareOperation( "SplitStringSubstring", [ IsString, IsString ] );
 #! @Description
 #!  The label of the quiver <A>Q</A>.
 #! @Arguments Q
-#! @Returns <C>IsString</C>
 DeclareAttribute( "Label", IsQuiver );
 
 #! @Arguments Q
@@ -503,6 +504,12 @@ DeclareAttribute( "Label", IsPrimitivePath );
 #!  The label of the primitive path <A>p</A>, as a string.
 #! @Returns <C>IsString</C>
 DeclareAttribute( "LabelAsString", IsPrimitivePath );
+
+#! @Arguments Q
+#! @Description
+#!  The label of the quiver <A>Q</A>, as a string.
+#! @Returns <C>IsString</C>
+DeclareAttribute( "LabelAsString", IsQuiver );
 
 DeclareGlobalFunction( "QPA_LABEL_TO_STRING" );
 
