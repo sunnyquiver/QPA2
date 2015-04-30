@@ -6,17 +6,6 @@ LoadPackage( "QPA" );
 # f1:=A.xy-A.x;
 # f2 := A.xx-A.xz;
 
-Q := LeftQuiver( "Q", 6,
-                 [ [ 'a', 1, 4 ],
-                   [ 'b', 4, 5 ],
-                   [ 'c', 1, 2 ],
-                   [ 'd', 2, 5 ],
-                   [ 'e', 2, 3 ],
-                   [ 'f', 3, 6 ],
-                   [ 'g', 5, 6 ] ] );
-kQ := PathAlgebra( Rationals, Q );
-rels := [ kQ.dc - kQ.ba, kQ.gd - kQ.fe ];
-
 Q1 := LeftQuiver( "Q1(3)[a:1->2,b:2->3]" );
 Q1_ := LeftQuiver( "Q1[a]", 3, [[1,2], [2,3]] );
 Q2 := LeftQuiver( "Q2", 1, [['a', 1, 1]] );
@@ -60,6 +49,18 @@ rels5 := [ kQ5.abc + kQ5.di, kQ5.id + kQ5.iaf, kQ5.f * kQ5.i + kQ5.fgc + kQ5.bhi
            kQ5.bca + kQ5.fe, kQ5.gh + kQ5.gcd, kQ5.he + kQ5.hia + kQ5.cde ];
 
 
+Q6 := LeftQuiver( "Q", 6,
+                 [ [ 'a', 1, 4 ],
+                   [ 'b', 4, 5 ],
+                   [ 'c', 1, 2 ],
+                   [ 'd', 2, 5 ],
+                   [ 'e', 2, 3 ],
+                   [ 'f', 3, 6 ],
+                   [ 'g', 5, 6 ] ] );
+kQ6 := PathAlgebra( Rationals, Q6 );
+rels6 := [ kQ6.dc - kQ6.ba, kQ6.gd - kQ6.fe ];
+
+
 P1 := QuiverRepresentation( kQ1, [ 1, 1, 1 ],
                             [ [ [ 1 ] ],
                               [ [ 1 ] ] ] );
@@ -81,9 +82,23 @@ f := QuiverRepresentationHomomorphism( P2, P1, [ [[0]], [[1]], [[1]] ] );
 
 ZZ := ZeroRepresentation( kQ1 );
 
-QxQ := LeftQuiver( "QxQ",
-                   [ [1,1],[1,2],[2,1],[2,2] ],
-                   [ [['a',1],[1,1],[2,1]],
-                     [['a',2],[1,2],[2,2]],
-                     [[1,'a'],[1,1],[1,2]],
-                     [[2,'a'],[2,1],[2,2]] ] );
+QxQ_ := LeftQuiver( "QxQ",
+                    [ [1,1],[1,2],[2,1],[2,2] ],
+                    [
+                      [[1,'a'],[1,1],[1,2]],
+                      [[2,'a'],[2,1],[2,2]],
+                      [['a',1],[1,1],[2,1]],
+                      [['a',2],[1,2],[2,2]]
+                     ] );
+
+QxQ := LeftQuiver( ["Q","Q"],
+                   VertexLabels( QxQ_ ),
+                   ArrowLabels( QxQ_ ),
+                   ArrowSourceIndices( QxQ_ ),
+                   ArrowTargetIndices( QxQ_ ) );
+
+IsProductQuiver( QxQ );
+Q := ProductQuiverFactor( QxQ, 1 );
+kQ := PathAlgebra( Rationals, Q );
+
+# IsProductQuiver( QxQ ) -> true
