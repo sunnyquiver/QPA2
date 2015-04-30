@@ -497,3 +497,146 @@ function( B, e )
 end );
 
 
+
+
+DeclareRepresentation( "IsQuiverModuleElementRep",
+                       IsComponentObjectRep and IsAttributeStoringRep, [] );
+DeclareRepresentation( "IsQuiverModuleRep",
+                       IsComponentObjectRep and IsAttributeStoringRep, [] );
+
+BindGlobal( "FamilyOfQuiverModules",
+            NewFamily( "quiver modules" ) );
+BindGlobal( "FamilyOfQuiverModuleElements",
+            NewFamily( "quiver module elements" ) );
+
+InstallMethod( AsModule,
+               [ IsQuiverRepresentation, IsQuiverAlgebra ],
+function( R, A )
+  local M, Q, rep_algebra, module_cat;
+  Q := QuiverOfRepresentation( R );
+  rep_algebra := AlgebraOfRepresentation( R );
+  if rep_algebra = A then
+    if IsLeftQuiver( Q ) then
+      module_cat := IsLeftQuiverModule;
+    else
+      module_cat := IsRightQuiverModule;
+    fi;
+  elif rep_algebra = OppositeAlgebra( A ) then
+    if IsLeftQuiver( Q ) then
+      module_cat := IsRightQuiverModule;
+    else
+      module_cat := IsLeftQuiverModule;
+    fi;
+  else
+    Error( "Representation is not over the given algebra or its opposite" );
+  fi;
+  M := rec();
+  ObjectifyWithAttributes( M, NewType( FamilyOfQuiverModules,
+                                       module_cat and IsQuiverModuleRep ),
+                           UnderlyingRepresentation, R,
+                           AlgebraOfModule, A );
+  return M;
+end );
+
+InstallMethod( AsLeftModule,
+               [ IsQuiverRepresentation, IsQuiverAlgebra ],
+function( R, A )
+  local M;
+  M := AsModule( R, A );
+  if not IsLeftQuiverModule( M ) then
+    Error( "Representation can not be considered as left module over the given algebra" );
+  fi;
+  return M;
+end );
+
+InstallMethod( AsRightModule,
+               [ IsQuiverRepresentation, IsQuiverAlgebra ],
+function( R, A )
+  local M;
+  M := AsModule( R, A );
+  if not IsRightQuiverModule( M ) then
+    Error( "Representation can not be considered as right module over the given algebra" );
+  fi;
+  return M;
+end );
+
+InstallMethod( AsBimodule,
+               [ IsQuiverRepresentation, IsQuiverAlgebra, IsQuiverAlgebra ],
+function( R, A, B )
+#  IsTensorProductOfAlgebras( AlgebraOfRepresentation( R ),
+#                             A, OppositeAlgebra( B ) )
+    #TODOTODOTODO
+end );
+
+InstallMethod( String,
+               [ IsQuiverModule ],
+function( M )
+  return String( UnderlyingRepresentation( M ) );
+end );
+
+InstallMethod( QuiverOfModule,
+               [ IsQuiverModule ],
+function( M )
+  return QuiverOfRepresentation( UnderlyingRepresentation( M ) );
+end );
+
+InstallMethod( FieldOfModule,
+               [ IsQuiverModule ],
+function( M )
+  return FieldOfRepresentation( UnderlyingRepresentation( M ) );
+end );
+
+InstallMethod( VertexDimensions,
+               [ IsQuiverModule ],
+function( M )
+  return VertexDimensions( UnderlyingRepresentation( M ) );
+end );
+
+InstallMethod( VertexDimension,
+               [ IsQuiverModule, IsPosInt ],
+function( M, i )
+  return VertexDimension( UnderlyingRepresentation( M ), i );
+end );
+
+InstallMethod( VertexDimension,
+               [ IsQuiverModule, IsVertex ],
+function( M, v )
+  return VertexDimension( UnderlyingRepresentation( M ), v );
+end );
+
+InstallMethod( AsModuleElement,
+               [ IsQuiverRepresentationElement, IsQuiverModule ],
+function( e, M )
+  local me, elem_cat;
+  if RepresentationOfElement( e ) <> UnderlyingRepresentation( M ) then
+    Error( "Element is not from the underlying representation of the module" );
+  fi;
+  if IsLeftQuiverModule( M ) then
+    elem_cat := IsLeftQuiverModuleElement;
+  else
+    elem_cat := IsRightQuiverModuleElement;
+  fi;
+  me := rec();
+  ObjectifyWithAttributes( me, NewType( FamilyOfQuiverModuleElements,
+                                        elem_cat and IsQuiverModuleRep ),
+                           UnderlyingRepresentationElement, e,
+                           ModuleOfElement, M );
+end );
+
+InstallMethod( ElementVectors,
+               [ IsQuiverModuleElement ],
+function( e )
+  return ElementVectors( UnderlyingRepresentationElement( e ) );
+end );
+
+InstallMethod( ElementVector,
+               [ IsQuiverModuleElement, IsPosInt ],
+function( e, i )
+  return ElementVector( UnderlyingRepresentationElement( e ), i );
+end );
+
+InstallMethod( ElementVector,
+               [ IsQuiverModuleElement, IsVertex ],
+function( e, v )
+  return ElementVector( UnderlyingRepresentationElement( e ), v );
+end );

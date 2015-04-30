@@ -30,3 +30,41 @@ DeclareOperation( "MatrixForArrow", [ IsQuiverRepresentation, IsArrow ] );
 DeclareOperation( "MatrixForPath", [ IsQuiverRepresentation, IsPath ] );
 DeclareOperation( "MatrixForAlgebraElement", [ IsQuiverRepresentation, IsQuiverAlgebraElement and IsUniform ] );
 
+
+DeclareCategory( "IsQuiverModuleElement", IsAlgebraModuleElement );
+DeclareCategory( "IsQuiverModule", IsAlgebraModule and CategoryCollections( IsQuiverModuleElement ) );
+DeclareCategory( "IsLeftQuiverModuleElement", IsQuiverModuleElement and IsLeftAlgebraModuleElement );
+DeclareCategory( "IsLeftQuiverModule", IsQuiverModule and IsLeftAlgebraModule and CategoryCollections( IsLeftQuiverModuleElement ) );
+DeclareCategory( "IsRightQuiverModuleElement", IsQuiverModuleElement and IsRightAlgebraModuleElement );
+DeclareCategory( "IsRightQuiverModule", IsQuiverModule and IsLeftAlgebraModule and CategoryCollections( IsRightQuiverModuleElement ) );
+DeclareCategory( "IsQuiverBimoduleElement", IsLeftQuiverModuleElement and IsRightQuiverModuleElement );
+DeclareCategory( "IsQuiverBimodule", IsLeftQuiverModule and IsRightQuiverModule and CategoryCollections( IsQuiverBimoduleElement ) );
+
+DeclareOperation( "AsModule", [ IsQuiverRepresentation, IsQuiverAlgebra ] );
+DeclareOperation( "AsLeftModule", [ IsQuiverRepresentation, IsQuiverAlgebra ] );
+DeclareOperation( "AsRightModule", [ IsQuiverRepresentation, IsQuiverAlgebra ] );
+DeclareOperation( "AsBimodule", [ IsQuiverRepresentation, IsQuiverAlgebra, IsQuiverAlgebra ] );
+DeclareAttribute( "UnderlyingRepresentation", IsQuiverModule );
+
+DeclareOperation( "LeftQuiverModule", [ IsQuiverAlgebra, IsDenseList, IsDenseList ] );
+DeclareOperation( "LeftQuiverModuleByArrows", [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
+DeclareAttribute( "LeftZeroModule", IsQuiverAlgebra );
+
+DeclareOperation( "RightQuiverModule", [ IsQuiverAlgebra, IsDenseList, IsDenseList ] );
+DeclareOperation( "RightQuiverModuleByArrows", [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
+DeclareAttribute( "RightZeroModule", IsQuiverAlgebra );
+
+DeclareAttribute( "AlgebraOfModule", IsQuiverModule );
+DeclareAttribute( "QuiverOfModule", IsQuiverModule );
+DeclareAttribute( "FieldOfModule", IsQuiverModule );
+DeclareAttribute( "VertexDimensions", IsQuiverModule );
+DeclareOperation( "VertexDimension", [ IsQuiverModule, IsPosInt ] );
+DeclareOperation( "VertexDimension", [ IsQuiverModule, IsVertex ] );
+
+DeclareOperation( "AsModuleElement", [ IsQuiverRepresentationElement, IsQuiverModule ] );
+DeclareAttribute( "UnderlyingRepresentationElement", IsQuiverModuleElement );
+DeclareAttribute( "ModuleOfElement", IsQuiverModuleElement );
+DeclareAttribute( "ElementVectors", IsQuiverModuleElement );
+DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsPosInt ] );
+DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsVertex ] );
+
