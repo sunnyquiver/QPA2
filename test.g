@@ -61,26 +61,33 @@ kQ6 := PathAlgebra( Rationals, Q6 );
 rels6 := [ kQ6.dc - kQ6.ba, kQ6.gd - kQ6.fe ];
 
 
-P1 := QuiverRepresentation( kQ1, [ 1, 1, 1 ],
-                            [ [ [ 1 ] ],
-                              [ [ 1 ] ] ] );
-P2 := QuiverRepresentation( kQ1, [ 0, 1, 1 ],
-                            [ [ [ 0 ] ],
-                              [ [ 1 ] ] ] );
-P3 := QuiverRepresentation( kQ1, [ 0, 0, 1 ],
-                            [ [ [ 0 ] ],
-                              [ [ 0 ] ] ] );
-I1 := QuiverRepresentation( kQ1, [ 1, 0, 0 ],
-                            [ [ [ 0 ] ],
-                              [ [ 0 ] ] ] );
-I2 := QuiverRepresentation( kQ1, [ 1, 1, 0 ],
-                            [ [ [ 1 ] ],
-                              [ [ 0 ] ] ] );
-I3 := P1;
+P1r := QuiverRepresentation( kQ1, [ 1, 1, 1 ],
+                             [ [ [ 1 ] ],
+                               [ [ 1 ] ] ] );
+P2r := QuiverRepresentation( kQ1, [ 0, 1, 1 ],
+                             [ [ [ 0 ] ],
+                               [ [ 1 ] ] ] );
+P3r := QuiverRepresentation( kQ1, [ 0, 0, 1 ],
+                             [ [ [ 0 ] ],
+                               [ [ 0 ] ] ] );
+I1r := QuiverRepresentation( kQ1, [ 1, 0, 0 ],
+                             [ [ [ 0 ] ],
+                               [ [ 0 ] ] ] );
+I2r := QuiverRepresentation( kQ1, [ 1, 1, 0 ],
+                             [ [ [ 1 ] ],
+                               [ [ 0 ] ] ] );
+I3r := P1r;
 
-f := QuiverRepresentationHomomorphism( P2, P1, [ [[0]], [[1]], [[1]] ] );
+f := QuiverRepresentationHomomorphism( P2r, P1r, [ [[0]], [[1]], [[1]] ] );
 
 ZZ := ZeroRepresentation( kQ1 );
+
+P1 := AsLeftModule( P1r, kQ1 );
+P2 := AsLeftModule( P2r, kQ1 );
+P3 := AsLeftModule( P3r, kQ1 );
+I1 := AsLeftModule( I1r, kQ1 );
+I2 := AsLeftModule( I2r, kQ1 );
+I3 := AsLeftModule( I3r, kQ1 );
 
 QxQ_ := LeftQuiver( "QxQ",
                     [ [1,1],[1,2],[2,1],[2,2] ],
