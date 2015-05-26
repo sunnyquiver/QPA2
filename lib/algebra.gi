@@ -116,7 +116,7 @@ function( e )
   s := Source( LeadingPath( e ) );
   t := Target( LeadingPath( e ) );
   return ForAll( Paths( e ),
-                 p -> ( Source( e ) = s and Target( e ) = t ) );
+                 p -> ( Source( p ) = s and Target( p ) = t ) );
 end );
 
 InstallMethod( Zero, "for element of quiver algebra",
