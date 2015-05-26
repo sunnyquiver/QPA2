@@ -28,7 +28,7 @@ DeclareAttribute( "MatricesOfRepresentation", IsQuiverRepresentation );
 DeclareOperation( "MatrixForArrow", [ IsQuiverRepresentation, IsPosInt ] );
 DeclareOperation( "MatrixForArrow", [ IsQuiverRepresentation, IsArrow ] );
 DeclareOperation( "MatrixForPath", [ IsQuiverRepresentation, IsPath ] );
-DeclareOperation( "MatrixForAlgebraElement", [ IsQuiverRepresentation, IsQuiverAlgebraElement and IsUniform ] );
+DeclareOperation( "MatrixForAlgebraElement", [ IsQuiverRepresentation, IsQuiverAlgebraElement ] );
 
 
 DeclareCategory( "IsQuiverModuleElement", IsAlgebraModuleElement );

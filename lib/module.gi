@@ -424,10 +424,10 @@ function( R, p )
 end );
 
 InstallMethod( MatrixForAlgebraElement, "for quiver representation and uniform quiver algebra element",
-               [ IsQuiverRepresentation, IsQuiverAlgebraElement and IsUniform ],
+               [ IsQuiverRepresentation, IsQuiverAlgebraElement ],
 function( R, e )
   return Sum( ListN( Coefficients( e ),
-                     List( Paths( e ), MatrixForPath ),
+                     List( Paths( e ), p -> MatrixForPath( R, p ) ),
                      \* ) );
 end );
 
