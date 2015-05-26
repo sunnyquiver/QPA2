@@ -903,3 +903,12 @@ function( A, B )
   rels_b := List( RelationsOfAlgebra( B ), inc_rel_b );
   return kQ / Concatenation( commutativity_relations, rels_a, rels_b );
 end );
+
+InstallMethod( IsTensorProductOfAlgebras,
+               [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ],
+function( T, A, B )
+  # TODO: Write a better implementation.
+  # Should not be necessary to recompute the tensor algebra.
+  # Should at least avoid recomputing the Groebner basis.
+  return T = TensorProductOfAlgebras( A, B );
+end );

@@ -413,6 +413,13 @@ DeclareAttribute( "OppositeAlgebraElement", IsQuiverAlgebraElement );
 #!  Returns the tensor product of the quiver algebras <A>A</A> and <A>B</A>.
 DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
 
+#! @Arguments T, A, B
+#! @Returns <C>true</C> or <C>false</C>
+#! @Description
+#!  Returns <C>true</C> if the algebra <A>T</A> is the tensor product of
+#!  the algebras <A>A</A> and <A>B</A>; <C>false</C> otherwise.
+DeclareOperation( "IsTensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ] );
+
 DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 
 #
