@@ -54,7 +54,6 @@ DeclareOperation( "RightQuiverModule", [ IsQuiverAlgebra, IsDenseList, IsDenseLi
 DeclareOperation( "RightQuiverModuleByArrows", [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
 DeclareAttribute( "RightZeroModule", IsQuiverAlgebra );
 
-DeclareAttribute( "AlgebraOfModule", IsQuiverModule );
 DeclareAttribute( "QuiverOfModule", IsQuiverModule );
 DeclareAttribute( "FieldOfModule", IsQuiverModule );
 DeclareAttribute( "VertexDimensions", IsQuiverModule );

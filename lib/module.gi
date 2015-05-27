@@ -512,7 +512,7 @@ BindGlobal( "FamilyOfQuiverModuleElements",
 InstallMethod( AsModule,
                [ IsQuiverRepresentation, IsQuiverAlgebra ],
 function( R, A )
-  local M, Q, rep_algebra, module_cat;
+  local M, Q, rep_algebra, module_cat, acting_algebra_attr;
   Q := QuiverOfRepresentation( R );
   rep_algebra := AlgebraOfRepresentation( R );
   if rep_algebra = A then
@@ -530,11 +530,16 @@ function( R, A )
   else
     Error( "Representation is not over the given algebra or its opposite" );
   fi;
+  if module_cat = IsLeftQuiverModule then
+    acting_algebra_attr := LeftActingAlgebra;
+  else
+    acting_algebra_attr := RightActingAlgebra;
+  fi;
   M := rec();
   ObjectifyWithAttributes( M, NewType( FamilyOfQuiverModules,
                                        module_cat and IsQuiverModuleRep ),
                            UnderlyingRepresentation, R,
-                           AlgebraOfModule, A );
+                           acting_algebra_attr, A );
   return M;
 end );
 
@@ -563,9 +568,18 @@ end );
 InstallMethod( AsBimodule,
                [ IsQuiverRepresentation, IsQuiverAlgebra, IsQuiverAlgebra ],
 function( R, A, B )
-#  IsTensorProductOfAlgebras( AlgebraOfRepresentation( R ),
-#                             A, OppositeAlgebra( B ) )
-    #TODOTODOTODO
+  local M;
+  if not IsTensorProductOfAlgebras( AlgebraOfRepresentation( R ),
+                                    A, OppositeAlgebra( B ) ) then
+    Error( "Representation is not over the appropriate tensor algebra" );
+  fi;
+  M := rec();
+  ObjectifyWithAttributes( M, NewType( FamilyOfQuiverModules,
+                                       IsQuiverBimodule and IsQuiverModuleRep ),
+                           UnderlyingRepresentation, R,
+                           LeftActingAlgebra, A,
+                           RightActingAlgebra, B );
+  return M;
 end );
 
 InstallMethod( String,
