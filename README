@@ -1,0 +1,28 @@
+QPA2: Quivers and path algebras, version 2
+
+This repository contains (what is going to be) version 2 of the GAP
+package QPA.  For information about QPA version 1, see
+http://www.math.ntnu.no/~oyvinso/QPA/
+
+QPA version 2 is intended to have roughly the same functionality as
+QPA version 1, but with the basic functionality reimplemented in a
+cleaner way.  So far, only a small part of the functionality from
+version 1 has been implemented in version 2.
+
+To use QPA2, you need the following non-standard packages:
+
+ * AutoDoc, available at https://github.com/homalg-project/AutoDoc
+ * CAP, available at https://github.com/sebasguts/CAP_project
+ * ToolsForHomalg, available at https://github.com/homalg-project/ToolsForHomalg
+
+The documentation for QPA2 is written as AutoDoc comments inside the
+source code files.  To build the documentation, run `gap makedoc.g` in
+the root directory of the package.  This produces documentation in
+HTML and PDF form in the directory doc.  The HTML version is also
+available at http://www.math.ntnu.no/~oysteini/qpa2/doc/chap0.html
+
+If you encounter any problems or have questions regarding QPA2, you
+can either:
+
+ * report an issue at https://github.com/oysteins/QPA2/issues/new, or
+ * contact oysteini@math.ntnu.no.
