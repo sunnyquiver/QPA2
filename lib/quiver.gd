@@ -331,6 +331,12 @@ DeclareOperation( "SplitStringSubstring", [ IsString, IsString ] );
 DeclareAttribute( "Label", IsQuiver );
 
 #! @Arguments Q
+#! @Description
+#!  The label of the quiver <A>Q</A>, as a string.
+#! @Returns <C>IsString</C>
+DeclareAttribute( "LabelAsString", IsQuiver );
+
+#! @Arguments Q
 #! @Returns category
 #! @Description
 #!  Returns the category <A>Q</A> belongs to;
@@ -506,12 +512,6 @@ DeclareAttribute( "Label", IsPrimitivePath );
 DeclareAttribute( "LabelAsString", IsPrimitivePath );
 
 DeclareAttribute( "ArrowString", IsArrow );
-
-#! @Arguments Q
-#! @Description
-#!  The label of the quiver <A>Q</A>, as a string.
-#! @Returns <C>IsString</C>
-DeclareAttribute( "LabelAsString", IsQuiver );
 
 DeclareGlobalFunction( "QPA_LABEL_TO_STRING" );
 
