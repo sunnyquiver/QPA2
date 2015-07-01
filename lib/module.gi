@@ -588,6 +588,12 @@ function( M )
   return String( UnderlyingRepresentation( M ) );
 end );
 
+InstallMethod( ViewObj,
+               [ IsQuiverModule ],
+function( R )
+  Print( "<", String( R ), ">" );
+end );
+
 InstallMethod( QuiverOfModule,
                [ IsQuiverModule ],
 function( M )
