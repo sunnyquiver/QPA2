@@ -32,7 +32,7 @@ DeclareOperation( "MatrixForAlgebraElement", [ IsQuiverRepresentation, IsQuiverA
 
 
 DeclareCategory( "IsQuiverModuleElement", IsAlgebraModuleElement );
-DeclareCategory( "IsQuiverModule", IsAlgebraModule and CategoryCollections( IsQuiverModuleElement ) );
+DeclareCategory( "IsQuiverModule", IsVectorSpace and IsAlgebraModule and CategoryCollections( IsQuiverModuleElement ) );
 DeclareCategory( "IsLeftQuiverModuleElement", IsQuiverModuleElement and IsLeftAlgebraModuleElement );
 DeclareCategory( "IsLeftQuiverModule", IsQuiverModule and IsLeftAlgebraModule and CategoryCollections( IsLeftQuiverModuleElement ) );
 DeclareCategory( "IsRightQuiverModuleElement", IsQuiverModuleElement and IsRightAlgebraModuleElement );
@@ -60,6 +60,8 @@ DeclareAttribute( "VertexDimensions", IsQuiverModule );
 DeclareOperation( "VertexDimension", [ IsQuiverModule, IsPosInt ] );
 DeclareOperation( "VertexDimension", [ IsQuiverModule, IsVertex ] );
 
+DeclareOperation( "QuiverModuleElement", [ IsQuiverModule, IsDenseList ] );
+DeclareOperation( "QuiverModuleElementByVertices", [ IsQuiverModule, IsDenseList, IsDenseList ] );
 DeclareOperation( "AsModuleElement", [ IsQuiverRepresentationElement, IsQuiverModule ] );
 DeclareAttribute( "UnderlyingRepresentationElement", IsQuiverModuleElement );
 DeclareAttribute( "ModuleOfElement", IsQuiverModuleElement );
@@ -67,3 +69,5 @@ DeclareAttribute( "ElementVectors", IsQuiverModuleElement );
 DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsPosInt ] );
 DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsVertex ] );
 
+DeclareOperation( "\^", [ IsQuiverAlgebraElement, IsLeftQuiverModuleElement ] );
+DeclareOperation( "\^", [ IsRightQuiverModuleElement, IsQuiverAlgebraElement ] );

@@ -146,6 +146,13 @@ function( re, ae )
                      \* ) );
 end );
 
+InstallMethod( \=, "for elements of quiver representation",
+               [ IsQuiverRepresentationElement, IsQuiverRepresentationElement ],
+function( e1, e2 )
+  return RepresentationOfElement( e1 ) = RepresentationOfElement( e2 )
+         and ElementVectors( e1 ) = ElementVectors( e2 );
+end );
+
 InstallMethod( \+, "for elements of quiver representation",
                [ IsQuiverRepresentationElement, IsQuiverRepresentationElement ],
 function( e1, e2 )
@@ -334,6 +341,12 @@ function( A )
                                        [], [] );
 end );
 
+InstallMethod( \=, [ IsQuiverRepresentation, IsQuiverRepresentation ],
+function( R1, R2 )
+  return AlgebraOfRepresentation( R1 ) = AlgebraOfRepresentation( R2 ) and
+         VertexDimensions( R1 ) = VertexDimensions( R2 ) and
+         MatricesOfRepresentation( R1 ) = MatricesOfRepresentation( R2 );
+end );
 
 InstallMethod( PrintObj, "for quiver representation",
                [ IsQuiverRepresentation ],
@@ -512,7 +525,8 @@ BindGlobal( "FamilyOfQuiverModuleElements",
 InstallMethod( AsModule,
                [ IsQuiverRepresentation, IsQuiverAlgebra ],
 function( R, A )
-  local M, Q, rep_algebra, module_cat, acting_algebra_attr;
+  local M, k, Q, rep_algebra, module_cat, acting_algebra_attr;
+  k := FieldOfRepresentation( R );
   Q := QuiverOfRepresentation( R );
   rep_algebra := AlgebraOfRepresentation( R );
   if rep_algebra = A then
@@ -539,6 +553,7 @@ function( R, A )
   ObjectifyWithAttributes( M, NewType( FamilyOfQuiverModules,
                                        module_cat and IsQuiverModuleRep ),
                            UnderlyingRepresentation, R,
+                           LeftActingDomain, k,
                            acting_algebra_attr, A );
   return M;
 end );
@@ -580,6 +595,93 @@ function( R, A, B )
                            LeftActingAlgebra, A,
                            RightActingAlgebra, B );
   return M;
+end );
+
+InstallMethod( LeftQuiverModule,
+               [ IsPathAlgebra, IsDenseList, IsDenseList ],
+function( A, dimensions, matrices )
+  local R;
+  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+    R := QuiverRepresentation( A, dimensions, matrices );
+  else
+    R := QuiverRepresentation( OppositeAlgebra( A ), dimensions, matrices );
+  fi;
+  return AsLeftModule( R, A );
+end );
+
+InstallMethod( LeftQuiverModuleByArrows,
+               [ IsPathAlgebra, IsDenseList, IsDenseList, IsDenseList ],
+function( A, dimensions, arrows, matrices )
+  local R;
+  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+    R := QuiverRepresentationByArrows( A, dimensions, arrows, matrices );
+  else
+    R := QuiverRepresentationByArrows( OppositeAlgebra( A ), dimensions, arrows, matrices );
+  fi;
+  return AsLeftModule( R, A );
+end );
+
+InstallMethod( LeftZeroModule,
+               [ IsPathAlgebra ],
+function( A )
+  local R;
+  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+    R := ZeroRepresentation( A );
+  else
+    R := ZeroRepresentation( OppositeAlgebra( A ) );
+  fi;
+  return AsLeftModule( R, A );
+end );
+
+InstallMethod( RightQuiverModule,
+               [ IsPathAlgebra, IsDenseList, IsDenseList ],
+function( A, dimensions, matrices )
+  local R;
+  if IsRightQuiver( QuiverOfAlgebra( A ) ) then
+    R := QuiverRepresentation( A, dimensions, matrices );
+  else
+    R := QuiverRepresentation( OppositeAlgebra( A ), dimensions, matrices );
+  fi;
+  return AsRightModule( R, A );
+end );
+
+InstallMethod( RightQuiverModuleByArrows,
+               [ IsPathAlgebra, IsDenseList, IsDenseList, IsDenseList ],
+function( A, dimensions, arrows, matrices )
+  local R;
+  if IsRightQuiver( QuiverOfAlgebra( A ) ) then
+    R := QuiverRepresentationByArrows( A, dimensions, arrows, matrices );
+  else
+    R := QuiverRepresentationByArrows( OppositeAlgebra( A ), dimensions, arrows, matrices );
+  fi;
+  return AsRightModule( R, A );
+end );
+
+InstallMethod( RightZeroModule,
+               [ IsPathAlgebra ],
+function( A )
+  local R;
+  if IsRightQuiver( QuiverOfAlgebra( A ) ) then
+    R := ZeroRepresentation( A );
+  else
+    R := ZeroRepresentation( OppositeAlgebra( A ) );
+  fi;
+  return AsRightModule( R, A );
+end );
+
+InstallMethod( \=, [ IsLeftQuiverModule, IsLeftQuiverModule ],
+function( M1, M2 )
+  return UnderlyingRepresentation( M1 ) = UnderlyingRepresentation( M2 );
+end );
+
+InstallMethod( \=, [ IsRightQuiverModule, IsRightQuiverModule ],
+function( M1, M2 )
+  return UnderlyingRepresentation( M1 ) = UnderlyingRepresentation( M2 );
+end );
+
+InstallMethod( \=, [ IsQuiverBimodule, IsQuiverBimodule ],
+function( M1, M2 )
+  return UnderlyingRepresentation( M1 ) = UnderlyingRepresentation( M2 );
 end );
 
 InstallMethod( String,
@@ -641,6 +743,33 @@ function( e, M )
                                         elem_cat and IsQuiverModuleRep ),
                            UnderlyingRepresentationElement, e,
                            ModuleOfElement, M );
+  return me;
+end );
+
+InstallMethod( QuiverModuleElement,
+               [ IsQuiverModule, IsDenseList ],
+function( M, vectors )
+  local R, e;
+  R := UnderlyingRepresentation( M );
+  e := QuiverRepresentationElement( R, vectors );
+  return AsModuleElement( e, M );
+end );
+
+InstallMethod( QuiverModuleElementByVertices,
+               [ IsQuiverModule, IsDenseList, IsDenseList ],
+function( M, vertices, vectors )
+  local R, e;
+  R := UnderlyingRepresentation( M );
+  e := QuiverRepresentationElement( R, vertices, vectors );
+  return AsModuleElement( e, M );
+end );
+
+InstallMethod( Zero,
+               [ IsQuiverModule ],
+function( M )
+  local R;
+  R := UnderlyingRepresentation( M );
+  return AsModuleElement( Zero( R ), M );
 end );
 
 InstallMethod( ElementVectors,
@@ -659,4 +788,123 @@ InstallMethod( ElementVector,
                [ IsQuiverModuleElement, IsVertex ],
 function( e, v )
   return ElementVector( UnderlyingRepresentationElement( e ), v );
+end );
+
+InstallMethod( String,
+               [ IsLeftQuiverModuleElement ],
+function( e )
+  return Concatenation( "left module element ", String( ElementVectors( e ) ) );
+end );
+
+InstallMethod( String,
+               [ IsRightQuiverModuleElement ],
+function( e )
+  return Concatenation( "right module element ", String( ElementVectors( e ) ) );
+end );
+
+InstallMethod( ViewObj,
+               [ IsQuiverModuleElement ],
+function( e )
+  Print( "<", String( e ), ">" );
+end );
+
+InstallMethod( \^,
+               [ IsQuiverAlgebraElement, IsLeftQuiverModuleElement ],
+function( ae, me )
+  local A, Q, re, re_;
+  A := AlgebraOfElement( ae );
+  Q := QuiverOfAlgebra( A );
+  re := UnderlyingRepresentationElement( me );
+  if IsLeftQuiver( Q ) then
+    re_ := QuiverAlgebraAction( re, ae );
+  else
+    re_ := QuiverAlgebraAction( re, OppositeAlgebraElement( ae ) );
+  fi;
+  return AsModuleElement( re_, ModuleOfElement( me ) );
+end );
+
+InstallMethod( \^,
+               [ IsRightQuiverModuleElement, IsQuiverAlgebraElement ],
+function( me, ae )
+  local A, Q, re, re_;
+  A := AlgebraOfElement( ae );
+  Q := QuiverOfAlgebra( A );
+  re := UnderlyingRepresentationElement( me );
+  if IsRightQuiver( Q ) then
+    re_ := QuiverAlgebraAction( re, ae );
+  else
+    re_ := QuiverAlgebraAction( re, OppositeAlgebraElement( ae ) );
+  fi;
+  return AsModuleElement( re_, ModuleOfElement( me ) );
+end );
+
+InstallMethod( \=, [ IsQuiverModuleElement, IsQuiverModuleElement ],
+function( e1, e2 )
+  local re1, re2;
+  if ModuleOfElement( e1 ) <> ModuleOfElement( e2 ) then
+    return false;
+  fi;
+  re1 := UnderlyingRepresentationElement( e1 );
+  re2 := UnderlyingRepresentationElement( e2 );
+  return re1 = re2;
+end );
+
+InstallMethod( \+, [ IsQuiverModuleElement, IsQuiverModuleElement ],
+function( e1, e2 )
+  local re1, re2;
+  if ModuleOfElement( e1 ) <> ModuleOfElement( e2 ) then
+    Error( "cannot add elements of different modules" );
+  fi;
+  re1 := UnderlyingRepresentationElement( e1 );
+  re2 := UnderlyingRepresentationElement( e2 );
+  return AsModuleElement( re1 + re2, ModuleOfElement( e1 ) );
+end );
+
+InstallMethod( \*, "for multiplicative element and element of quiver module",
+               [ IsMultiplicativeElement, IsQuiverModuleElement ],
+function( c, e )
+  return AsModuleElement( c * UnderlyingRepresentationElement( e ),
+                          ModuleOfElement( e ) );
+end );
+
+InstallMethod( \*, "for element of quiver module and multiplicative element",
+               [ IsQuiverModuleElement, IsMultiplicativeElement ],
+function( e, c )
+  return AsModuleElement( UnderlyingRepresentationElement( e ) * c,
+                          ModuleOfElement( e ) );
+end );
+
+# basis of modules
+
+DeclareRepresentation( "IsQuiverModuleBasisRep", IsComponentObjectRep,
+                       [ "module", "underlyingRepresentationBasis" ] );
+
+InstallMethod( CanonicalBasis, "for quiver module",
+               [ IsQuiverModule ],
+function( M )
+  local R, rep_basis;
+  R := UnderlyingRepresentation( M );
+  rep_basis := CanonicalBasis( R );
+  return Objectify( NewType( FamilyObj( M ),
+                             IsBasis and IsQuiverModuleBasisRep ),
+                    rec( module := M,
+                         underlyingRepresentationBasis := rep_basis ) );
+end );
+
+InstallMethod( Basis, "for quiver module",
+               [ IsQuiverModule ],
+               CanonicalBasis );
+
+InstallMethod( BasisVectors, "for quiver module basis",
+               [ IsBasis and IsQuiverModuleBasisRep ],
+function( B )
+  return List( BasisVectors( B!.underlyingRepresentationBasis ),
+               v -> AsModuleElement( v, B!.module ) );
+end );
+
+# TODO: right modules?
+InstallMethod( UnderlyingLeftModule, "for quiver module basis",
+               [ IsBasis and IsQuiverModuleBasisRep ],
+function( B )
+  return B!.module;
 end );
