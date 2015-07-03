@@ -71,3 +71,5 @@ DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsVertex ] );
 
 DeclareOperation( "\^", [ IsQuiverAlgebraElement, IsLeftQuiverModuleElement ] );
 DeclareOperation( "\^", [ IsRightQuiverModuleElement, IsQuiverAlgebraElement ] );
+
+DeclareOperation( "MatrixVectorMultiplication", [ IsQuiver ] );

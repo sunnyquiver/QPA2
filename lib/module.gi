@@ -127,18 +127,12 @@ InstallMethod( PathAction,
                "for element of quiver representation and path",
                [ IsQuiverRepresentationElement, IsPath ],
 function( e, p )
-  local R, M, source_vec, target_vec;
+  local R, M, source_vec, target_vec, mult;
   R := RepresentationOfElement( e );
-  if VertexDimension( R, Target( p ) ) = 0 then
-    return Zero( R );
-  fi;
   M := MatrixForPath( R, p );
+  mult := MatrixVectorMultiplication( QuiverOfRepresentation( R ) );
   source_vec := ElementVector( e, Source( p ) );
-  if IsLeftPath( p ) then
-    target_vec := M * source_vec;
-  else
-    target_vec := source_vec * M;
-  fi;
+  target_vec := mult( M, source_vec, VertexDimension( R, Target( p ) ) );
   return QuiverRepresentationElementByVertices( R, [ Target( p ) ], [ target_vec ] );
 end );
 
@@ -920,4 +914,30 @@ InstallMethod( UnderlyingLeftModule, "for quiver module basis",
                [ IsBasis and IsQuiverModuleBasisRep ],
 function( B )
   return B!.module;
+end );
+
+InstallMethod( MatrixVectorMultiplication,
+               [ IsQuiver ],
+function( Q )
+  if IsLeftQuiver( Q ) then
+    return function( M, v, target_dim )
+      if target_dim = 0 then
+        return [];
+      elif Length( v ) = 0 then
+        return List( [ 1 .. target_dim ], x -> M[1][1] );
+      else
+        return M * v;
+      fi;
+    end;
+  else
+    return function( M, v, target_dim )
+      if target_dim = 0 then
+        return [];
+      elif Length( v ) = 0 then
+        return List( [ 1 .. target_dim ], x -> M[1][1] );
+      else
+        return v * M;
+      fi;
+    end;
+  fi;
 end );
