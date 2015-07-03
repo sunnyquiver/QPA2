@@ -84,6 +84,13 @@ function( R, vertices, vectors )
   return QuiverRepresentationElementNC( R, repVectors );
 end );
 
+InstallMethod( \in,
+               [ IsQuiverRepresentationElement,
+                 IsQuiverRepresentation ],
+function( e, R )
+  return RepresentationOfElement( e ) = R;
+end );
+
 InstallMethod( PrintObj, "for element of quiver representation",
                [ IsQuiverRepresentationElement ],
 function( e )
@@ -806,6 +813,12 @@ InstallMethod( ViewObj,
                [ IsQuiverModuleElement ],
 function( e )
   Print( "<", String( e ), ">" );
+end );
+
+InstallMethod( \in,
+               [ IsQuiverModuleElement, IsQuiverModule ],
+function( e, M )
+  return ModuleOfElement( e ) = M;
 end );
 
 InstallMethod( \^,
