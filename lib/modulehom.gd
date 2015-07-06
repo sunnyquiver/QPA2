@@ -1,5 +1,5 @@
 DeclareCategory( "IsQuiverRepresentationHomomorphism",
-                 IsVectorSpaceHomomorphism );
+                 IsMapping and IsSPGeneralMapping and IsVectorSpaceHomomorphism );
 
 DeclareOperation( "QuiverRepresentationHomomorphism",
                   [ IsQuiverRepresentation, IsQuiverRepresentation,
@@ -11,3 +11,8 @@ DeclareOperation( "QuiverRepresentationHomomorphismNC",
 
 DeclareOperation( "MatricesOfRepresentationHomomorphism",
                   [ IsQuiverRepresentationHomomorphism ] );
+
+# DeclareOperation( "ImageElm",
+#                   [ IsQuiverRepresentationHomomorphism,
+#                     IsQuiverRepresentationElement ] );
+

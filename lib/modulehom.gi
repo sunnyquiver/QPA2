@@ -1,6 +1,11 @@
 BindGlobal( "FamilyOfQuiverRepresentationHomomorphisms",
             NewFamily( "quiver representation homomorphisms" ) );
 
+# The builtin global function Image uses the FamilySource attribute to check
+# whether a given map can be applied to a given element.
+SetFamilySource( FamilyOfQuiverRepresentationHomomorphisms,
+                 FamilyOfQuiverRepresentationElements );
+
 DeclareRepresentation( "IsQuiverRepresentationHomomorphismRep",
                        IsComponentObjectRep,
                        [ "source", "range", "matrices" ] );
@@ -103,4 +108,16 @@ function( f )
   return f!.matrices;
 end );
 
-
+InstallMethod( ImageElm,
+               [ IsQuiverRepresentationHomomorphism,
+                 IsQuiverRepresentationElement ],
+function( f, e )
+  local Q;
+  Q := QuiverOfRepresentation( Source( f ) );
+  return QuiverRepresentationElement
+         ( Range( f ),
+           ListN( MatricesOfRepresentationHomomorphism( f ),
+                  ElementVectors( e ),
+                  VertexDimensions( Range( f ) ),
+                  MatrixVectorMultiplication( Q ) ) );
+end );
