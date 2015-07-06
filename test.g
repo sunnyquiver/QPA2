@@ -80,14 +80,19 @@ I3r := P1r;
 
 f := QuiverRepresentationHomomorphism( P2r, P1r, [ [[0]], [[1]], [[1]] ] );
 
-ZZ := ZeroRepresentation( kQ1 );
+ZZr := ZeroRepresentation( kQ1 );
 
-P1 := AsLeftModule( P1r, kQ1 );
-P2 := AsLeftModule( P2r, kQ1 );
-P3 := AsLeftModule( P3r, kQ1 );
-I1 := AsLeftModule( I1r, kQ1 );
-I2 := AsLeftModule( I2r, kQ1 );
-I3 := AsLeftModule( I3r, kQ1 );
+P1m := AsLeftModule( P1r, kQ1 );
+P2m := AsLeftModule( P2r, kQ1 );
+P3m := AsLeftModule( P3r, kQ1 );
+I1m := AsLeftModule( I1r, kQ1 );
+I2m := AsLeftModule( I2r, kQ1 );
+I3m := AsLeftModule( I3r, kQ1 );
+
+P1 := LeftQuiverModule( kQ1, [ 1, 1, 1 ], [ [ [ 1 ] ], [ [ 1 ] ] ] );
+P2 := LeftQuiverModuleByArrows( kQ1, [ 0, 1, 1 ], [ Q1.b ], [ [ [ 1 ] ] ] );
+P3 := LeftQuiverModuleByArrows( kQ1, [ 0, 0, 1 ], [ ], [ ] );
+ZZ := LeftZeroModule( kQ1 );
 
 QxQ_ := LeftQuiver( "QxQ",
                     [ [1,1],[1,2],[2,1],[2,2] ],
