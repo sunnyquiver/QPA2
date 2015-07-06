@@ -40,9 +40,12 @@ DeclareCategory( "IsRightQuiverModule", IsQuiverModule and IsLeftAlgebraModule a
 DeclareCategory( "IsQuiverBimoduleElement", IsLeftQuiverModuleElement and IsRightQuiverModuleElement );
 DeclareCategory( "IsQuiverBimodule", IsLeftQuiverModule and IsRightQuiverModule and CategoryCollections( IsQuiverBimoduleElement ) );
 
+DeclareAttribute( "AlgebraForLeftModules", IsQuiverAlgebra );
+DeclareAttribute( "AlgebraForRightModules", IsQuiverAlgebra );
+
 DeclareOperation( "AsModule", [ IsQuiverRepresentation, IsQuiverAlgebra ] );
-DeclareOperation( "AsLeftModule", [ IsQuiverRepresentation, IsQuiverAlgebra ] );
-DeclareOperation( "AsRightModule", [ IsQuiverRepresentation, IsQuiverAlgebra ] );
+DeclareOperation( "AsLeftModule", [ IsQuiverRepresentation ] );
+DeclareOperation( "AsRightModule", [ IsQuiverRepresentation ] );
 DeclareOperation( "AsBimodule", [ IsQuiverRepresentation, IsQuiverAlgebra, IsQuiverAlgebra ] );
 DeclareAttribute( "UnderlyingRepresentation", IsQuiverModule );
 

@@ -528,6 +528,26 @@ BindGlobal( "FamilyOfQuiverModules",
 BindGlobal( "FamilyOfQuiverModuleElements",
             NewFamily( "quiver module elements" ) );
 
+InstallMethod( AlgebraForLeftModules,
+               [ IsQuiverAlgebra ],
+function( A )
+  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+    return A;
+  else
+    return OppositeAlgebra( A );
+  fi;
+end );
+
+InstallMethod( AlgebraForRightModules,
+               [ IsQuiverAlgebra ],
+function( A )
+  if IsRightQuiver( QuiverOfAlgebra( A ) ) then
+    return A;
+  else
+    return OppositeAlgebra( A );
+  fi;
+end );
+
 InstallMethod( AsModule,
                [ IsQuiverRepresentation, IsQuiverAlgebra ],
 function( R, A )
@@ -565,25 +585,15 @@ function( R, A )
 end );
 
 InstallMethod( AsLeftModule,
-               [ IsQuiverRepresentation, IsQuiverAlgebra ],
-function( R, A )
-  local M;
-  M := AsModule( R, A );
-  if not IsLeftQuiverModule( M ) then
-    Error( "Representation can not be considered as left module over the given algebra" );
-  fi;
-  return M;
+               [ IsQuiverRepresentation ],
+function( R )
+  return AsModule( R, AlgebraForLeftModules( AlgebraOfRepresentation( R ) ) );
 end );
 
 InstallMethod( AsRightModule,
-               [ IsQuiverRepresentation, IsQuiverAlgebra ],
-function( R, A )
-  local M;
-  M := AsModule( R, A );
-  if not IsRightQuiverModule( M ) then
-    Error( "Representation can not be considered as right module over the given algebra" );
-  fi;
-  return M;
+               [ IsQuiverRepresentation ],
+function( R )
+  return AsModule( R, AlgebraForRightModules( AlgebraOfRepresentation( R ) ) );
 end );
 
 InstallMethod( AsBimodule,
@@ -606,73 +616,47 @@ end );
 InstallMethod( LeftQuiverModule,
                [ IsPathAlgebra, IsDenseList, IsDenseList ],
 function( A, dimensions, matrices )
-  local R;
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    R := QuiverRepresentation( A, dimensions, matrices );
-  else
-    R := QuiverRepresentation( OppositeAlgebra( A ), dimensions, matrices );
-  fi;
-  return AsLeftModule( R, A );
+  return AsLeftModule
+         ( QuiverRepresentation( AlgebraForLeftModules( A ),
+                                 dimensions, matrices ) );
 end );
 
 InstallMethod( LeftQuiverModuleByArrows,
                [ IsPathAlgebra, IsDenseList, IsDenseList, IsDenseList ],
 function( A, dimensions, arrows, matrices )
-  local R;
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    R := QuiverRepresentationByArrows( A, dimensions, arrows, matrices );
-  else
-    R := QuiverRepresentationByArrows( OppositeAlgebra( A ), dimensions, arrows, matrices );
-  fi;
-  return AsLeftModule( R, A );
+  return AsLeftModule
+         ( QuiverRepresentationByArrows( AlgebraForLeftModules( A ),
+                                         dimensions, arrows, matrices ) );
 end );
 
 InstallMethod( LeftZeroModule,
                [ IsPathAlgebra ],
 function( A )
-  local R;
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    R := ZeroRepresentation( A );
-  else
-    R := ZeroRepresentation( OppositeAlgebra( A ) );
-  fi;
-  return AsLeftModule( R, A );
+  return AsLeftModule
+         ( ZeroRepresentation( AlgebraForLeftModules( A ) ) );
 end );
 
 InstallMethod( RightQuiverModule,
                [ IsPathAlgebra, IsDenseList, IsDenseList ],
 function( A, dimensions, matrices )
-  local R;
-  if IsRightQuiver( QuiverOfAlgebra( A ) ) then
-    R := QuiverRepresentation( A, dimensions, matrices );
-  else
-    R := QuiverRepresentation( OppositeAlgebra( A ), dimensions, matrices );
-  fi;
-  return AsRightModule( R, A );
+  return AsRightModule
+         ( QuiverRepresentation( AlgebraForRightModules( A ),
+                                 dimensions, matrices ) );
 end );
 
 InstallMethod( RightQuiverModuleByArrows,
                [ IsPathAlgebra, IsDenseList, IsDenseList, IsDenseList ],
 function( A, dimensions, arrows, matrices )
-  local R;
-  if IsRightQuiver( QuiverOfAlgebra( A ) ) then
-    R := QuiverRepresentationByArrows( A, dimensions, arrows, matrices );
-  else
-    R := QuiverRepresentationByArrows( OppositeAlgebra( A ), dimensions, arrows, matrices );
-  fi;
-  return AsRightModule( R, A );
+  return AsRightModule
+         ( QuiverRepresentationByArrows( AlgebraForRightModules( A ),
+                                         dimensions, arrows, matrices ) );
 end );
 
 InstallMethod( RightZeroModule,
                [ IsPathAlgebra ],
 function( A )
-  local R;
-  if IsRightQuiver( QuiverOfAlgebra( A ) ) then
-    R := ZeroRepresentation( A );
-  else
-    R := ZeroRepresentation( OppositeAlgebra( A ) );
-  fi;
-  return AsRightModule( R, A );
+  return AsRightModule
+         ( ZeroRepresentation( AlgebraForRightModules( A ) ) );
 end );
 
 InstallMethod( \=, [ IsLeftQuiverModule, IsLeftQuiverModule ],
