@@ -1,3 +1,8 @@
+BindGlobal( "FamilyOfQuiverRepresentationElements",
+            NewFamily( "quiver representation elements" ) );
+BindGlobal( "FamilyOfQuiverRepresentations",
+            CollectionsFamily( FamilyOfQuiverRepresentationElements ) );
+
 DeclareRepresentation( "IsQuiverRepresentationElementRep", IsComponentObjectRep,
                        [ "representation", "vectors" ] );
 
@@ -35,7 +40,7 @@ InstallMethod( QuiverRepresentationElementNC, "for quiver representation and col
                [ IsQuiverRepresentation, IsDenseList ],
 function( rep, vectors )
   local elemType;
-  elemType := NewType( ElementsFamily( FamilyObj( rep ) ),
+  elemType := NewType( FamilyOfQuiverRepresentationElements,
                        IsQuiverRepresentationElement and IsQuiverRepresentationElementRep );
   return Objectify( elemType,
                     rec( representation := rep,
@@ -256,12 +261,9 @@ end );
 InstallMethod( QuiverRepresentationNC, "for quiver algebra and dense lists",
                [ IsQuiverAlgebra, IsDenseList, IsDenseList ],
 function( A, dimensions, matrices )
-  local Q, elementFam, repFam, repType, R;
-  Q := QuiverOfAlgebra( A );
-  # TODO: representation should have its own elements family
-  elementFam := ElementsFamily( FamilyObj( Q ) );
-  repFam := CollectionsFamily( elementFam );
-  repType := NewType( repFam, IsQuiverRepresentation and IsQuiverRepresentationRep );
+  local repType, R;
+  repType := NewType( FamilyOfQuiverRepresentations,
+                      IsQuiverRepresentation and IsQuiverRepresentationRep );
   R := Objectify( repType, rec( algebra := A,
                                 dimensions := dimensions,
                                 matrices := matrices ) );
@@ -461,6 +463,9 @@ InstallMethod( LeftActingDomain, "for quiver representation",
                [ IsQuiverRepresentation ],
                FieldOfRepresentation );
 
+BindGlobal( "FamilyOfQuiverRepresentationBases",
+            NewFamily( "quiver representation bases" ) );
+
 DeclareRepresentation( "IsQuiverRepresentationBasisRep", IsComponentObjectRep,
                        [ "representation", "basisVectors" ] );
 
@@ -481,7 +486,7 @@ function( R )
            ( R, [ vertices[ i ] ], [ vertexBasis[ j ] ] ) );
     od;
   od;
-  return Objectify( NewType( FamilyObj( R ),
+  return Objectify( NewType( FamilyOfQuiverRepresentationBases,
                              IsBasis and IsQuiverRepresentationBasisRep ),
                     rec( representation := R,
                          basisVectors := basis ) );
@@ -883,6 +888,9 @@ end );
 
 # basis of modules
 
+BindGlobal( "FamilyOfQuiverModuleBases",
+            NewFamily( "quiver module bases" ) );
+
 DeclareRepresentation( "IsQuiverModuleBasisRep", IsComponentObjectRep,
                        [ "module", "underlyingRepresentationBasis" ] );
 
@@ -892,7 +900,7 @@ function( M )
   local R, rep_basis;
   R := UnderlyingRepresentation( M );
   rep_basis := CanonicalBasis( R );
-  return Objectify( NewType( FamilyObj( M ),
+  return Objectify( NewType( FamilyOfQuiverModuleBases,
                              IsBasis and IsQuiverModuleBasisRep ),
                     rec( module := M,
                          underlyingRepresentationBasis := rep_basis ) );
