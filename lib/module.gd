@@ -383,7 +383,7 @@ DeclareOperation( "AsRightModule", [ IsQuiverRepresentation ] );
 #!  <A>A</A> (left) and <A>B</A> (right).
 #!  The algebras <A>A</A> and <A>B</A> must have the same base field $k$,
 #!  and the representation <A>R</A> must be a representation over the tensor
-#!  algebra $<A>A</A> \otimes_k <A>B</A>^\operatorname{op}$.
+#!  algebra $<A>A</A> \otimes_k <A>B</A>^\mathrm{op}$.
 #! @Returns <Ref Filt="IsLeftQuiverModule"/>
 #! @Arguments R, A, B
 DeclareOperation( "AsBimodule", [ IsQuiverRepresentation, IsQuiverAlgebra, IsQuiverAlgebra ] );
@@ -399,22 +399,121 @@ DeclareOperation( "AsBimodule", [ IsQuiverRepresentation, IsQuiverAlgebra, IsQui
 #! @Arguments M
 DeclareAttribute( "UnderlyingRepresentation", IsQuiverModule );
 
+#! @Description
+#!  Returns the quiver that the module <A>M</A> represents.
+#! @Returns <Ref Filt="IsQuiver"/>
+#! @Arguments M
 DeclareAttribute( "QuiverOfModule", IsQuiverModule );
+
+#! @Description
+#!  Returns the base field that the module <A>M</A> is a vector space over;
+#!  that is, the base field of the algebra it is a module over.
+#!  This is also available by the builtin GAP attribute
+#!  <Ref BookName="Reference" Attr="LeftActingDomain"/>.
+#! @Returns <Ref BookName="Reference" Filt="IsField"/>
+#! @Arguments M
 DeclareAttribute( "FieldOfModule", IsQuiverModule );
+
+#! @Description
+#!  Returns the dimensions of the vector spaces in the module <A>M</A>,
+#!  as a list.  The entries in the list correspond to the vertices of the quiver.
+#! @Returns <Ref BookName="Reference" Filt="IsDenseList"/>
+#! @Arguments M
 DeclareAttribute( "VertexDimensions", IsQuiverModule );
+
+#! @Description
+#!  Returns the dimension of the vector space in the module <A>M</A>
+#!  at vertex number <A>i</A>, where <A>i</A> is a positive integer.
+#! @Returns <Ref BookName="Reference" Filt="IsVector"/>
+#! @Arguments M, i
 DeclareOperation( "VertexDimension", [ IsQuiverModule, IsPosInt ] );
+
+#! @Description
+#!  Returns the dimension of the vector space in the module <A>M</A>
+#!  at the vertex <A>v</A>.
+#! @Returns <Ref BookName="Reference" Filt="IsVector"/>
+#! @Arguments M, v
 DeclareOperation( "VertexDimension", [ IsQuiverModule, IsVertex ] );
 
+#! @Section Constructing elements
+
+#! @Description
+#!  Construct the element in the module <A>M</A>
+#!  given by the vectors in the list <A>vectors</A>.
+#!  Each entry in <A>vectors</A> corresponds to a vertex in the quiver.
+#! @Returns <Ref Filt="IsQuiverModuleElement"/>
+#! @Arguments M, vectors
 DeclareOperation( "QuiverModuleElement", [ IsQuiverModule, IsDenseList ] );
+
+#! @Description
+#!  Construct an element in the module <A>M</A> by assigning
+#!  vectors to certain given vertices.
+#!  All vertices of the quiver which are not present in the list
+#!  <A>vertices</A> are assigned the zero vector.
+#! @Returns <Ref Filt="IsQuiverModuleElement"/>
+#! @Arguments M, vertices, vectors
 DeclareOperation( "QuiverModuleElementByVertices", [ IsQuiverModule, IsDenseList, IsDenseList ] );
+
+#! @Description
+#!  Returns the element of the module <A>M</A> corresponding to the
+#!  element <A>e</A> in the underlying representation of <A>M</A>.
+#! @Returns <Ref Filt="IsQuiverModuleElement"/>
+#! @Arguments e, M
 DeclareOperation( "AsModuleElement", [ IsQuiverRepresentationElement, IsQuiverModule ] );
+
+#! @Section Information about an element
+
+#! @Description
+#!  Given an element <A>e</A> in a quiver module <C>M</C>,
+#!  this attribute returns the corresponding element in the
+#!  underlying representation of <C>M</C>.
+#! @Returns <Ref Filt="IsQuiverRepresentationElement"/>
+#! @Arguments e
 DeclareAttribute( "UnderlyingRepresentationElement", IsQuiverModuleElement );
+
+#! @Description
+#!  Returns the quiver module which the element <A>e</A> belongs to.
+#! @Returns <Ref Filt="IsQuiverModule"/>
+#! @Arguments e
 DeclareAttribute( "ModuleOfElement", IsQuiverModuleElement );
+
+#! @Description
+#!  Returns all the vectors of the element <A>e</A>, as a list ordered
+#!  in the same way as the vertices of the quiver.
+#! @Returns <Ref BookName="Reference" Filt="IsDenseList"/>
+#! @Arguments e
 DeclareAttribute( "ElementVectors", IsQuiverModuleElement );
+
+#! @Description
+#!  Returns the vector of the element <A>e</A> at the vertex with number <A>i</A>.
+#! @Returns <Ref BookName="Reference" Filt="IsVector"/>
+#! @Arguments e, i
 DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsPosInt ] );
+
+#! @Description
+#!  Returns the vector of the element <A>e</A> at the vertex <A>v</A>.
+#! @Returns <Ref BookName="Reference" Filt="IsVector"/>
+#! @Arguments e, v
 DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsVertex ] );
 
+#! @Section Acting on elements
+
+#! @Description
+#!  For an element <A>a</A> in a quiver algebra <C>A</C>
+#!  and an element <A>e</A> in a left <C>A</C>-module,
+#!  the expression <C><A>a</A>^<A>e</A></C> produces the product
+#!  of <A>a</A> and <A>e</A>.
+#! @Returns <Ref Filt="IsLeftQuiverModuleElement"/>
+#! @Arguments a, e
 DeclareOperation( "\^", [ IsQuiverAlgebraElement, IsLeftQuiverModuleElement ] );
+
+#! @Description
+#!  For an element <A>a</A> in a quiver algebra <C>A</C>
+#!  and an element <A>e</A> in a right <C>A</C>-module,
+#!  the expression <C><A>e</A>^<A>a</A></C> produces the product
+#!  of <A>e</A> and <A>a</A>.
+#! @Returns <Ref Filt="IsLeftQuiverModuleElement"/>
+#! @Arguments e, a
 DeclareOperation( "\^", [ IsRightQuiverModuleElement, IsQuiverAlgebraElement ] );
 
 DeclareOperation( "MatrixVectorMultiplication", [ IsQuiver ] );
