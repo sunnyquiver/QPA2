@@ -23,8 +23,8 @@ function( source, range, matrices )
   fi;
   Q := QuiverOfAlgebra( A );
   for i in [ 1 .. NumberOfVertices( Q ) ] do
-    dim_src := Maximum( 1, VertexDimension( source, i ) );
-    dim_tgt := Maximum( 1, VertexDimension( range, i ) );
+    dim_src := VertexDimension( source, i );
+    dim_tgt := VertexDimension( range, i );
     if IsLeftQuiver( Q ) then
       expected_dim := [ dim_tgt, dim_src ];
     else

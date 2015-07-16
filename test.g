@@ -65,20 +65,20 @@ P1r := QuiverRepresentation( kQ1, [ 1, 1, 1 ],
                              [ [ [ 1 ] ],
                                [ [ 1 ] ] ] );
 P2r := QuiverRepresentation( kQ1, [ 0, 1, 1 ],
-                             [ [ [ 0 ] ],
+                             [ MakeZeroMatrix( 1, 0, Rationals ),
                                [ [ 1 ] ] ] );
 P3r := QuiverRepresentation( kQ1, [ 0, 0, 1 ],
-                             [ [ [ 0 ] ],
-                               [ [ 0 ] ] ] );
+                             [ MakeZeroMatrix( 0, 0, Rationals ),
+                               MakeZeroMatrix( 1, 0, Rationals ) ] );
 I1r := QuiverRepresentation( kQ1, [ 1, 0, 0 ],
-                             [ [ [ 0 ] ],
-                               [ [ 0 ] ] ] );
+                             [ MakeZeroMatrix( 0, 1, Rationals ),
+                               MakeZeroMatrix( 0, 0, Rationals ) ] );
 I2r := QuiverRepresentation( kQ1, [ 1, 1, 0 ],
                              [ [ [ 1 ] ],
-                               [ [ 0 ] ] ] );
+                               MakeZeroMatrix( 0, 1, Rationals ) ] );
 I3r := P1r;
 
-f := QuiverRepresentationHomomorphism( P2r, P1r, [ [[0]], [[1]], [[1]] ] );
+f := QuiverRepresentationHomomorphism( P2r, P1r, [ MakeZeroMatrix( 1, 0, Rationals ), [[1]], [[1]] ] );
 
 ZZr := ZeroRepresentation( kQ1 );
 

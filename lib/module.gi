@@ -137,7 +137,7 @@ function( e, p )
   M := MatrixForPath( R, p );
   mult := MatrixVectorMultiplication( QuiverOfRepresentation( R ) );
   source_vec := ElementVector( e, Source( p ) );
-  target_vec := mult( M, source_vec, VertexDimension( R, Target( p ) ) );
+  target_vec := mult( M, source_vec );
   return QuiverRepresentationElementByVertices( R, [ Target( p ) ], [ target_vec ] );
 end );
 
@@ -242,8 +242,8 @@ function( A, dimensions, matrices )
       Error( "Not a matrix: ", matrices[ i ] );
     fi;
     arrow := arrows[ i ];
-    dim_src := Maximum( 1, dimensions[ VertexNumber( Source( arrow ) ) ] );
-    dim_tgt := Maximum( 1, dimensions[ VertexNumber( Target( arrow ) ) ] );
+    dim_src := dimensions[ VertexNumber( Source( arrow ) ) ];
+    dim_tgt := dimensions[ VertexNumber( Target( arrow ) ) ];
     if IsLeftQuiver( Q ) then
       expected_dim := [ dim_tgt, dim_src ];
     else
@@ -307,9 +307,9 @@ function( A, dimensions, arrows, matrices )
   all_matrices :=
     List( all_arrows,
           a ->
-          NullMat( Maximum( 1, dimensions[ VertexNumber( LeftEnd( a ) ) ] ),
-                   Maximum( 1, dimensions[ VertexNumber( RightEnd( a ) ) ] ),
-                   field ) );
+          MakeZeroMatrix( dimensions[ VertexNumber( LeftEnd( a ) ) ],
+                          dimensions[ VertexNumber( RightEnd( a ) ) ],
+                          field ) );
   num_specified_arrows := Length( arrows );
   if num_specified_arrows <> Length( matrices ) then
     Error( "Length of arrow list not the same as length of matrix list" );
@@ -912,24 +912,8 @@ InstallMethod( MatrixVectorMultiplication,
                [ IsQuiver ],
 function( Q )
   if IsLeftQuiver( Q ) then
-    return function( M, v, target_dim )
-      if target_dim = 0 then
-        return [];
-      elif Length( v ) = 0 then
-        return List( [ 1 .. target_dim ], x -> M[1][1] );
-      else
-        return M * v;
-      fi;
-    end;
+    return function( M, v ) return M * v; end;
   else
-    return function( M, v, target_dim )
-      if target_dim = 0 then
-        return [];
-      elif Length( v ) = 0 then
-        return List( [ 1 .. target_dim ], x -> M[1][1] );
-      else
-        return v * M;
-      fi;
-    end;
+    return function( M, v ) return v * M; end;
   fi;
 end );
