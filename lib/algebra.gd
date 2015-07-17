@@ -165,10 +165,10 @@ DeclareOperation( "PathAsAlgebraElement", [ IsQuiverAlgebra, IsPath ] );
 #! @Description
 #!  Returns the primitive path (vertex or arrow) with label <A>label</A>,
 #!  as an element of the quiver algebra <A>A</A>.
-#!  If no such path exists, then <C>fail</C> is returned.
+#!  If no such path exists, an error is signalled.
 #!  The operation <C><A>A</A>[ <A>label</A> ]</C> is equivalent to
 #!  <C>AlgebraElementByLabel( <A>A</A>, <A>label</A> )</C>.
-#! @Returns <Ref Filt="IsQuiverAlgebraElement"/> or <C>fail</C>
+#! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
 #! @Arguments A, label
 DeclareOperation( "AlgebraElementByLabel", [ IsQuiverAlgebra, IsObject ] );
 #! @Arguments A, label
@@ -182,10 +182,11 @@ DeclareOperation( "\[\]", [ IsQuiverAlgebra, IsObject ] );
 #!  Returns the path described by the string <A>string</A>
 #!  (see <Ref Oper="PathFromString"  Label="for IsQuiver, IsString"/>)
 #!  as an element of the quiver algebra <A>A</A>.
-#!  If no such path exists, then <C>fail</C> is returned.
+#!  If no such path exists, an error is signalled.
 #!  <P/>
 #!  This operation can also be called by writing <C><A>A</A>.str</C>,
 #!  where <C>str</C> is an unquoted string literal.
+#! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
 DeclareOperation( "AlgebraElementFromString", [ IsQuiverAlgebra, IsString ] );
 
 #! @InsertChunk Example_AlgebraElementFromString

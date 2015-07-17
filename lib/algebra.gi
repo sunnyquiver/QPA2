@@ -538,19 +538,29 @@ end );
 InstallMethod( AlgebraElementFromString, "for quiver algebra and string",
                [ IsQuiverAlgebra, IsString ],
 function( A, string )
-  return PathAsAlgebraElement( A, PathFromString( QuiverOfAlgebra( A ), string ) );
+  local path;
+  path := PathFromString( QuiverOfAlgebra( A ), string );
+  if path = fail then
+    Error( "Algebra does not contain a path named \"", string, "\"" );
+  fi;
+  return PathAsAlgebraElement( A, path );
 end );
 
 InstallMethod( \., "for quiver algebra and positive integer",
 	       [ IsQuiverAlgebra, IsPosInt ],
 function( A, string_as_int )
-  return PathAsAlgebraElement( A, \.( QuiverOfAlgebra( A ), string_as_int ) );
+  return AlgebraElementFromString( A, NameRNam( string_as_int ) );
 end );
 
 InstallMethod( AlgebraElementByLabel, "for quiver algebra and object",
                [ IsQuiverAlgebra, IsObject ],
 function( A, label )
-  return PathAsAlgebraElement( A, PrimitivePathByLabel( QuiverOfAlgebra( A ), label ) );
+  local path;
+  path := PrimitivePathByLabel( QuiverOfAlgebra( A ), label );
+  if path = fail then
+    Error( "Algebra does not contain a primitive path with label ", label );
+  fi;
+  return PathAsAlgebraElement( A, path );
 end );
 
 InstallMethod( \[\], "for quiver algebra and int",
