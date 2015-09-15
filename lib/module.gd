@@ -261,6 +261,7 @@ DeclareCategory( "IsQuiverBimodule",
 
 #! @Section Constructing modules
 
+#! @BeginGroup LeftQuiverModule
 #! @Description
 #!  Construct a left module over the quiver algebra <A>A</A>.
 #!  The argument <A>dimensions</A> is a list of positive integers
@@ -292,6 +293,7 @@ DeclareCategory( "IsQuiverBimodule",
 #! @Arguments A, dimensions, matrices
 DeclareOperation( "LeftQuiverModule",
                   [ IsQuiverAlgebra, IsDenseList, IsDenseList ] );
+#! @EndGroup
 
 #! @Description
 #!  Construct a left module over the quiver algebra <A>A</A>,
@@ -374,7 +376,7 @@ DeclareOperation( "AsLeftModule", [ IsQuiverRepresentation ] );
 
 #! @Description
 #!  The representation <A>R</A> considered as a right module.
-#! @Returns <Ref Filt="IsLeftQuiverModule"/>
+#! @Returns <Ref Filt="IsRightQuiverModule"/>
 #! @Arguments R
 DeclareOperation( "AsRightModule", [ IsQuiverRepresentation ] );
 
