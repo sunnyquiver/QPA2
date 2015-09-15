@@ -5,7 +5,7 @@ Q := LeftQuiver( "Q(3)[a:1->2,b:2->3,c:2->3]" );
 kQ := PathAlgebra( Rationals, Q );
 #! Rationals * Q
 kQ.c - 2/5 * kQ.ba + kQ[1];
-#! -2/5*(b*a) + 1*(c:2->3) + 1*(1)
+#! -2/5*(b*a) + 1*(c) + 1*(1)
 #! @EndExample
 #! @EndChunk
 
@@ -14,11 +14,11 @@ kQ.c - 2/5 * kQ.ba + kQ[1];
 kQ := PathAlgebra( Rationals, LeftQuiver( "Q(3)[a:1->2,b:2->3,c:2->3]" ) );
 #! Rationals * Q
 A := kQ / [ kQ.ca - kQ.ba ];
-#! ( Rationals * Q ) / [ 1*(c*a) + -1*(b*a) ]
+#! (Rationals * Q) / [ 1*(c*a) - 1*(b*a) ]
 (A.c + A.b) * A.a;
 #! { 2*(b*a) }
 kQ / TwoSidedIdealByGenerators( kQ, [ kQ.ca - kQ.ba ] );
-#! ( Rationals * Q ) / [ 1*(c*a) + -1*(b*a) ]
+#! (Rationals * Q) / [ 1*(c*a) - 1*(b*a) ]
 #! @EndExample
 #! @EndChunk
 
@@ -27,9 +27,9 @@ kQ / TwoSidedIdealByGenerators( kQ, [ kQ.ca - kQ.ba ] );
 kQ := PathAlgebra( Rationals, LeftQuiver( "Q(3)[a:1->2,b:2->3,c:2->3]" ) );
 #! Rationals * Q
 PathAlgebraElement( kQ, [ 2, -1, 1/5 ], [ Q.a, Q.ba, Q[1] ] );
-#! -1*(b*a) + 2*(a:1->2) + 1/5*(1)
+#! -1*(b*a) + 2*(a) + 1/5*(1)
 PathAlgebraElement( kQ, [ 2, 3/2 ], [ Q.a, Q.a ] );
-#! 7/2*(a:1->2)
+#! 7/2*(a)
 #! @EndExample
 #! @EndChunk
 
@@ -38,7 +38,7 @@ PathAlgebraElement( kQ, [ 2, 3/2 ], [ Q.a, Q.a ] );
 kQ := PathAlgebra( Rationals, LeftQuiver( "Q(3)[a:1->2,b:2->3,c:2->3]" ) );
 #! Rationals * Q
 A := kQ / [ kQ.ca - kQ.ba ];
-#! ( Rationals * Q ) / [ 1*(c*a) + -1*(b*a) ]
+#! (Rationals * Q) / [ 1*(c*a) - 1*(b*a) ]
 e := kQ.ca + kQ.ba;
 #! 1*(c*a) + 1*(b*a)
 QuotientOfPathAlgebraElement( A, e );
@@ -75,7 +75,7 @@ Q := LeftQuiver( "Q(3)[a:1->2,b:2->3,c:3->2,d:2->1]" );;
 kQ := PathAlgebra( Rationals, Q );;
 AlgebraElementFromString( kQ, "dcba" );
 #! 1*(d*c*b*a)
-kQ.dcba
+kQ.dcba;
 #! 1*(d*c*b*a)
 #! @EndExample
 #! @EndChunk
@@ -86,9 +86,9 @@ Q := LeftQuiver( "Q(6)[a:1->2,b:2->3,c:2->4,d:3->5,e:4->5,f:5->6]" );;
 kQ := PathAlgebra( Rationals, Q );;
 divisors := [ kQ.ec - kQ.db, kQ.fdb ];;
 DivideByList( kQ.fdba, divisors );
-#! [ [ [  ], [ [ 1*(6), 1*(a:1->2) ] ] ], 0 ]
+#! [ [ [  ], [ [ 1*(6), 1*(a) ] ] ], 0 ]
 DivideByList( kQ.feca + kQ.eca, divisors );
-#! [ [ [ [ 1*(f:5->6), 1*(a:1->2) ], [ 1*(5), 1*(a:1->2) ] ], [ [ 1*(6), 1*(a:1->2) ] ] ], 1*(d*b*a) ]
+#! [ [ [ [ 1*(f), 1*(a) ], [ 1*(5), 1*(a) ] ], [ [ 1*(6), 1*(a) ] ] ], 1*(d*b*a) ]
 #! @EndExample
 #! @EndChunk
 

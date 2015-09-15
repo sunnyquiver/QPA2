@@ -70,14 +70,13 @@ MakeLabelsFromPattern( "spam3", 5, [,,"egg"] );
 LeftQuiver( "Q", MakeLabelsFromPattern( "u", 3 ),
                MakeLabelsFromPattern( "a", 4 ),
                [ 1, 1, 2, 3 ], [ 1, 2, 3, 2 ] );
-Q(u,v,w)[a:u->u,b:u->v,c:v->w,d:w->v]
+#! Q(u,v,w)[a:u->u,b:u->v,c:v->w,d:w->v]
 #! @EndExample
 #! @EndChunk
 
 #! @BeginChunk Example_Decompose
 #! @BeginExample
-Q := LeftQuiver( "Q", 3, [ [ 'a', 1, 2 ], [ 'b', 2, 3 ] ] );
-#! Quiver( Q, 3, [ [ 'a', 1, 2 ], [ 'b', 2, 3 ] ] )
+Q := LeftQuiver( "Q", 3, [ [ 'a', 1, 2 ], [ 'b', 2, 3 ] ] );;
 AsList( Q.ba );
 #! [ (a), (b) ]
 AsListLR( Q.ba );
