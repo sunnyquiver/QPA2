@@ -119,7 +119,6 @@ function( f, e )
          ( Range( f ),
            ListN( MatricesOfRepresentationHomomorphism( f ),
                   ElementVectors( e ),
-                  VertexDimensions( Range( f ) ),
                   MatrixVectorMultiplication( Q ) ) );
 end );
 
