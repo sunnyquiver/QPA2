@@ -1344,12 +1344,15 @@ end );
 InstallMethod( OppositeQuiver,
                [ IsQuiver ],
 function( Q )
-  return Quiver( QuiverCategory( Q ),
-                 Concatenation( Label( Q ), "_op" ),
-                 VertexLabels( Q ),
-                 ArrowLabels( Q ),
-                 ArrowTargetIndices( Q ),
-                 ArrowSourceIndices( Q ) );
+  local Q_op;
+  Q_op := Quiver( QuiverCategory( Q ),
+                  Concatenation( Label( Q ), "_op" ),
+                  VertexLabels( Q ),
+                  ArrowLabels( Q ),
+                  ArrowTargetIndices( Q ),
+                  ArrowSourceIndices( Q ) );
+  SetOppositeQuiver( Q_op, Q );
+  return Q_op;
 end );
 
 InstallMethod( OppositePath,
