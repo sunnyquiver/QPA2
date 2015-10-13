@@ -30,6 +30,8 @@ DeclareAttribute( "RingOfEmptyMatrix", IsEmptyMatrix );
 #! @Arguments m, n, R
 DeclareOperation( "MakeZeroMatrix", [ IsInt, IsInt, IsRing ] );
 
+DeclareOperation( "IdentityMatrix", [ IsInt, IsRing ] );
+
 DeclareOperation( "\*", [ IsEmptyMatrix, IsList and IsEmpty ] );
 DeclareOperation( "\*", [ IsList and IsEmpty, IsEmptyMatrix ] );
 

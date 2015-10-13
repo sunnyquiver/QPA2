@@ -52,6 +52,16 @@ function( m, n, R )
   fi;
 end );
 
+InstallMethod( IdentityMatrix, "for integer and ring",
+               [ IsInt, IsRing ],
+function( n, R )
+  if n = 0 then
+    return MakeEmptyMatrix( n, n, R );
+  else
+    return MakeImmutable( IdentityMat( n, R ) );
+  fi;
+end );
+
 InstallMethod( \*, "for empty matrix and matrix",
                [ IsEmptyMatrix, IsMatrix ],
 function( M, N )
