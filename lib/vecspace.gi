@@ -1,6 +1,9 @@
 DeclareRepresentation( "IsVectorSpaceRep",
                        IsComponentObjectRep and IsAttributeStoringRep,
                        [ ] );
+DeclareRepresentation( "IsVectorSpaceBasisRep",
+                       IsComponentObjectRep and IsAttributeStoringRep,
+                       [ ] );
 DeclareRepresentation( "IsVectorRep",
                        IsComponentObjectRep and IsAttributeStoringRep,
                        [ "type", "field", "entries" ] );
@@ -16,6 +19,8 @@ BindGlobal( "FamilyOfRowVectorSpaces",
             CollectionsFamily( FamilyOfRowVectors ) );
 BindGlobal( "FamilyOfColVectorSpaces",
             CollectionsFamily( FamilyOfColVectors ) );
+BindGlobal( "FamilyOfVectorSpaceBases",
+            NewFamily( "vector space bases" ) );
 BindGlobal( "FamilyOfRowMatrices",
             NewFamily( "row matrices" ) );
 BindGlobal( "FamilyOfColMatrices",
@@ -132,6 +137,33 @@ function( V1, V2 )
   return V1!.type = V2!.type and
          LeftActingDomain( V1 ) = LeftActingDomain( V2 ) and
          Dimension( V1 ) = Dimension( V2 );
+end );
+
+InstallMethod( CanonicalBasis, [ IsQPAVectorSpace ],
+function( V )
+  local basis, basis_vectors;
+  if Dimension( V ) = 0 then
+    basis_vectors := [];
+  else
+    basis_vectors := List( IdentityMat( Dimension( V ) ),
+                           v -> MakeQPAVector( V!.type, LeftActingDomain( V ), v ) );
+  fi;
+  basis := rec();
+  ObjectifyWithAttributes( basis,
+                           NewType( FamilyOfVectorSpaceBases,
+                                    IsBasis and IsVectorSpaceBasisRep ),
+                           BasisVectors, basis_vectors,
+                           UnderlyingLeftModule, V );
+  return basis;
+end );
+
+InstallMethod( Basis, [ IsQPAVectorSpace ], CanonicalBasis );
+
+InstallMethod( Coefficients,
+               [ IsBasis and IsVectorSpaceBasisRep,
+                 IsQPAVector ],
+function( B, v )
+  return v!.entries;
 end );
 
 InstallMethod( MakeQPAMatrix, [ IsString, IsField, IsMatrix ],
@@ -329,7 +361,7 @@ function( type_str, F )
       return zero_morphism( Source( test ), Source( i ) );
     fi;
     matrix := List( Basis( Source( test ) ),
-                    v -> SolutionMat( i!.matrix, ImageElm( test, v ) ) );
+                    v -> SolutionMat( i!.matrix, ImageElm( test, v )!.entries ) );
     return make_morphism( matrix );
   end;
   AddLiftAlongMonomorphism( cat, mono_lift );
@@ -340,7 +372,7 @@ function( type_str, F )
       return zero_morphism( Range( e ), Range( test ) );
     fi;
     matrix := List( Basis( Range( e ) ),
-                    v -> ImageElm( test, SolutionMat( e!.matrix, v ) ) );
+                    v -> ImageElm( test, SolutionMat( e!.matrix, v!.entries ) ) );
     return make_morphism( matrix );
   end;
   AddColiftAlongEpimorphism( cat, epi_colift );
