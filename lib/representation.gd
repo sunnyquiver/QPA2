@@ -10,7 +10,28 @@ DeclareCategory( "IsQuiverRepresentationElement", IsVector );
 #!  Category for quiver representations.
 DeclareCategory( "IsQuiverRepresentation",
                  IsVectorSpace and
+                 IsCapCategoryObject and
                  CategoryCollections( IsQuiverRepresentationElement ) );
+
+
+#! @Section Categories of representations
+
+#!
+DeclareCategory( "IsQuiverRepresentationCategory", IsCapCategory );
+
+#!
+DeclareAttribute( "AlgebraOfCategory", IsQuiverRepresentationCategory );
+
+#!
+DeclareAttribute( "VectorSpaceCategory", IsQuiverRepresentationCategory );
+
+#!
+DeclareAttribute( "CategoryOfQuiverRepresentations", IsQuiverAlgebra );
+
+#!
+DeclareOperation( "CategoryOfQuiverRepresentationsOverVectorSpaceCategory",
+                  [ IsQuiverAlgebra, IsVectorSpaceCategory ] );
+
 
 #! @Section Constructing elements
 
@@ -103,8 +124,21 @@ DeclareOperation( "QuiverAlgebraAction", [ IsQuiverRepresentationElement, IsQuiv
 DeclareOperation( "QuiverRepresentation", [ IsQuiverAlgebra, IsDenseList, IsDenseList ] );
 #! @Arguments A, dimensions, matrices
 DeclareOperation( "QuiverRepresentationNC", [ IsQuiverAlgebra, IsDenseList, IsDenseList ] );
+#! @Arguments cat, dimensions, matrices
+DeclareOperation( "QuiverRepresentation", [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ] );
+#! @Arguments cat, dimensions, matrices
+DeclareOperation( "QuiverRepresentationNC", [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ] );
 #! @EndGroup
 
+#!
+DeclareOperation( "QuiverRepresentationByObjectsAndMorphisms",
+                  [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ] );
+
+#!
+DeclareOperation( "QuiverRepresentationByObjectsAndMorphismsNC",
+                  [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ] );
+
+#! @BeginGroup QuiverRepresentationByArrows
 #! @Description
 #!  Construct a quiver representation by specifying matrices for certain arrows.
 #!  This works like the constructor <Ref Oper="QuiverRepresentation"/>,
@@ -115,6 +149,10 @@ DeclareOperation( "QuiverRepresentationNC", [ IsQuiverAlgebra, IsDenseList, IsDe
 #! @Arguments A, dimensions, arrows, matrices
 DeclareOperation( "QuiverRepresentationByArrows",
                   [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
+#! @Arguments cat, dimensions, arrows, matrices
+DeclareOperation( "QuiverRepresentationByArrows",
+                  [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ] );
+#! @EndGroup
 
 #! @Description
 #!  Given an algebra $<A>A</A> = kQ/I$ and a representation <A>R</A> over
@@ -126,6 +164,12 @@ DeclareOperation( "QuiverRepresentationByArrows",
 #! @Arguments R, A
 DeclareOperation( "AsRepresentationOfQuotientAlgebra",
                   [ IsQuiverRepresentation, IsQuotientOfPathAlgebra ] );
+
+#!
+DeclareAttribute( "UnderlyingCategoryForRepresentations", IsQuiverAlgebra );
+
+#!
+DeclareAttribute( "VectorSpaceTypeForRepresentations", IsQuiverAlgebra );
 
 #! @Description
 #!  Produces the zero representation over the quiver algebra <A>A</A>.
@@ -159,7 +203,16 @@ DeclareAttribute( "FieldOfRepresentation", IsQuiverRepresentation );
 #!  as a list.  The entries in the list correspond to the vertices of the quiver.
 #! @Returns <Ref BookName="Reference" Filt="IsDenseList"/>
 #! @Arguments R
-DeclareAttribute( "VertexDimensions", IsQuiverRepresentation );
+DeclareAttribute( "DimensionVector", IsQuiverRepresentation );
+
+#!
+DeclareAttribute( "VectorSpacesOfRepresentation", IsQuiverRepresentation );
+
+#!
+DeclareOperation( "VectorSpaceOfRepresentation", [ IsQuiverRepresentation, IsPosInt ] );
+
+#!
+DeclareAttribute( "MapsOfRepresentation", IsQuiverRepresentation );
 
 #! @Description
 #!  Returns the dimension of the vector space in the representation <A>R</A>
@@ -187,14 +240,14 @@ DeclareAttribute( "MatricesOfRepresentation", IsQuiverRepresentation );
 #!  corresponding to arrow number <A>i</A>, where <A>i</A> is a positive integer.
 #! @Returns <Ref BookName="Reference" Filt="IsMatrix"/>
 #! @Arguments R, i
-DeclareOperation( "MatrixForArrow", [ IsQuiverRepresentation, IsPosInt ] );
+DeclareOperation( "MapForArrow", [ IsQuiverRepresentation, IsPosInt ] );
 
 #! @Description
 #!  Returns the matrix for the map in the representation <A>R</A>
 #!  corresponding to the arrow <A>a</A>.
 #! @Returns <Ref BookName="Reference" Filt="IsMatrix"/>
 #! @Arguments R, a
-DeclareOperation( "MatrixForArrow", [ IsQuiverRepresentation, IsArrow ] );
+DeclareOperation( "MapForArrow", [ IsQuiverRepresentation, IsArrow ] );
 
 #! @Description
 #!  Returns the matrix for the map in the representation <A>R</A>
@@ -202,31 +255,53 @@ DeclareOperation( "MatrixForArrow", [ IsQuiverRepresentation, IsArrow ] );
 #!  the maps corresponding to the arrows in <A>p</A>.
 #! @Returns <Ref BookName="Reference" Filt="IsMatrix"/>
 #! @Arguments R, p
-DeclareOperation( "MatrixForPath", [ IsQuiverRepresentation, IsPath ] );
+DeclareOperation( "MapForPath", [ IsQuiverRepresentation, IsPath ] );
 
 #! @Description
 #!  Returns the matrix for the map in the representation <A>R</A>
 #!  corresponding to the homogeneous algebra element <A>e</A>.
 #! @Returns <Ref BookName="Reference" Filt="IsMatrix"/>
 #! @Arguments R, e
-DeclareOperation( "MatrixForAlgebraElement", [ IsQuiverRepresentation, IsQuiverAlgebraElement ] );
+DeclareOperation( "MapForAlgebraElement", [ IsQuiverRepresentation, IsQuiverAlgebraElement ] );
 
+#! @Section Homomorphisms of representations
+
+#!
 DeclareCategory( "IsQuiverRepresentationHomomorphism",
-                 IsMapping and IsSPGeneralMapping and IsVectorSpaceHomomorphism );
+                 IsMapping and IsSPGeneralMapping and IsVectorSpaceHomomorphism
+                 and IsCapCategoryMorphism );
 
+#!
 DeclareOperation( "QuiverRepresentationHomomorphism",
                   [ IsQuiverRepresentation, IsQuiverRepresentation,
                     IsDenseList ] );
 
+#!
 DeclareOperation( "QuiverRepresentationHomomorphismNC",
                   [ IsQuiverRepresentation, IsQuiverRepresentation,
                     IsDenseList ] );
 
-DeclareOperation( "MatricesOfRepresentationHomomorphism",
-                  [ IsQuiverRepresentationHomomorphism ] );
+#!
+DeclareOperation( "QuiverRepresentationHomomorphismByMorphisms",
+                  [ IsQuiverRepresentation, IsQuiverRepresentation,
+                    IsDenseList ] );
+
+#!
+DeclareOperation( "QuiverRepresentationHomomorphismByMorphismsNC",
+                  [ IsQuiverRepresentation, IsQuiverRepresentation,
+                    IsDenseList ] );
+
+#!
+DeclareAttribute( "MapsOfRepresentationHomomorphism",
+                  IsQuiverRepresentationHomomorphism );
+
+#!
+DeclareAttribute( "MatricesOfRepresentationHomomorphism",
+                  IsQuiverRepresentationHomomorphism );
 
 # DeclareOperation( "ImageElm",
 #                   [ IsQuiverRepresentationHomomorphism,
 #                     IsQuiverRepresentationElement ] );
 
-DeclareOperation( "MatrixVectorMultiplication", [ IsQuiver ] );
+# DeclareOperation( "MatrixVectorMultiplication", [ IsQuiver ] );
+
