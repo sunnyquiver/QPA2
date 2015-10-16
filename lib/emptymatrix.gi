@@ -52,6 +52,8 @@ function( m, n, R )
   fi;
 end );
 
+InstallTrueMethod( IsZero, IsEmptyMatrix );
+
 InstallMethod( IdentityMatrix, "for integer and ring",
                [ IsInt, IsRing ],
 function( n, R )

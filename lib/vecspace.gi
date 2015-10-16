@@ -7,7 +7,7 @@ DeclareRepresentation( "IsVectorSpaceBasisRep",
 DeclareRepresentation( "IsVectorRep",
                        IsComponentObjectRep and IsAttributeStoringRep,
                        [ "type", "field", "entries" ] );
-DeclareRepresentation( "IsMatrixRep",
+DeclareRepresentation( "IsLinearTransformationRep",
                        IsComponentObjectRep and IsAttributeStoringRep,
                        [ ] );
 
@@ -21,10 +21,8 @@ BindGlobal( "FamilyOfColVectorSpaces",
             CollectionsFamily( FamilyOfColVectors ) );
 BindGlobal( "FamilyOfVectorSpaceBases",
             NewFamily( "vector space bases" ) );
-BindGlobal( "FamilyOfRowMatrices",
-            NewFamily( "row matrices" ) );
-BindGlobal( "FamilyOfColMatrices",
-            NewFamily( "col matrices" ) );
+BindGlobal( "FamilyOfLinearTransformations",
+            NewFamily( "linear transformations" ) );
 
 InstallMethod( MakeQPAVector, [ IsString, IsField, IsDenseList ],
 function( type_str, F, entries )
@@ -73,6 +71,11 @@ function( v, i )
   return v!.entries[ i ];
 end );
 
+InstallMethod( Length, [ IsQPAVector ],
+function( v )
+  return Length( v!.entries );
+end );
+
 InstallMethod( \+, [ IsQPAVector, IsQPAVector ],
 function( v1, v2 )
   if SpaceContainingVector( v1 ) <> SpaceContainingVector( v2 ) then
@@ -107,11 +110,11 @@ function( type_str, F, dim )
   if type_str = "row" then
     type := NewType( FamilyOfRowVectorSpaces,
                      IsRowVectorSpace and IsQPAVectorSpace and IsVectorSpaceRep );
-    cat := RowSpaceCategory( F );
+    cat := CategoryOfRowSpaces( F );
   elif type_str = "col" then
     type := NewType( FamilyOfColVectorSpaces,
                      IsColVectorSpace and IsQPAVectorSpace and IsVectorSpaceRep );
-    cat := ColSpaceCategory( F );
+    cat := CategoryOfColSpaces( F );
   else
     Error( "type must be \"row\" or \"col\"" );
   fi;
@@ -166,125 +169,158 @@ function( B, v )
   return v!.entries;
 end );
 
-InstallMethod( MakeQPAMatrix, [ IsString, IsField, IsMatrix ],
-function( type_str, F, entries )
-  local type, cat, mat, dims, dims_underlying;
+InstallMethod( MakeLinearTransformation, [ IsString, IsField, IsMatrix ],
+function( type_str, F, matrix )
+  local type, cat, mat, dims, source_dim, range_dim;
   mat := rec( type := type_str,
-              field := F,
-              matrix := entries );
-  dims_underlying := DimensionsMat( entries );
+              field := F );
+  dims := DimensionsMat( matrix );
   if type_str = "row" then
-    type := NewType( FamilyOfRowMatrices,
-                     IsRowMatrix and IsMatrixRep );
-    cat := RowSpaceCategory( F );
-    dims := dims_underlying;
+    type := NewType( FamilyOfLinearTransformations,
+                     IsLinearTransformationOfRowSpaces and IsLinearTransformationRep );
+    cat := CategoryOfRowSpaces( F );
+    source_dim := dims[ 1 ];
+    range_dim := dims[ 2 ];
   elif type_str = "col" then
-    type := NewType( FamilyOfColMatrices,
-                     IsColMatrix and IsMatrixRep );
-    cat := ColSpaceCategory( F );
-    dims := Reversed( dims_underlying );
+    type := NewType( FamilyOfLinearTransformations,
+                     IsLinearTransformationOfColSpaces and IsLinearTransformationRep );
+    cat := CategoryOfColSpaces( F );
+    source_dim := dims[ 2 ];
+    range_dim := dims[ 1 ];
   else
     Error( "type must be \"row\" or \"col\"" );
   fi;
   ObjectifyWithAttributes( mat, type,
-                           DimensionsMat, dims,
-                           Source, MakeQPAVectorSpace( type_str, F, dims_underlying[ 1 ] ),
-                           Range, MakeQPAVectorSpace( type_str, F, dims_underlying[ 2 ] ),
+                           Source, MakeQPAVectorSpace( type_str, F, source_dim ),
+                           Range, MakeQPAVectorSpace( type_str, F, range_dim ),
+                           MatrixOfLinearTransformation, matrix,
                            IsMapping, true );
   Add( cat, mat );
   return mat;
 end );
 
-InstallMethod( RowMatrix, [ IsField, IsMatrix ],
-function( F, entries )
-  return MakeQPAMatrix( "row", F, entries );
+InstallMethod( LinearTransformationOfRowSpaces, [ IsField, IsMatrix ],
+function( F, matrix )
+  return MakeLinearTransformation( "row", F, matrix );
 end );
 
-InstallMethod( ColMatrix, [ IsField, IsMatrix ],
-function( F, entries )
-  return MakeQPAMatrix( "col", F, entries );
+InstallMethod( LinearTransformationOfColSpaces, [ IsField, IsMatrix ],
+function( F, matrix )
+  return MakeLinearTransformation( "col", F, matrix );
 end );
 
-InstallMethod( MatElm, [ IsRowMatrix, IsPosInt, IsPosInt ],
-function( m, i, j )
-  return m!.matrix[ i ][ j ];
-end );
+# InstallMethod( MatElm, [ IsRowMatrix, IsPosInt, IsPosInt ],
+# function( m, i, j )
+#   return m!.matrix[ i ][ j ];
+# end );
 
-InstallMethod( MatElm, [ IsColMatrix, IsPosInt, IsPosInt ],
-function( m, i, j )
-  return m!.matrix[ j ][ i ];
-end );
+# InstallMethod( MatElm, [ IsColMatrix, IsPosInt, IsPosInt ],
+# function( m, i, j )
+#   return m!.matrix[ j ][ i ];
+# end );
 
-InstallMethod( String, [ IsQPAMatrix ],
+InstallMethod( String, [ IsLinearTransformation ],
 function( m )
-  local sep, dims, rows, entry_len;
-  if m!.type = "row" then
-    sep := "_";
-  else
-    sep := "|";
-  fi;
-  dims := DimensionsMat( m );
-  if dims[ 1 ] = 0 or dims[ 2 ] = 0 then
-    return Concatenation( "<", JoinStringsWithSeparator( dims, "x" ), " ",
-                          m!.type, " matrix>" );
-  fi;
-  entry_len := Maximum( List( m!.matrix,
-                              r -> Maximum( List( r, x -> Length( String( x ) ) ) ) ) );
-  rows := List( [ 1 .. dims[ 1 ] ],
-                i -> Concatenation
-                     ( sep,
-                       JoinStringsWithSeparator
-                       ( List( [ 1 .. dims[ 2 ] ],
-                               j -> String( MatElm( m, i, j ),
-                                            entry_len ) ),
-                         sep ),
-                       sep ) );
-  return JoinStringsWithSeparator( rows, "\n" );
+  return Concatenation( "linear transformation of ", m!.type, " spaces: ",
+                        String( Dimension( Source( m ) ) ), "->",
+                        String( Dimension( Range( m ) ) ) );
+  # local mat, sep, dims, rows, entry_len;
+  # mat := MatrixOfLinearTransformation( m );
+  # if m!.type = "row" then
+  #   sep := "_";
+  # else
+  #   sep := "|";
+  # fi;
+  # dims := DimensionsMat( mat );
+  # if dims[ 1 ] = 0 or dims[ 2 ] = 0 then
+  #   return Concatenation( "<", JoinStringsWithSeparator( dims, "x" ), " ",
+  #                         m!.type, " matrix>" );
+  # fi;
+  # entry_len := Maximum( List( m!.matrix,
+  #                             r -> Maximum( List( r, x -> Length( String( x ) ) ) ) ) );
+  # rows := List( [ 1 .. dims[ 1 ] ],
+  #               i -> Concatenation
+  #                    ( sep,
+  #                      JoinStringsWithSeparator
+  #                      ( List( [ 1 .. dims[ 2 ] ],
+  #                              j -> String( MatElm( m, i, j ),
+  #                                           entry_len ) ),
+  #                        sep ),
+  #                      sep ) );
+  # return JoinStringsWithSeparator( rows, "\n" );
 end );
 
-InstallMethod( ViewObj, [ IsQPAMatrix ],
+InstallMethod( ViewObj, [ IsLinearTransformation ],
 function( m )
   Print( String( m ) );
 end );
 
-InstallMethod( \+, [ IsQPAMatrix, IsQPAMatrix ],
+InstallMethod( \+, [ IsLinearTransformation, IsLinearTransformation ],
 function( m1, m2 )
+  local mat1, mat2;
   if m1!.type <> m2!.type then
-    Error( "cannot add matrices of different types" );
+    Error( "cannot add linear transformations of different types" );
   elif m1!.field <> m2!.field then
-    Error( "cannot add matrices over different fields" );
-  elif DimensionsMat( m1 ) <> DimensionsMat( m2 ) then
-    Error( "cannot add matrices of different dimensions" );
+    Error( "cannot add linear transformations over different fields" );
+  elif Source( m1 ) <> Source( m2 ) then
+    Error( "cannot add linear transformations with different source spaces" );
+  elif Range( m1 ) <> Range( m2 ) then
+    Error( "cannot add linear transformations with different range spaces" );
   fi;
-  return MakeQPAMatrix( m1!.type, m1!.field, m1!.matrix + m2!.matrix );
+  mat1 := MatrixOfLinearTransformation( m1 );
+  mat2 := MatrixOfLinearTransformation( m2 );
+  return MakeLinearTransformation( m1!.type, m1!.field, mat1 + mat2 );
 end );
 
-InstallMethod( ImageElm, [ IsQPAMatrix, IsQPAVector ],
+InstallMethod( ImageElm, [ IsLinearTransformationOfRowSpaces, IsQPAVector and IsRowVector ],
 function( m, v )
   if not v in Source( m ) then
     Error( "vector not in source vector space" );
   fi;
   return MakeQPAVector( v!.type, v!.field,
-                        v!.entries * m!.matrix );
+                        v!.entries * MatrixOfLinearTransformation( m ) );
+end );
+
+InstallMethod( ImageElm, [ IsLinearTransformationOfColSpaces, IsQPAVector and IsColVector ],
+function( m, v )
+  if not v in Source( m ) then
+    Error( "vector not in source vector space" );
+  fi;
+  return MakeQPAVector( v!.type, v!.field,
+                        MatrixOfLinearTransformation( m ) * v!.entries );
+end );
+
+InstallMethod( VectorSpaceInCategory, [ IsVectorSpaceCategory, IsInt ],
+function( cat, dim )
+  return VectorSpaceConstructor( cat )( dim );
+end );
+
+InstallMethod( LinearTransformationInCategory, [ IsVectorSpaceCategory, IsMatrix ],
+function( cat, matrix )
+  return LinearTransformationConstructor( cat )( matrix );
 end );
 
 InstallMethod( MakeQPAVectorSpaceCategory, [ IsString, IsField ],
 function( type_str, F )
   local cat, make_vecspace, make_morphism,
         equal_objects, equal_morphisms,
-        zero_object, zero_morphism, identity_morphism,
+        zero_object, zero_morphism, is_zero_morphism, identity_morphism,
         pre_compose, addition, additive_inverse,
-        kernel_emb, coker_proj, mono_lift, epi_colift,
-        direct_sum, inj_direct_sum, proj_direct_sum;
+        kernel_emb, kernel_emb_mat, coker_proj, coker_proj_mat,
+        preimage, mono_lift, epi_colift,
+        direct_sum, direct_sum_morphism_1, direct_sum_morphism_2;
 
   if type_str <> "row" and type_str <> "col" then
     Error( "type must be \"row\" or \"col\"" );
   fi;
 
   make_vecspace := dim -> MakeQPAVectorSpace( type_str, F, dim );
-  make_morphism := mat -> MakeQPAMatrix( type_str, F, mat );
+  make_morphism := mat -> MakeLinearTransformation( type_str, F, mat );
 
   cat := CreateCapCategory( Concatenation( type_str, " spaces over ", String( F ) ) );
+  SetFilterObj( cat, IsVectorSpaceCategory );
+  SetVectorSpaceConstructor( cat, make_vecspace );
+  SetLinearTransformationConstructor( cat, make_morphism );
 
   SetIsAbelianCategory( cat, true );
 
@@ -294,7 +330,7 @@ function( type_str, F )
   AddIsEqualForObjects( cat, equal_objects );
                         
   equal_morphisms := function( m1, m2 )
-    return m1!.matrix = m2!.matrix;
+    return MatrixOfLinearTransformation( m1 ) = MatrixOfLinearTransformation( m2 );
   end;
   AddIsEqualForMorphisms( cat, equal_morphisms );
 
@@ -303,38 +339,62 @@ function( type_str, F )
   end;
   AddZeroObject( cat, zero_object );
 
-  zero_morphism := function( V1, V2 )
-    local matrix;
-    matrix := MakeZeroMatrix( Dimension( V1 ), Dimension( V2 ), F );
-    return make_morphism( matrix );
-  end;
+  if type_str = "row" then
+    zero_morphism := function( V1, V2 )
+      return make_morphism( MakeZeroMatrix( Dimension( V1 ), Dimension( V2 ), F ) );
+    end;
+  else
+    zero_morphism := function( V1, V2 )
+      return make_morphism( MakeZeroMatrix( Dimension( V2 ), Dimension( V1 ), F ) );
+    end;
+  fi;
   AddZeroMorphism( cat, zero_morphism );
 
-  AddIsZeroForMorphisms( cat, IsZero );
+  is_zero_morphism := function( m )
+    return IsZero( MatrixOfLinearTransformation( m ) );
+  end;
+  AddIsZeroForMorphisms( cat, is_zero_morphism );
 
   identity_morphism := function( V )
     return make_morphism( IdentityMatrix( Dimension( V ), F ) );
   end;
   AddIdentityMorphism( cat, identity_morphism );
 
-  pre_compose := function( m1, m2 )
-    return make_morphism( m1!.matrix * m2!.matrix );
-  end;
+  if type_str = "row" then
+    pre_compose := function( m1, m2 )
+      return make_morphism( MatrixOfLinearTransformation( m1 ) *
+                            MatrixOfLinearTransformation( m2 ) );
+    end;
+  else
+    pre_compose := function( m1, m2 )
+      return make_morphism( MatrixOfLinearTransformation( m2 ) *
+                            MatrixOfLinearTransformation( m1 ) );
+    end;
+  fi;
   AddPreCompose( cat, pre_compose );
 
   addition := function( m1, m2 )
-    return make_morphism( m1!.matrix + m2!.matrix );
+    return make_morphism( MatrixOfLinearTransformation( m1 ) +
+                          MatrixOfLinearTransformation( m2 ) );
   end;
   AddAdditionForMorphisms( cat, addition );
 
   additive_inverse := function( m )
-    return make_morphism( - m!.matrix );
+    return make_morphism( - MatrixOfLinearTransformation( m ) );
   end;
   AddAdditiveInverseForMorphisms( cat, additive_inverse );
 
+  if type_str = "row" then
+    kernel_emb_mat := TriangulizedNullspaceMat;
+    coker_proj_mat := m -> TransposedMat( TriangulizedNullspaceMat( TransposedMat( m ) ) );
+  else
+    kernel_emb_mat := m -> TransposedMat( TriangulizedNullspaceMat( TransposedMat( m ) ) );
+    coker_proj_mat := TriangulizedNullspaceMat;
+  fi;
+
   kernel_emb := function( m )
     local kernel_mat;
-    kernel_mat := TriangulizedNullspaceMat( m!.matrix );
+    kernel_mat := kernel_emb_mat( MatrixOfLinearTransformation( m ) );
     if kernel_mat = [] then
       return zero_morphism( zero_object(), Source( m ) );
     else
@@ -345,8 +405,7 @@ function( type_str, F )
 
   coker_proj := function( m )
     local coker_mat;
-    coker_mat := TransposedMat( TriangulizedNullspaceMat
-                                ( TransposedMat( m!.matrix ) ) );
+    coker_mat := coker_proj_mat( MatrixOfLinearTransformation( m ) );
     if coker_mat = [] then
       return zero_morphism( Range( m ), zero_object() );
     else
@@ -355,13 +414,26 @@ function( type_str, F )
   end;
   AddCokernelProjection( cat, coker_proj );
 
+  if type_str = "row" then
+    preimage := function( m, v )
+      return SolutionMat( MatrixOfLinearTransformation( m ), v!.entries );
+    end;
+  else
+    preimage := function( m, v )
+      return SolutionMat( TransposedMat( MatrixOfLinearTransformation( m ) ), v!.entries );
+    end;
+  fi;
+
   mono_lift := function( i, test )
     local matrix;
     if IsZero( Source( i ) ) or IsZero( Source( test ) ) then
       return zero_morphism( Source( test ), Source( i ) );
     fi;
     matrix := List( Basis( Source( test ) ),
-                    v -> SolutionMat( i!.matrix, ImageElm( test, v )!.entries ) );
+                    v -> preimage( i, ImageElm( test, v ) ) );
+    if type_str = "col" then
+      matrix := TransposedMat( matrix );
+    fi;
     return make_morphism( matrix );
   end;
   AddLiftAlongMonomorphism( cat, mono_lift );
@@ -372,7 +444,10 @@ function( type_str, F )
       return zero_morphism( Range( e ), Range( test ) );
     fi;
     matrix := List( Basis( Range( e ) ),
-                    v -> ImageElm( test, SolutionMat( e!.matrix, v!.entries ) ) );
+                    v -> ImageElm( test, preimage( e, v ) ) );
+    if type_str = "col" then
+      matrix := TransposedMat( matrix );
+    fi;
     return make_morphism( matrix );
   end;
   AddColiftAlongEpimorphism( cat, epi_colift );
@@ -382,7 +457,7 @@ function( type_str, F )
   end;
   AddDirectSum( cat, direct_sum );
 
-  inj_direct_sum := function( summands, i, sum )
+  direct_sum_morphism_1 := function( summands, i, sum )
     local n, summands_before, summands_after, dim_before, dim_after, dim_i,
           m1, m2, m3, matrix;
     n := Length( summands );
@@ -397,9 +472,8 @@ function( type_str, F )
     matrix := StackMatricesHorizontally( [ m1, m2, m3 ] );
     return make_morphism( matrix );
   end;
-  AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, inj_direct_sum );
 
-  proj_direct_sum := function( summands, i, sum )
+  direct_sum_morphism_2 := function( summands, i, sum )
     local n, summands_before, summands_after, dim_before, dim_after, dim_i,
           m1, m2, m3, matrix;
     n := Length( summands );
@@ -414,17 +488,24 @@ function( type_str, F )
     matrix := StackMatricesVertically( [ m1, m2, m3 ] );
     return make_morphism( matrix );
   end;
-  AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, proj_direct_sum );
+
+  if type_str = "row" then
+    AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, direct_sum_morphism_1 );
+    AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, direct_sum_morphism_2 );
+  else
+    AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, direct_sum_morphism_2 );
+    AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, direct_sum_morphism_1 );
+  fi;
   
   Finalize( cat );
 
   return cat;
 end );
 
-InstallMethod( RowSpaceCategory, [ IsField ],
+InstallMethod( CategoryOfRowSpaces, [ IsField ],
                F -> MakeQPAVectorSpaceCategory( "row", F ) );
 
-InstallMethod( ColSpaceCategory, [ IsField ],
+InstallMethod( CategoryOfColSpaces, [ IsField ],
                F -> MakeQPAVectorSpaceCategory( "col", F ) );
 
 InstallMethod( StackMatricesHorizontally, [ IsDenseList ],
