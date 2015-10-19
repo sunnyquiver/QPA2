@@ -212,6 +212,9 @@ DeclareAttribute( "VectorSpacesOfRepresentation", IsQuiverRepresentation );
 DeclareOperation( "VectorSpaceOfRepresentation", [ IsQuiverRepresentation, IsPosInt ] );
 
 #!
+DeclareOperation( "VectorSpaceOfRepresentation", [ IsQuiverRepresentation, IsVertex ] );
+
+#!
 DeclareAttribute( "MapsOfRepresentation", IsQuiverRepresentation );
 
 #! @Description
@@ -299,9 +302,21 @@ DeclareAttribute( "MapsOfRepresentationHomomorphism",
 DeclareAttribute( "MatricesOfRepresentationHomomorphism",
                   IsQuiverRepresentationHomomorphism );
 
+#!
+DeclareOperation( "MapForVertex",
+                  [ IsQuiverRepresentationHomomorphism, IsVertex ] );
+
+#!
+DeclareOperation( "MapForVertex",
+                  [ IsQuiverRepresentationHomomorphism, IsPosInt ] );
+
 # DeclareOperation( "ImageElm",
 #                   [ IsQuiverRepresentationHomomorphism,
 #                     IsQuiverRepresentationElement ] );
 
 # DeclareOperation( "MatrixVectorMultiplication", [ IsQuiver ] );
 
+
+
+#!
+DeclareOperation( "Transpose", [ IsDenseList ] );

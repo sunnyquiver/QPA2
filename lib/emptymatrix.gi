@@ -164,3 +164,23 @@ InstallMethod( \=, "for matrix and empty matrix",
 InstallMethod( \=, "for empty matrix and matrix",
                [ IsEmptyMatrix, IsMatrix ],
                ReturnFalse );
+
+InstallMethod( TransposedMat, "for empty matrix",
+               [ IsEmptyMatrix ],
+function( M )
+  local dim;
+  dim := DimensionsMat( M );
+  return MakeEmptyMatrix( dim[ 2 ], dim[ 1 ], RingOfEmptyMatrix( M ) );
+end );
+
+InstallMethod( TriangulizedNullspaceMat, "for empty matrix",
+               [ IsEmptyMatrix ],
+function( M )
+  local dim;
+  dim := DimensionsMat( M );
+  if dim[ 1 ] = 0 then
+    return [];
+  else
+    return IdentityMatrix( dim[ 1 ], RingOfEmptyMatrix( M ) );
+  fi;
+end );

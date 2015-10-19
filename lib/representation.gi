@@ -413,21 +413,16 @@ end );
 InstallMethod( ZeroRepresentation, "for quiver algebra",
                [ IsQuiverAlgebra ],
 function( A )
-  local numVertices, field;
+  local numVertices;
   numVertices := NumberOfVertices( QuiverOfAlgebra( A ) );
-  field := LeftActingDomain( A );
   return QuiverRepresentationByArrows( A,
                                        List( [ 1 .. numVertices ],
-                                             i -> Zero( field ) ),
+                                             i -> 0 ),
                                        [], [] );
 end );
 
 InstallMethod( \=, [ IsQuiverRepresentation, IsQuiverRepresentation ],
-function( R1, R2 )
-  return AlgebraOfRepresentation( R1 ) = AlgebraOfRepresentation( R2 ) and
-         DimensionVector( R1 ) = DimensionVector( R2 ) and
-         MatricesOfRepresentation( R1 ) = MatricesOfRepresentation( R2 );
-end );
+               IsEqualForObjects );
 
 InstallMethod( PrintObj, "for quiver representation",
                [ IsQuiverRepresentation ],
@@ -462,6 +457,12 @@ InstallMethod( VectorSpaceOfRepresentation, "for quiver representation and posit
                [ IsQuiverRepresentation, IsPosInt ],
 function( R, i )
   return VectorSpacesOfRepresentation( R )[ i ];
+end );
+
+InstallMethod( VectorSpaceOfRepresentation, "for quiver representation and vertex",
+               [ IsQuiverRepresentation, IsVertex ],
+function( R, v )
+  return VectorSpacesOfRepresentation( R )[ VertexNumber( v ) ];
 end );
 
 InstallMethod( VertexDimension, "for quiver representation and positive integer",
@@ -648,7 +649,7 @@ function( source, range, maps )
                          maps[ VertexNumber( Target( arrow ) ) ] );
     comp2 := PreCompose( maps[ VertexNumber( Source( arrow ) ) ],
                          MapForArrow( range, arrow ) );
-    if comp1 <> comp2 then
+    if not IsEqualForMorphisms( comp1, comp2 ) then
       Error( "Does not commute with maps for arrow ", arrow );
     fi;
   od;
@@ -690,6 +691,9 @@ function( f )
   Print( "<", String( f ), ">" );
 end );
 
+InstallMethod( \=, [ IsQuiverRepresentationHomomorphism, IsQuiverRepresentationHomomorphism ],
+               IsEqualForMorphisms );
+
 InstallMethod( ImageElm,
                [ IsQuiverRepresentationHomomorphism,
                  IsQuiverRepresentationElement ],
@@ -699,6 +703,18 @@ function( f, e )
            ListN( MatricesOfRepresentationHomomorphism( f ),
                   ElementVectors( e ),
                   ImageElm ) );
+end );
+
+InstallMethod( MapForVertex, "for quiver representation homomorphism and vertex",
+               [ IsQuiverRepresentationHomomorphism, IsVertex ],
+function( f, v )
+  return MapsOfRepresentationHomomorphism( f )[ VertexNumber( v ) ];
+end );
+
+InstallMethod( MapForVertex, "for quiver representation homomorphism and positive integer",
+               [ IsQuiverRepresentationHomomorphism, IsPosInt ],
+function( f, i )
+  return MapsOfRepresentationHomomorphism( f )[ i ];
 end );
 
 
@@ -714,15 +730,207 @@ InstallMethod( CategoryOfQuiverRepresentationsOverVectorSpaceCategory,
                "for quiver algebra and vector space category",
                [ IsQuiverAlgebra, IsVectorSpaceCategory ],
 function( A, vecspace_cat )
-  local cat;
+  local Q, cat, equal_objects, equal_morphisms, zero_object, zero_morphism,
+        identity_morphism, pre_compose, addition, additive_inverse,
+        kernel, kernel_emb, coker, coker_proj,
+        mono_lift, epi_colift,
+        direct_sum, direct_sum_inj, direct_sum_proj;
+
+  Q := QuiverOfAlgebra( A );
 
   cat := CreateCapCategory( Concatenation( "quiver representations over ", String( A ) ) );
   SetFilterObj( cat, IsQuiverRepresentationCategory );
   SetAlgebraOfCategory( cat, A );
   SetVectorSpaceCategory( cat, vecspace_cat );
 
-  # TODO
+  SetIsAbelianCategory( cat, true );
+
+  equal_objects := function( R1, R2 )
+    return AlgebraOfRepresentation( R1 ) = AlgebraOfRepresentation( R2 ) and
+           DimensionVector( R1 ) = DimensionVector( R2 ) and
+           MatricesOfRepresentation( R1 ) = MatricesOfRepresentation( R2 );
+  end;
+  AddIsEqualForObjects( cat, equal_objects );
+
+  equal_morphisms := function( m1, m2 )
+    return Source( m1 ) = Source( m2 ) and
+           Range( m1 ) = Range( m2 ) and
+           MapsOfRepresentationHomomorphism( m1 ) = MapsOfRepresentationHomomorphism( m2 );
+  end;
+  AddIsEqualForMorphisms( cat, equal_morphisms );
+
+  zero_object := function()
+    return QuiverRepresentationByArrows
+           ( cat, List( Vertices( Q ), v -> 0 ), [], [] );
+  end;
+  AddZeroObject( cat, zero_object );
+
+  zero_morphism := function( R1, R2 )
+    return QuiverRepresentationHomomorphismByMorphisms( R1, R2, [] );
+  end;
+  AddZeroMorphism( cat, zero_morphism );
+
+  # TODO: need IsZeroForMorphisms?
+
+  identity_morphism := function( R )
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( R, R,
+             List( VectorSpacesOfRepresentation( R ),
+                   IdentityMorphism ) );
+  end;
+  AddIdentityMorphism( cat, identity_morphism );
+
+  pre_compose := function( m1, m2 )
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( Source( m1 ), Range( m2 ),
+             ListN( MapsOfRepresentationHomomorphism( m1 ),
+                    MapsOfRepresentationHomomorphism( m2 ),
+                    PreCompose ) );
+  end;
+  AddPreCompose( cat, pre_compose );
+
+  addition := function( m1, m2 )
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( Source( m1 ), Range( m1 ),
+             ListN( MapsOfRepresentationHomomorphism( m1 ),
+                    MapsOfRepresentationHomomorphism( m2 ),
+                    AdditionForMorphisms ) );
+  end;
+  AddAdditionForMorphisms( cat, addition );
+
+  additive_inverse := function( m )
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( Source( m ), Range( m ),
+             List( MapsOfRepresentationHomomorphism( m ),
+                   AdditiveInverse ) );
+  end;
+  AddAdditiveInverseForMorphisms( cat, additive_inverse );
+
+  kernel := function( m )
+    local map_for_arrow;
+    map_for_arrow := function( a )
+      return KernelObjectFunctorial
+             ( MapForVertex( m, Source( a ) ),
+               MapForArrow( Source( m ), a ),
+               MapForVertex( m, Target( a ) ) );
+    end;
+    return QuiverRepresentationByObjectsAndMorphisms
+           ( cat,
+             List( MapsOfRepresentationHomomorphism( m ),
+                   KernelObject ),
+             List( Arrows( Q ),
+                   map_for_arrow ) );
+  end;
+  kernel_emb := function( m )
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( kernel( m ), Source( m ),
+             List( MapsOfRepresentationHomomorphism( m ),
+                   KernelEmbedding ) );
+  end;
+  AddKernelEmbedding( cat, kernel_emb );
+
+  coker := function( m )
+    local map_for_arrow;
+    map_for_arrow := function( a )
+      return CokernelFunctorial
+             ( MapForVertex( m, Source( a ) ),
+               MapForArrow( Range( m ), a ),
+               MapForVertex( m, Target( a ) ) );
+    end;
+    return QuiverRepresentationByObjectsAndMorphisms
+           ( cat,
+             List( MapsOfRepresentationHomomorphism( m ),
+                   CokernelObject ),
+             List( Arrows( Q ),
+                   map_for_arrow ) );
+  end;
+  coker_proj := function( m )
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( Range( m ), coker( m ),
+             List( MapsOfRepresentationHomomorphism( m ),
+                   CokernelProjection ) );
+  end;
+  AddCokernelProjection( cat, coker_proj );
+
+  mono_lift := function( i, test )
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( Source( test ), Source( i ),
+             ListN( MapsOfRepresentationHomomorphism( i ),
+                    MapsOfRepresentationHomomorphism( test ),
+                    LiftAlongMonomorphism ) );
+  end;
+  AddLiftAlongMonomorphism( cat, mono_lift );
+
+  epi_colift := function( e, test )
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( Range( e ), Range( test ),
+             ListN( MapsOfRepresentationHomomorphism( e ),
+                    MapsOfRepresentationHomomorphism( test ),
+                    ColiftAlongEpimorphism ) );
+  end;
+  AddColiftAlongEpimorphism( cat, epi_colift );
+
+  direct_sum := function( summands )
+    return QuiverRepresentationByObjectsAndMorphisms
+           ( cat,
+             List( Transpose( List( summands,
+                                    VectorSpacesOfRepresentation ) ),
+                   DirectSum ),
+             List( Transpose( List( summands,
+                                    MapsOfRepresentation ) ),
+                   DirectSumFunctorial ) );
+  end;
+  AddDirectSum( cat, direct_sum );
+
+  direct_sum_inj := function( summands, i, sum )
+    local map_for_vertex;
+    map_for_vertex := function( v )
+      return InjectionOfCofactorOfDirectSumWithGivenDirectSum
+             ( List( summands, R -> VectorSpaceOfRepresentation( R, v ) ),
+               i,
+               VectorSpaceOfRepresentation( sum, v ) );
+    end;
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( summands[ i ], sum,
+             ListN( Vertices( Q ), map_for_vertex ) );
+  end;
+  AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, direct_sum_inj );
+  
+  direct_sum_proj := function( summands, i, sum )
+    local map_for_vertex;
+    map_for_vertex := function( v )
+      return ProjectionInFactorOfDirectSumWithGivenDirectSum
+             ( List( summands, R -> VectorSpaceOfRepresentation( R, v ) ),
+               i,
+               VectorSpaceOfRepresentation( sum, v ) );
+    end;
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( sum, summands[ i ],
+             ListN( Vertices( Q ), map_for_vertex ) );
+  end;
+  AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, direct_sum_proj );
+  
+  Finalize( cat );
 
   return cat;
 end );
 
+
+
+InstallMethod( Transpose, "for dense list",
+               [ IsDenseList ],
+function( lists )
+  local len;
+  if IsEmpty( lists ) then
+    return lists;
+  fi;
+  if not ForAll( lists, IsDenseList ) then
+    Error( "all entries in list must be dense lists" );
+  fi;
+  len := Length( lists[ 1 ] );
+  if not ForAll( lists, L -> Length( L ) = len ) then
+    Error( "all lists must have same length" );
+  fi;
+  return List( [ 1 .. len ],
+               i -> List( lists, L -> L[ i ] ) );
+end );
