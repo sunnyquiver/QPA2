@@ -142,6 +142,14 @@ function( V1, V2 )
          Dimension( V1 ) = Dimension( V2 );
 end );
 
+InstallMethod( Zero, [ IsQPAVectorSpace ],
+function( V )
+  local F;
+  F := LeftActingDomain( V );
+  return MakeQPAVector( V!.type, F,
+                        List( [ 1 .. Dimension( V ) ], i -> Zero( F ) ) );
+end );
+
 InstallMethod( CanonicalBasis, [ IsQPAVectorSpace ],
 function( V )
   local basis, basis_vectors;

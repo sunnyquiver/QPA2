@@ -3,18 +3,17 @@ BindGlobal( "FamilyOfQuiverRepresentationElements",
 BindGlobal( "FamilyOfQuiverRepresentations",
             CollectionsFamily( FamilyOfQuiverRepresentationElements ) );
 
-# TODO fix element stuff
-
-DeclareRepresentation( "IsQuiverRepresentationElementRep", IsComponentObjectRep,
+DeclareRepresentation( "IsQuiverRepresentationElementRep",
+                       IsComponentObjectRep and IsAttributeStoringRep,
                        [ "representation", "vectors" ] );
 
 InstallMethod( QuiverRepresentationElement, "for quiver representation and collection",
                [ IsQuiverRepresentation, IsDenseList ],
-function( rep, vectors )
-  local field, Q, numVertices, i, v;
+function( R, vectors )
+  local field, Q, numVertices, i, v, space;
   vectors := Immutable( vectors );
-  field := FieldOfRepresentation( rep );
-  Q := QuiverOfRepresentation( rep );
+  field := FieldOfRepresentation( R );
+  Q := QuiverOfRepresentation( R );
   numVertices := Length( Vertices( Q ) );
   if Length( vectors ) <> numVertices then
     Error( "Wrong number of vectors in QuiverRepresentationElement constructor ",
@@ -22,73 +21,54 @@ function( rep, vectors )
   fi;
   for i in [ 1 .. numVertices ] do
     v := vectors[ i ];
-    if not IsDenseList( v ) then
-      Error( "Vector ", i, " in QuiverRepresentationElement constructor ",
-             "is not a dense list: ", v );
-    fi;
-    if Length( v ) <> VertexDimension( rep, i ) then
-      Error( "Vector ", i, " in QuiverRepresentationElement constructor ",
-             "has wrong length (", Length( v ), ", should be ", VertexDimension( rep, i ), ")" );
-    fi;
-    if not ForAll( v, a -> a in field ) then
-      Error( "Vector ", i, " in QuiverRepresentationElement constructor ",
-             "contains elements which are not from the ground field" );
+    space := VectorSpaceOfRepresentation( R, i );
+    if not v in space then
+      Error( "Vector ", v, " given for vertex ", Vertex( Q, i ),
+             " is not in the vector space ", space );
     fi;
   od;
-  return QuiverRepresentationElementNC( rep, vectors );
+  return QuiverRepresentationElementNC( R, vectors );
 end );
 
 InstallMethod( QuiverRepresentationElementNC, "for quiver representation and collection",
                [ IsQuiverRepresentation, IsDenseList ],
-function( rep, vectors )
-  local elemType;
-  elemType := NewType( FamilyOfQuiverRepresentationElements,
-                       IsQuiverRepresentationElement and IsQuiverRepresentationElementRep );
-  return Objectify( elemType,
-                    rec( representation := rep,
-                         vectors := vectors ) );
+function( R, vectors )
+  local type, elem;
+  type := NewType( FamilyOfQuiverRepresentationElements,
+                   IsQuiverRepresentationElement and IsQuiverRepresentationElementRep );
+  elem := rec();
+  ObjectifyWithAttributes( elem, type,
+                           RepresentationOfElement, R,
+                           ElementVectors, vectors );
+  return elem;
 end );
 
 InstallMethod( QuiverRepresentationElementByVertices, "for quiver representation and dense lists",
                [ IsQuiverRepresentation, IsDenseList, IsDenseList ],
 function( R, vertices, vectors )
-  local field, zero, dims, repVectors, numVectors, i, vertex, vertexNumber, vector;
-  field := FieldOfRepresentation( R );
-  zero := Zero( field );
-  dims := DimensionVector( R );
-  repVectors := List( dims,
-                      d -> List( [ 1 .. d ], i -> zero ) );
-  numVectors := Length( vectors );
-  
-  if Length( vertices ) <> numVectors then
+  local num_vectors, i, rep_vectors, vertex_number;
+
+  num_vectors := Length( vectors );
+  if Length( vertices ) <> num_vectors then
     Error( "Different lengths of list of vertices (", Length( vertices ),
-           ") and list of vectors (", numVectors, ")" );
+           ") and list of vectors (", num_vectors, ")" );
   fi;
-  for i in [ 1 .. numVectors ] do
+  for i in [ 1 .. num_vectors ] do
     if not IsVertex( vertices[ i ] ) then
       Error( "Not a vertex: ", vertices[ i ] );
     fi;
     if not vertices[ i ] in QuiverOfRepresentation( R ) then
       Error( "Vertex ", vertices[ i ], " is not in the quiver of the representation ", R );
     fi;
-    if ( not IsDenseList( vectors[ i ] ) ) or
-       ( not ForAll( vectors[ i ], v -> v in field ) ) then
-      Error( "Not a vector over the field ", field, ": ", vectors[ i ] );
-    fi;
   od;
       
-  for i in [ 1 .. numVectors ] do
-    vertex := vertices[ i ];
-    vertexNumber := VertexNumber( vertex );
-    vector := vectors[ i ];
-    if Length( vector ) <> dims[ vertexNumber ] then
-      Error( "Wrong size of vector for vertex ", vertex,
-             " (size is ", Length( vector ), ", should be ", dims[ vertexNumber ], ")" );
-    fi;
-    repVectors[ vertexNumber ] := vector;
+  rep_vectors := List( VectorSpacesOfRepresentation( R ), Zero );
+  for i in [ 1 .. num_vectors ] do
+    vertex_number := VertexNumber( vertices[ i ] );
+    rep_vectors[ vertex_number ] := vectors[ i ];
   od;
-  MakeImmutable( repVectors );
-  return QuiverRepresentationElementNC( R, repVectors );
+
+  return QuiverRepresentationElement( R, rep_vectors );
 end );
 
 InstallMethod( \in,
@@ -533,53 +513,54 @@ InstallMethod( LeftActingDomain, "for quiver representation",
 BindGlobal( "FamilyOfQuiverRepresentationBases",
             NewFamily( "quiver representation bases" ) );
 
-DeclareRepresentation( "IsQuiverRepresentationBasisRep", IsComponentObjectRep,
+DeclareRepresentation( "IsQuiverRepresentationBasisRep",
+                       IsComponentObjectRep and IsAttributeStoringRep,
                        [ "representation", "basisVectors" ] );
 
 InstallMethod( CanonicalBasis, "for quiver representation",
                [ IsQuiverRepresentation ],
 function( R )
-  local Q, field, basis, vertices, dims, i, vertexBasis, j;
+  local Q, vertices, spaces, basis_elements, i, vertex_basis,
+        basis_vector, basis;
   Q := QuiverOfRepresentation( R );
-  field := FieldOfRepresentation( R );
-  basis := [];
   vertices := Vertices( Q );
-  dims := DimensionVector( R );
+  spaces := VectorSpacesOfRepresentation( R );
+  basis_elements := [];
   for i in [ 1 .. Length( vertices ) ] do
-    vertexBasis := BasisVectors( CanonicalBasis( field ^ dims[ i ] ) );
-    for j in [ 1 .. dims[ i ] ] do
-      Add( basis,
+    vertex_basis := CanonicalBasis( spaces[ i ] );
+    for basis_vector in vertex_basis do
+      Add( basis_elements,
            QuiverRepresentationElementByVertices
-           ( R, [ vertices[ i ] ], [ vertexBasis[ j ] ] ) );
+           ( R, [ vertices[ i ] ], [ basis_vector ] ) );
     od;
   od;
-  return Objectify( NewType( FamilyOfQuiverRepresentationBases,
-                             IsBasis and IsQuiverRepresentationBasisRep ),
-                    rec( representation := R,
-                         basisVectors := basis ) );
+  basis := rec();
+  ObjectifyWithAttributes
+    ( basis,
+      NewType( FamilyOfQuiverRepresentationBases,
+               IsBasis and IsQuiverRepresentationBasisRep ),
+      BasisVectors, basis_elements,
+      UnderlyingLeftModule, R );
+  return basis;
 end );
 
 InstallMethod( Basis, "for quiver representation",
                [ IsQuiverRepresentation ],
                CanonicalBasis );
 
-InstallMethod( BasisVectors, "for quiver representation basis",
-               [ IsBasis and IsQuiverRepresentationBasisRep ],
-function( B )
-  return B!.basisVectors;
-end );
-
-InstallMethod( UnderlyingLeftModule, "for quiver representation basis",
-               [ IsBasis and IsQuiverRepresentationBasisRep ],
-function( B )
-  return B!.representation;
-end );
-
 InstallMethod( Coefficients, "for quiver representation basis and quiver representation element",
                [ IsBasis and IsQuiverRepresentationBasisRep,
                  IsQuiverRepresentationElement ],
 function( B, e )
-  return Concatenation( ElementVectors( e ) );
+  local R, coefficients_of_vector;
+  R := UnderlyingLeftModule( B );
+  coefficients_of_vector := function( V, v )
+    return Coefficients( CanonicalBasis( V ), v );
+  end;
+  return Concatenation
+         ( ListN( VectorSpacesOfRepresentation( R ),
+                  ElementVectors( e ),
+                  coefficients_of_vector ) );
 end );
 
 BindGlobal( "FamilyOfQuiverRepresentationHomomorphisms",
