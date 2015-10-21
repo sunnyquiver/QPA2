@@ -447,14 +447,19 @@ DeclareRepresentation( "IsPathAlgebraRep", IsComponentObjectRep and IsAttributeS
 InstallMethod( PathAlgebra, "for field and quiver",
                [ IsField, IsQuiver ],
 function( k, Q )
-  local elementFam, algebraFam, algebraType, A;
+  local elementFam, algebraFam, orientation_type, algebraType, A;
   # TODO: algebra should have its own elements family,
   # but this should rely only on ( k, Q ).
   # If we make a new algebra with same arguments, we
   # should get the same family.
   elementFam := ElementsFamily( FamilyObj( Q ) );
   algebraFam := CollectionsFamily( elementFam );
-  algebraType := NewType( algebraFam, IsPathAlgebra and IsPathAlgebraRep );
+  if IsLeftQuiver( Q ) then
+    orientation_type := IsLeftQuiverAlgebra;
+  else
+    orientation_type := IsRightQuiverAlgebra;
+  fi;
+  algebraType := NewType( algebraFam, IsPathAlgebra and orientation_type and IsPathAlgebraRep );
   A := Objectify( algebraType,
                   rec( field := k,
                        quiver := Q ) );
@@ -647,8 +652,15 @@ end );
 InstallMethod( QuotientOfPathAlgebra, "for path algebra and path ideal",
                [ IsPathAlgebra, IsPathIdeal ],
 function( A, I )
+  local orientation_type;
+  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+    orientation_type := IsLeftQuiverAlgebra;
+  else
+    orientation_type := IsRightQuiverAlgebra;
+  fi;
   return Objectify( NewType( FamilyObj( A ),
-                             IsQuotientOfPathAlgebra and IsQuotientOfPathAlgebraRep ),
+                             IsQuotientOfPathAlgebra and orientation_type
+                             and IsQuotientOfPathAlgebraRep ),
                     rec( pathAlgebra := A,
                          relations := GeneratorsOfIdeal( I ),
                          ideal := I ) );

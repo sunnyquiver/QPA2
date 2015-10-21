@@ -31,36 +31,39 @@ end );
 InstallMethod( AsModule,
                [ IsQuiverRepresentation, IsQuiverAlgebra ],
 function( R, A )
-  local M, k, Q, rep_algebra, module_cat, acting_algebra_attr;
+  local M, k, Q, rep_algebra, cat, module_type, acting_algebra_attr;
   k := FieldOfRepresentation( R );
   Q := QuiverOfRepresentation( R );
   rep_algebra := AlgebraOfRepresentation( R );
   if rep_algebra = A then
+    cat := AsDirectCategoryOfModules( CapCategory( R ) );
     if IsLeftQuiver( Q ) then
-      module_cat := IsLeftQuiverModule;
+      module_type := IsLeftQuiverModule;
     else
-      module_cat := IsRightQuiverModule;
+      module_type := IsRightQuiverModule;
     fi;
   elif rep_algebra = OppositeAlgebra( A ) then
+    cat := AsOppositeCategoryOfModules( CapCategory( R ) );
     if IsLeftQuiver( Q ) then
-      module_cat := IsRightQuiverModule;
+      module_type := IsRightQuiverModule;
     else
-      module_cat := IsLeftQuiverModule;
+      module_type := IsLeftQuiverModule;
     fi;
   else
     Error( "Representation is not over the given algebra or its opposite" );
   fi;
-  if module_cat = IsLeftQuiverModule then
+  if module_type = IsLeftQuiverModule then
     acting_algebra_attr := LeftActingAlgebra;
   else
     acting_algebra_attr := RightActingAlgebra;
   fi;
   M := rec();
   ObjectifyWithAttributes( M, NewType( FamilyOfQuiverModules,
-                                       module_cat and IsQuiverModuleRep ),
+                                       module_type and IsQuiverModuleRep ),
                            UnderlyingRepresentation, R,
                            LeftActingDomain, k,
                            acting_algebra_attr, A );
+  Add( cat, M );
   return M;
 end );
 
@@ -387,3 +390,118 @@ InstallMethod( UnderlyingLeftModule, "for quiver module basis",
 function( B )
   return B!.module;
 end );
+
+
+InstallMethod( AsCategoryOfModules, [ IsQuiverRepresentationCategory, IsBool ],
+function( rep_cat, is_opposite )
+  local rA, Q, A, side, _R, _r, _M, _m, cat;
+
+  # TODO: add objects to category when they are created
+
+  rA := AlgebraOfCategory( rep_cat );
+  Q := QuiverOfAlgebra( rA );
+
+  if is_opposite then
+    A := OppositeAlgebra( rA );
+  else
+    A := rA;
+  fi;
+
+  if IsLeftQuiver( Q ) and not is_opposite then
+    side := "left";
+  else
+    side := "right";
+  fi;
+
+  _R := UnderlyingRepresentation;
+  _r := UnderlyingRepresentationHomomorphism;
+  _M := R -> AsModule( R, A );
+  _m := m -> AsModuleHomomorphism( m, A );
+
+  cat := CreateCapCategory( Concatenation( side, " modules over ", String( A ) ) );
+  SetFilterObj( cat, IsQuiverModuleCategory );
+  SetAlgebraOfCategory( cat, A );
+  SetUnderlyingRepresentationCategory( cat, rep_cat );
+  SetIsAbelianCategory( cat, true );
+
+  AddIsEqualForObjects( cat,
+  function( M1, M2 )
+    return IsEqualForObjects( _R( M1 ), _R( M2 ) );
+  end );
+
+  AddIsEqualForMorphisms( cat,
+  function( m1, m2 )
+    return IsEqualForMorphisms( _r( m1 ), _r( m2 ) );
+  end );
+
+  AddZeroObject( cat, function()
+    return _M( ZeroObject( rep_cat ) );
+  end );
+  AddZeroMorphism( cat, function( M1, M2 )
+    return _m( ZeroMorphism( _R( M1 ), _R( M2 ) ) );
+  end );
+  AddIdentityMorphism( cat, M -> _m( IdentityMorphism( _R( M ) ) ) );
+  AddPreCompose( cat, function( m1, m2 )
+    return _m( PreCompose( _r( m1 ), _r( m2 ) ) );
+  end );
+  AddAdditionForMorphisms( cat, function( m1, m2 )
+    return _m( AdditionForMorphisms( _r( m1 ), _r( m2 ) ) );
+  end );
+  AddAdditiveInverseForMorphisms( cat, m -> _m( AdditiveInverseForMorphisms( _r( m ) ) ) );
+  AddKernelEmbedding( cat, m -> _m( KernelEmbedding( _r( m ) ) ) );
+  AddCokernelProjection( cat, m -> _m( CokernelProjection( _r( m ) ) ) );
+  AddLiftAlongMonomorphism( cat, function( i, test )
+    return _m( LiftAlongMonomorphism( _r( i ), _r( test ) ) );
+  end );
+  AddColiftAlongEpimorphism( cat, function( e, test )
+    return _m( ColiftAlongEpimorphism( _r( e ), _r( test ) ) );
+  end );
+  AddDirectSum( cat, function( summands )
+    return _M( DirectSum( List( summands, _R ) ) );
+  end );
+  AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, function( summands, i, sum )
+    return _m( InjectionOfCofactorOfDirectSumWithGivenDirectSum
+               ( List( summands, _R ), i, _R( sum ) ) );
+  end );
+  AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, function( summands, i, sum )
+    return _m( ProjectionInFactorOfDirectSumWithGivenDirectSum
+               ( List( summands, _R ), i, _R( sum ) ) );
+  end );
+
+  Finalize( cat );
+
+  return cat;
+end );
+
+InstallMethod( AsDirectCategoryOfModules, [ IsQuiverRepresentationCategory ],
+               rep_cat -> AsCategoryOfModules( rep_cat, false ) );
+
+InstallMethod( AsOppositeCategoryOfModules, [ IsQuiverRepresentationCategory ],
+               rep_cat -> AsCategoryOfModules( rep_cat, true ) );
+
+InstallMethod( AsCategoryOfLeftModules, [ IsQuiverRepresentationCategory ],
+function( rep_cat )
+  if IsLeftQuiverAlgebra( AlgebraOfCategory( rep_cat ) ) then
+    return AsDirectCategoryOfModules( rep_cat );
+  else
+    return AsOppositeCategoryOfModules( rep_cat );
+  fi;
+end );
+
+InstallMethod( AsCategoryOfRightModules, [ IsQuiverRepresentationCategory ],
+function( rep_cat )
+  if IsRightQuiverAlgebra( AlgebraOfCategory( rep_cat ) ) then
+    return AsDirectCategoryOfModules( rep_cat );
+  else
+    return AsOppositeCategoryOfModules( rep_cat );
+  fi;
+end );
+
+InstallMethod( CategoryOfLeftModules, [ IsLeftQuiverAlgebra ],
+               A -> AsDirectCategoryOfModules( CategoryOfQuiverRepresentations( A ) ) );
+InstallMethod( CategoryOfLeftModules, [ IsRightQuiverAlgebra ],
+               A -> AsOppositeCategoryOfModules( CategoryOfQuiverRepresentations( OppositeAlgebra( A ) ) ) );
+InstallMethod( CategoryOfRightModules, [ IsRightQuiverAlgebra ],
+               A -> AsDirectCategoryOfModules( CategoryOfQuiverRepresentations( A ) ) );
+InstallMethod( CategoryOfRightModules, [ IsLeftQuiverAlgebra ],
+               A -> AsOppositeCategoryOfModules( CategoryOfQuiverRepresentations( OppositeAlgebra( A ) ) ) );

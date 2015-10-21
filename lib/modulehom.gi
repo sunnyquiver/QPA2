@@ -14,14 +14,16 @@ DeclareRepresentation( "IsQuiverModuleHomomorphismRep",
 InstallMethod( AsModuleHomomorphism,
                [ IsQuiverRepresentationHomomorphism, IsQuiverAlgebra ],
 function( rf, A )
-  local R1, R2, rep_algebra, hom_cat, M1, M2, matrices, f;
+  local R1, R2, rep_algebra, cat, hom_type, M1, M2, matrices, f;
   R1 := Source( rf );
   R2 := Range( rf );
   rep_algebra := AlgebraOfRepresentation( R1 );
   if A = AlgebraForLeftModules( rep_algebra ) then
-    hom_cat := IsLeftQuiverModuleHomomorphism;
+    hom_type := IsLeftQuiverModuleHomomorphism;
+    cat := AsCategoryOfLeftModules( CapCategory( R1 ) );
   elif A = AlgebraForRightModules( rep_algebra ) then
-    hom_cat := IsRightQuiverModuleHomomorphism;
+    hom_type := IsRightQuiverModuleHomomorphism;
+    cat := AsCategoryOfRightModules( CapCategory( R1 ) );
   else
     Error( "Representation homomorphism is not over the given algebra or its opposite" );
   fi;
@@ -30,11 +32,12 @@ function( rf, A )
   matrices := MatricesOfRepresentationHomomorphism( rf );
   f := rec();
   ObjectifyWithAttributes( f, NewType( FamilyOfQuiverModuleHomomorphisms,
-                                       hom_cat and IsQuiverModuleHomomorphismRep ),
+                                       hom_type and IsQuiverModuleHomomorphismRep ),
                            UnderlyingRepresentationHomomorphism, rf,
                            MatricesOfModuleHomomorphism, matrices,
                            Source, M1,
                            Range, M2 );
+  Add( cat, f );
   return f;
 end );
 

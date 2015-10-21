@@ -1,5 +1,6 @@
 DeclareCategory( "IsQuiverModuleHomomorphism",
-                 IsMapping and IsSPGeneralMapping and IsVectorSpaceHomomorphism );
+                 IsMapping and IsSPGeneralMapping and IsVectorSpaceHomomorphism and
+                 IsCapCategoryMorphism );
 
 DeclareCategory( "IsLeftQuiverModuleHomomorphism",
                  IsQuiverModuleHomomorphism );

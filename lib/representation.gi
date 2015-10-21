@@ -729,14 +729,18 @@ function( A, vecspace_cat )
   equal_objects := function( R1, R2 )
     return AlgebraOfRepresentation( R1 ) = AlgebraOfRepresentation( R2 ) and
            DimensionVector( R1 ) = DimensionVector( R2 ) and
-           MatricesOfRepresentation( R1 ) = MatricesOfRepresentation( R2 );
+           ForAll( ListN( MapsOfRepresentation( R1 ),
+                          MapsOfRepresentation( R2 ),
+                          IsEqualForObjects ),
+                   IdFunc );
   end;
   AddIsEqualForObjects( cat, equal_objects );
 
   equal_morphisms := function( m1, m2 )
-    return Source( m1 ) = Source( m2 ) and
-           Range( m1 ) = Range( m2 ) and
-           MapsOfRepresentationHomomorphism( m1 ) = MapsOfRepresentationHomomorphism( m2 );
+    return ForAll( ListN( MapsOfRepresentationHomomorphism( m1 ),
+                          MapsOfRepresentationHomomorphism( m2 ),
+                          IsEqualForMorphisms),
+                   IdFunc );
   end;
   AddIsEqualForMorphisms( cat, equal_morphisms );
 
@@ -747,7 +751,11 @@ function( A, vecspace_cat )
   AddZeroObject( cat, zero_object );
 
   zero_morphism := function( R1, R2 )
-    return QuiverRepresentationHomomorphismByMorphisms( R1, R2, [] );
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( R1, R2,
+             ListN( VectorSpacesOfRepresentation( R1 ),
+                    VectorSpacesOfRepresentation( R2 ),
+                    ZeroMorphism ) );
   end;
   AddZeroMorphism( cat, zero_morphism );
 

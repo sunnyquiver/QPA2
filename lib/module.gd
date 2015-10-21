@@ -1,6 +1,6 @@
 #! @Chapter Modules
 
-#! @Section Categories for modules and module elements
+#! @Section Categories for modules, module elements and module categories
 
 #! @Description
 #!  Category for elements of modules over quiver algebras.
@@ -9,8 +9,12 @@ DeclareCategory( "IsQuiverModuleElement", IsAlgebraModuleElement );
 #! @Description
 #!  Category for modules over quiver algebras.
 DeclareCategory( "IsQuiverModule",
-                 IsVectorSpace and IsAlgebraModule
+                 IsVectorSpace and IsAlgebraModule and IsCapCategoryObject
                  and CategoryCollections( IsQuiverModuleElement ) );
+
+#! @Description
+#!  Category for module categories.
+DeclareCategory( "IsQuiverModuleCategory", IsCapCategory );
 
 #! @Description
 #!  Category for elements of left modules over quiver algebras.
@@ -303,3 +307,52 @@ DeclareOperation( "\^", [ IsQuiverAlgebraElement, IsLeftQuiverModuleElement ] );
 #! @Returns <Ref Filt="IsLeftQuiverModuleElement"/>
 #! @Arguments e, a
 DeclareOperation( "\^", [ IsRightQuiverModuleElement, IsQuiverAlgebraElement ] );
+
+
+#! @Section Module categories
+
+#!
+DeclareAttribute( "CategoryOfLeftModules", IsQuiverAlgebra );
+
+#!
+DeclareAttribute( "CategoryOfRightModules", IsQuiverAlgebra );
+
+#!
+DeclareOperation( "CategoryOfBimodules", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
+
+#!
+DeclareAttribute( "AsDirectCategoryOfModules", IsQuiverRepresentationCategory );
+
+#!
+DeclareAttribute( "AsOppositeCategoryOfModules", IsQuiverRepresentationCategory );
+
+#!
+DeclareAttribute( "AsCategoryOfLeftModules", IsQuiverRepresentationCategory );
+
+#!
+DeclareAttribute( "AsCategoryOfRightModules", IsQuiverRepresentationCategory );
+
+#!
+DeclareOperation( "AsCategoryOfModules", [ IsQuiverRepresentationCategory, IsBool ] );
+
+#!
+DeclareAttribute( "AsCategoryOfBimodules", IsQuiverRepresentationCategory );
+
+# TODO: remove?
+#!
+DeclareOperation( "CategoryOfLeftModulesOverVectorSpaceCategory",
+                  [ IsQuiverAlgebra, IsVectorSpaceCategory ] );
+
+#!
+DeclareOperation( "CategoryOfRightModulesOverVectorSpaceCategory",
+                  [ IsQuiverAlgebra, IsVectorSpaceCategory ] );
+
+#!
+DeclareOperation( "CategoryOfBimodulesOverVectorSpaceCategory",
+                  [ IsQuiverAlgebra, IsQuiverAlgebra, IsVectorSpaceCategory ] );
+
+#!
+DeclareAttribute( "AlgebraOfCategory", IsQuiverModuleCategory );
+
+#!
+DeclareAttribute( "UnderlyingRepresentationCategory", IsQuiverModuleCategory );

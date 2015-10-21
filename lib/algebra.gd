@@ -14,6 +14,12 @@ DeclareCategory( "IsQuiverAlgebraElement", IsRingElementWithOne );
 #!  Category for quiver algebras.
 DeclareCategory( "IsQuiverAlgebra", IsAlgebraWithOne and CategoryCollections( IsQuiverAlgebraElement ) );
 
+#!
+DeclareCategory( "IsLeftQuiverAlgebra", IsQuiverAlgebra );
+
+#!
+DeclareCategory( "IsRightQuiverAlgebra", IsQuiverAlgebra );
+
 #! @Description
 #!  Category for elements of path algebras.
 DeclareCategory( "IsPathAlgebraElement", IsQuiverAlgebraElement );
