@@ -795,26 +795,21 @@ function( A, vecspace_cat )
   end;
   AddAdditiveInverseForMorphisms( cat, additive_inverse );
 
-  kernel := function( m )
-    local map_for_arrow;
+  kernel_emb := function( m )
+    local emb_maps, ker_objs, map_for_arrow, ker;
+    emb_maps := List( MapsOfRepresentationHomomorphism( m ),
+                      KernelEmbedding );
+    ker_objs := List( emb_maps, Source );
     map_for_arrow := function( a )
       return KernelObjectFunctorial
              ( MapForVertex( m, Source( a ) ),
                MapForArrow( Source( m ), a ),
                MapForVertex( m, Target( a ) ) );
     end;
-    return QuiverRepresentationByObjectsAndMorphisms
-           ( cat,
-             List( MapsOfRepresentationHomomorphism( m ),
-                   KernelObject ),
-             List( Arrows( Q ),
-                   map_for_arrow ) );
-  end;
-  kernel_emb := function( m )
+    ker := QuiverRepresentationByObjectsAndMorphisms
+           ( cat, ker_objs, List( Arrows( Q ), map_for_arrow ) );
     return QuiverRepresentationHomomorphismByMorphisms
-           ( kernel( m ), Source( m ),
-             List( MapsOfRepresentationHomomorphism( m ),
-                   KernelEmbedding ) );
+           ( ker, Source( m ), emb_maps );
   end;
   AddKernelEmbedding( cat, kernel_emb );
 
