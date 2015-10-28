@@ -506,6 +506,7 @@ function( type_str, F )
   fi;
   
   Finalize( cat );
+  DeactivateCachingOfCategory( cat );
 
   return cat;
 end );
