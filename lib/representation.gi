@@ -731,7 +731,7 @@ function( A, vecspace_cat )
            DimensionVector( R1 ) = DimensionVector( R2 ) and
            ForAll( ListN( MapsOfRepresentation( R1 ),
                           MapsOfRepresentation( R2 ),
-                          IsEqualForObjects ),
+                          IsEqualForMorphisms ),
                    IdFunc );
   end;
   AddIsEqualForObjects( cat, equal_objects );
