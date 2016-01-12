@@ -276,11 +276,15 @@ DeclareAttribute( "ModuleOfElement", IsQuiverModuleElement );
 #! @Arguments e
 DeclareAttribute( "ElementVectors", IsQuiverModuleElement );
 
+#! @BeginGroup ElementVector
 #! @Description
 #!  Returns the vector of the element <A>e</A> at the vertex with number <A>i</A>.
 #! @Returns <Ref BookName="Reference" Filt="IsVector"/>
 #! @Arguments e, i
 DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsPosInt ] );
+#! @Arguments e, i
+DeclareOperation( "\[\]", [ IsQuiverModuleElement, IsPosInt ] );
+#! @EndGroup
 
 #! @Description
 #!  Returns the vector of the element <A>e</A> at the vertex <A>v</A>.

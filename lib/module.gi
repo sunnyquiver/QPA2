@@ -257,6 +257,8 @@ function( e, i )
   return ElementVector( UnderlyingRepresentationElement( e ), i );
 end );
 
+InstallMethod( \[\], [ IsQuiverModuleElement, IsPosInt ], ElementVector );
+
 InstallMethod( ElementVector,
                [ IsQuiverModuleElement, IsVertex ],
 function( e, v )
