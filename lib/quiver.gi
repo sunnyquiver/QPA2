@@ -920,8 +920,8 @@ function( p1, p2 )
   elif IsArrow( p1 ) then
     return ArrowNumber( p1 ) < ArrowNumber( p2 );
   else
-    a1 := ArrowListLR( p1 );
-    a2 := ArrowListLR( p2 );
+    a1 := ArrowList( p1 );
+    a2 := ArrowList( p2 );
     for i in [ 1 .. Length( a1 ) ] do
       if a1[ i ] < a2[ i ] then
         return true;
