@@ -3,9 +3,9 @@
 BindGlobal( "FamilyOfPaths", NewFamily( "paths" ) );
 BindGlobal( "FamilyOfQuivers", CollectionsFamily( FamilyOfPaths ) );
 
-DeclareRepresentation( "IsVertexRep", IsComponentObjectRep,
+DeclareRepresentation( "IsVertexRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "quiver", "number" ] );
-DeclareRepresentation( "IsArrowRep", IsComponentObjectRep,
+DeclareRepresentation( "IsArrowRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "quiver", "label", "number", "source", "target" ] );
 DeclareRepresentation( "IsCompositePathRep", IsComponentObjectRep,
                        [ "arrows" ] );
@@ -377,7 +377,8 @@ InstallMethod( Quiver,
 function( quiver_cat, label, vertex_labels, arrow_labels,
           source_indices, target_indices )
   local num_vertices, num_arrows, path_cat, quiver_type,
-        Q, vertex_type, make_vertex, arrow_type, make_arrow;
+        Q, vertex_type, make_vertex, arrow_type, make_arrow,
+        incoming_arrows, outgoing_arrows, i;
   num_vertices := Length( vertex_labels );
   num_arrows := Length( arrow_labels );
   if quiver_cat = IsLeftQuiver then
@@ -435,6 +436,21 @@ function( quiver_cat, label, vertex_labels, arrow_labels,
                       make_arrow );
 
   Q!.primitive_paths := Concatenation( Q!.vertices, Q!.arrows );
+
+  outgoing_arrows := [];
+  incoming_arrows := [];
+  for i in [ 1 .. num_vertices ] do
+    outgoing_arrows[ i ] := [];
+    incoming_arrows[ i ] := [];
+  od;
+  for i in [ 1 .. num_arrows ] do
+    Add( outgoing_arrows[ source_indices[ i ] ], Q!.arrows[ i ] );
+    Add( incoming_arrows[ target_indices[ i ] ], Q!.arrows[ i ] );
+  od;
+  for i in [ 1 .. num_vertices ] do
+    SetOutgoingArrows( Q!.vertices[ i ], outgoing_arrows[ i ] );
+    SetIncomingArrows( Q!.vertices[ i ], incoming_arrows[ i ] );
+  od;
 
   return Q;
 end );
@@ -1085,6 +1101,31 @@ end );
 InstallMethod( QuiverCategory, [ IsLeftQuiver ], Q -> IsLeftQuiver );
 InstallMethod( QuiverCategory, [ IsRightQuiver ], Q -> IsRightQuiver );
 
+InstallMethod( IsAcyclicQuiver, [ IsQuiver ],
+function( Q )
+  local vertices, arrow_removed, to_remove, i, v, incoming, a;
+  vertices := ShallowCopy( Vertices( Q ) );
+  arrow_removed := List( [ 1 .. NumberOfArrows( Q ) ], i -> false );
+  repeat
+    to_remove := [];
+    for i in [ 1 .. Length( vertices ) ] do
+      v := vertices[ i ];
+      incoming := IncomingArrows( v );
+      if ForAll( IncomingArrows( v ),
+                 a -> arrow_removed[ ArrowNumber( a ) ] ) then
+        Add( to_remove, i );
+        for a in OutgoingArrows( v ) do
+          arrow_removed[ ArrowNumber( a ) ] := true;
+        od;
+      fi;
+    od;
+    for i in to_remove do
+      Remove( vertices, i );
+    od;
+  until Length( vertices ) = 0 or Length( to_remove ) = 0;
+  return Length( vertices ) = 0;
+end );
+
 InstallMethod( Vertices,
                "for quiver",
 	       [ IsQuiver and IsQuiverRep ],
@@ -1644,4 +1685,58 @@ InstallMethod( PathInProductQuiver,
                [ IsProductQuiver, IsHomogeneousList ],
 function( PQ, paths )
   return PathInProductQuiver( PQ, paths, () );
+end );
+
+
+InstallMethod( PathIterator, [ IsQuiver ],
+function( Q )
+  return FilteredPathIterator( Q, ReturnTrue );
+end );
+
+InstallMethod( FilteredPathIterator, [ IsQuiver, IsFunction ],
+function( Q, filter )
+  local next, is_done, print, make_init_record, init_queue;
+  next := function( iter )
+    local p, a, new_p;
+    if Length( iter!.path_queue ) = 0 then
+      Error( "no more paths in path iterator" );
+    fi;
+    p := Remove( iter!.path_queue, 1 );
+    if Length( p ) > 0 then
+      for a in OutgoingArrows( Target( p ) ) do
+        new_p := ComposePaths( p, a );
+        if filter( new_p ) then
+          Add( iter!.path_queue, new_p );
+        fi;
+      od;
+    fi;
+    return p;
+  end;
+  is_done := iter -> Length( iter!.path_queue ) = 0;
+  print := function( iter )
+    Print( "<path iterator over quiver ", Q, ">" );
+  end;
+  make_init_record := function( queue )
+    return rec( path_queue := queue,
+                NextIterator := next,
+                IsDoneIterator := is_done,
+                ShallowCopy := iter -> make_init_record( iter!.path_queue ),
+                PrintObj := print );
+  end;
+  init_queue := Filtered( Concatenation( Vertices( Q ), Arrows( Q ) ), filter );
+  return IteratorByFunctions( make_init_record( init_queue ) );
+end );
+
+InstallMethod( PathList, [ IsQuiver ],
+function( Q )
+  local iter, list;
+  if not IsAcyclicQuiver( Q ) then
+    Error( "not an acyclic quiver" );
+  fi;
+  iter := PathIterator( Q );
+  list := [];
+  while not IsDoneIterator( iter ) do
+    Add( list, NextIterator( iter ) );
+  od;
+  return list;
 end );

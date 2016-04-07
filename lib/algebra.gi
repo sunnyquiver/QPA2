@@ -516,8 +516,6 @@ function( A )
   return A;
 end );
 
-# TODO: InstallMethod( Basis, "for path algebra", [ IsPathAlgebra ]
-
 InstallMethod( \in, "for element of path algebra and path algebra",
                [ IsPathAlgebraElement, IsPathAlgebra ],
 function( e, A )
@@ -933,4 +931,61 @@ function( T, A, B )
   # Should not be necessary to recompute the tensor algebra.
   # Should at least avoid recomputing the Groebner basis.
   return T = TensorProductOfAlgebras( A, B );
+end );
+
+BindGlobal( "FamilyOfQuiverAlgebraBases",
+            NewFamily( "quiver algebra bases" ) );
+
+DeclareRepresentation( "IsQuiverAlgebraBasisRep", IsComponentObjectRep,
+                       [ "algebra", "basis_vectors" ] );
+
+InstallMethod( CanonicalBasis, "for path algebra",
+               [ IsPathAlgebra ],
+function( A )
+  local Q, basis;
+  Q := QuiverOfAlgebra( A );
+  if not IsAcyclicQuiver( Q ) then
+    Error( "algebra is infinite-dimensional" );
+  fi;
+  basis := List( PathList( Q ), p -> PathAsAlgebraElement( A, p ) );
+  return Objectify( NewType( FamilyOfQuiverAlgebraBases,
+                             IsBasis and IsQuiverAlgebraBasisRep ),
+                    rec( algebra := A,
+                         basis_vectors := basis ) );
+end );
+
+InstallMethod( CanonicalBasis, "for quotient of path algebra",
+               [ IsQuotientOfPathAlgebra ],
+function( A )
+  local Q, basis, iter, is_nonreducible;
+  Q := QuiverOfAlgebra( A );
+  is_nonreducible :=
+    p ->
+    ( Representative( PathAsAlgebraElement( A, p ) )
+      = PathAsAlgebraElement( PathAlgebra( A ), p ) );
+  iter := FilteredPathIterator( Q, is_nonreducible );
+  basis := [];
+  while not IsDoneIterator( iter ) do
+    Add( basis, PathAsAlgebraElement( A, NextIterator( iter ) ) );
+  od;
+  return Objectify( NewType( FamilyOfQuiverAlgebraBases,
+                             IsBasis and IsQuiverAlgebraBasisRep ),
+                    rec( algebra := A,
+                         basis_vectors := basis ) );
+end );
+
+InstallMethod( Basis, "for quiver algebra",
+               [ IsQuiverAlgebra ],
+               CanonicalBasis );
+
+InstallMethod( BasisVectors, "for quiver algebra basis",
+               [ IsBasis and IsQuiverAlgebraBasisRep ],
+function( B )
+  return B!.basis_vectors;
+end );
+
+InstallMethod( UnderlyingLeftModule, "for quiver algebra basis",
+               [ IsBasis and IsQuiverAlgebraBasisRep ],
+function( B )
+  return B!.algebra;
 end );

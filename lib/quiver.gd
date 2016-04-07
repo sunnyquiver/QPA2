@@ -343,6 +343,12 @@ DeclareAttribute( "LabelAsString", IsQuiver );
 #!  either <Ref Filt="IsLeftQuiver"/> or <Ref Filt="IsRightQuiver"/>.
 DeclareAttribute( "QuiverCategory", IsQuiver );
 
+#! @Arguments Q
+#! @Description
+#!  Returns <C>true</C> if the quiver does not contain any oriented cycle,
+#!  <C>false</C> otherwise.
+DeclareProperty( "IsAcyclicQuiver", IsQuiver );
+
 
 #! @Section Accessing paths in a quiver
 
@@ -530,6 +536,18 @@ DeclareAttribute( "VertexNumber", IsVertex );
 #!  In a quiver with $m$ arrows, the arrows are assigned
 #!  numbers $1, \ldots, m$ when the quiver is constructed.
 DeclareAttribute( "ArrowNumber", IsArrow );
+
+#! @Arguments v
+#! @Returns list of arrows
+#! @Description
+#!  A list containing all arrows starting in the vertex <A>v</A>.
+DeclareAttribute( "OutgoingArrows", IsVertex );
+
+#! @Arguments v
+#! @Returns list of arrows
+#! @Description
+#!  A list containing all arrows ending in the vertex <A>v</A>.
+DeclareAttribute( "IncomingArrows", IsVertex );
 
 
 #! @Section Composition of paths
@@ -777,3 +795,36 @@ DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsHomogeneousList, I
 DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsHomogeneousList ] );
 
 DeclareOperation( "Decartesian", [ IsList ] );
+
+
+#! @Section Path iterators
+
+#! @Arguments Q
+#! @Returns iterator
+#! @Description
+#!  Produces an iterator which iterates over the paths of the quiver.
+#!  The paths appear in order from smallest to largest
+#!  (as given by the <C>\&lt;</C> operator):
+#!  first the vertices, then the arrows, and so on.
+#!  Use the functions <C>NextIterator</C> and <C>IsDoneIterator</C>
+#!  to access elements of the iterator
+#!  (for more general information about iterators, see the GAP reference manual).
+DeclareOperation( "PathIterator", [ IsQuiver ] );
+
+#! @Arguments Q, f
+#! @Returns iterator
+#! @Description
+#!  Produces an iterator which iterates over paths of the quiver <A>Q</A>
+#!  satisfying the predicate function <A>f</A>.
+#!  It is assumed that the predicate function has the property that
+#!  if it returns true for a given path, then it also returns true for
+#!  every prefix of that path (when the paths are written in source-to-target order).
+DeclareOperation( "FilteredPathIterator", [ IsQuiver, IsFunction ] );
+
+#! @Arguments Q
+#! @Returns list of paths
+#! @Description
+#!  Produces a list of all paths in the quiver.
+#!  This works only for acyclic quivers.
+#!  Raises an error if called with a quiver which is not acyclic.
+DeclareOperation( "PathList", [ IsQuiver ] );
