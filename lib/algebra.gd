@@ -119,6 +119,23 @@ DeclareAttribute( "IdealOfQuotient", IsQuotientOfPathAlgebra );
 #!  the path algebra $kQ$.
 DeclareAttribute( "PathAlgebra", IsQuiverAlgebra );
 
+#!
+DeclareCategory( "IsQuiverAlgebraBasis", IsBasis );
+
+#!
+DeclareAttribute( "BasisPaths", IsQuiverAlgebraBasis );
+
+#! @Arguments A
+#! @Description
+#!  The basis elements of the algebra <A>A</A> ordered by the
+#!  indecomposable projective module they belong to.
+#!  The result is a list of lists, such that the first list contains
+#!  the basis of the indecomposable projective in the first vertex,
+#!  and so on.
+DeclareAttribute( "BasisOfProjectives", IsQuiverAlgebra );
+
+#!
+DeclareAttribute( "IndecProjModules", IsQuiverAlgebra );
 
 #! @Section Accessing algebra elements
 
@@ -258,6 +275,12 @@ DeclareProperty( "IsUniform", IsQuiverAlgebraElement );
 #!  Returns the canonical representative path algebra element
 #!  of the element <A>e</A> of a quotient of a path algebra.
 DeclareAttribute( "Representative", IsQuotientOfPathAlgebraElement );
+
+#!
+DeclareOperation( "CoefficientsOfPaths", [ IsList, IsQuiverAlgebraElement ] );
+
+#!
+DeclareOperation( "CoefficientsOfPathsSorted", [ IsList, IsQuiverAlgebraElement ] );
 
 
 #! @Section Manipulation of elements
@@ -428,5 +451,6 @@ DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra 
 DeclareOperation( "IsTensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ] );
 
 DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
+
 
 #

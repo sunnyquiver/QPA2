@@ -936,56 +936,177 @@ end );
 BindGlobal( "FamilyOfQuiverAlgebraBases",
             NewFamily( "quiver algebra bases" ) );
 
-DeclareRepresentation( "IsQuiverAlgebraBasisRep", IsComponentObjectRep,
-                       [ "algebra", "basis_vectors" ] );
+DeclareRepresentation( "IsQuiverAlgebraBasisRep", IsComponentObjectRep and IsAttributeStoringRep,
+                       [ ] );
 
 InstallMethod( CanonicalBasis, "for path algebra",
                [ IsPathAlgebra ],
 function( A )
-  local Q, basis;
+  local Q, basis_paths, basis_elems, basis;
   Q := QuiverOfAlgebra( A );
   if not IsAcyclicQuiver( Q ) then
     Error( "algebra is infinite-dimensional" );
   fi;
-  basis := List( PathList( Q ), p -> PathAsAlgebraElement( A, p ) );
-  return Objectify( NewType( FamilyOfQuiverAlgebraBases,
-                             IsBasis and IsQuiverAlgebraBasisRep ),
-                    rec( algebra := A,
-                         basis_vectors := basis ) );
+  basis_paths := PathList( Q );
+  basis_elems := List( basis_paths, p -> PathAsAlgebraElement( A, p ) );
+  basis := rec();
+  ObjectifyWithAttributes( basis,
+                           NewType( FamilyOfQuiverAlgebraBases,
+                                    IsQuiverAlgebraBasis and IsQuiverAlgebraBasisRep ),
+                           BasisPaths, basis_paths,
+                           BasisVectors, basis_elems,
+                           UnderlyingLeftModule, A );
+  return basis;
 end );
 
 InstallMethod( CanonicalBasis, "for quotient of path algebra",
                [ IsQuotientOfPathAlgebra ],
 function( A )
-  local Q, basis, iter, is_nonreducible;
+  local Q, is_nonreducible, iter, basis_paths, basis_elems, basis;
   Q := QuiverOfAlgebra( A );
   is_nonreducible :=
     p ->
     ( Representative( PathAsAlgebraElement( A, p ) )
       = PathAsAlgebraElement( PathAlgebra( A ), p ) );
   iter := FilteredPathIterator( Q, is_nonreducible );
-  basis := [];
+  basis_paths := [];
   while not IsDoneIterator( iter ) do
-    Add( basis, PathAsAlgebraElement( A, NextIterator( iter ) ) );
+    Add( basis_paths, NextIterator( iter ) );
   od;
-  return Objectify( NewType( FamilyOfQuiverAlgebraBases,
-                             IsBasis and IsQuiverAlgebraBasisRep ),
-                    rec( algebra := A,
-                         basis_vectors := basis ) );
+  basis_elems := List( basis_paths, p -> PathAsAlgebraElement( A, p ) );
+  basis := rec();
+  ObjectifyWithAttributes( basis,
+                           NewType( FamilyOfQuiverAlgebraBases,
+                                    IsQuiverAlgebraBasis and IsQuiverAlgebraBasisRep ),
+                           BasisPaths, basis_paths,
+                           BasisVectors, basis_elems,
+                           UnderlyingLeftModule, A );
+  return basis;
 end );
 
 InstallMethod( Basis, "for quiver algebra",
                [ IsQuiverAlgebra ],
                CanonicalBasis );
 
-InstallMethod( BasisVectors, "for quiver algebra basis",
-               [ IsBasis and IsQuiverAlgebraBasisRep ],
-function( B )
-  return B!.basis_vectors;
+InstallMethod( Coefficients,
+               "for quiver algebra basis and quiver algebra element",
+               [ IsQuiverAlgebraBasis, IsQuiverAlgebraElement ],
+function( B, e )
+  return CoefficientsOfPathsSorted( BasisPaths( B ), e );
 end );
 
-InstallMethod( UnderlyingLeftModule, "for quiver algebra basis",
-               [ IsBasis and IsQuiverAlgebraBasisRep ],
-function( B )
-  return B!.algebra;
+InstallMethod( CoefficientsOfPathsSorted, "for list and quiver algebra element",
+               [ IsList, IsQuiverAlgebraElement ],
+function( paths, e )
+  local Ps, Cs, zero, coeffs, j, i;
+  Ps := Paths( e );
+  Cs := Coefficients( e );
+  zero := Zero( LeftActingDomain( AlgebraOfElement( e ) ) );
+  coeffs := List( paths, p -> zero );
+  j := Length( Ps );
+  for i in [ 1 .. Length( paths ) ] do
+    if j = 0 then
+      break;
+    fi;
+    if paths[ i ] = Ps[ j ] then
+      coeffs[ i ] := Cs[ j ];
+      j := j - 1;
+    fi;
+  od;
+  return coeffs;
 end );
+
+InstallMethod( CoefficientsOfPaths, "for list and quiver algebra element",
+               [ IsList, IsQuiverAlgebraElement ],
+function( paths, e )
+  local sorted, i, Ps, Cs, zero, coefficient_of_path;
+  sorted := true;
+  for i in [ 1 .. ( Length( paths ) - 1 ) ] do
+    if not ( paths[ i ] < paths[ i + 1 ] ) then
+      sorted := false;
+      break;
+    fi;
+  od;
+  if sorted then
+    return CoefficientsOfPathsSorted( paths, e );
+  fi;
+  Ps := Paths( e );
+  Cs := Coefficients( e );
+  zero := Zero( LeftActingDomain( AlgebraOfElement( e ) ) );
+  coefficient_of_path := function( p )
+    local pos;
+    pos := Position( Ps, p );
+    if pos = fail then
+      return zero;
+    else
+      return Cs[ pos ];
+    fi;
+  end;
+  return List( paths, coefficient_of_path );
+end );
+
+InstallMethod( BasisOfProjectives, "for quiver algebra",
+               [ IsQuiverAlgebra ],
+function( A )
+  local   basis,  list,  b,  i;
+  basis := BasisVectors( Basis( A ) );
+  list := List( Vertices( QuiverOfAlgebra( A ) ),
+                v -> [] );
+  for b in basis do
+    i := VertexNumber( Source( Paths( b )[ 1 ] ) );
+    Add( list[ i ], b );
+  od;
+  return list;
+end );
+
+InstallMethod( IndecProjModules, "for quiver algebra",
+               [ IsQuiverAlgebra ],
+function( A )
+  local   basis_list,  i,  basis,  basis_paths,  basis_per_vertex,  
+          dimensions,  p,  j,  arrows,  arrows_with_matrices,  
+          matrices,  a,  source,  target,  dim_source,  dim_target,  
+          b_source,  b_target,  matrix,  b,  b_a_path,  b_a,  coeffs,  
+          R, proj_modules;
+  basis_list := BasisOfProjectives( A );
+  proj_modules := [];
+  for i in [ 1 .. Length( basis_list ) ] do
+    basis := basis_list[ i ];
+    basis_paths := List( basis, b -> Paths( b )[ 1 ] );
+    basis_per_vertex := List( Vertices( QuiverOfAlgebra( A ) ),
+                              v -> [] );
+    for p in basis_paths do
+      j := VertexNumber( Target( p ) );
+      Add( basis_per_vertex[ j ], p );
+    od;
+    dimensions := List( basis_per_vertex, Length );
+    arrows := Arrows( QuiverOfAlgebra( A ) );
+    arrows_with_matrices := [];
+    matrices := [];
+    for a in arrows do
+      source := VertexNumber( Source( a ) );
+      target := VertexNumber( Target( a ) );
+      dim_source := Length( basis_per_vertex[ source ] );
+      dim_target := Length( basis_per_vertex[ target ] );
+      if dim_source <> 0 and dim_target <> 0 then
+        b_source := basis_per_vertex[ source ];
+        b_target := basis_per_vertex[ target ];
+        matrix := [];
+        for b in b_source do
+          b_a_path := ComposePaths( b, a );
+          b_a := PathAsAlgebraElement( A, b_a_path );
+          coeffs := CoefficientsOfPaths( b_target, b_a );
+          Add( matrix, coeffs );
+        od;
+        if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+          matrix := TransposedMat( matrix );
+        fi;
+        Add( arrows_with_matrices, a );
+        Add( matrices, matrix );
+      fi;
+    od;
+    R := QuiverRepresentationByArrows( A, dimensions, arrows_with_matrices, matrices );
+    Add( proj_modules, AsModule( R, A ) );
+  od;
+  return proj_modules;
+end );
+
