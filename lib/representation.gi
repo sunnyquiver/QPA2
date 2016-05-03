@@ -433,6 +433,12 @@ function( R )
   return QuiverRepresentationElementByVertices( R, [], [] );
 end );
 
+InstallMethod( Zero, "for quiver representation element",
+               [ IsQuiverRepresentationElement ],
+function( e )
+  return Zero( RepresentationOfElement( e ) );
+end );
+
 InstallMethod( VectorSpaceOfRepresentation, "for quiver representation and positive integer",
                [ IsQuiverRepresentation, IsPosInt ],
 function( R, i )
@@ -472,8 +478,7 @@ end );
 InstallMethod( MapForPath, "for quiver representation and vertex",
                [ IsQuiverRepresentation, IsVertex ],
 function( R, v )
-  return IdentityMat( VertexDimension( R, v ),
-                      FieldOfRepresentation( R ) );
+  return IdentityMorphism( VectorSpaceOfRepresentation( R, v ) );
 end );
 
 InstallMethod( MapForPath, "for quiver representation and arrow",
