@@ -1048,13 +1048,14 @@ end );
 InstallMethod( BasisOfProjectives, "for quiver algebra",
                [ IsQuiverAlgebra ],
 function( A )
-  local   basis,  list,  b,  i;
+  local   basis,  list,  b,  i,  j;
   basis := BasisVectors( Basis( A ) );
   list := List( Vertices( QuiverOfAlgebra( A ) ),
-                v -> [] );
+                v -> List( Vertices( QuiverOfAlgebra( A ) ), w -> [] ) );
   for b in basis do
     i := VertexNumber( Source( Paths( b )[ 1 ] ) );
-    Add( list[ i ], b );
+    j := VertexNumber( Target( Paths( b )[ 1 ] ) );
+    Add( list[ i ][ j ], b );
   od;
   return list;
 end );
@@ -1062,34 +1063,26 @@ end );
 InstallMethod( IndecProjModules, "for quiver algebra",
                [ IsQuiverAlgebra ],
 function( A )
-  local   basis_list,  i,  basis,  basis_paths,  basis_per_vertex,  
-          dimensions,  p,  j,  arrows,  arrows_with_matrices,  
-          matrices,  a,  source,  target,  dim_source,  dim_target,  
-          b_source,  b_target,  matrix,  b,  b_a_path,  b_a,  coeffs,  
-          R, proj_modules;
+    local   basis_list,  proj_modules,  i,  basis,  dimensions,  
+            arrows,  arrows_with_matrices,  matrices,  a,  source,  
+            target,  dim_source,  dim_target,  b_source,  b_target,  
+            matrix,  b,  b_a_path,  b_a,  coeffs,  R;
   basis_list := BasisOfProjectives( A );
   proj_modules := [];
-  for i in [ 1 .. Length( basis_list ) ] do
+  for i in [ 1 .. NumberOfVertices( QuiverOfAlgebra( A ) ) ] do
     basis := basis_list[ i ];
-    basis_paths := List( basis, b -> Paths( b )[ 1 ] );
-    basis_per_vertex := List( Vertices( QuiverOfAlgebra( A ) ),
-                              v -> [] );
-    for p in basis_paths do
-      j := VertexNumber( Target( p ) );
-      Add( basis_per_vertex[ j ], p );
-    od;
-    dimensions := List( basis_per_vertex, Length );
+    dimensions := List( basis, Length );
     arrows := Arrows( QuiverOfAlgebra( A ) );
     arrows_with_matrices := [];
     matrices := [];
     for a in arrows do
       source := VertexNumber( Source( a ) );
       target := VertexNumber( Target( a ) );
-      dim_source := Length( basis_per_vertex[ source ] );
-      dim_target := Length( basis_per_vertex[ target ] );
+      dim_source := dimensions[ source ];
+      dim_target := dimensions[ target ];
       if dim_source <> 0 and dim_target <> 0 then
-        b_source := basis_per_vertex[ source ];
-        b_target := basis_per_vertex[ target ];
+        b_source := List( basis[ source ], b -> Paths(b)[ 1 ] );
+        b_target := List( basis[ target ], b -> Paths(b)[ 1 ] );
         matrix := [];
         for b in b_source do
           b_a_path := ComposePaths( b, a );

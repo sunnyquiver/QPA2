@@ -918,3 +918,51 @@ function( lists )
   return List( [ 1 .. len ],
                i -> List( lists, L -> L[ i ] ) );
 end );
+
+
+InstallMethod( SubrepresentationInclusion, "for a represenation and a homogeneous list",
+               [ IsQuiverRepresentation, IsHomogeneousList ],
+function( R, gens )
+  local   A,  Q,  vertices,  num_vert,  newgens,  g,  v,  temp,  new,  
+          arrows,  new_things,  r,  a,  x;
+
+  if not ForAll( gens, g -> g in R ) then
+    Error("entered elements are not in the representation <R>,\n");
+  fi;
+  A := AlgebraOfRepresentation( R );
+  if Length(gens) = 0 then 
+        return ZeroMorphism( ZeroObject( CapCategory( R ) ), R );
+  fi;
+  Q := QuiverOfAlgebra( A ); 
+  vertices := Vertices( Q ); 
+  num_vert := Length( vertices ); 
+  newgens := List( [ 1 .. num_vert ], i -> [ ] ) ; 
+  for g in gens do
+    for v in vertices do
+      if not IsZero( PathAction( g, v ) ) then
+        Add( newgens[ VertexNumber( v ) ], PathAction( g, v ) ); 
+      fi;
+    od;
+  od;
+  temp := List( [ 1 .. num_vert ], i -> [ ] );
+  new := newgens;
+  arrows := Arrows( Q ); 
+  new_things := true; 
+  while new_things do
+    new_things := false;
+    for r in new do
+      for a in arrows do
+        x := PathAction( r, a );
+        if not IsZero( x ) then
+          Add(temp[ Target( a ) ], x );
+          Add(newgens[ Target( a ) ], x );
+          new_things := true; 
+        fi; 
+      od;
+    od;
+    new := temp;
+    temp := List( [ 1 .. num_vert ], i -> [ ] );
+  od;
+
+  return newgens; 
+end );
