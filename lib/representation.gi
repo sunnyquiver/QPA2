@@ -934,13 +934,14 @@ function( R, gens )
   if not ForAll( gens, g -> g in R ) then
     Error("entered elements are not in the representation <R>,\n");
   fi;
-  A := AlgebraOfRepresentation( R );
   if Length(gens) = 0 then 
-        return ZeroMorphism( ZeroObject( CapCategory( R ) ), R );
+    return ZeroMorphism( ZeroObject( CapCategory( R ) ), R );
   fi;
+  A := AlgebraOfRepresentation( R );
   Q := QuiverOfAlgebra( A ); 
   vertices := Vertices( Q ); 
   num_vert := Length( vertices ); 
+
   newgens := List( [ 1 .. num_vert ], i -> [ ] ) ; 
   for g in gens do
     for v in vertices do
@@ -950,19 +951,21 @@ function( R, gens )
     od;
   od;
   temp := List( [ 1 .. num_vert ], i -> [ ] );
-  new := newgens;
+  new := List( newgens, ShallowCopy );
   arrows := Arrows( Q ); 
   new_things := true; 
   while new_things do
     new_things := false;
-    for r in new do
-      for a in arrows do
-        x := PathAction( r, a );
-        if not IsZero( x ) then
-          Add(temp[ Target( a ) ], x );
-          Add(newgens[ Target( a ) ], x );
-          new_things := true; 
-        fi; 
+    for v in vertices do
+      for r in new[ VertexNumber( v ) ] do
+        for a in OutgoingArrows( v ) do
+          x := PathAction( r, a );
+          if not IsZero( x ) then
+            Add( temp[ VertexNumber( Target( a ) ) ], x );
+            Add( newgens[ VertexNumber( Target( a ) ) ], x );
+            new_things := true;
+          fi;
+        od;
       od;
     od;
     new := temp;
