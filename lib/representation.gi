@@ -928,8 +928,8 @@ end );
 InstallMethod( SubrepresentationInclusion, "for a represenation and a homogeneous list",
                [ IsQuiverRepresentation, IsHomogeneousList ],
 function( R, gens )
-  local   A,  Q,  vertices,  num_vert,  newgens,  g,  v,  temp,  new,  
-          arrows,  new_things,  r,  a,  x;
+  local   A,  Q,  vertices,  num_vert,  queue,  g,  v,  spanningset,  
+          temp,  outgoingarrows,  a,  ga;
 
   if not ForAll( gens, g -> g in R ) then
     Error("entered elements are not in the representation <R>,\n");
@@ -941,36 +941,31 @@ function( R, gens )
   Q := QuiverOfAlgebra( A ); 
   vertices := Vertices( Q ); 
   num_vert := Length( vertices ); 
+  queue := [ ] ; 
 
-  newgens := List( [ 1 .. num_vert ], i -> [ ] ) ; 
-  for g in gens do
+  # Making the generators uniform.
+k  for g in gens do
     for v in vertices do
       if not IsZero( PathAction( g, v ) ) then
-        Add( newgens[ VertexNumber( v ) ], PathAction( g, v ) ); 
+        Add( queue, [ v , PathAction( g, v ) ] ); 
       fi;
     od;
   od;
-  temp := List( [ 1 .. num_vert ], i -> [ ] );
-  new := List( newgens, ShallowCopy );
-  arrows := Arrows( Q ); 
-  new_things := true; 
-  while new_things do
-    new_things := false;
-    for v in vertices do
-      for r in new[ VertexNumber( v ) ] do
-        for a in OutgoingArrows( v ) do
-          x := PathAction( r, a );
-          if not IsZero( x ) then
-            Add( temp[ VertexNumber( Target( a ) ) ], x );
-            Add( newgens[ VertexNumber( Target( a ) ) ], x );
-            new_things := true;
-          fi;
-        od;
-      od;
+  spanningset := List( [1 .. num_vert ], v -> [ ] );
+  while not IsEmpty( queue ) do
+    temp := Remove( queue, 1);
+    v := temp[ 1 ];
+    g := temp[ 2 ];
+    Add( spanningset[ VertexNumber( v ) ], g );
+    outgoingarrows := OutgoingArrows( v );
+    for a in outgoingarrows do
+      ga := PathAction( g, a );
+      if  not IsZero( ga ) then
+        Add( queue, [ Target( a ), ga ] );
+      fi;
     od;
-    new := temp;
-    temp := List( [ 1 .. num_vert ], i -> [ ] );
   od;
-
-  return newgens; 
+  
+  return spanningset; 
 end );
+
