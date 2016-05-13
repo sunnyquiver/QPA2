@@ -610,3 +610,21 @@ function( m1, m2 )
   return MatrixByRows( F, rows );
 end );
 
+InstallMethod( SubspaceInclusion, [ IsQPAVectorSpace, IsHomogeneousList ],
+function( V, gens )
+  local   K,  W,  B,  matrix,  WQPA;
+  
+  if not ForAll( gens, g -> g in V ) then
+    Error("not all generators are in the entered vector space,\n");
+  fi;
+  K := LeftActingDomain( V );
+  if Length( gens ) = 0 then
+    return ZeroMorphism( ZeroVectorSpace( K ), V );
+  fi;
+  W := VectorSpace( K, List( gens, AsList ) );
+  B := BasisVectors( CanonicalBasis( W ) );
+  matrix := MatrixByRows( K, B );
+  WQPA := MakeQPAVectorSpace( V, Length( B ) );
+  
+  return LinearTransformationByRightMatrix( WQPA, V, matrix );
+end );
