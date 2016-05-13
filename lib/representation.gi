@@ -188,11 +188,21 @@ end );
 DeclareRepresentation( "IsQuiverRepresentationRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "algebra", "dimensions", "matrices" ] );
 
-InstallMethod( QuiverRepresentation, "for path algebra and dense lists",
-               [ IsPathAlgebra, IsDenseList, IsDenseList ],
+InstallMethod( QuiverRepresentation, "for quiver algebra, dense list and list",
+               [ IsQuiverAlgebra, IsDenseList, IsList ],
 function( A, dimensions, matrices )
   return QuiverRepresentation( CategoryOfQuiverRepresentations( A ),
                                dimensions, matrices );
+end );
+
+InstallMethod( QuiverRepresentation, "for representation category, dense list and lists",
+               [ IsQuiverRepresentationCategory, IsDenseList, IsList ],
+function( cat, dimensions, matrices )
+  local objects, morphisms;
+  objects := List( dimensions, VectorSpaceConstructor( cat ) );
+  morphisms := List( matrices, LinearTransformationConstructor( cat ) );
+  return QuiverRepresentationByObjectsAndMorphisms
+         ( cat, objects, morphisms );
 end );
 
 InstallMethod( QuiverRepresentationNC, "for path algebra and dense lists",
@@ -200,69 +210,145 @@ InstallMethod( QuiverRepresentationNC, "for path algebra and dense lists",
 function( A, dimensions, matrices )
   return QuiverRepresentationNC( CategoryOfQuiverRepresentations( A ),
                                  dimensions, matrices );
-  # local field, vecspace_type, make_vecspace, make_morphism;
-  # field := LeftActingDomain( A );
-  # vecspace_type := VectorSpaceTypeForRepresentations( A );
-  # make_vecspace := dim -> MakeQPAVectorSpace( vecspace_type, field, dim );
-  # make_morphism := mat -> MakeLinearTransformation( vecspace_type, field, mat );
-  # return QuiverRepresentationByObjectsAndMorphismsNC
-  #        ( A, List( dimensions, make_vecspace ), List( matrices, make_morphism ) );
-end );
-
-InstallMethod( QuiverRepresentation, "for representation category and dense lists",
-               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ],
-function( cat, dimensions, matrices )
-  local vecspace_cat;
-  vecspace_cat := VectorSpaceCategory( cat );
-  return QuiverRepresentationByObjectsAndMorphisms
-         ( cat,
-           List( dimensions, VectorSpaceConstructor( vecspace_cat ) ),
-           List( matrices, LinearTransformationConstructor( vecspace_cat ) ) );
 end );
 
 InstallMethod( QuiverRepresentationNC, "for representation category and dense lists",
                [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ],
 function( cat, dimensions, matrices )
-  local vecspace_cat;
-  vecspace_cat := VectorSpaceCategory( cat );
+  local objects, morphisms;
+  objects := List( dimensions, VectorSpaceConstructor( cat ) );
+  morphisms := List( matrices, LinearTransformationConstructor( cat ) );
   return QuiverRepresentationByObjectsAndMorphismsNC
-         ( cat,
-           List( dimensions, VectorSpaceConstructor( vecspace_cat ) ),
-           List( matrices, LinearTransformationConstructor( vecspace_cat ) ) );
+         ( cat, objects, morphisms );
+end );
+
+InstallMethod( QuiverRepresentation, "for quiver algebra and three dense lists",
+               [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ],
+function( A, dimensions, arrows, matrices )
+  return QuiverRepresentation
+         ( CategoryOfQuiverRepresentations( A ), dimensions, arrows, matrices );
+end );
+
+InstallMethod( QuiverRepresentation, "for representation category and three dense lists",
+               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ],
+function( cat, dimensions, arrows, matrices )
+  local objects, morphisms;
+  objects := List( dimensions, VectorSpaceConstructor( cat ) );
+  morphisms := List( matrices, LinearTransformationConstructor( cat ) );
+  return QuiverRepresentationByObjectsAndMorphisms
+         ( cat, objects, arrows, morphisms );
+end );
+
+InstallMethod( QuiverRepresentationByRightMatrices,
+               [ IsQuiverAlgebra, IsDenseList, IsDenseList ],
+function( A, dimensions, matrices )
+  return QuiverRepresentationByRightMatrices
+         ( CategoryOfQuiverRepresentations( A ), dimensions, matrices );
+end );
+
+InstallMethod( QuiverRepresentationByRightMatrices,
+               [ IsQuiverRepresentationCategory, IsDenseList, IsList ],
+function( cat, dimensions, matrices )
+  local A, Q, objects, morphisms, a, i, source, target;
+  A := AlgebraOfCategory( cat );
+  Q := QuiverOfAlgebra( A );
+  objects := List( dimensions, VectorSpaceConstructor( cat ) );
+  morphisms := [];
+  for a in Arrows( Q ) do
+    i := ArrowNumber( a );
+    source := objects[ VertexNumber( Source( a ) ) ];
+    target := objects[ VertexNumber( Target( a ) ) ];
+    if IsBound( matrices[ i ] ) then
+      morphisms[ i ] :=
+        LinearTransformationByRightMatrix( source, target, matrices[ i ] );
+    fi;
+  od;
+  return QuiverRepresentationByObjectsAndMorphisms
+         ( cat, objects, morphisms );
+end );
+
+InstallMethod( QuiverRepresentationByRightMatrices,
+               [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ],
+function( A, dimensions, arrows, matrices )
+  return QuiverRepresentationByRightMatrices
+         ( CategoryOfQuiverRepresentations( A ), dimensions, arrows, matrices );
+end );
+
+InstallMethod( QuiverRepresentationByRightMatrices,
+               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ],
+function( cat, dimensions, arrows, matrices )
+  local new_matrices, i;
+  new_matrices := [];
+  for i in [ 1 .. Length( arrows ) ] do
+    new_matrices[ ArrowNumber( arrows[ i ] ) ] := matrices[ i ];
+  od;
+  return QuiverRepresentationByRightMatrices
+         ( cat, dimensions, new_matrices );
 end );
 
 InstallMethod( QuiverRepresentationByObjectsAndMorphisms,
-               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ],
+               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ],
+function( cat, objects, arrows, morphisms )
+  local morphisms_full, i;
+  morphisms_full := [];
+  # TODO check Length( arrows ) = Length( morphisms ); more?
+  for i in [ 1 .. Length( arrows ) ] do
+    morphisms_full[ ArrowNumber( arrows[ i ] ) ] := morphisms[ i ];
+  od;
+  return QuiverRepresentationByObjectsAndMorphisms
+         ( cat, objects, morphisms_full );
+end );
+
+InstallMethod( QuiverRepresentationByObjectsAndMorphisms,
+               [ IsQuiverRepresentationCategory, IsDenseList, IsList ],
 function( cat, objects, morphisms )
-  local vecspace_cat, A, Q, vertices, numVertices, arrows, numArrows, i,
-        src, correct_src, rng, correct_rng;
+  local A, R, Q, vertices, num_vertices, arrows, num_arrows, 
+        vecspace_cat, i, a, source, target, src, correct_src, rng, 
+        correct_rng;
 
   A := AlgebraOfCategory( cat );
+  if IsQuotientOfPathAlgebra( A ) then
+    R := QuiverRepresentationByObjectsAndMorphisms
+         ( CategoryOfQuiverRepresentations( PathAlgebra( A ) ),
+           objects, morphisms );
+    return AsRepresentationOfQuotientAlgebra( R, A );
+  fi;
+
   Q := QuiverOfAlgebra( A );
   vertices := Vertices( Q );
-  numVertices := Length( vertices );
+  num_vertices := Length( vertices );
   arrows := Arrows( Q );
-  numArrows := Length( arrows );
+  num_arrows := Length( arrows );
   vecspace_cat := VectorSpaceCategory( cat );
 
-  if Length( objects ) <> numVertices then
+  if Length( objects ) <> num_vertices then
     Error( "Wrong number of objects ",
-           "(", Length( objects ), " given, expected ", numVertices, ")" );
+           "(", Length( objects ), " given, expected ", num_vertices, ")" );
   fi;
-  for i in [ 1 .. numVertices ] do
-    if not ( IsCapCategoryObject( objects[ i ] )
-             and CapCategory( objects[ i ] ) = vecspace_cat ) then
+  for i in [ 1 .. num_vertices ] do
+    if not ( IsCapCategoryObject( objects[ i ] ) and
+             IsIdenticalObj( CapCategory( objects[ i ] ), vecspace_cat ) ) then
       Error( "Object ", objects[ i ], " for vertex ", vertices[ i ],
              " is not a CAP object in the correct category" );
     fi;
   od;
-  if Length( morphisms ) <> numArrows then
-    Error( "Wrong number of morphisms in QuiverRepresentation constructor ",
-           "(", Length( morphisms ), " given, expected ", numArrows, ")" );
+  if Length( morphisms ) > num_arrows then
+    Error( "Too many morphisms in quiver representation constructor ",
+           "(", Length( morphisms ), " specified, but quiver has only ",
+           num_arrows, " arrows)" );
   fi;
-  for i in [ 1 .. numArrows ] do
+  morphisms := ShallowCopy( morphisms );
+  for i in [ 1 .. num_arrows ] do
+    if not IsBound( morphisms[ i ] ) then
+      a := Arrow( Q, i );
+      source := objects[ VertexNumber( Source( a ) ) ];
+      target := objects[ VertexNumber( Target( a ) ) ];
+      morphisms[ i ] := ZeroMorphism( source, target );
+    fi;
+  od;
+  for i in [ 1 .. num_arrows ] do
     if not ( IsCapCategoryMorphism( morphisms[ i ] ) and
-             CapCategory( morphisms[ i ] ) = vecspace_cat ) then
+             IsIdenticalObj( CapCategory( morphisms[ i ] ), vecspace_cat ) ) then
       Error( "Morphism ", morphisms[ i ], " for arrow ", arrows[ i ],
              " is not a CAP object in the correct category" );
     fi;
@@ -279,6 +365,7 @@ function( cat, objects, morphisms )
              " has wrong source (is ", rng, ", should be ", correct_rng, ")" );
     fi;
   od;
+
   return QuiverRepresentationByObjectsAndMorphismsNC( cat, objects, morphisms );
 end );
 
@@ -303,11 +390,7 @@ end );
 
 InstallMethod( UnderlyingCategoryForRepresentations, [ IsQuiverAlgebra ],
 function( A )
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    return CategoryOfColSpaces( LeftActingDomain( A ) );
-  else
-    return CategoryOfRowSpaces( LeftActingDomain( A ) );
-  fi;
+  return CategoryOfVectorSpaces( LeftActingDomain( A ) );
 end );
 
 InstallMethod( VectorSpaceTypeForRepresentations, [ IsQuiverAlgebra ],
@@ -319,12 +402,53 @@ function( A )
   fi;
 end );
 
+InstallMethod( VectorSpaceConstructor, [ IsQuiverRepresentationCategory ],
+function( cat )
+  local A, F;
+  A := AlgebraOfCategory( cat );
+  F := LeftActingDomain( A );
+  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+    return dim -> ColVectorSpace( F, dim );
+  else
+    return dim -> RowVectorSpace( F, dim );
+  fi;
+end );
+
+InstallMethod( LinearTransformationConstructor, [ IsQuiverRepresentationCategory ],
+function( cat )
+  local A;
+  A := AlgebraOfCategory( cat );
+  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+    return LinearTransformationOfColSpaces;
+  else
+    return LinearTransformationOfRowSpaces;
+  fi;
+end );
+
+# InstallMethod( LinearTransformationConstructor, [ IsQuiverRepresentationCategory ],
+# function( cat )
+#   A := AlgebraOfCategory( cat );
+#   if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+#     return function( matrix )
+#       dims := DimensionsMat( matrix );
+      
+#     end;
+
+#     return dim -> ColVectorSpace( F, dim );
+#   else
+#     return dim -> RowVectorSpace( F, dim );
+#   fi;
+# end );
+
 InstallMethod( AsRepresentationOfQuotientAlgebra,
                "for quiver representation and quotient of path algebra",
                [ IsQuiverRepresentation, IsQuotientOfPathAlgebra ],
 function( R, A )
-  local kQ, rels, rel;
-  kQ := PathAlgebra( A );
+  local kQ, rels, rel, R_;
+  kQ := AlgebraOfRepresentation( R );
+  if kQ <> PathAlgebra( A ) then
+    Error( "The algebra ", A, " is not a quotient of the algebra ", kQ );
+  fi;
   rels := RelationsOfAlgebra( A );
   for rel in rels do
     if not IsZero( MapForAlgebraElement( R, rel ) ) then
@@ -332,63 +456,29 @@ function( R, A )
              "; does not respect the relation ", rel );
     fi;
   od;
-  return QuiverRepresentationNC( A, DimensionVector( R ),
-                                 MatricesOfRepresentation( R ) );
+  R_ := QuiverRepresentationByObjectsAndMorphismsNC
+        ( CategoryOfQuiverRepresentations( A ),
+          VectorSpacesOfRepresentation( R ),
+          MapsOfRepresentation( R ) );
+  SetAsRepresentationOfPathAlgebra( R_, R );
+  return R_;
 end );
 
-InstallMethod( QuiverRepresentation, "for quotient of path algebra and dense lists",
-               [ IsQuotientOfPathAlgebra, IsDenseList, IsDenseList ],
-function( A, dimensions, matrices )
-  local kQ, rels, kQrep, rel;
-  kQ := PathAlgebra( A );
-  rels := RelationsOfAlgebra( A );
-  kQrep := QuiverRepresentation( kQ, dimensions, matrices );
-  return AsRepresentationOfQuotientAlgebra( kQrep, A );
-end );
-
-InstallMethod( QuiverRepresentationByArrows, "for quiver algebra and dense lists",
-               [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ],
-function( A, dimensions, arrows, matrices )
-  return QuiverRepresentationByArrows
-         ( CategoryOfQuiverRepresentations( A ),
-           dimensions, arrows, matrices );
-end );
-
-InstallMethod( QuiverRepresentationByArrows, "for quiver algebra and dense lists",
-               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ],
-function( cat, dimensions, arrows, matrices )
-  local A, field, Q, all_arrows, all_matrices, num_specified_arrows, i;
-  A := AlgebraOfCategory( cat );
-  field := LeftActingDomain( A );
-  Q := QuiverOfAlgebra( A );
-  all_arrows := Arrows( Q );
-  all_matrices :=
-    List( all_arrows,
-          a ->
-          MakeZeroMatrix( dimensions[ VertexNumber( LeftEnd( a ) ) ],
-                          dimensions[ VertexNumber( RightEnd( a ) ) ],
-                          field ) );
-  num_specified_arrows := Length( arrows );
-  if num_specified_arrows <> Length( matrices ) then
-    Error( "Length of arrow list not the same as length of matrix list" );
-  fi;
-  for i in [ 1 .. num_specified_arrows ] do
-    if DimensionsMat( matrices[ i ] ) <>
-       DimensionsMat( all_matrices[ ArrowNumber( arrows[ i ] ) ] ) then
-      Error( "Wrong dimensions of matrix for arrow ", arrows[ i ],
-             " (dimensions are ", DimensionsMat( matrices[ i ] ),
-             ", should be ",
-             DimensionsMat( all_matrices[ ArrowNumber( arrows[ i ] ) ] ),
-             ")" );
-    fi;
-    all_matrices[ ArrowNumber( arrows[ i ] ) ] := matrices[ i ];
-  od;
+InstallMethod( AsRepresentationOfPathAlgebra, "for quiver representation",
+               [ IsQuiverRepresentation ],
+function( R )
+  local A;
+  A := AlgebraOfRepresentation( R );
   if IsPathAlgebra( A ) then
-    return QuiverRepresentationNC( cat, dimensions, all_matrices );
+    return R;
   else
-    return QuiverRepresentation( cat, dimensions, all_matrices );
+    return QuiverRepresentationByObjectsAndMorphismsNC
+           ( PathAlgebra( A ),
+             VectorSpacesOfRepresentation( R ),
+             MapsOfRepresentation( R ) );
   fi;
 end );
+
 
 InstallMethod( ZeroRepresentation, "for quiver algebra",
                [ IsQuiverAlgebra ],
@@ -584,13 +674,13 @@ DeclareRepresentation( "IsQuiverRepresentationHomomorphismRep",
 InstallMethod( QuiverRepresentationHomomorphism,
                "for quiver representations and dense list",
                [ IsQuiverRepresentation, IsQuiverRepresentation,
-                 IsDenseList ],
+                 IsList ],
 function( source, range, matrices )
-  local vecspace_cat;
-  vecspace_cat := VectorSpaceCategory( CapCategory( source ) );
+  local cat;
+  cat := CapCategory( source );
   return QuiverRepresentationHomomorphismByMorphisms
          ( source, range,
-           List( matrices, LinearTransformationConstructor( vecspace_cat ) ) );
+           List( matrices, LinearTransformationConstructor( cat ) ) );
 end );
 
 InstallMethod( QuiverRepresentationHomomorphismNC,
@@ -598,17 +688,17 @@ InstallMethod( QuiverRepresentationHomomorphismNC,
                [ IsQuiverRepresentation, IsQuiverRepresentation,
                  IsDenseList ],
 function( source, range, matrices )
-  local vecspace_cat;
-  vecspace_cat := VectorSpaceCategory( CapCategory( source ) );
+  local cat;
+  cat := CapCategory( source );
   return QuiverRepresentationHomomorphismByMorphismsNC
          ( source, range,
-           List( matrices, LinearTransformationConstructor( vecspace_cat ) ) );
+           List( matrices, LinearTransformationConstructor( cat ) ) );
 end );
 
 InstallMethod( QuiverRepresentationHomomorphismByMorphisms,
                "for quiver representations and dense list",
                [ IsQuiverRepresentation, IsQuiverRepresentation,
-                 IsDenseList ],
+                 IsList ],
 function( source, range, maps )
   local A, Q, i, src, correct_src, rng, correct_rng, arrow, comp1, comp2;
   A := AlgebraOfRepresentation( source );
@@ -616,18 +706,30 @@ function( source, range, maps )
     Error( "Source and range are representations of different algebras" );
   fi;
   Q := QuiverOfAlgebra( A );
+
+  if Length( maps ) > NumberOfVertices( Q ) then
+    Error( "Too many morphisms in quiver representation homomorphism constructor ",
+           "(", Length( maps ), " specified, but quiver has only ",
+           NumberOfVertices( Q ), " vertices)" );
+  fi;
+  maps := ShallowCopy( maps );
   for i in [ 1 .. NumberOfVertices( Q ) ] do
-    src := Source( maps[ i ] );
-    correct_src := VectorSpaceOfRepresentation( source, i );
-    rng := Range( maps[ i ] );
-    correct_rng := VectorSpaceOfRepresentation( range, i );
-    if src <> correct_src then
-      Error( "Map for vertex ", Vertex( Q, i ), " has wrong source",
-             " (is ", src, ", should be ", correct_src, ")" );
-    fi;
-    if rng <> correct_rng then
-      Error( "Map for vertex ", Vertex( Q, i ), " has wrong range",
-             " (is ", rng, ", should be ", correct_rng, ")" );
+    if IsBound( maps[ i ] ) then
+      src := Source( maps[ i ] );
+      correct_src := VectorSpaceOfRepresentation( source, i );
+      rng := Range( maps[ i ] );
+      correct_rng := VectorSpaceOfRepresentation( range, i );
+      if src <> correct_src then
+        Error( "Map for vertex ", Vertex( Q, i ), " has wrong source",
+               " (is ", src, ", should be ", correct_src, ")" );
+      fi;
+      if rng <> correct_rng then
+        Error( "Map for vertex ", Vertex( Q, i ), " has wrong range",
+               " (is ", rng, ", should be ", correct_rng, ")" );
+      fi;
+    else
+      maps[ i ] := ZeroMorphism( VectorSpaceOfRepresentation( source, i ),
+                                 VectorSpaceOfRepresentation( range, i ) );
     fi;
   od;
   for arrow in Arrows( Q ) do
@@ -686,7 +788,7 @@ InstallMethod( ImageElm,
 function( f, e )
   return QuiverRepresentationElement
          ( Range( f ),
-           ListN( MatricesOfRepresentationHomomorphism( f ),
+           ListN( MapsOfRepresentationHomomorphism( f ),
                   ElementVectors( e ),
                   ImageElm ) );
 end );
