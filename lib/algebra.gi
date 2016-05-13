@@ -1090,14 +1090,11 @@ function( A )
           coeffs := CoefficientsOfPaths( b_target, b_a );
           Add( matrix, coeffs );
         od;
-        if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-          matrix := TransposedMat( matrix );
-        fi;
         Add( arrows_with_matrices, a );
-        Add( matrices, matrix );
+        Add( matrices, MatrixByRows( LeftActingDomain( A ), matrix ) );
       fi;
     od;
-    R := QuiverRepresentationByArrows( A, dimensions, arrows_with_matrices, matrices );
+    R := QuiverRepresentationByRightMatrices( A, dimensions, arrows_with_matrices, matrices );
     Add( proj_modules, AsModule( R, A ) );
   od;
   return proj_modules;
