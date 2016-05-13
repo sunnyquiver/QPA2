@@ -1030,8 +1030,9 @@ end );
 InstallMethod( SubrepresentationInclusion, "for a represenation and a homogeneous list",
                [ IsQuiverRepresentation, IsHomogeneousList ],
 function( R, gens )
-  local   A,  Q,  vertices,  num_vert,  queue,  g,  v,  spanningset,  
-          temp,  outgoingarrows,  a,  ga;
+  local   A,  Q,  vertices,  num_vert,  queue,  v,  spanningset,  
+          temp,  g,  outgoingarrows,  a,  ga,  inclusions,  arrows,  
+          maps,  s,  t,  U;
 
   if not ForAll( gens, g -> g in R ) then
     Error("entered elements are not in the representation <R>,\n");
@@ -1046,7 +1047,7 @@ function( R, gens )
   queue := [ ] ; 
 
   # Making the generators uniform.
-k  for g in gens do
+  for g in gens do
     for v in vertices do
       if not IsZero( PathAction( g, v ) ) then
         Add( queue, [ v , PathAction( g, v ) ] ); 
@@ -1058,7 +1059,7 @@ k  for g in gens do
     temp := Remove( queue, 1);
     v := temp[ 1 ];
     g := temp[ 2 ];
-    Add( spanningset[ VertexNumber( v ) ], g );
+    Add( spanningset[ VertexNumber( v ) ], ElementVector( g, v ) );
     outgoingarrows := OutgoingArrows( v );
     for a in outgoingarrows do
       ga := PathAction( g, a );
@@ -1067,7 +1068,17 @@ k  for g in gens do
       fi;
     od;
   od;
+
+  inclusions := ListN( VectorSpacesOfRepresentation( R ), spanningset, SubspaceInclusion );
+  arrows := Arrows( Q );
+  maps := [ ]; 
+  for a in arrows do
+    s := VertexNumber( Source( a ) );
+    t := VertexNumber( Target( a ) );
+    Add( maps, LiftAlongMonomorphism( inclusions[ t ], PreCompose( inclusions[ s ], MapForArrow( R, a ) ) ) );
+  od;
+  U := QuiverRepresentationByObjectsAndMorphisms( CapCategory( R ), List( inclusions, Source ), maps );
   
-  return spanningset; 
+  return QuiverRepresentationHomomorphismByMorphisms( U, R, inclusions ); 
 end );
 
