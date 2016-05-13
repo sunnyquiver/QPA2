@@ -56,3 +56,5 @@ DeclareOperation( "StackMatricesHorizontally", [ IsDenseList ] );
 DeclareOperation( "StackMatricesHorizontally", [ IsQPAMatrix, IsQPAMatrix ] );
 DeclareOperation( "StackMatricesVertically", [ IsDenseList ] );
 DeclareOperation( "StackMatricesVertically", [ IsQPAMatrix, IsQPAMatrix ] );
+
+DeclareOperation( "SubspaceInclusion", [ IsQPAVectorSpace, IsHomogeneousList ] );

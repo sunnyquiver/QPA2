@@ -317,9 +317,13 @@ end );
 InstallMethod( MatrixOfLinearTransformation, "for linear transformation",
                [ IsLinearTransformation ],
 function( T )
-  if IsRowVectorSpace( Source( T ) ) and IsRowVectorSpace( Range( T ) ) then
+  local   is_rowspaceorzero,  is_colspaceorzero;
+
+  is_rowspaceorzero := V -> IsRowVectorSpace( V ) or IsZero( V );
+  is_colspaceorzero := V -> IsColVectorSpace( V ) or IsZero( V );
+  if is_rowspaceorzero( Source( T ) ) and is_rowspaceorzero( Range( T ) ) then
     return RightMatrixOfLinearTransformation( T );
-  elif IsColVectorSpace( Source( T ) ) and IsColVectorSpace( Range( T ) ) then
+  elif is_colspaceorzero( Source( T ) ) and is_colspaceorzero( Range( T ) ) then
     return LeftMatrixOfLinearTransformation( T );
   else
     Error( "MatrixOfLinearTransformation undefined for ", T );
@@ -606,3 +610,21 @@ function( m1, m2 )
   return MatrixByRows( F, rows );
 end );
 
+InstallMethod( SubspaceInclusion, [ IsQPAVectorSpace, IsHomogeneousList ],
+function( V, gens )
+  local   K,  W,  B,  matrix,  WQPA;
+  
+  if not ForAll( gens, g -> g in V ) then
+    Error("not all generators are in the entered vector space,\n");
+  fi;
+  K := LeftActingDomain( V );
+  if Length( gens ) = 0 then
+    return ZeroMorphism( ZeroVectorSpace( K ), V );
+  fi;
+  W := VectorSpace( K, List( gens, AsList ) );
+  B := BasisVectors( CanonicalBasis( W ) );
+  matrix := MatrixByRows( K, B );
+  WQPA := MakeQPAVectorSpace( V, Length( B ) );
+  
+  return LinearTransformationByRightMatrix( WQPA, V, matrix );
+end );
