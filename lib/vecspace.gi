@@ -317,9 +317,13 @@ end );
 InstallMethod( MatrixOfLinearTransformation, "for linear transformation",
                [ IsLinearTransformation ],
 function( T )
-  if IsRowVectorSpace( Source( T ) ) and IsRowVectorSpace( Range( T ) ) then
+  local   is_rowspaceorzero,  is_colspaceorzero;
+
+  is_rowspaceorzero := V -> IsRowVectorSpace( V ) or IsZero( V );
+  is_colspaceorzero := V -> IsColVectorSpace( V ) or IsZero( V );
+  if is_rowspaceorzero( Source( T ) ) and is_rowspaceorzero( Range( T ) ) then
     return RightMatrixOfLinearTransformation( T );
-  elif IsColVectorSpace( Source( T ) ) and IsColVectorSpace( Range( T ) ) then
+  elif is_colspaceorzero( Source( T ) ) and is_colspaceorzero( Range( T ) ) then
     return LeftMatrixOfLinearTransformation( T );
   else
     Error( "MatrixOfLinearTransformation undefined for ", T );
