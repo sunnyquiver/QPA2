@@ -20,8 +20,7 @@ AutoDoc( "QPA" :
          autodoc := rec( section_intros := [ [ "Quivers", "" ],
                                              [ "Quiver algebras", "" ],
                                              [ "Representations", "" ],
-                                             [ "Modules", "" ],
-                                             [ "Utilities", "" ] ] ),
+                                             [ "Modules", "" ] ] ),
          scaffold := rec( TitlePage := rec( TitleComment := make_qpa_version_string() ) ),
          maketest := rec( commands := [ "LoadPackage( \"QPA\" );" ] )
 );
