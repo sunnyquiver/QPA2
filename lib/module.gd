@@ -68,7 +68,7 @@ DeclareCategory( "IsQuiverBimodule",
 #!  This operation first constructs a quiver representation <C>R</C>
 #!  (see the <Ref Oper="QuiverRepresentation"/> constructor)
 #!  and then constructs a left module using <C>R</C> as its
-#!  <Ref Attr="UnderlyingRepresentation"/>.
+#!  <Ref Attr="UnderlyingRepresentation" Label="for IsQuiverModule"/>.
 #!  <P/>
 #!  If the quiver of the algebra <A>A</A> is left-oriented,
 #!  then representations over <A>A</A> naturally correspond to left modules;
@@ -78,7 +78,7 @@ DeclareCategory( "IsQuiverBimodule",
 #!  <A>A</A> if the quiver is left-oriented, and over the opposite algebra
 #!  of <A>A</A> if the quiver is right-oriented.
 #!  The appropriate algebra (<A>A</A> or its opposite) can be obtained
-#!  by calling <Ref Attr="AlgebraForLeftModules"/>.
+#!  by calling <Ref Attr="AlgebraForLeftModules" Label="for IsQuiverAlgebra"/>.
 #! @Returns <Ref Filt="IsLeftQuiverModule"/>
 #! @Arguments A, dimensions, matrices
 DeclareOperation( "LeftQuiverModule",
@@ -115,7 +115,8 @@ DeclareOperation( "RightQuiverModule",
 #! @Description
 #!  Construct a right module over the quiver algebra <A>A</A>,
 #!  by specifying matrices for certain arrows.
-#!  This operation works like <Ref Oper="LeftQuiverModuleByArrows"/>,
+#!  This operation works like <Ref Oper="LeftQuiverModuleByArrows"
+#!    Label="for IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList"/>,
 #!  except that it creates a right module.
 #! @Arguments A, dimensions, matrices
 DeclareOperation( "RightQuiverModuleByArrows",
@@ -360,3 +361,4 @@ DeclareAttribute( "AlgebraOfCategory", IsQuiverModuleCategory );
 
 #!
 DeclareAttribute( "UnderlyingRepresentationCategory", IsQuiverModuleCategory );
+
