@@ -35,6 +35,7 @@ DeclareAttribute( "SpaceContainingVector", IsQPAVector );
 DeclareOperation( "MakeQPAVectorSpace", [ IsString, IsField, IsInt ] );
 DeclareOperation( "MakeQPAVectorSpace", [ IsQPAVectorSpace, IsInt ] );
 DeclareAttribute( "ZeroVectorSpace", IsField );
+DeclareAttribute( "ZeroVector", IsField );
 DeclareOperation( "RowVectorSpace", [ IsField, IsInt ] );
 DeclareOperation( "ColVectorSpace", [ IsField, IsInt ] );
 DeclareOperation( "MakeLinearTransformation",

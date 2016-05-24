@@ -155,6 +155,26 @@ function( F )
   return space;
 end );
 
+InstallMethod( ZeroVector, [ IsField ],
+function( F )
+  local v, type, V;
+  V := ZeroVectorSpace( F );
+  v := rec( type := "zero",
+            field := F,
+            entries := [] );
+  type := NewType( FamilyOfQPAVectors,
+                   IsQPAVector and IsQPAVectorRep );
+  ObjectifyWithAttributes( v, type,
+                           SpaceContainingVector, V,
+                           IsZero, true );
+  return v;
+end );
+
+InstallMethod( Zero, [ IsZeroVectorSpace ],
+function( V )
+  return ZeroVector( LeftActingDomain( V ) );
+end );
+
 InstallMethod( MakeQPAVectorSpace, [ IsString, IsField, IsInt ],
 function( type_str, F, dim )
   local type, space, cat;
@@ -214,20 +234,6 @@ function( V )
   F := LeftActingDomain( V );
   return MakeQPAVector( V!.type, F,
                         List( [ 1 .. Dimension( V ) ], i -> Zero( F ) ) );
-end );
-
-InstallMethod( Zero, [ IsZeroVectorSpace ],
-function( V )
-  local v, type;
-  v := rec( type := "zero",
-            field := LeftActingDomain( V ),
-            entries := [] );
-  type := NewType( FamilyOfQPAVectors,
-                   IsQPAVector and IsQPAVectorRep );
-  ObjectifyWithAttributes( v, type,
-                           SpaceContainingVector, V,
-                           IsZero, true );
-  return v;
 end );
 
 InstallMethod( CanonicalBasis, [ IsQPAVectorSpace ],

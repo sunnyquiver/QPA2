@@ -295,7 +295,13 @@ function( v, M )
     Error( "can not multiply vector of length ", Length( v ), " with ",
            dim[ 1 ], "x", dim[ 2 ], " matrix" );
   fi;
-  return RowVector( R, AsList( v ) * RowsOfMatrix( M ) );
+  if dim[ 2 ] = 0 then
+    return ZeroVector( R );
+  elif dim[ 1 ] = 0 then
+    return Zero( RowVectorSpace( R, dim[ 2 ] ) );
+  else
+    return RowVector( R, AsList( v ) * RowsOfMatrix( M ) );
+  fi;
 end );
 
 InstallMethod( \*, "for QPA matrix and QPA column matrix",
