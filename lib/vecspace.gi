@@ -396,6 +396,9 @@ function( T, v )
   if not v in Source( T ) then
     Error( "vector not in source vector space" );
   fi;
+  if IsZeroVectorSpace( Range( T ) ) then
+    return Zero( Range( T ) );
+  fi;
   return Vector( Range( T ),
                  AsRowVector( v ) *
                  RightMatrixOfLinearTransformation( T ) );
