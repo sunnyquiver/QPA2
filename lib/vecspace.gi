@@ -67,6 +67,21 @@ function( V, col_vec )
   return Vector( V, AsList( col_vec ) );
 end );
 
+InstallMethod( Vector, [ IsZeroVectorSpace, IsList ],
+function( V, coeffs )
+  return Zero( V );
+end );
+
+InstallMethod( Vector, [ IsZeroVectorSpace, IsQPARowVector ],
+function( V, row_vec )
+  return Zero( V );
+end );
+
+InstallMethod( Vector, [ IsZeroVectorSpace, IsQPAColVector ],
+function( V, col_vec )
+  return Zero( V );
+end );
+
 InstallMethod( AsRowVector, [ IsQPAVector ],
 function( v )
   return RowVector( LeftActingDomain( SpaceContainingVector( v ) ),
