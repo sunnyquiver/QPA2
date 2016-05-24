@@ -395,3 +395,23 @@ DeclareOperation( "Transpose", [ IsDenseList ] );
 #! @Arguments R, gens
 DeclareOperation( "SubrepresentationInclusion",
                   [ IsQuiverRepresentation, IsHomogeneousList ] );
+
+#! @Description
+#!  Returns the vertices where the element  <A>r</A>  in a representation is
+#!  supported. 
+#! @Returns list of vertices
+#! @Arguments r
+DeclareAttribute( "SupportOfElement", IsQuiverRepresentationElement );
+
+#! @Description
+#!  Returns a inclusion of the radical the representation  <A>R</A>  into the 
+#!  representation  <A>R</A>.
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments R
+DeclareAttribute( "RadicalInclusion", IsQuiverRepresentation );
+
+#! @Description
+#!  Returns the radical the representation homomorphism  <A>f</A>. 
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments f
+DeclareAttribute( "RadicalOfMorphism", IsQuiverRepresentationHomomorphism );

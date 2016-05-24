@@ -616,7 +616,7 @@ InstallMethod( CanonicalBasis, "for quiver representation",
                [ IsQuiverRepresentation ],
 function( R )
   local Q, vertices, spaces, basis_elements, i, vertex_basis,
-        basis_vector, basis;
+        basis_vector, temp, basis;
   Q := QuiverOfRepresentation( R );
   vertices := Vertices( Q );
   spaces := VectorSpacesOfRepresentation( R );
@@ -624,9 +624,9 @@ function( R )
   for i in [ 1 .. Length( vertices ) ] do
     vertex_basis := CanonicalBasis( spaces[ i ] );
     for basis_vector in vertex_basis do
-      Add( basis_elements,
-           QuiverRepresentationElementByVertices
-           ( R, [ vertices[ i ] ], [ basis_vector ] ) );
+      temp := QuiverRepresentationElementByVertices( R, [ vertices[ i ] ], [ basis_vector ] );
+      SetSupportOfElement( temp, [ vertices[ i ] ] );
+      Add( basis_elements, temp );
     od;
   od;
   basis := rec();
@@ -1082,3 +1082,52 @@ function( R, gens )
   return QuiverRepresentationHomomorphismByMorphisms( U, R, inclusions ); 
 end );
 
+InstallMethod( SupportOfElement, "for a represenation element",
+               [ IsQuiverRepresentationElement ],
+function( r )
+  local   Q,  temp,  vertices;
+
+  Q := QuiverOfRepresentation( RepresentationOfElement( r ) );
+  temp := PositionsProperty( ElementVectors( r ), v -> not IsZero( v ) );
+  vertices := Vertices( Q );
+  
+  return vertices{temp};
+end
+);
+
+
+InstallMethod( RadicalInclusion, "for a represenation",
+               [ IsQuiverRepresentation ],
+function( R )
+  local   basis,  generators,  b,  a,  temp;
+
+  basis := Basis( R ); 
+  generators := [ ];
+  for b in basis do
+    for a in OutgoingArrows( SupportOfElement( b )[1] ) do
+      temp := PathAction( b, a ); 
+      if not IsZero( temp ) then
+        Add( generators, temp );
+      fi;
+    od;
+  od;
+  generators := Unique(generators);
+
+  return SubrepresentationInclusion( R, generators );
+end
+);
+
+
+InstallMethod( RadicalOfMorphism, "for a represenation homomorphism",
+               [ IsQuiverRepresentationHomomorphism ],
+function( f )
+  local   R1,  R2,  i1,  i2;
+
+  R1 := Source(f);
+  R2 := Range(f);
+  i1 := RadicalInclusion( R1 );
+  i2 := RadicalInclusion( R2 );
+  
+  return LiftAlongMonomorphism( i2, PreCompose( i1, f ) );
+end
+); 
