@@ -216,6 +216,20 @@ function( V )
                         List( [ 1 .. Dimension( V ) ], i -> Zero( F ) ) );
 end );
 
+InstallMethod( Zero, [ IsZeroVectorSpace ],
+function( V )
+  local v, type;
+  v := rec( type := "zero",
+            field := LeftActingDomain( V ),
+            entries := [] );
+  type := NewType( FamilyOfQPAVectors,
+                   IsQPAVector and IsQPAVectorRep );
+  ObjectifyWithAttributes( v, type,
+                           SpaceContainingVector, V,
+                           IsZero, true );
+  return v;
+end );
+
 InstallMethod( CanonicalBasis, [ IsQPAVectorSpace ],
 function( V )
   local basis, basis_vectors;
