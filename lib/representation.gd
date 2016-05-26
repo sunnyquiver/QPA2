@@ -411,7 +411,52 @@ DeclareAttribute( "SupportOfElement", IsQuiverRepresentationElement );
 DeclareAttribute( "RadicalInclusion", IsQuiverRepresentation );
 
 #! @Description
-#!  Returns the radical the representation homomorphism  <A>f</A>. 
+#!  Returns the radical of the representation homomorphism  <A>f</A>. 
 #! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
 #! @Arguments f
 DeclareAttribute( "RadicalOfMorphism", IsQuiverRepresentationHomomorphism );
+
+#! @Description
+#!  Returns the radical functor for the category <A>C</A>.
+#! @Returns IsCapFunctor
+#! @Arguments C
+DeclareOperation( "RadicalFunctor", [ IsQuiverRepresentationCategory ] );
+
+#! @Description
+#!  Returns the identity functor for a category <A>C</A>.
+#! @Returns IsCapFunctor
+#! @Arguments C
+DeclareOperation( "IdentityFunctor", [ IsCapCategory ] );
+
+#! @Description
+#!  Returns the natural transformation from the radical functor to the identity 
+#!  functor for a category <A>C</A>.
+#! @Returns IsCapNaturalTransformation
+#! @Arguments C
+DeclareOperation( "RadicalInclusionTransformation", [ IsQuiverRepresentationCategory ] );
+
+#! @Description
+#!  Returns a projection from the representation  <A>R</A>  onto the top of the 
+#!  representation  <A>R</A>.
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments R
+DeclareAttribute( "TopProjection", IsQuiverRepresentation );
+
+#! @Description
+#!  Returns the top of the representation homomorphism  <A>f</A>. 
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments f
+DeclareAttribute( "TopOfMorphism", IsQuiverRepresentationHomomorphism );
+
+#! @Description
+#!  Returns the top functor for the category <A>C</A>.
+#! @Returns IsCapFunctor
+#! @Arguments C
+DeclareOperation( "TopFunctor", [ IsQuiverRepresentationCategory ] );
+
+#! @Description
+#!  Returns the natural transformation from the identity functor to the top functor
+#!  for a category <A>C</A>.
+#! @Returns IsCapNaturalTransformation
+#! @Arguments C
+DeclareOperation( "TopProjectionTransformation", [ IsQuiverRepresentationCategory ] );

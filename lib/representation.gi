@@ -1131,3 +1131,93 @@ function( f )
   return LiftAlongMonomorphism( i2, PreCompose( i1, f ) );
 end
 ); 
+
+InstallMethod( RadicalFunctor, "for a category of representations",
+               [ IsQuiverRepresentationCategory ],
+function( C )
+  local   rad;
+
+  rad := CapFunctor( "Radical", C, C );
+  AddObjectFunction( rad, X -> Source( RadicalInclusion( X ) ) ); 
+  AddMorphismFunction( rad, function ( X, f, Y ) return RadicalOfMorphism( f ); end );
+  
+  return rad;
+end
+);
+
+InstallMethod( IdentityFunctor, "for a category", [ IsCapCategory ],
+function( C )
+  local   Id;
+
+  Id := CapFunctor( "Identity", C, C );
+  AddObjectFunction( Id, X -> X ); 
+  AddMorphismFunction( Id, function ( X, f, Y ) return f; end );
+  
+  return Id;
+end
+);
+
+InstallMethod( RadicalInclusionTransformation, "for a category of representations",
+               [ IsQuiverRepresentationCategory ],
+function( C )
+  local   rad,  Id,  radembedding;
+
+  rad := RadicalFunctor( C );
+  Id := IdentityFunctor( C );
+  radembedding := NaturalTransformation( rad, Id );
+  AddNaturalTransformationFunction( radembedding, 
+                                    function( X, Y, Z ) return RadicalInclusion( Y ); end ); 
+  
+  return radembedding;
+end
+);
+
+InstallMethod( TopProjection, "for a represenation",
+               [ IsQuiverRepresentation ],
+function( R )
+
+  return CokernelProjection( RadicalInclusion( R ) );
+end
+);
+
+InstallMethod( TopOfMorphism, "for a represenation homomorphism",
+               [ IsQuiverRepresentationHomomorphism ],
+function( f )
+  local   R1,  R2,  p1,  p2;
+
+  R1 := Source(f);
+  R2 := Range(f);
+  p1 := TopProjection( R1 );
+  p2 := TopProjection( R2 );
+  
+  return ColiftAlongEpimorphism( p1, PreCompose( f, p2 ) );
+end
+); 
+
+InstallMethod( TopFunctor, "for a category of representations",
+               [ IsQuiverRepresentationCategory ],
+function( C )
+  local   top;
+
+  top := CapFunctor( "Top", C, C );
+  AddObjectFunction( top, X -> Range( TopProjection( X ) ) ); 
+  AddMorphismFunction( top, function ( X, f, Y ) return TopOfMorphism( f ); end );
+  
+  return top;
+end
+);
+
+InstallMethod( TopProjectionTransformation, "for a category of representations",
+               [ IsQuiverRepresentationCategory ],
+function( C )
+  local   top,  Id,  topprojection;
+
+  top := TopFunctor( C );
+  Id := IdentityFunctor( C );
+  topprojection := NaturalTransformation( Id, top );
+  AddNaturalTransformationFunction( topprojection, 
+                                    function( X, Y, Z ) return TopProjection( Y ); end ); 
+  
+  return topprojection;
+end
+);
