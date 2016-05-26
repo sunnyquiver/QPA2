@@ -23,6 +23,9 @@ BindGlobal( "FamilyOfLinearTransformations",
 InstallMethod( MakeQPAVector, [ IsString, IsField, IsDenseList ],
 function( type_str, F, entries )
   local type, space, v;
+  if Length( entries ) = 0 then
+    return EmptyVector( F );
+  fi;
   v := rec( type := type_str,
             field := F,
             entries := entries );
@@ -104,6 +107,13 @@ function( v )
   return Concatenation( "<", v!.type, " vector ", String( v!.entries ), ">" );
 end );
 
+InstallMethod( String, [ IsEmptyVector ],
+function( v )
+  return Concatenation( "<empty vector over ",
+                        String( LeftActingDomain( SpaceContainingVector( v ) ) ),
+                        ">" );
+end );
+
 InstallMethod( ViewObj, [ IsQPAVector ],
 function( v )
   Print( String( v ) );
@@ -170,7 +180,7 @@ function( F )
   return space;
 end );
 
-InstallMethod( ZeroVector, [ IsField ],
+InstallMethod( EmptyVector, [ IsField ],
 function( F )
   local v, type, V;
   V := ZeroVectorSpace( F );
@@ -178,7 +188,7 @@ function( F )
             field := F,
             entries := [] );
   type := NewType( FamilyOfQPAVectors,
-                   IsQPAVector and IsQPAVectorRep );
+                   IsEmptyVector and IsQPAVectorRep );
   ObjectifyWithAttributes( v, type,
                            SpaceContainingVector, V,
                            IsZero, true );
@@ -187,7 +197,7 @@ end );
 
 InstallMethod( Zero, [ IsZeroVectorSpace ],
 function( V )
-  return ZeroVector( LeftActingDomain( V ) );
+  return EmptyVector( LeftActingDomain( V ) );
 end );
 
 InstallMethod( MakeQPAVectorSpace, [ IsString, IsField, IsInt ],
@@ -352,13 +362,9 @@ end );
 InstallMethod( MatrixOfLinearTransformation, "for linear transformation",
                [ IsLinearTransformation ],
 function( T )
-  local   is_rowspaceorzero,  is_colspaceorzero;
-
-  is_rowspaceorzero := V -> IsRowVectorSpace( V ) or IsZero( V );
-  is_colspaceorzero := V -> IsColVectorSpace( V ) or IsZero( V );
-  if is_rowspaceorzero( Source( T ) ) and is_rowspaceorzero( Range( T ) ) then
+  if IsRowVectorSpace( Source( T ) ) and IsRowVectorSpace( Range( T ) ) then
     return RightMatrixOfLinearTransformation( T );
-  elif is_colspaceorzero( Source( T ) ) and is_colspaceorzero( Range( T ) ) then
+  elif IsColVectorSpace( Source( T ) ) and IsColVectorSpace( Range( T ) ) then
     return LeftMatrixOfLinearTransformation( T );
   else
     Error( "MatrixOfLinearTransformation undefined for ", T );

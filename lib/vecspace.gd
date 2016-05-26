@@ -18,6 +18,8 @@ DeclareCategory( "IsQPARowVector", IsQPAVector );
 #!  Category for column vectors.
 DeclareCategory( "IsQPAColVector", IsQPAVector );
 
+DeclareCategory( "IsEmptyVector", IsQPARowVector and IsQPAColVector );
+
 #! @Description
 #!  Category for vector spaces.
 #!  Subcategory of the builtin GAP category <C>IsVector</C>,
@@ -34,7 +36,7 @@ DeclareCategory( "IsColVectorSpace", IsQPAVectorSpace );
 
 #! @Description
 #!  Category for zero vector spaces.
-DeclareCategory( "IsZeroVectorSpace", IsQPAVectorSpace );
+DeclareCategory( "IsZeroVectorSpace", IsRowVectorSpace and IsColVectorSpace );
 
 #! @Description
 #!  Category for linear transformations.
@@ -144,9 +146,17 @@ DeclareOperation( "MakeQPAVectorSpace", [ IsQPAVectorSpace, IsInt ] );
 #! @Returns <Ref Filt="IsZeroVectorSpace"/>
 #! @Description
 #!  Returns the zero vector space over the field <A>k</A>.
+#!  The zero vector space contains a single element, the empty vector.
+#!  The zero vector space is regarded as both a row space and a column space.
 DeclareAttribute( "ZeroVectorSpace", IsField );
 
-DeclareAttribute( "ZeroVector", IsField );
+#! @Arguments k
+#! @Returns <Ref Filt="IsEmptyVector"/>
+#! @Description
+#!  Returns the empty vector over the field <A>k</A>.
+#!  This is the only element of the zero vector space.
+#!  The empty vector is regarded as both a row vector and a column vector.
+DeclareAttribute( "EmptyVector", IsField );
 
 
 DeclareOperation( "MakeLinearTransformation",

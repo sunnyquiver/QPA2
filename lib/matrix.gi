@@ -296,7 +296,7 @@ function( v, M )
            dim[ 1 ], "x", dim[ 2 ], " matrix" );
   fi;
   if dim[ 2 ] = 0 then
-    return ZeroVector( R );
+    return EmptyVector( R );
   elif dim[ 1 ] = 0 then
     return Zero( RowVectorSpace( R, dim[ 2 ] ) );
   else
