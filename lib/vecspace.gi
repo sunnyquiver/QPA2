@@ -515,7 +515,7 @@ function( F )
   coker_proj := function( m )
     local mat, coker_mat, dim;
     mat := RowsOfMatrix( RightMatrixOfLinearTransformation( m ) );
-    coker_mat := TransposedMat( TriangulizedNullspaceMat( TransposedMat( m ) ) );
+    coker_mat := TransposedMat( TriangulizedNullspaceMat( TransposedMat( mat ) ) );
     if coker_mat = [] then
       return zero_morphism( Range( m ), zero_object() );
     else
