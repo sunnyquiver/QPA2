@@ -202,3 +202,11 @@ DeclareOperation( "StackMatricesVertically", [ IsDenseList ] );
 DeclareOperation( "StackMatricesVertically", [ IsQPAMatrix, IsQPAMatrix ] );
 
 DeclareOperation( "SubspaceInclusion", [ IsQPAVectorSpace, IsHomogeneousList ] );
+#! @Arguments M, v
+#! @Returns a row vector w
+#! @Description
+#!  Returns a row vector such that  w*<A>M</A> = <A>v</A>, whenever possible or fail if there
+#!  is no solution.  Signals an error message if the vector <A>v</A> and matrix <A>M</A> are
+#!  not compatible, that is, number of columns in the matrix <A>M</A> differ from the number 
+#!  of enteries in the vector <A>v</A>. 
+DeclareOperation( "SolutionMat", [ IsQPAMatrix, IsQPARowVector ] );

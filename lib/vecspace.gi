@@ -672,3 +672,20 @@ function( V, gens )
   
   return LinearTransformationByRightMatrix( WQPA, V, matrix );
 end );
+
+InstallMethod( PreImagesRepresentative, "for a linear transformation and a vector",
+               [ IsLinearTransformation, IsQPAVector ],
+function( f, v )
+  local   temp;
+
+  if not v in Range( f ) then
+    Error("the entered element is not in the range for the entered linear transformation,\n");
+  fi;
+  temp := SolutionMat( RightMatrixOfLinearTransformation( f ), AsRowVector( v ) );
+  if temp <> fail then 
+    return Vector( Source( f ), temp );
+  else
+    return fail;
+  fi;
+end
+);

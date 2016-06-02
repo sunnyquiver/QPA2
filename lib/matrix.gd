@@ -77,3 +77,5 @@ DeclareOperation( "RowsOfMatrix", [ IsQPAMatrix ] );
 #! @Description
 #!  Returns the columns of the matrix <A>M</A>, as a list of lists.
 DeclareOperation( "ColsOfMatrix", [ IsQPAMatrix ] );
+
+

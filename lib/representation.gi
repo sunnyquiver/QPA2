@@ -1221,3 +1221,22 @@ function( C )
   return topprojection;
 end
 );
+
+InstallMethod( PreImagesRepresentative, "for a representation homomorphism and a representation element",
+               [ IsQuiverRepresentationHomomorphism, IsQuiverRepresentationElement ],
+function( f, m )
+  local   elementvectors,  maps,  preimage;
+  
+  if not m in Range( f ) then
+    Error("the entered element is not in the range for the entered homomorphism,\n");
+  fi;
+  elementvectors := ElementVectors( m );
+  maps := MapsOfRepresentationHomomorphism( f );
+  preimage := ListN( maps, elementvectors, PreImagesRepresentative );
+  if ForAll( preimage, x -> x <> fail ) then
+    return QuiverRepresentationElement( Source( f ), preimage );
+  else
+    return fail;
+  fi;
+end
+);

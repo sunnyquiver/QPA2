@@ -341,3 +341,29 @@ function( M )
   od;
   return true;
 end );
+
+InstallMethod( SolutionMat, "for QPA matrix and a row vector",
+	       [ IsQPAMatrix, IsQPARowVector ], NICE_FLAGS + 1000, 
+function( M, v )
+  local   dim,  V;
+
+  dim := DimensionsMat( M );
+  if dim[ 2 ] <> Length( v ) then
+    Error("a row vector of length ",Length( v )," cannot be in the image of a ",
+          dim[ 1 ]," x ",dim[ 2 ],"-matrix,\n"); 
+  fi;
+  if dim[ 1 ] = 0 then
+    if IsZero( v ) then
+      return EmptyVector( BaseDomain( M ) );
+    else
+      return fail;
+    fi;
+  fi;
+  V :=  RowVectorSpace( BaseDomain( M ), dim[ 1 ] );
+  if dim[ 2 ] = 0 then
+    return Zero( V );
+  else
+    return Vector( V, SolutionMat( RowsOfMatrix( M ), AsList( v ) ) );
+  fi;
+end 
+);
