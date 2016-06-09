@@ -1060,7 +1060,7 @@ function( A )
   return list;
 end );
 
-InstallMethod( IndecProjModules, "for quiver algebra",
+InstallMethod( IndecProjRepresentations, "for quiver algebra",
                [ IsQuiverAlgebra ],
 function( A )
     local   basis_list,  proj_modules,  i,  basis,  dimensions,  
@@ -1095,8 +1095,14 @@ function( A )
       fi;
     od;
     R := QuiverRepresentationByRightMatrices( A, dimensions, arrows_with_matrices, matrices );
-    Add( proj_modules, AsModule( R, A ) );
+    Add( proj_modules, R );
   od;
   return proj_modules;
 end );
 
+InstallMethod( IndecProjModules, "for quiver algebra",
+               [ IsQuiverAlgebra ],
+function( A )
+
+return List( IndecProjRepresentations( A ), P -> AsModule( P, A ) );
+end );

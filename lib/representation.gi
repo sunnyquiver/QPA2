@@ -672,7 +672,7 @@ DeclareRepresentation( "IsQuiverRepresentationHomomorphismRep",
                        [ ] );
 
 InstallMethod( QuiverRepresentationHomomorphism,
-               "for quiver representations and dense list",
+               "for quiver representations and list",
                [ IsQuiverRepresentation, IsQuiverRepresentation,
                  IsList ],
 function( source, range, matrices )
@@ -693,6 +693,23 @@ function( source, range, matrices )
   return QuiverRepresentationHomomorphismByMorphismsNC
          ( source, range,
            List( matrices, LinearTransformationConstructor( cat ) ) );
+end );
+
+InstallMethod( QuiverRepresentationHomomorphismByRightMatrices,
+               "for quiver representations and list",
+               [ IsQuiverRepresentation, IsQuiverRepresentation, IsList ],
+function( source, range, matrices )
+  local   vecspacesource,  vecspacerange,  lineartransformations,  i;
+
+  vecspacesource := VectorSpacesOfRepresentation( source );
+  vecspacerange := VectorSpacesOfRepresentation( range );
+  lineartransformations := [ ];
+  for i in [ 1 .. Length( matrices ) ] do
+    if IsBound( matrices[ i ] ) then
+      lineartransformations[ i ] := LinearTransformationByRightMatrix( vecspacesource[ i ], vecspacerange[ i ], matrices[ i ] ); 
+    fi;
+  od;
+  return QuiverRepresentationHomomorphismByMorphisms ( source, range, lineartransformations );
 end );
 
 InstallMethod( QuiverRepresentationHomomorphismByMorphisms,
@@ -1238,5 +1255,34 @@ function( f, m )
   else
     return fail;
   fi;
+end
+);
+
+InstallMethod( HomFromProjective, "for a representation element and a quiver representation",
+               [ IsQuiverRepresentationElement, IsQuiverRepresentation ],
+function( r, R )
+  local   supp,  A,  k,  n,  B,  mats,  i,  matrix,  b;
+  
+  supp := SupportOfElement( r );
+  if Length( supp ) > 1 then
+    Error("the entered quiver representation element is supported in more than one vertex,\n");
+  fi;
+
+  A := AlgebraOfRepresentation( R );
+  k := FieldOfRepresentation( R );
+  n := VertexNumber( supp[1] );
+  B := BasisOfProjectives( A )[ n ];
+  mats := [ ];
+  for i in [ 1 .. Length( B ) ] do
+    if Length( B[ i ] ) > 0 and DimensionVector( R )[ i ] > 0 then
+      matrix := [ ];
+      for b in B[ i ] do
+        Add( matrix, AsList( ElementVector( QuiverAlgebraAction( r, b ), i ) ) );
+      od;
+      mats[i] := MatrixByRows( FieldOfRepresentation( R ), matrix );
+    fi;
+  od;
+  
+  return QuiverRepresentationHomomorphismByRightMatrices( IndecProjRepresentations( A )[ n ], R, mats );
 end
 );

@@ -348,6 +348,16 @@ DeclareOperation( "QuiverRepresentationHomomorphismNC",
                   [ IsQuiverRepresentation, IsQuiverRepresentation,
                     IsDenseList ] );
 
+#! @Description
+#!  Returns the quiver representation homomorphism from <A>source</A> to
+#!  <A>range</A> given by the entered <A>matrices</A> acting on the right. 
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments source, range, matrices 
+DeclareOperation( "QuiverRepresentationHomomorphismByRightMatrices",
+                  [ IsQuiverRepresentation, IsQuiverRepresentation,
+                    IsList ] );
+		    
+
 #!
 DeclareOperation( "QuiverRepresentationHomomorphismByMorphisms",
                   [ IsQuiverRepresentation, IsQuiverRepresentation,
@@ -460,3 +470,12 @@ DeclareOperation( "TopFunctor", [ IsQuiverRepresentationCategory ] );
 #! @Returns IsCapNaturalTransformation
 #! @Arguments C
 DeclareOperation( "TopProjectionTransformation", [ IsQuiverRepresentationCategory ] );
+
+#! @Description
+#!  Returns a homomorphism from the indecomposable projetive representation corresponding to
+#!  the vertex <C>i</C>, where <A>r</A> is supported to <A>R</A>, sending a top element to
+#!  <A>r</A>. It signals an error message if the element <A>r</A> is not supported in only one
+#!  vertex.
+#! @Returns IsCapNaturalTransformation
+#! @Arguments r, R
+DeclareOperation( "HomFromProjective", [ IsQuiverRepresentationElement, IsQuiverRepresentation ] );

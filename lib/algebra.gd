@@ -135,6 +135,9 @@ DeclareAttribute( "BasisPaths", IsQuiverAlgebraBasis );
 DeclareAttribute( "BasisOfProjectives", IsQuiverAlgebra );
 
 #!
+DeclareAttribute( "IndecProjRepresentations", IsQuiverAlgebra );
+
+#!
 DeclareAttribute( "IndecProjModules", IsQuiverAlgebra );
 
 #! @Section Accessing algebra elements
