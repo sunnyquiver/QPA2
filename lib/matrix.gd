@@ -78,4 +78,10 @@ DeclareOperation( "RowsOfMatrix", [ IsQPAMatrix ] );
 #!  Returns the columns of the matrix <A>M</A>, as a list of lists.
 DeclareOperation( "ColsOfMatrix", [ IsQPAMatrix ] );
 
+#! @Arguments M
+#! @Description
+#!  Returns a matrix, which rows are a basis for the nullspace of the matrix
+#!  <A>M</A>. 
+#! @Returns IsQPAMatrix
+DeclareAttribute( "NullspaceMat", IsQPAMatrix );
 

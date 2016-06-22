@@ -500,30 +500,21 @@ function( F )
 
   kernel_emb := function( m )
     local kernel_mat, dim;
-    kernel_mat := TriangulizedNullspaceMat( RowsOfMatrix( RightMatrixOfLinearTransformation( m ) ) );
-    if kernel_mat = [] then
-      return zero_morphism( zero_object(), Source( m ) );
-    else
-      dim := DimensionsMat( kernel_mat )[ 1 ];
-      return LinearTransformationByRightMatrix
-             ( MakeQPAVectorSpace( Source( m ), dim ), Source( m ),
-               MatrixByRows( F, kernel_mat ) );
-    fi;
+    kernel_mat := NullspaceMat( RightMatrixOfLinearTransformation( m ) );
+    dim := DimensionsMat( kernel_mat )[ 1 ];
+    return LinearTransformationByRightMatrix
+           ( MakeQPAVectorSpace( Source( m ), dim ), Source( m ),
+             kernel_mat );
   end;
   AddKernelEmbedding( cat, kernel_emb );
 
   coker_proj := function( m )
     local mat, coker_mat, dim;
-    mat := RowsOfMatrix( RightMatrixOfLinearTransformation( m ) );
-    coker_mat := TransposedMat( TriangulizedNullspaceMat( TransposedMat( mat ) ) );
-    if coker_mat = [] then
-      return zero_morphism( Range( m ), zero_object() );
-    else
-      dim := DimensionsMat( coker_mat )[ 2 ];
-      return LinearTransformationByRightMatrix
-             ( Range( m ), MakeQPAVectorSpace( Range( m ), dim ),
-               MatrixByRows( F, coker_mat ) );
-    fi;
+    mat := RightMatrixOfLinearTransformation( m );
+    coker_mat := TransposedMat( NullspaceMat( TransposedMat( mat ) ) );
+    dim := DimensionsMat( coker_mat )[ 2 ];
+    return LinearTransformationByRightMatrix
+           ( Range( m ), MakeQPAVectorSpace( Range( m ), dim ), coker_mat );
   end;
   AddCokernelProjection( cat, coker_proj );
 

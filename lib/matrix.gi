@@ -367,3 +367,23 @@ function( M, v )
   fi;
 end 
 );
+
+InstallMethod( NullspaceMat, "for QPA matrix", [ IsQPAMatrix ],
+
+function( M )
+  local   dim,  temp;
+
+  dim := DimensionsMat( M );
+  if dim[ 1 ] = 0 or dim[ 2 ] = 0 then
+    return IdentityMatrix( BaseDomain( M ), dim[ 1 ] );
+  else
+    temp := NullspaceMat( RowsOfMatrix( M ) );
+    if Length( temp ) = 0 then
+      return MakeZeroMatrix( BaseDomain( M ), 0, dim[ 1 ] );
+    else
+      return MatrixByRows( BaseDomain( M ), temp );
+    fi;
+  fi;
+end 
+);
+

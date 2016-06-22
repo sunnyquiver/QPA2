@@ -485,10 +485,8 @@ InstallMethod( ZeroRepresentation, "for quiver algebra",
 function( A )
   local numVertices;
   numVertices := NumberOfVertices( QuiverOfAlgebra( A ) );
-  return QuiverRepresentationByArrows( A,
-                                       List( [ 1 .. numVertices ],
-                                             i -> 0 ),
-                                       [], [] );
+  return QuiverRepresentation( A, List( [ 1 .. numVertices ],
+                                        i -> 0 ), [], [] );
 end );
 
 InstallMethod( \=, [ IsQuiverRepresentation, IsQuiverRepresentation ],
@@ -578,7 +576,7 @@ InstallMethod( MapForPath, "for quiver representation and arrow",
 InstallMethod( MapForPath, "for quiver representation and composite path",
                [ IsQuiverRepresentation, IsCompositePath ],
 function( R, p )
-  return PreCompose( List( ArrowListLR( p ), a -> MapForArrow( R, a ) ) );
+  return PreCompose( List( ArrowList( p ), a -> MapForArrow( R, a ) ) );
 end );
 
 InstallMethod( MapForAlgebraElement, "for quiver representation and uniform quiver algebra element",
@@ -869,8 +867,7 @@ function( A, vecspace_cat )
   AddIsEqualForMorphisms( cat, equal_morphisms );
 
   zero_object := function()
-    return QuiverRepresentationByArrows
-           ( cat, List( Vertices( Q ), v -> 0 ), [], [] );
+    return QuiverRepresentation( cat, List( Vertices( Q ), v -> 0 ), [], [] );
   end;
   AddZeroObject( cat, zero_object );
 
@@ -1284,5 +1281,30 @@ function( r, R )
   od;
   
   return QuiverRepresentationHomomorphismByRightMatrices( IndecProjRepresentations( A )[ n ], R, mats );
+end
+);
+
+InstallMethod( MinimalGeneratingSet, "for a quiver representation",
+               [ IsQuiverRepresentation ],
+function( R )
+  local   f;
+
+  f := TopProjection( R );
+  return List( BasisVectors( Basis( Range( f ) ) ), x -> PreImagesRepresentative( f, x ) );
+end
+);
+
+InstallMethod( ProjectiveCover, "for a quiver representation",
+               [ IsQuiverRepresentation ],
+function( R )
+  local   mingen,  maps,  PR,  projections;
+
+  if Sum( DimensionVector( R ) ) = 0 then
+    return ZeroMorphism( ZeroObject( CapCategory( R ) ), R);
+  else
+    mingen := MinimalGeneratingSet( R );
+    maps := List( mingen, x -> HomFromProjective( x, R ) );
+    return UniversalMorphismFromDirectSum( maps );
+  fi;
 end
 );

@@ -479,3 +479,15 @@ DeclareOperation( "TopProjectionTransformation", [ IsQuiverRepresentationCategor
 #! @Returns IsCapNaturalTransformation
 #! @Arguments r, R
 DeclareOperation( "HomFromProjective", [ IsQuiverRepresentationElement, IsQuiverRepresentation ] );
+
+#! @Description
+#! Returns a list which is a minimal generating set for the representation  <A>R</A>.
+#! @Returns IsList
+#! @Arguments R
+DeclareAttribute( "MinimalGeneratingSet", IsQuiverRepresentation );
+
+#! @Description
+#! Returns the projective cover of the quiver representation  <A>R</A>. 
+#! @Returns IsQuiverRepresentationHomomorphism
+#! @Arguments R
+DeclareAttribute( "ProjectiveCover", IsQuiverRepresentation );
