@@ -57,7 +57,7 @@ end );
 
 InstallMethod( Vector, [ IsQPAVectorSpace, IsList ],
 function( V, coeffs )
-  return LinearCombination( coeffs, CanonicalBasis( V ) );
+  return LinearCombination( CanonicalBasis( V ), coeffs );
 end );
 
 InstallMethod( Vector, [ IsQPAVectorSpace, IsQPARowVector ],
@@ -152,7 +152,7 @@ function( a, v )
   if not a in v!.field then
     Error( "scalar not from appropriate field" );
   fi;
-  return MakeQPAVector( v!.type, v!.field, v!.entries );
+  return MakeQPAVector( v!.type, v!.field, a * v!.entries );
 end );
 
 InstallMethod( \in, [ IsQPAVector, IsQPAVectorSpace ],
