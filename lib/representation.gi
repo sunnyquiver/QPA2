@@ -1159,18 +1159,6 @@ function( C )
 end
 );
 
-InstallMethod( IdentityFunctor, "for a category", [ IsCapCategory ],
-function( C )
-  local   Id;
-
-  Id := CapFunctor( "Identity", C, C );
-  AddObjectFunction( Id, X -> X ); 
-  AddMorphismFunction( Id, function ( X, f, Y ) return f; end );
-  
-  return Id;
-end
-);
-
 InstallMethod( RadicalInclusionTransformation, "for a category of representations",
                [ IsQuiverRepresentationCategory ],
 function( C )

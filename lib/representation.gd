@@ -433,12 +433,6 @@ DeclareAttribute( "RadicalOfMorphism", IsQuiverRepresentationHomomorphism );
 DeclareOperation( "RadicalFunctor", [ IsQuiverRepresentationCategory ] );
 
 #! @Description
-#!  Returns the identity functor for a category <A>C</A>.
-#! @Returns IsCapFunctor
-#! @Arguments C
-DeclareOperation( "IdentityFunctor", [ IsCapCategory ] );
-
-#! @Description
 #!  Returns the natural transformation from the radical functor to the identity 
 #!  functor for a category <A>C</A>.
 #! @Returns IsCapNaturalTransformation
