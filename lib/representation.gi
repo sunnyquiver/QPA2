@@ -613,26 +613,27 @@ DeclareRepresentation( "IsQuiverRepresentationBasisRep",
 InstallMethod( CanonicalBasis, "for quiver representation",
                [ IsQuiverRepresentation ],
 function( R )
-  local Q, vertices, spaces, basis_elements, i, vertex_basis,
+  local Q, vertices, spaces, basis_elements_by_vertex, i, vertex_basis,
         basis_vector, temp, basis;
   Q := QuiverOfRepresentation( R );
   vertices := Vertices( Q );
   spaces := VectorSpacesOfRepresentation( R );
-  basis_elements := [];
+  basis_elements_by_vertex := List( vertices, v -> [] );
   for i in [ 1 .. Length( vertices ) ] do
     vertex_basis := CanonicalBasis( spaces[ i ] );
     for basis_vector in vertex_basis do
       temp := QuiverRepresentationElementByVertices( R, [ vertices[ i ] ], [ basis_vector ] );
       SetSupportOfElement( temp, [ vertices[ i ] ] );
-      Add( basis_elements, temp );
+      Add( basis_elements_by_vertex[ i ], temp );
     od;
   od;
   basis := rec();
   ObjectifyWithAttributes
     ( basis,
       NewType( FamilyOfQuiverRepresentationBases,
-               IsBasis and IsQuiverRepresentationBasisRep ),
-      BasisVectors, basis_elements,
+               IsQuiverRepresentationBasis and IsQuiverRepresentationBasisRep ),
+      BasisVectors, Flat( basis_elements_by_vertex ),
+      BasisVectorsByVertex, basis_elements_by_vertex,
       UnderlyingLeftModule, R );
   return basis;
 end );

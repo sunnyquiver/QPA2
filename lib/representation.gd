@@ -485,3 +485,14 @@ DeclareAttribute( "MinimalGeneratingSet", IsQuiverRepresentation );
 #! @Returns IsQuiverRepresentationHomomorphism
 #! @Arguments R
 DeclareAttribute( "ProjectiveCover", IsQuiverRepresentation );
+
+#! @Description
+#! Category for bases of quiver representations.
+DeclareCategory( "IsQuiverRepresentationBasis", IsBasis );
+
+#! @Description
+#! Returns the elements in a basis of a representation, ordered by vertex.
+#! The result is a list of lists, such that the basis elements belonging to vertex
+#! number <C>i</C> are in the <C>i</C>th element of the list.
+#! @Arguments B
+DeclareAttribute( "BasisVectorsByVertex", IsQuiverRepresentationBasis );
