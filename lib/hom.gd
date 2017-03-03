@@ -9,3 +9,5 @@
 #! @Returns List of <Ref Filt="IsQuiverRepresentationHomomorphism"/>
 #! @Arguments R1, R2
 DeclareOperation( "BasisOfHom", [ IsQuiverRepresentation, IsQuiverRepresentation ]);
+
+#
