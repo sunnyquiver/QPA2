@@ -142,13 +142,13 @@ DeclareAttribute( "IndecProjModules", IsQuiverAlgebra );
 
 #! @Section Accessing algebra elements
 
-#! @BeginGroup PathAlgebraElement
-#! @Returns <Ref Filt="IsPathAlgebraElement"/>
+#! @BeginGroup QuiverAlgebraElement
+#! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
 #! @Description
-#!  Creates an element of a path algebra.
+#!  Creates an element of a quiver algebra.
 #!  <P/>
-#!  The argument <A>kQ</A> is a path algebra,
-#!  <A>paths</A> is a list of paths in the quiver of <A>kQ</A>,
+#!  The argument <A>A</A> is a quiver algebra,
+#!  <A>paths</A> is a list of paths in the quiver of <A>A</A>,
 #!  and <A>coefficients</A> a list of coefficients.
 #!  The lists <A>paths</A> and <A>coefficients</A> must have the same length.
 #!  If the paths are $p_1, \ldots, p_n$
@@ -156,20 +156,20 @@ DeclareAttribute( "IndecProjModules", IsQuiverAlgebra );
 #!  then the result is the linear combination
 #!  $\sum_{i=1}^n c_i p_i$.
 #!  <P/>
-#!  For the operation <C>PathAlgebraElement</C>,
+#!  For the operation <C>QuiverAlgebraElement</C>,
 #!  the elements in <A>paths</A> may be listed in any order,
 #!  and the same paths can occur several times in the list.
-#!  The operation <C>PathAlgebraElementNC</C> assumes that
+#!  The operation <C>QuiverAlgebraElementNC</C> assumes that
 #!  the list of paths is sorted in decreasing order
 #!  (by the path ordering of the quiver)
 #!  and does not have any duplicates.
-#! @Arguments kQ, coefficients, paths
-DeclareOperation( "PathAlgebraElement", [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ] );
-#! @Arguments kQ, coefficients, paths
-DeclareOperation( "PathAlgebraElementNC", [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ] );
+#! @Arguments A, coefficients, paths
+DeclareOperation( "QuiverAlgebraElement", [ IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ] );
+#! @Arguments A, coefficients, paths
+DeclareOperation( "QuiverAlgebraElementNC", [ IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ] );
 #! @EndGroup
 
-#! @InsertChunk Example_PathAlgebraElement
+#! @InsertChunk Example_QuiverAlgebraElement
 
 #! @Arguments A, e
 #! @Description

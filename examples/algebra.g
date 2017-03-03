@@ -22,13 +22,13 @@ kQ / TwoSidedIdealByGenerators( kQ, [ kQ.ca - kQ.ba ] );
 #! @EndExample
 #! @EndChunk
 
-#! @BeginChunk Example_PathAlgebraElement
+#! @BeginChunk Example_QuiverAlgebraElement
 #! @BeginExample
 kQ := PathAlgebra( Rationals, LeftQuiver( "Q(3)[a:1->2,b:2->3,c:2->3]" ) );
 #! Rationals * Q
-PathAlgebraElement( kQ, [ 2, -1, 1/5 ], [ Q.a, Q.ba, Q[1] ] );
+QuiverAlgebraElement( kQ, [ 2, -1, 1/5 ], [ Q.a, Q.ba, Q[1] ] );
 #! -1*(b*a) + 2*(a) + 1/5*(1)
-PathAlgebraElement( kQ, [ 2, 3/2 ], [ Q.a, Q.a ] );
+QuiverAlgebraElement( kQ, [ 2, 3/2 ], [ Q.a, Q.a ] );
 #! 7/2*(a)
 #! @EndExample
 #! @EndChunk

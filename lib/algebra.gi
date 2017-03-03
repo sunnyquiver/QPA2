@@ -1,7 +1,7 @@
 DeclareRepresentation( "IsPathAlgebraElementRep", IsComponentObjectRep,
                        [ "algebra", "paths", "coefficients" ] );
 
-InstallMethod( PathAlgebraElement,
+InstallMethod( QuiverAlgebraElement,
                "for path algebra and homogeneous lists",
                [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ],
 function( algebra, coefficients, paths )
@@ -32,10 +32,10 @@ function( algebra, coefficients, paths )
   nonzeroIndices := PositionsProperty( Cs, c -> not IsZero( c ) );
   Cs := Cs{ nonzeroIndices };
   Ps := Ps{ nonzeroIndices };
-  return PathAlgebraElementNC( algebra, Cs, Ps );
+  return QuiverAlgebraElementNC( algebra, Cs, Ps );
 end );
 
-InstallMethod( PathAlgebraElementNC,
+InstallMethod( QuiverAlgebraElementNC,
                "for path algebra and homogeneous lists",
                [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ],
 function( algebra, coefficients, paths )
@@ -52,7 +52,7 @@ function( A, p )
   if QuiverOfPath( p ) <> QuiverOfAlgebra( A ) then
     Error( "Path from wrong quiver" );
   fi;
-  return PathAlgebraElementNC( A, [ One( LeftActingDomain( A ) ) ], [ p ] );
+  return QuiverAlgebraElementNC( A, [ One( LeftActingDomain( A ) ) ], [ p ] );
 end );
 
 InstallMethod( String, "for element of path algebra",
@@ -134,7 +134,7 @@ end );
 InstallMethod( AdditiveInverse, "for element of path algebra",
                [ IsPathAlgebraElement ],
 function( e )
-  return PathAlgebraElement
+  return QuiverAlgebraElement
          ( AlgebraOfElement( e ),
            List( Coefficients( e ), AdditiveInverse ),
            Paths( e ) );
@@ -181,7 +181,7 @@ function( e1, e2 )
     Add( Cs, Cs2[ j ] ); Add( Ps, Ps2[ j ] );
     j := j + 1;
   od;
-  return PathAlgebraElement( AlgebraOfElement( e1 ), Cs, Ps );
+  return QuiverAlgebraElement( AlgebraOfElement( e1 ), Cs, Ps );
 end );
 
 InstallMethod( \*, "for elements of path algebra", IsIdenticalObj,
@@ -191,7 +191,7 @@ function( e1, e2 )
   Cs := List( Cartesian( Coefficients( e1 ), Coefficients( e2 ) ), c -> c[ 1 ] * c[ 2 ] );
   Ps := List( Cartesian( Paths( e1 ), Paths( e2 ) ), p -> p[ 1 ] * p[ 2 ] );
   nonzeros := PositionsProperty( Ps, p -> p <> fail );
-  return PathAlgebraElement
+  return QuiverAlgebraElement
          ( AlgebraOfElement( e1 ),
            Cs{ nonzeros },
            Ps{ nonzeros } );
@@ -213,7 +213,7 @@ InstallMethod( \*, "for multiplicative element and element of path algebra",
                [ IsMultiplicativeElement, IsPathAlgebraElement ],
 function( c, e )
   if c in LeftActingDomain( AlgebraOfElement( e ) ) then
-    return PathAlgebraElement
+    return QuiverAlgebraElement
            ( AlgebraOfElement( e ),
              c * Coefficients( e ),
              Paths( e ) );
@@ -235,7 +235,7 @@ end );
 InstallMethod( TranslateAlgebraElement,
                [ IsQuiverAlgebraElement, IsPathAlgebra, IsFunction ],
 function( e, A, f )
-  return PathAlgebraElement( A, Coefficients( e ),
+  return QuiverAlgebraElement( A, Coefficients( e ),
                              List( Paths( e ), f ) );
 end );
 
@@ -264,8 +264,8 @@ function( e )
   local Cs, Ps, len;
   Cs := Coefficients( e );
   Ps := Paths( e );
-  return PathAlgebraElementNC( AlgebraOfElement( e ),
-                               [ Cs[ 1 ] ], [ Ps[ 1 ] ] );
+  return QuiverAlgebraElementNC( AlgebraOfElement( e ),
+                                 [ Cs[ 1 ] ], [ Ps[ 1 ] ] );
 end );
 
 InstallMethod( NonLeadingTerms, "for element of path algebra",
@@ -275,9 +275,9 @@ function( e )
   Cs := Coefficients( e );
   Ps := Paths( e );
   len := Length( Ps );
-  return PathAlgebraElementNC( AlgebraOfElement( e ),
-                               Cs{ [ 2 .. len ] },
-                               Ps{ [ 2 .. len ] } );
+  return QuiverAlgebraElementNC( AlgebraOfElement( e ),
+                                 Cs{ [ 2 .. len ] },
+                                 Ps{ [ 2 .. len ] } );
 end );
 
 InstallMethod( DivideByList, "for element of path algebra and list",
@@ -522,20 +522,20 @@ function( e, A )
   return A = AlgebraOfElement( e );
 end );
 
-InstallMethod( Zero, "for path algebra",
-               [ IsPathAlgebra ],
+InstallMethod( Zero, "for quiver algebra",
+               [ IsQuiverAlgebra ],
 function( A )
-  return PathAlgebraElement( A, [], [] );
+  return QuiverAlgebraElement( A, [], [] );
 end );
 
-InstallMethod( One, "for path algebra",
-               [ IsPathAlgebra ],
+InstallMethod( One, "for quiver algebra",
+               [ IsQuiverAlgebra ],
 function( A )
   local vertices;
   vertices := Vertices( QuiverOfAlgebra( A ) );
-  return PathAlgebraElement( A,
-                             List( vertices, v -> One( LeftActingDomain( A ) ) ),
-                             vertices );
+  return QuiverAlgebraElement( A,
+                               List( vertices, v -> One( LeftActingDomain( A ) ) ),
+                               vertices );
 end );
 
 InstallMethod( AlgebraElementFromString, "for quiver algebra and string",
@@ -722,18 +722,6 @@ function( A )
   return A!.pathAlgebra;
 end );
 
-InstallMethod( Zero, "for quotient of path algebra",
-               [ IsQuotientOfPathAlgebra ],
-function( A )
-  return QuotientOfPathAlgebraElement( A, Zero( PathAlgebra( A ) ) );
-end );
-
-InstallMethod( One, "for quotient of path algebra",
-               [ IsQuotientOfPathAlgebra ],
-function( A )
-  return QuotientOfPathAlgebraElement( A, One( PathAlgebra( A ) ) );
-end );
-
 
 DeclareRepresentation( "IsQuotientOfPathAlgebraElementRep", IsComponentObjectRep,
                        [ "algebra", "representative" ] );
@@ -754,6 +742,22 @@ InstallMethod( PathAsAlgebraElement, "for quotient of path algebra and path",
 function( A, p )
   local representative;
   representative := PathAsAlgebraElement( PathAlgebra( A ), p );
+  return QuotientOfPathAlgebraElement( A, representative );
+end );
+
+InstallMethod( QuiverAlgebraElement, "for quotient of path algebra and homogeneous lists",
+               [ IsQuotientOfPathAlgebra, IsHomogeneousList, IsHomogeneousList ],
+function( A, coefficients, paths )
+  local representative;
+  representative := QuiverAlgebraElement( PathAlgebra( A ), coefficients, paths );
+  return QuotientOfPathAlgebraElement( A, representative );
+end );
+
+InstallMethod( QuiverAlgebraElementNC, "for quotient of path algebra and homogeneous lists",
+               [ IsQuotientOfPathAlgebra, IsHomogeneousList, IsHomogeneousList ],
+function( A, coefficients, paths )
+  local representative;
+  representative := QuiverAlgebraElementNC( PathAlgebra( A ), coefficients, paths );
   return QuotientOfPathAlgebraElement( A, representative );
 end );
 
@@ -878,19 +882,11 @@ function( A )
 end );
 
 InstallMethod( OppositeAlgebraElement,
-               [ IsPathAlgebraElement ],
+               [ IsQuiverAlgebraElement ],
 function( e )
-  return PathAlgebraElement( OppositeAlgebra( AlgebraOfElement( e ) ),
-                             Coefficients( e ),
-                             List( Paths( e ), OppositePath ) );
-end );
-
-InstallMethod( OppositeAlgebraElement,
-               [ IsQuotientOfPathAlgebraElement ],
-function( e )
-  return QuotientOfPathAlgebraElement
-         ( OppositeAlgebra( AlgebraOfElement( e ) ),
-           OppositeAlgebraElement( Representative( e ) ) );
+  return QuiverAlgebraElement( OppositeAlgebra( AlgebraOfElement( e ) ),
+                               Coefficients( e ),
+                               List( Paths( e ), OppositePath ) );
 end );
 
 InstallMethod( TensorProductOfAlgebras,
