@@ -57,8 +57,8 @@ function( f )
   return AsModuleHomomorphism( f, AlgebraForRightModules( A ) );
 end );
 
-InstallMethod( LeftQuiverModuleHomomorphism,
-               [ IsLeftQuiverModule, IsLeftQuiverModule, IsDenseList ],
+InstallMethod( QuiverModuleHomomorphism,
+               [ IsLeftQuiverModule, IsLeftQuiverModule, IsList ],
 function( M1, M2, matrices )
   local R1, R2, rf;
   R1 := UnderlyingRepresentation( M1 );
@@ -67,8 +67,8 @@ function( M1, M2, matrices )
   return AsLeftModuleHomomorphism( rf );
 end );
 
-InstallMethod( RightQuiverModuleHomomorphism,
-               [ IsRightQuiverModule, IsRightQuiverModule, IsDenseList ],
+InstallMethod( QuiverModuleHomomorphism,
+               [ IsRightQuiverModule, IsRightQuiverModule, IsList ],
 function( M1, M2, matrices )
   local R1, R2, rf;
   R1 := UnderlyingRepresentation( M1 );
@@ -77,3 +77,12 @@ function( M1, M2, matrices )
   return AsRightModuleHomomorphism( rf );
 end );
 
+InstallMethod( ImageElm,
+               [ IsQuiverModuleHomomorphism, IsQuiverModuleElement ],
+function( f, m )
+  local M, r, F;
+  M := ModuleOfElement( m );
+  r := UnderlyingRepresentationElement( m );
+  F := UnderlyingRepresentationHomomorphism( f );
+  return AsModuleElement( ImageElm( F, r ), M );
+end );
