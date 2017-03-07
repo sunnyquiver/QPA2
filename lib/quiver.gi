@@ -1364,7 +1364,8 @@ end );
 InstallMethod( \=, "for quivers",
                [ IsQuiver, IsQuiver ],
 function( Q1, Q2 )
-  return Label( Q1 ) = Label( Q2 )
+  return QuiverCategory( Q1 ) = QuiverCategory( Q2 )
+         and Label( Q1 ) = Label( Q2 )
          and List( Vertices( Q1 ), Label ) = List( Vertices( Q2 ), Label )
          and List( Arrows( Q1 ), Label ) = List( Arrows( Q2 ), Label )
          and ArrowSourceIndices( Q1 ) = ArrowSourceIndices( Q2 )
