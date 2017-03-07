@@ -28,6 +28,23 @@ function( A )
   fi;
 end );
 
+InstallMethod( AlgebraForBimodules,
+               [ IsQuiverAlgebra, IsQuiverAlgebra ],
+function( A, B )
+  local A_, B_;
+  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
+    A_ := A;
+  else
+    A_ := OppositeAlgebra( A );
+  fi;
+  if IsRightQuiver( QuiverOfAlgebra( B ) ) then
+    B_ := B;
+  else
+    B_ := OppositeAlgebra( B );
+  fi;
+  return TensorProductOfAlgebras( A_, B_ );
+end );
+
 InstallMethod( AsModule,
                [ IsQuiverRepresentation, IsQuiverAlgebra ],
 function( R, A )
@@ -94,6 +111,20 @@ function( R, A, B )
                            LeftActingAlgebra, A,
                            RightActingAlgebra, B );
   return M;
+end );
+
+InstallMethod( QuiverBimodule,
+               [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsList ],
+function( A, B, dimensions, matrices )
+  return AsBimodule( QuiverRepresentation( AlgebraForBimodules( A, B ), dimensions, matrices ),
+                     A, B );
+end );
+
+InstallMethod( QuiverBimodule,
+               [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsDenseList, IsList ],
+function( A, B, dimensions, arrows, matrices_for_arrows )
+  return AsBimodule( QuiverRepresentation( AlgebraForBimodules( A, B ), dimensions, arrows, matrices_for_arrows ),
+                     A, B );
 end );
 
 InstallMethod( LeftQuiverModule,

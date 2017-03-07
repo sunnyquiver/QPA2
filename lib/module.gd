@@ -147,6 +147,12 @@ DeclareAttribute( "AlgebraForLeftModules", IsQuiverAlgebra );
 DeclareAttribute( "AlgebraForRightModules", IsQuiverAlgebra );
 
 #! @Description
+#!  Returns the appropriate algebra to use for representations of <A>A</A>-<A>B</A>-bimodules.
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+#! @Arguments A, B
+DeclareOperation( "AlgebraForBimodules", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
+
+#! @Description
 #!  The representation <A>R</A> considered as a (left or right) module
 #!  over the algebra <A>A</A>.
 #!  The algebra <A>A</A> must either be the algebra of the representation <A>R</A>,
@@ -181,7 +187,16 @@ DeclareOperation( "AsRightModule", [ IsQuiverRepresentation ] );
 #! @Arguments R, A, B
 DeclareOperation( "AsBimodule", [ IsQuiverRepresentation, IsQuiverAlgebra, IsQuiverAlgebra ] );
 
-# TODO direct bimodule constructor?
+#! @BeginGroup QuiverBimodule
+#! @Description
+#!  Create an <A>A</A>-<A>B</A>-bimodule, where <A>A</A> and <A>B</A> are quiver algebras.
+#! @Returns <Ref Filt="IsQuiverBimodule"/>
+#! @Arguments A, B, dimensions, matrices
+DeclareOperation( "QuiverBimodule", [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsList ] );
+#! @Arguments A, B, dimensions, arrows, matrices_for_arrows
+DeclareOperation( "QuiverBimodule", [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsDenseList, IsList ] );
+#! @EndGroup
+
 
 #! @Section Information about a module
 
