@@ -1387,13 +1387,22 @@ InstallMethod( OppositeQuiver,
 function( Q )
   local Q_op;
   Q_op := Quiver( QuiverCategory( Q ),
-                  Concatenation( Label( Q ), "_op" ),
+                  ToggleSuffix( Label( Q ), "_op" ),
                   VertexLabels( Q ),
                   ArrowLabels( Q ),
                   ArrowTargetIndices( Q ),
                   ArrowSourceIndices( Q ) );
   SetOppositeQuiver( Q_op, Q );
   return Q_op;
+end );
+
+InstallMethod( ToggleSuffix, "for two strings", [ IsString, IsString ],
+function( s, suffix )
+  if EndsWith( s, suffix ) and Length( s ) > Length( suffix ) then
+    return s{ [ 1 .. Length( s ) - Length( suffix ) ] };
+  else
+    return Concatenation( s, suffix );
+  fi;
 end );
 
 InstallMethod( OppositePath,

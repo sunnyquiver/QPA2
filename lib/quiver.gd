@@ -758,6 +758,13 @@ DeclareOperation( "PathOverlaps", [ IsPath, IsPath ] );
 #!  Returns the opposite quiver of <A>Q</A>.
 DeclareAttribute( "OppositeQuiver", IsQuiver );
 
+#! @Description
+#!  Returns the string <A>s</A> with the suffix <A>suffix</A> either added
+#!  or removed, based on whether it is already present in <A>s</A>.
+#! @Arguments s, suffix
+#! @Returns string
+DeclareOperation( "ToggleSuffix", [ IsString, IsString ] );
+
 #! @Arguments p
 #! @Returns <Ref Filt="IsPath"/>
 #! @Description
