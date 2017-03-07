@@ -3,10 +3,10 @@ DeclareRepresentation( "IsQuiverModuleElementRep",
 DeclareRepresentation( "IsQuiverModuleRep",
                        IsComponentObjectRep and IsAttributeStoringRep, [] );
 
-BindGlobal( "FamilyOfQuiverModules",
-            NewFamily( "quiver modules" ) );
 BindGlobal( "FamilyOfQuiverModuleElements",
             NewFamily( "quiver module elements" ) );
+BindGlobal( "FamilyOfQuiverModules",
+            CollectionsFamily( FamilyOfQuiverModuleElements ) );
 
 InstallMethod( AlgebraForLeftModules,
                [ IsQuiverAlgebra ],
@@ -314,7 +314,7 @@ function( e )
   Print( "<", String( e ), ">" );
 end );
 
-InstallMethod( \in,
+InstallMethod( \in, "for quiver module element and quiver module",
                [ IsQuiverModuleElement, IsQuiverModule ],
 function( e, M )
   return ModuleOfElement( e ) = M;
