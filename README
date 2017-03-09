@@ -11,9 +11,9 @@ version 1 has been implemented in version 2.
 
 To use QPA2, you need the following non-standard packages:
 
- * AutoDoc, available at https://github.com/homalg-project/AutoDoc
+ * AutoDoc, available at https://github.com/gap-packages/AutoDoc
  * CAP, available at https://github.com/sebasguts/CAP_project
- * ToolsForHomalg, available at https://github.com/homalg-project/ToolsForHomalg
+ * ToolsForHomalg, available at http://homalg-project.github.io/homalg_project/ToolsForHomalg/
 
 The documentation for QPA2 is written as AutoDoc comments inside the
 source code files.  To build the documentation, run `gap makedoc.g` in
