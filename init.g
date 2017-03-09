@@ -6,3 +6,4 @@ ReadPackage( "QPA", "lib/representation.gd" );
 ReadPackage( "QPA", "lib/module.gd" );
 ReadPackage( "QPA", "lib/modulehom.gd" );
 ReadPackage( "QPA", "lib/hom.gd" );
+ReadPackage( "QPA", "lib/tensor.gd" );
