@@ -453,6 +453,8 @@ DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra 
 #!  the algebras <A>A</A> and <A>B</A>; <C>false</C> otherwise.
 DeclareOperation( "IsTensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ] );
 
+DeclareAttribute( "TensorProductFactors", IsQuiverAlgebra );
+
 DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 
 

@@ -893,7 +893,7 @@ InstallMethod( TensorProductOfAlgebras,
                [ IsQuiverAlgebra, IsQuiverAlgebra ],
 function( A, B )
   local Qa, Qb, Q, kQ, commutativity_relations, rels_a, rels_b,
-        make_commutativity_relation, inc_rel_a, inc_rel_b;
+        make_commutativity_relation, inc_rel_a, inc_rel_b, T;
   if LeftActingDomain( A ) <> LeftActingDomain( B ) then
     Error( "Algebras over different fields" );
   fi;
@@ -917,7 +917,9 @@ function( A, B )
   end;
   rels_a := List( RelationsOfAlgebra( A ), inc_rel_a );
   rels_b := List( RelationsOfAlgebra( B ), inc_rel_b );
-  return kQ / Concatenation( commutativity_relations, rels_a, rels_b );
+  T := kQ / Concatenation( commutativity_relations, rels_a, rels_b );
+  SetTensorProductFactors( T, [ A, B ] );
+  return T;
 end );
 
 InstallMethod( IsTensorProductOfAlgebras,
@@ -927,6 +929,12 @@ function( T, A, B )
   # Should not be necessary to recompute the tensor algebra.
   # Should at least avoid recomputing the Groebner basis.
   return T = TensorProductOfAlgebras( A, B );
+end );
+
+InstallMethod( TensorProductFactors,
+               [ IsQuiverAlgebra ],
+function( T )
+  # TODO
 end );
 
 BindGlobal( "FamilyOfQuiverAlgebraBases",
