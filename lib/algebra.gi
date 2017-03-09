@@ -929,6 +929,36 @@ function( T, A, B )
   return T = TensorProductOfAlgebras( A, B );
 end );
 
+InstallMethod( ElementaryTensor,
+        "for two elements in quiveralgebras",
+        [ IsQuiverAlgebraElement, IsQuiverAlgebraElement, IsQuiverAlgebra ],
+        function( a, b, T )
+    
+    local   A1,  A2,  paths_in_a,  coefficients_of_a,  paths_in_b,  
+            coefficients_of_b,  paths,  coefficients,  i,  j;
+    
+    A1 := AlgebraOfElement( a );
+    A2 := AlgebraOfElement( b );
+    if not IsTensorProductOfAlgebras( T, A1, A2 ) then 
+        Error("Entered elements are not in the entered tensor algebra");
+    fi;
+    paths_in_a := Paths( a );
+    coefficients_of_a := Coefficients( a );
+    paths_in_b := Paths( b );
+    coefficients_of_b := Coefficients( b );
+    paths := [ ];
+    coefficients := [ ];
+    for i in [ 1..Length( paths_in_a ) ] do
+        for j in [ 1..Length( paths_in_b ) ] do
+            Add( coefficients, coefficients_of_a[ i ] * coefficients_of_b[ j ] );
+            Add( paths, PathInProductQuiver( QuiverOfAlgebra( T ), [ paths_in_a[ i ], paths_in_b[ j ] ] ) );
+        od;
+    od;
+    
+    return QuiverAlgebraElement( T, coefficients, paths );
+end
+  );
+
 BindGlobal( "FamilyOfQuiverAlgebraBases",
             NewFamily( "quiver algebra bases" ) );
 

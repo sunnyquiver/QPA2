@@ -453,6 +453,14 @@ DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra 
 #!  the algebras <A>A</A> and <A>B</A>; <C>false</C> otherwise.
 DeclareOperation( "IsTensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ] );
 
+#! @Arguments a, b, T
+#! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
+#! @Description
+#!  Returns <M>a\otimes b</M> as an element of the the tensor algebra <A>T</A>.  The algebra <A>T</A>
+#!  must be the tensor product of the algebra containing <A>a</A> and the algebra 
+#!  containing <A>b</A>. 
+DeclareOperation( "ElementaryTensor", [ IsQuiverAlgebraElement, IsQuiverAlgebraElement, IsQuiverAlgebra ] );
+
 DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 
 
