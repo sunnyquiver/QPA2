@@ -119,6 +119,12 @@ DeclareAttribute( "IdealOfQuotient", IsQuotientOfPathAlgebra );
 #!  the path algebra $kQ$.
 DeclareAttribute( "PathAlgebra", IsQuiverAlgebra );
 
+#! @Description
+#!  The orientation of the quiver of the algebra <A>A</A>.
+#! @Arguments A
+#! @Returns <C>"left"</C> or <C>"right"</C>
+DeclareAttribute( "Orientation", IsQuiverAlgebra );
+
 #!
 DeclareCategory( "IsQuiverAlgebraBasis", IsBasis );
 
@@ -440,6 +446,16 @@ DeclareAttribute( "OppositeAlgebra", IsQuiverAlgebra );
 #!  Returns the element corresponding to <A>e</A> in the opposite algebra.
 DeclareAttribute( "OppositeAlgebraElement", IsQuiverAlgebraElement );
 
+#! @Description
+#!  Returns either the algebra <A>A</A> itself or its opposite.
+#!  If <A>A</A> is left-oriented, then <C>A^LEFT</C> is <A>A</A>
+#!  and <C>A^RIGHT</C> is the opposite algebra of <A>A</A>.
+#!  If <A>A</A> is right-oriented, then <C>A^RIGHT</C> is <A>A</A>
+#!  and <C>A^LEFT</C> is the opposite algebra of <A>A</A>.
+#! @Arguments A, side
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+DeclareOperation( "\^", [ IsQuiverAlgebra, IsString ] );
+
 #! @Arguments A, B
 #! @Returns <Ref Filt="IsQuiverAlgebra"/>
 #! @Description
@@ -454,6 +470,8 @@ DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra 
 DeclareOperation( "IsTensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ] );
 
 DeclareAttribute( "TensorProductFactors", IsQuiverAlgebra );
+
+DeclareAttribute( "TensorProductFactorsLeftRight", IsQuiverAlgebra );
 
 #! @Arguments a, b, T
 #! @Returns <Ref Filt="IsQuiverAlgebraElement"/>

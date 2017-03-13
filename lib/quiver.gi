@@ -1101,6 +1101,9 @@ end );
 InstallMethod( QuiverCategory, [ IsLeftQuiver ], Q -> IsLeftQuiver );
 InstallMethod( QuiverCategory, [ IsRightQuiver ], Q -> IsRightQuiver );
 
+InstallMethod( Orientation, [ IsLeftQuiver ], Q -> LEFT );
+InstallMethod( Orientation, [ IsRightQuiver ], Q -> RIGHT );
+
 InstallMethod( IsAcyclicQuiver, [ IsQuiver ],
 function( Q )
   local vertices, arrow_removed, to_remove, i, v, incoming, a;

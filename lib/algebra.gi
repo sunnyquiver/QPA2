@@ -492,6 +492,12 @@ function( A )
   return A!.quiver;
 end );
 
+InstallMethod( Orientation, "for quiver algebra",
+               [ IsQuiverAlgebra ],
+function( A )
+  return Orientation( QuiverOfAlgebra( A ) );
+end );
+
 InstallMethod( LeftActingDomain, "for path algebra",
                [ IsPathAlgebra and IsPathAlgebraRep ],
 function( A )
@@ -889,6 +895,15 @@ function( e )
                                List( Paths( e ), OppositePath ) );
 end );
 
+InstallMethod( \^, [ IsQuiverAlgebra, IsString ],
+function( A, side )
+  if side = Orientation( A ) then
+    return A;
+  else
+    return OppositeAlgebra( A );
+  fi;
+end );
+
 InstallMethod( TensorProductOfAlgebras,
                [ IsQuiverAlgebra, IsQuiverAlgebra ],
 function( A, B )
@@ -919,6 +934,7 @@ function( A, B )
   rels_b := List( RelationsOfAlgebra( B ), inc_rel_b );
   T := kQ / Concatenation( commutativity_relations, rels_a, rels_b );
   SetTensorProductFactors( T, [ A, B ] );
+  SetTensorProductFactorsLeftRight( T, [ A^LEFT, B^RIGHT ] );
   return T;
 end );
 

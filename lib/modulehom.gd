@@ -18,6 +18,11 @@ DeclareCategory( "IsLeftQuiverModuleHomomorphism",
 DeclareCategory( "IsRightQuiverModuleHomomorphism",
                  IsQuiverModuleHomomorphism );
 
+#! @Description
+#!  Category for bimodule homomorphisms.
+DeclareCategory( "IsQuiverBimoduleHomomorphism",
+                 IsQuiverModuleHomomorphism );
+
 #! @BeginGroup QuiverModuleHomomorphism
 #! @Description
 #!  Create a homomorphism from <A>M</A> to <A>N</A>.
@@ -33,25 +38,31 @@ DeclareOperation( "QuiverModuleHomomorphismNC",
 #! @EndGroup
 
 #! @Description
-#!  The representation homomorphism <A>f</A> considered as a module homomorphism
-#!  over the algebra <A>A</A>.
-#! @Arguments f, A
+#!  The representation homomorphism <A>f</A> considered as a module homomorphism.
+#! @Arguments f, side
 #! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
 DeclareOperation( "AsModuleHomomorphism",
-                  [ IsQuiverRepresentationHomomorphism, IsQuiverAlgebra ] );
+                  [ IsQuiverRepresentationHomomorphism, IsString ] );
 
 #! @Description
 #!  The representation homomorphism <A>f</A> considered as a left module homomorphism.
-#! @Arguments f, A
+#! @Arguments f
 #! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
 DeclareAttribute( "AsLeftModuleHomomorphism",
                   IsQuiverRepresentationHomomorphism );
 
 #! @Description
 #!  The representation homomorphism <A>f</A> considered as a right module homomorphism.
-#! @Arguments f, A
+#! @Arguments f
 #! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
 DeclareAttribute( "AsRightModuleHomomorphism",
+                  IsQuiverRepresentationHomomorphism );
+
+#! @Description
+#!  The representation homomorphism <A>f</A> considered as a bimodule homomorphism.
+#! @Arguments f
+#! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
+DeclareAttribute( "AsBimoduleHomomorphism",
                   IsQuiverRepresentationHomomorphism );
 
 #! @Description

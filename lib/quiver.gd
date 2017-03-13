@@ -343,6 +343,12 @@ DeclareAttribute( "LabelAsString", IsQuiver );
 #!  either <Ref Filt="IsLeftQuiver"/> or <Ref Filt="IsRightQuiver"/>.
 DeclareAttribute( "QuiverCategory", IsQuiver );
 
+#! @Description
+#!  The orientation of the quiver <A>Q</A>.
+#! @Arguments Q
+#! @Returns <C>"left"</C> or <C>"right"</C>
+DeclareAttribute( "Orientation", IsQuiver );
+
 #! @Arguments Q
 #! @Description
 #!  Returns <C>true</C> if the quiver does not contain any oriented cycle,
