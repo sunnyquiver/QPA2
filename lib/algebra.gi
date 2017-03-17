@@ -930,8 +930,8 @@ function( A, B )
   inc_rel_b := function( list )
     return TranslateAlgebraElement( list[ 2 ], kQ, p -> PathInProductQuiver( Q, [ list[ 1 ], p ] ) );
   end;
-  rels_a := List( RelationsOfAlgebra( A ), inc_rel_a );
-  rels_b := List( RelationsOfAlgebra( B ), inc_rel_b );
+  rels_a := List( Cartesian( RelationsOfAlgebra( A ), Vertices( Qb ) ), inc_rel_a );
+  rels_b := List( Cartesian( Vertices( Qa ), RelationsOfAlgebra( B ) ), inc_rel_b );
   T := kQ / Concatenation( commutativity_relations, rels_a, rels_b );
   SetTensorProductFactors( T, [ A, B ] );
   SetTensorProductFactorsLeftRight( T, [ A^LEFT, B^RIGHT ] );
