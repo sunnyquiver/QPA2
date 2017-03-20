@@ -4,3 +4,4 @@
 #!  Returns the tensor product of the two representations <A>R1</A> and <A>R2</A>. 
 DeclareOperation( "TensorProductOfRepresentations", [ IsQuiverRepresentation, IsQuiverRepresentation, 
         IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ] );
+DeclareAttribute( "ElementaryTensorFunction", IsQuiverRepresentation );

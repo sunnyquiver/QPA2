@@ -10,7 +10,8 @@ InstallMethod( TensorProductOfRepresentations,
             dimension,  alpha,  source,  basis_i_j,  images_iprime_j,  
             beta,  iprime,  iB1,  iprimeB1,  basisR1_i_l,  
             basisR2_l_j,  b,  bprime,  matrix,  images_i_jprime,  
-            jprime,  jB2,  jprimeB2;
+            jprime,  jB2,  jprimeB2,  tensorproduct,  
+            elementarytensor;
     
     K := LeftActingDomain( A1 );
     B1 := AlgebraOfRepresentation( R1 );
@@ -148,7 +149,14 @@ InstallMethod( TensorProductOfRepresentations,
         od;
     od;
     maps := List( maps, m -> MatrixByRows( K, m ) );
+    tensorproduct := QuiverRepresentationByRightMatrices( B3, dimension, arrowsB3, maps );
     
-    return QuiverRepresentationByRightMatrices( B3, dimension, arrowsB3, maps );
+    elementarytensor := function( r1, r2 ) 
+        return QuiverRepresentationElement( tensorproduct, List( verticesB3, v -> ImageElm( projections[ VertexNumber( v ) ], partialtensor( r1, r2, v ) ) ) );
+    end;
+    
+    SetElementaryTensorFunction( tensorproduct, elementarytensor ); 
+    
+    return tensorproduct;
 end
   );
