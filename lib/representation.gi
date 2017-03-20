@@ -8,23 +8,23 @@ DeclareRepresentation( "IsQuiverRepresentationElementRep",
                        [ "representation", "vectors" ] );
 
 InstallMethod( QuiverRepresentationElement, "for quiver representation and collection",
-               [ IsQuiverRepresentation, IsDenseList ],
+               [ IsQuiverRepresentation, IsList ],
 function( R, vectors )
   local field, Q, numVertices, i, v, space;
-  vectors := Immutable( vectors );
+  vectors := ShallowCopy( vectors );
   field := FieldOfRepresentation( R );
   Q := QuiverOfRepresentation( R );
   numVertices := Length( Vertices( Q ) );
-  if Length( vectors ) <> numVertices then
-    Error( "Wrong number of vectors in QuiverRepresentationElement constructor ",
-           "(", Length( vectors ), " given, expected ", numVertices, ")" );
+  if Length( vectors ) > numVertices then
+    Error( "Too many vectors ",
+           "(", Length( vectors ), " vectors, but only ", numVertices, ")" );
   fi;
   for i in [ 1 .. numVertices ] do
-    v := vectors[ i ];
     space := VectorSpaceOfRepresentation( R, i );
-    if not v in space then
-      Error( "Vector ", v, " given for vertex ", Vertex( Q, i ),
-             " is not in the vector space ", space );
+    if IsBound( vectors[ i ] ) then
+      vectors[ i ] := Vector( space, vectors[ i ] );
+    else
+      vectors[ i ] := Zero( space );
     fi;
   od;
   return QuiverRepresentationElementNC( R, vectors );
@@ -43,15 +43,14 @@ function( R, vectors )
   return elem;
 end );
 
-InstallMethod( QuiverRepresentationElementByVertices, "for quiver representation and dense lists",
-               [ IsQuiverRepresentation, IsDenseList, IsDenseList ],
+InstallMethod( QuiverRepresentationElement, "for quiver representation and dense lists",
+               [ IsQuiverRepresentation, IsDenseList, IsList ],
 function( R, vertices, vectors )
   local num_vectors, i, rep_vectors, vertex_number;
 
   num_vectors := Length( vectors );
-  if Length( vertices ) <> num_vectors then
-    Error( "Different lengths of list of vertices (", Length( vertices ),
-           ") and list of vectors (", num_vectors, ")" );
+  if Length( vertices ) < num_vectors then
+    Error( "Too many vectors (", num_vectors, " vectors for ", Length( vertices ), " vertices)" );
   fi;
   for i in [ 1 .. num_vectors ] do
     if not IsVertex( vertices[ i ] ) then
@@ -65,7 +64,9 @@ function( R, vertices, vectors )
   rep_vectors := List( VectorSpacesOfRepresentation( R ), Zero );
   for i in [ 1 .. num_vectors ] do
     vertex_number := VertexNumber( vertices[ i ] );
-    rep_vectors[ vertex_number ] := vectors[ i ];
+    if IsBound( vectors[ i ] ) then
+      rep_vectors[ vertex_number ] := vectors[ i ];
+    fi;
   od;
 
   return QuiverRepresentationElement( R, rep_vectors );
@@ -119,7 +120,7 @@ function( e, p )
   M := MapForPath( R, p );
   source_vec := ElementVector( e, Source( p ) );
   target_vec := ImageElm( M, source_vec );
-  return QuiverRepresentationElementByVertices( R, [ Target( p ) ], [ target_vec ] );
+  return QuiverRepresentationElement( R, [ Target( p ) ], [ target_vec ] );
 end );
 
 InstallMethod( QuiverAlgebraAction,
@@ -518,7 +519,7 @@ end );
 InstallMethod( Zero, "for quiver representation",
                [ IsQuiverRepresentation ],
 function( R )
-  return QuiverRepresentationElementByVertices( R, [], [] );
+  return QuiverRepresentationElement( R, [] );
 end );
 
 InstallMethod( Zero, "for quiver representation element",
@@ -622,7 +623,7 @@ function( R )
   for i in [ 1 .. Length( vertices ) ] do
     vertex_basis := CanonicalBasis( spaces[ i ] );
     for basis_vector in vertex_basis do
-      temp := QuiverRepresentationElementByVertices( R, [ vertices[ i ] ], [ basis_vector ] );
+      temp := QuiverRepresentationElement( R, [ vertices[ i ] ], [ basis_vector ] );
       SetSupportOfElement( temp, [ vertices[ i ] ] );
       Add( basis_elements_by_vertex[ i ], temp );
     od;

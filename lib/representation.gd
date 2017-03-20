@@ -53,7 +53,7 @@ DeclareOperation( "CategoryOfQuiverRepresentationsOverVectorSpaceCategory",
 #!  element in the representation <A>R</A>.
 #! @Arguments R, vectors
 DeclareOperation( "QuiverRepresentationElement",
-                  [ IsQuiverRepresentation, IsDenseList ] );
+                  [ IsQuiverRepresentation, IsList ] );
 #! @Arguments R, vectors
 DeclareOperation( "QuiverRepresentationElementNC",
                   [ IsQuiverRepresentation, IsDenseList ] );
@@ -66,8 +66,8 @@ DeclareOperation( "QuiverRepresentationElementNC",
 #!  <A>vertices</A> are assigned the zero vector.
 #! @Returns <Ref Filt="IsQuiverRepresentationElement"/>
 #! @Arguments R, vertices, vectors
-DeclareOperation( "QuiverRepresentationElementByVertices",
-                  [ IsQuiverRepresentation, IsDenseList, IsDenseList ] );
+DeclareOperation( "QuiverRepresentationElement",
+                  [ IsQuiverRepresentation, IsDenseList, IsList ] );
 
 #! @Section Information about an element
 

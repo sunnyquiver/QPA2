@@ -138,7 +138,7 @@ function( e, M )
 end );
 
 InstallMethod( QuiverModuleElement,
-               [ IsQuiverModule, IsDenseList ],
+               [ IsQuiverModule, IsList ],
 function( M, vectors )
   local R, e;
   R := UnderlyingRepresentation( M );
@@ -146,8 +146,8 @@ function( M, vectors )
   return AsModuleElement( e, M );
 end );
 
-InstallMethod( QuiverModuleElementByVertices,
-               [ IsQuiverModule, IsDenseList, IsDenseList ],
+InstallMethod( QuiverModuleElement,
+               [ IsQuiverModule, IsDenseList, IsList ],
 function( M, vertices, vectors )
   local R, e;
   R := UnderlyingRepresentation( M );

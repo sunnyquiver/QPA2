@@ -268,7 +268,7 @@ DeclareOperation( "VertexDimension", [ IsQuiverModule, IsVertex ] );
 #!  Each entry in <A>vectors</A> corresponds to a vertex in the quiver.
 #! @Returns <Ref Filt="IsQuiverModuleElement"/>
 #! @Arguments M, vectors
-DeclareOperation( "QuiverModuleElement", [ IsQuiverModule, IsDenseList ] );
+DeclareOperation( "QuiverModuleElement", [ IsQuiverModule, IsList ] );
 
 #! @Description
 #!  Construct an element in the module <A>M</A> by assigning
@@ -277,7 +277,7 @@ DeclareOperation( "QuiverModuleElement", [ IsQuiverModule, IsDenseList ] );
 #!  <A>vertices</A> are assigned the zero vector.
 #! @Returns <Ref Filt="IsQuiverModuleElement"/>
 #! @Arguments M, vertices, vectors
-DeclareOperation( "QuiverModuleElementByVertices", [ IsQuiverModule, IsDenseList, IsDenseList ] );
+DeclareOperation( "QuiverModuleElement", [ IsQuiverModule, IsDenseList, IsList ] );
 
 #! @Description
 #!  Returns the element of the module <A>M</A> corresponding to the
