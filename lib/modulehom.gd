@@ -42,7 +42,7 @@ DeclareOperation( "QuiverModuleHomomorphismNC",
 #! @Arguments f, side
 #! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
 DeclareOperation( "AsModuleHomomorphism",
-                  [ IsQuiverRepresentationHomomorphism, IsString ] );
+                  [ IsSide, IsQuiverRepresentationHomomorphism ] );
 
 #! @Description
 #!  The representation homomorphism <A>f</A> considered as a left module homomorphism.

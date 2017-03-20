@@ -8,11 +8,11 @@
 
 #! @Description
 #!  Category for elements of quiver algebras.
-DeclareCategory( "IsQuiverAlgebraElement", IsRingElementWithOne );
+DeclareCategory( "IsQuiverAlgebraElement", IsRingElementWithOne and IsObjectWithDirection );
 
 #! @Description
 #!  Category for quiver algebras.
-DeclareCategory( "IsQuiverAlgebra", IsAlgebraWithOne and CategoryCollections( IsQuiverAlgebraElement ) );
+DeclareCategory( "IsQuiverAlgebra", IsAlgebraWithOne and CategoryCollections( IsQuiverAlgebraElement ) and IsObjectWithDirection );
 
 #!
 DeclareCategory( "IsLeftQuiverAlgebra", IsQuiverAlgebra );
@@ -123,7 +123,7 @@ DeclareAttribute( "PathAlgebra", IsQuiverAlgebra );
 #!  The orientation of the quiver of the algebra <A>A</A>.
 #! @Arguments A
 #! @Returns <C>"left"</C> or <C>"right"</C>
-DeclareAttribute( "Orientation", IsQuiverAlgebra );
+#DeclareAttribute( "Orientation", IsQuiverAlgebra );
 
 #!
 DeclareCategory( "IsQuiverAlgebraBasis", IsBasis );
@@ -144,7 +144,16 @@ DeclareAttribute( "BasisOfProjectives", IsQuiverAlgebra );
 DeclareAttribute( "IndecProjRepresentations", IsQuiverAlgebra );
 
 #!
-DeclareAttribute( "IndecProjModules", IsQuiverAlgebra );
+DeclareOperation( "IndecProjModules", [ IsSide, IsQuiverAlgebra ] );
+
+#!
+DeclareAttribute( "IndecProjLeftModules", IsQuiverAlgebra );
+
+#!
+DeclareAttribute( "IndecProjRightModules", IsQuiverAlgebra );
+
+#!
+DeclareOperation( "IndecProjBimodules", [ IsDenseList ] );
 
 #! @Section Accessing algebra elements
 
@@ -454,7 +463,10 @@ DeclareAttribute( "OppositeAlgebraElement", IsQuiverAlgebraElement );
 #!  and <C>A^LEFT</C> is the opposite algebra of <A>A</A>.
 #! @Arguments A, side
 #! @Returns <Ref Filt="IsQuiverAlgebra"/>
-DeclareOperation( "\^", [ IsQuiverAlgebra, IsString ] );
+#DeclareOperation( "\^", [ IsQuiverAlgebra, IsString ] );
+
+DeclareOperation( "\^", [ IsQuiverAlgebra, IsSide ] );
+DeclareOperation( "\^", [ IsDenseList, IsSide ] );
 
 #! @Arguments A, B
 #! @Returns <Ref Filt="IsQuiverAlgebra"/>
@@ -465,9 +477,9 @@ DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra 
 #! @Arguments T, A, B
 #! @Returns <C>true</C> or <C>false</C>
 #! @Description
-#!  Returns <C>true</C> if the algebra <A>T</A> is the tensor product of
-#!  the algebras <A>A</A> and <A>B</A>; <C>false</C> otherwise.
-DeclareOperation( "IsTensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ] );
+#!  Returns <C>true</C> if the algebra <A>T</A> is a tensor product of
+#!  algebras; <C>false</C> otherwise.
+DeclareAttribute( "IsTensorProductOfAlgebras", IsQuiverAlgebra );
 
 DeclareAttribute( "TensorProductFactors", IsQuiverAlgebra );
 

@@ -1,3 +1,5 @@
+DeclareDirectionOperations( IsQuiverAlgebra, IsLeftQuiverAlgebra, IsRightQuiverAlgebra );
+
 DeclareRepresentation( "IsPathAlgebraElementRep", IsComponentObjectRep,
                        [ "algebra", "paths", "coefficients" ] );
 
@@ -447,19 +449,15 @@ DeclareRepresentation( "IsPathAlgebraRep", IsComponentObjectRep and IsAttributeS
 InstallMethod( PathAlgebra, "for field and quiver",
                [ IsField, IsQuiver ],
 function( k, Q )
-  local elementFam, algebraFam, orientation_type, algebraType, A;
+  local elementFam, algebraFam, algebraType, A;
   # TODO: algebra should have its own elements family,
   # but this should rely only on ( k, Q ).
   # If we make a new algebra with same arguments, we
   # should get the same family.
   elementFam := ElementsFamily( FamilyObj( Q ) );
   algebraFam := CollectionsFamily( elementFam );
-  if IsLeftQuiver( Q ) then
-    orientation_type := IsLeftQuiverAlgebra;
-  else
-    orientation_type := IsRightQuiverAlgebra;
-  fi;
-  algebraType := NewType( algebraFam, IsPathAlgebra and orientation_type and IsPathAlgebraRep );
+  algebraType := NewType( algebraFam,
+                          IsPathAlgebra and IsQuiverAlgebra^Direction( Q ) and IsPathAlgebraRep );
   A := Objectify( algebraType,
                   rec( field := k,
                        quiver := Q ) );
@@ -490,12 +488,6 @@ InstallMethod( QuiverOfAlgebra, "for path algebra",
                [ IsPathAlgebra and IsPathAlgebraRep ],
 function( A )
   return A!.quiver;
-end );
-
-InstallMethod( Orientation, "for quiver algebra",
-               [ IsQuiverAlgebra ],
-function( A )
-  return Orientation( QuiverOfAlgebra( A ) );
 end );
 
 InstallMethod( LeftActingDomain, "for path algebra",
@@ -656,14 +648,8 @@ end );
 InstallMethod( QuotientOfPathAlgebra, "for path algebra and path ideal",
                [ IsPathAlgebra, IsPathIdeal ],
 function( A, I )
-  local orientation_type;
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    orientation_type := IsLeftQuiverAlgebra;
-  else
-    orientation_type := IsRightQuiverAlgebra;
-  fi;
   return Objectify( NewType( FamilyObj( A ),
-                             IsQuotientOfPathAlgebra and orientation_type
+                             IsQuotientOfPathAlgebra and IsQuiverAlgebra^Direction( A )
                              and IsQuotientOfPathAlgebraRep ),
                     rec( pathAlgebra := A,
                          relations := GeneratorsOfIdeal( I ),
@@ -895,12 +881,52 @@ function( e )
                                List( Paths( e ), OppositePath ) );
 end );
 
-InstallMethod( \^, [ IsQuiverAlgebra, IsString ],
-function( A, side )
-  if side = Orientation( A ) then
+InstallMethod( Direction, [ IsQuiverAlgebra ], A -> Direction( QuiverOfAlgebra( A ) ) );
+
+InstallMethod( Direction, [ IsQuiverAlgebraElement ], a -> Direction( AlgebraOfElement( a ) ) );
+
+InstallMethod( \^, [ IsQuiverAlgebra, IsDirection ],
+function( A, dir )
+  if dir = Direction( A ) then
     return A;
   else
     return OppositeAlgebra( A );
+  fi;
+end );
+
+InstallMethod( \^, [ IsQuiverAlgebraElement, IsDirection ],
+function( a, dir )
+  if dir = Direction( a ) then
+    return a;
+  else
+    return OppositeAlgebraElement( a );
+  fi;
+end );
+
+InstallMethod( \^, [ IsDenseList, IsSide ],
+function( list, side )
+  local e1, e2;
+  if side = LEFT_RIGHT and Length( list ) = 2 then
+    if IsQuiverAlgebra( list[ 1 ] ) and IsQuiverAlgebra( list[ 2 ] ) then
+      return TensorProductOfAlgebras( list[ 1 ]^LEFT, list[ 2 ]^RIGHT );
+    elif IsQuiverAlgebraElement( list[ 1 ] ) and IsQuiverAlgebraElement( list[ 2 ] ) then
+      e1 := list[ 1 ]^LEFT;
+      e2 := list[ 2 ]^RIGHT;
+      return ElementaryTensor( e1, e2,
+                               TensorProductOfAlgebras( AlgebraOfElement( e1 ), AlgebraOfElement( e2 ) ) );
+    fi;
+  else
+    return fail;
+  fi;
+end );
+
+InstallMethod( \^, [ IsQuiverAlgebra, IsSide ],
+function( A, side )
+  local algebras;
+  if side = LEFT_RIGHT then
+    return TensorProductFactorsLeftRight( A );
+  else
+    TryNextMethod();
   fi;
 end );
 
@@ -935,17 +961,18 @@ function( A, B )
   T := kQ / Concatenation( commutativity_relations, rels_a, rels_b );
   SetTensorProductFactors( T, [ A, B ] );
   SetTensorProductFactorsLeftRight( T, [ A^LEFT, B^RIGHT ] );
+  SetIsTensorProductOfAlgebras( T, true );
   return T;
 end );
 
-InstallMethod( IsTensorProductOfAlgebras,
-               [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ],
-function( T, A, B )
-  # TODO: Write a better implementation.
-  # Should not be necessary to recompute the tensor algebra.
-  # Should at least avoid recomputing the Groebner basis.
-  return T = TensorProductOfAlgebras( A, B );
-end );
+# InstallMethod( IsTensorProductOfAlgebras,
+#                [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ],
+# function( T, A, B )
+#   # TODO: Write a better implementation.
+#   # Should not be necessary to recompute the tensor algebra.
+#   # Should at least avoid recomputing the Groebner basis.
+#   return T = TensorProductOfAlgebras( A, B );
+# end );
 
 InstallMethod( TensorProductFactors,
                [ IsQuiverAlgebra ],
@@ -963,7 +990,8 @@ InstallMethod( ElementaryTensor,
     
     A1 := AlgebraOfElement( a );
     A2 := AlgebraOfElement( b );
-    if not IsTensorProductOfAlgebras( T, A1, A2 ) then 
+    if not ( IsTensorProductOfAlgebras( T ) and
+             TensorProductFactors( T ) = [ A1, A2 ] ) then
         Error("Entered elements are not in the entered tensor algebra");
     fi;
     paths_in_a := Paths( a );
@@ -1150,9 +1178,10 @@ function( A )
   return proj_modules;
 end );
 
-InstallMethod( IndecProjModules, "for quiver algebra",
-               [ IsQuiverAlgebra ],
-function( A )
+DeclareSideOperations( IndecProjModules, IndecProjLeftModules, IndecProjRightModules,
+                       IndecProjBimodules );
 
-return List( IndecProjRepresentations( A ), P -> AsModule( P, A ) );
+InstallMethodWithSides( IndecProjModules, [ IsQuiverAlgebra ],
+side -> function( A )
+  return List( IndecProjRepresentations( A^side ), AsModule^side );
 end );

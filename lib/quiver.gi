@@ -13,6 +13,10 @@ DeclareRepresentation( "IsQuiverRep", IsComponentObjectRep and IsAttributeStorin
 		       [ "label", "vertices", "arrows", "primitive_paths",
 		         "vertices_desc", "arrows_desc"] );
 
+DeclareDirectionOperations( IsPath, IsLeftPath, IsRightPath );
+DeclareDirectionOperations( IsQuiver, IsLeftQuiver, IsRightQuiver );
+DeclareDirectionOperations( Quiver, LeftQuiver, RightQuiver );
+
 InstallMethod( DecomposeQuiverDescriptionString,
                [ IsString ],
 function( string )
@@ -269,45 +273,43 @@ function( string, sep )
   return split;
 end );
 
-InstallMethod( Quiver,
-               [ IsFunction, IsString, IsPosInt, IsDenseList ],
-function( quiver_cat, label_with_patterns, num_vertices, arrows )
+InstallMethodWithDirections( Quiver,
+                             [ IsString, IsPosInt, IsDenseList ],
+dir -> function( label_with_patterns, num_vertices, arrows )
   local tmp, label, vertex_label_pattern, arrow_label_pattern;
   tmp := DecomposeQuiverDescriptionString( label_with_patterns );
   label := tmp[ 1 ];
   vertex_label_pattern := tmp[ 2 ];
   arrow_label_pattern := tmp[ 3 ];
-  return Quiver( quiver_cat,
+  return Quiver( dir,
                  [ label, vertex_label_pattern, arrow_label_pattern ],
                  num_vertices, [], arrows );
 end );
 
-InstallMethod( Quiver,
-               [ IsFunction, IsString, IsDenseList, IsDenseList ],
-function( quiver_cat, label_with_patterns, vertex_labels, arrows )
+InstallMethodWithDirections( Quiver,
+                             [ IsString, IsDenseList, IsDenseList ],
+dir -> function( label_with_patterns, vertex_labels, arrows )
   local tmp, label, vertex_label_pattern, arrow_label_pattern;
   tmp := DecomposeQuiverDescriptionString( label_with_patterns );
   label := tmp[ 1 ];
   vertex_label_pattern := tmp[ 2 ];
   arrow_label_pattern := tmp[ 3 ];
-  return Quiver( quiver_cat,
+  return Quiver( dir,
                  [ label, vertex_label_pattern, arrow_label_pattern ],
                  Length( vertex_labels ), vertex_labels, arrows );
 end );
 
-InstallMethod( Quiver, "for function and string",
-               [ IsFunction, IsString ],
-function( quiver_cat, description )
-  return CallFuncList( Quiver,
-                       Concatenation( [ quiver_cat ],
-                                      ParseQuiverDescriptionString( description ) ) );
+InstallMethodWithDirections( Quiver,
+                             [ IsString ],
+dir -> function( description )
+  return CallFuncList( Quiver^dir,
+                       ParseQuiverDescriptionString( description ) );
 end );
 
-InstallMethod( Quiver,
-               [ IsFunction, IsDenseList,
-                 IsPosInt, IsList, IsDenseList ],
-function( quiver_cat, label_with_patterns_list,
-          num_vertices, vertex_labels, arrows )
+InstallMethodWithDirections( Quiver,
+                             [ IsDenseList, IsPosInt, IsList, IsDenseList ],
+dir -> function( label_with_patterns_list,
+                 num_vertices, vertex_labels, arrows )
   local label, vertex_pattern, arrow_pattern, vertex_pattern_str, arrow_pattern_str,
         make_vertex_label, all_vertex_labels,  
         set_arrow_label, arrows_with_labels, arrow_labels, get_vertex_index,  
@@ -367,27 +369,21 @@ function( quiver_cat, label_with_patterns_list,
   end;
   source_indices := List( arrows_with_labels, a -> get_vertex_index( a[ 2 ] ) );
   target_indices := List( arrows_with_labels, a -> get_vertex_index( a[ 3 ] ) );
-  return Quiver( quiver_cat, label, all_vertex_labels, arrow_labels,
+  return Quiver( dir, label, all_vertex_labels, arrow_labels,
                  source_indices, target_indices );
 end );
 
-InstallMethod( Quiver,
-               [ IsFunction, IsObject, IsDenseList, IsDenseList,
-                 IsDenseList, IsDenseList ],
-function( quiver_cat, label, vertex_labels, arrow_labels,
-          source_indices, target_indices )
+InstallMethodWithDirections( Quiver,
+                             [ IsObject, IsDenseList, IsDenseList,
+                               IsDenseList, IsDenseList ],
+dir -> function( label, vertex_labels, arrow_labels,
+                 source_indices, target_indices )
   local num_vertices, num_arrows, path_cat, quiver_type,
         Q, vertex_type, make_vertex, arrow_type, make_arrow,
         incoming_arrows, outgoing_arrows, i;
   num_vertices := Length( vertex_labels );
   num_arrows := Length( arrow_labels );
-  if quiver_cat = IsLeftQuiver then
-    path_cat := IsLeftPath;
-  elif quiver_cat = IsRightQuiver then
-    path_cat := IsRightPath;
-  else
-    Error( "First argument to Quiver must be either IsLeftQuiver or IsRightQuiver" );
-  fi;
+  path_cat := IsPath^dir;
   if num_vertices = 0 then
     Error( "Quiver must have at least one vertex" );
   fi;
@@ -403,9 +399,10 @@ function( quiver_cat, label, vertex_labels, arrow_labels,
     Error( "Empty quiver label" );
   fi;
 
-  quiver_type := NewType( FamilyOfQuivers, quiver_cat and IsQuiverRep );
+  quiver_type := NewType( FamilyOfQuivers, IsQuiver^dir and IsQuiverRep );
   Q := Objectify( quiver_type,
                   rec( label := label ) );
+  SetDirection( Q, dir );
 
   vertex_type := NewType( FamilyOfPaths, IsVertex and IsVertexRep and path_cat );
   make_vertex := function( num, label )
@@ -455,62 +452,6 @@ function( quiver_cat, label, vertex_labels, arrow_labels,
   return Q;
 end );
 
-CallFuncList(
-function()
-  local left_quiver_func, right_quiver_func, filter_lists, fl;
-  left_quiver_func := function( arg )
-    return CallFuncList( Quiver, Concatenation( [ IsLeftQuiver ], arg ) );
-  end;
-  right_quiver_func := function( arg )
-    return CallFuncList( Quiver, Concatenation( [ IsRightQuiver ], arg ) );
-  end;
-  filter_lists := [ [ IsString, IsPosInt, IsDenseList ],
-                    [ IsString, IsDenseList, IsDenseList ],
-                    [ IsString ],
-                    [ IsDenseList, IsPosInt, IsList, IsDenseList ],
-                    [ IsObject, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] ];
-  for fl in filter_lists do
-    InstallMethod( LeftQuiver, fl, left_quiver_func );
-    InstallMethod( RightQuiver, fl, right_quiver_func );
-  od;
-end, [] );
-
-# InstallMethod( LeftQuiver, "for string, positive integer and list",
-#                [ IsString, IsPosInt, IsDenseList ],
-# function( label, num_vertices, arrows )
-#   return Quiver( IsLeftQuiver, label, num_vertices, arrows );
-# end );
-
-# InstallMethod( LeftQuiver, "for string and lists",
-#                [ IsString, IsDenseList, IsDenseList ],
-# function( label, vertices, arrows )
-#   return Quiver( IsLeftQuiver, label, vertices, arrows );
-# end );
-
-# InstallMethod( LeftQuiver, "for string",
-#                [ IsString ],
-# function( label )
-#   return Quiver( IsLeftQuiver, label );
-# end );
-
-# InstallMethod( RightQuiver, "for string, positive integer and list",
-#                [ IsString, IsPosInt, IsDenseList ],
-# function( label, num_vertices, arrows )
-#   return Quiver( IsRightQuiver, label, num_vertices, arrows );
-# end );
-
-# InstallMethod( RightQuiver, "for string and lists",
-#                [ IsString, IsDenseList, IsDenseList ],
-# function( label, vertices, arrows )
-#   return Quiver( IsRightQuiver, label, vertices, arrows );
-# end );
-
-# InstallMethod( RightQuiver, "for string",
-#                [ IsString ],
-# function( label )
-#   return Quiver( IsRightQuiver, label );
-# end );
-
 InstallMethod( QuiverOfPath,
                "for vertex",
 	       [ IsVertex and IsVertexRep ],
@@ -523,6 +464,8 @@ InstallMethod( QuiverOfPath,
                "for composite path",
 	       [ IsCompositePath and IsCompositePathRep ],
 function( a ) return QuiverOfPath( a!.arrows[1] ); end );
+
+InstallMethod( Direction, "for path", [ IsPath ], p -> Direction( QuiverOfPath( p ) ) );
 
 InstallMethod( Source,
                "for vertex",
@@ -828,15 +771,10 @@ InstallMethod( PathFromArrowListNC,
                "for list",
                [ IsList ],
 function( list )
-  local pathType;
   if Length( list ) > 1 then
-    if IsLeftPath( list[ 1 ] ) then
-      pathType := IsLeftPath;
-    else
-      pathType := IsRightPath;
-    fi;
     return Objectify( NewType( FamilyObj( list[ 1 ] ),
-                               pathType and IsCompositePath and IsCompositePathRep ),
+                               IsPath^Direction( list[ 1 ] ) and IsCompositePath
+                               and IsCompositePathRep ),
                       rec( arrows := list ) );
   elif Length( list ) = 1 then
     return list[ 1 ];
@@ -1100,9 +1038,6 @@ end );
 
 InstallMethod( QuiverCategory, [ IsLeftQuiver ], Q -> IsLeftQuiver );
 InstallMethod( QuiverCategory, [ IsRightQuiver ], Q -> IsRightQuiver );
-
-InstallMethod( Orientation, [ IsLeftQuiver ], Q -> LEFT );
-InstallMethod( Orientation, [ IsRightQuiver ], Q -> RIGHT );
 
 InstallMethod( IsAcyclicQuiver, [ IsQuiver ],
 function( Q )
@@ -1390,7 +1325,7 @@ InstallMethod( OppositeQuiver,
                [ IsQuiver ],
 function( Q )
   local Q_op;
-  Q_op := Quiver( QuiverCategory( Q ),
+  Q_op := Quiver( Direction( Q ),
                   ToggleSuffix( Label( Q ), "_op" ),
                   VertexLabels( Q ),
                   ArrowLabels( Q ),
@@ -1437,7 +1372,7 @@ function( Q, R )
   nQ := NumberOfVertices( Q );
   nR := NumberOfVertices( R );
   make_index := L -> nR * ( L[ 1 ] - 1 ) + L[ 2 ];
-  QxR := Quiver( QuiverCategory( Q ),
+  QxR := Quiver( Direction( Q ),
                  [ Label( Q ), Label( R ) ],
                  Cartesian( VertexLabels( Q ), VertexLabels( R ) ),
                  Concatenation( Cartesian( VertexLabels( Q ), ArrowLabels( R ) ),
@@ -1529,7 +1464,7 @@ function( Q )
     s := s + arrow_part_sizes[ n ];
   od;
 
-  Qs := ListN( List( [ 1 .. num_factors ], i -> QuiverCategory( Q ) ),
+  Qs := ListN( List( [ 1 .. num_factors ], i -> Direction( Q ) ),
                Label( Q ),
                vertex_labels,
                arrow_labels,

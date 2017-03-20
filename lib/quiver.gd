@@ -9,7 +9,7 @@
 #!  the category <C>IsLeftPath</C>, and
 #!  every path in a right-oriented quiver is in
 #!  the category <C>IsRightPath</C>.
-DeclareCategory( "IsPath", IsMultiplicativeElement );
+DeclareCategory( "IsPath", IsMultiplicativeElement and IsObjectWithDirection );
 #!
 DeclareCategory( "IsLeftPath", IsPath );
 #!
@@ -44,7 +44,7 @@ DeclareCategory( "IsArrow", IsNontrivialPath and IsPrimitivePath );
 #!  Additionally, a left-oriented quiver is in the category
 #!  <Ref Filt="IsLeftQuiver"/>,
 #!  and a right-oriented quiver is in the category <C>IsRightQuiver</C>.
-DeclareCategory( "IsQuiver", CategoryCollections( IsPath ) );
+DeclareCategory( "IsQuiver", CategoryCollections( IsPath ) and IsObjectWithDirection );
 #! @Description
 #!  Category for left-oriented quivers.
 DeclareCategory( "IsLeftQuiver", IsQuiver );
@@ -275,15 +275,15 @@ DeclareOperation( "RightQuiver", [ IsObject, IsDenseList, IsDenseList, IsDenseLi
 #!  The value of this argument should be either <Ref Filt="IsLeftQuiver"/>
 #!  or <Ref Filt="IsRightQuiver"/>.
 #! @Arguments quiver_cat, label_with_patterns, num_vertices, arrows
-DeclareOperation( "Quiver", [ IsFunction, IsString, IsPosInt, IsDenseList ] );
+DeclareOperation( "Quiver", [ IsDirection, IsString, IsPosInt, IsDenseList ] );
 #! @Arguments quiver_cat, label_with_patterns, vertex_labels, arrows
-DeclareOperation( "Quiver", [ IsFunction, IsString, IsDenseList, IsDenseList ] );
+DeclareOperation( "Quiver", [ IsDirection, IsString, IsDenseList, IsDenseList ] );
 #! @Arguments quiver_cat, description
-DeclareOperation( "Quiver", [ IsFunction, IsString ] );
+DeclareOperation( "Quiver", [ IsDirection, IsString ] );
 #! @Arguments quiver_cat, label_with_patterns_list, num_vertices, vertex_labels, arrows
-DeclareOperation( "Quiver", [ IsFunction, IsDenseList, IsPosInt, IsList, IsDenseList ] );
+DeclareOperation( "Quiver", [ IsDirection, IsDenseList, IsPosInt, IsList, IsDenseList ] );
 #! @Arguments quiver_cat, label, vertex_labels, arrow_labels, source_indices, target_indices
-DeclareOperation( "Quiver", [ IsFunction, IsObject, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
+DeclareOperation( "Quiver", [ IsDirection, IsObject, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup Quiver
 
 #! @InsertChunk Example_Quiver
@@ -342,12 +342,6 @@ DeclareAttribute( "LabelAsString", IsQuiver );
 #!  Returns the category <A>Q</A> belongs to;
 #!  either <Ref Filt="IsLeftQuiver"/> or <Ref Filt="IsRightQuiver"/>.
 DeclareAttribute( "QuiverCategory", IsQuiver );
-
-#! @Description
-#!  The orientation of the quiver <A>Q</A>.
-#! @Arguments Q
-#! @Returns <C>"left"</C> or <C>"right"</C>
-DeclareAttribute( "Orientation", IsQuiver );
 
 #! @Arguments Q
 #! @Description

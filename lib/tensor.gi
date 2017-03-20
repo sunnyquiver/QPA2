@@ -15,8 +15,8 @@ InstallMethod( TensorProductOfRepresentations,
     K := LeftActingDomain( A1 );
     B1 := AlgebraOfRepresentation( R1 );
     B2 := AlgebraOfRepresentation( R2 );
-    if not IsTensorProductOfAlgebras( B1, A1, A2 ) or 
-       not IsTensorProductOfAlgebras( B2, OppositeAlgebra( A2 ), A3 ) then
+    if not ( IsTensorProductOfAlgebras( B1 ) and TensorProductFactors( B1 ) = [ A1, A2 ] ) or 
+       not ( IsTensorProductOfAlgebras( B2 ) and TensorProductFactors( B1 ) = [ OppositeAlgebra( A2 ), A3 ] ) then
         Error( "Entered modules are not over the appropriate algebras,\n" );
     fi;
     

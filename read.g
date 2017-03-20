@@ -1,4 +1,4 @@
-ReadPackage( "QPA", "lib/constants.gi" );
+ReadPackage( "QPA", "lib/side.gi" );
 ReadPackage( "QPA", "lib/matrix.gi" );
 ReadPackage( "QPA", "lib/vecspace.gi" );
 ReadPackage( "QPA", "lib/quiver.gi" );

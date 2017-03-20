@@ -8,183 +8,74 @@ BindGlobal( "FamilyOfQuiverModuleElements",
 BindGlobal( "FamilyOfQuiverModules",
             CollectionsFamily( FamilyOfQuiverModuleElements ) );
 
-InstallMethod( AlgebraForLeftModules,
-               [ IsQuiverAlgebra ],
-function( A )
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    return A;
-  else
-    return OppositeAlgebra( A );
-  fi;
-end );
+DeclareSideOperations( IsQuiverModule, IsLeftQuiverModule, IsRightQuiverModule, IsQuiverBimodule );
+DeclareSideOperations( AsModule, AsLeftModule, AsRightModule, AsBimodule );
+DeclareSideOperations( QuiverModule, LeftQuiverModule, RightQuiverModule, QuiverBimodule );
+DeclareSideOperations( ZeroModule, LeftZeroModule, RightZeroModule, ZeroBimodule );
+DeclareSideOperations( IsQuiverModuleElement,
+                       IsLeftQuiverModuleElement, IsRightQuiverModuleElement, IsQuiverBimoduleElement );
+DeclareSideOperations( AsModuleCategory,
+                       AsLeftModuleCategory, AsRightModuleCategory, AsBimoduleCategory );
+DeclareSideOperations( ModuleCategory,
+                       LeftModuleCategory, RightModuleCategory, BimoduleCategory );
 
-InstallMethod( AlgebraForRightModules,
-               [ IsQuiverAlgebra ],
-function( A )
-  if IsRightQuiver( QuiverOfAlgebra( A ) ) then
-    return A;
-  else
-    return OppositeAlgebra( A );
-  fi;
-end );
 
-InstallMethod( AlgebraForBimodules,
-               [ IsQuiverAlgebra, IsQuiverAlgebra ],
-function( A, B )
-  local A_, B_;
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    A_ := A;
-  else
-    A_ := OppositeAlgebra( A );
-  fi;
-  if IsRightQuiver( QuiverOfAlgebra( B ) ) then
-    B_ := B;
-  else
-    B_ := OppositeAlgebra( B );
-  fi;
-  return TensorProductOfAlgebras( A_, B_ );
-end );
-
-InstallMethod( AsModule,
-               [ IsQuiverRepresentation, IsString ],
-function( R, side )
-  local attr, k, Q, rep_algebra, cat, module_type, left_algebra,  
+InstallMethodWithSides( AsModule,
+                        [ IsQuiverRepresentation ],
+side -> function( R )
+  local k, Q, rep_algebra, cat, module_type, left_algebra,  
         right_algebra, algebras, M;
 
-  if side = LEFT then attr := AsLeftModule;
-  elif side = RIGHT then attr := AsRightModule;
-  elif side = LEFT_RIGHT then attr := AsBimodule;
-  else Error( "invalid value for side: ", side ); fi;
-  if Tester( attr )( R ) then
-    return attr( R );
-  fi;
-
-  k := FieldOfRepresentation( R );
-  Q := QuiverOfRepresentation( R );
-  rep_algebra := AlgebraOfRepresentation( R );
-  cat := AsModuleCategory( CapCategory( R ), side );
-  if side = LEFT then
-    module_type := IsLeftQuiverModule;
-    left_algebra := AlgebraForLeftModules( rep_algebra );
-    right_algebra := fail;
-  elif side = RIGHT then
-    module_type := IsRightQuiverModule;
-    right_algebra := AlgebraForRightModules( rep_algebra );
-    left_algebra := fail;
-  elif side = LEFT_RIGHT then
-    module_type := IsQuiverBimodule;
-    # TODO: check that rep_algebra is tensor product of two algebras
-    algebras := TensorProductFactorsLeftRight( rep_algebra );
-    left_algebra := algebras[ 1 ];
-    right_algebra := algebras[ 2 ];
-  fi;
   M := rec();
   ObjectifyWithAttributes( M, NewType( FamilyOfQuiverModules,
-                                       module_type and IsQuiverModuleRep ),
+                                       IsQuiverModule^side and IsQuiverModuleRep ),
                            UnderlyingRepresentation, R,
-                           LeftActingDomain, k,
+                           LeftActingDomain, FieldOfRepresentation( R ),
                            Side, side );
-  if left_algebra <> fail then
-    SetLeftActingAlgebra( M, left_algebra );
+
+  rep_algebra := AlgebraOfRepresentation( R );
+  if side = LEFT_RIGHT then
+    algebras := TensorProductFactorsLeftRight( rep_algebra );
+  else
+    algebras := [ fail, fail ];
+    algebras[ Int( side ) ] := rep_algebra^side;
   fi;
-  if right_algebra <> fail then
-    SetRightActingAlgebra( M, right_algebra );
+  if algebras[ Int( LEFT ) ] <> fail then
+    SetLeftActingAlgebra( M, algebras[ Int( LEFT ) ] );
   fi;
+  if algebras[ Int( RIGHT ) ] <> fail then
+    SetRightActingAlgebra( M, algebras[ Int( RIGHT ) ] );
+  fi;
+
+  cat := AsModuleCategory( side, CapCategory( R ) );
   Add( cat, M );
-  Setter( attr )( R, M );
+
   return M;
 end );
 
-InstallMethod( AsLeftModule,
-               [ IsQuiverRepresentation ],
-               R -> AsModule( R, LEFT ) );
-
-InstallMethod( AsRightModule,
-               [ IsQuiverRepresentation ],
-               R -> AsModule( R, RIGHT ) );
-
-InstallMethod( AsBimodule,
-               [ IsQuiverRepresentation ],
-               R -> AsModule( R, LEFT_RIGHT ) );
-
-InstallMethod( QuiverModule,
-               [ IsString, IsQuiverAlgebra, IsDenseList, IsList ],
-function( side, A, dimensions, matrices )
-  return AsModule( QuiverRepresentation( A^side, dimensions, matrices ),
-                   side );
+InstallMethodWithSides( QuiverModule,
+                        [ IsQuiverAlgebra, IsDenseList, IsList ],
+side -> function( A, dimensions, matrices )
+  return AsModule( side, QuiverRepresentation( A^side, dimensions, matrices ) );
 end );
 
-InstallMethod( QuiverModule,
-               [ IsString, IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ],
-function( side, A, dimensions, arrows, matrices_for_arrows )
-  return AsModule( QuiverRepresentation( A^side,
-                                         dimensions, arrows, matrices_for_arrows ),
-                   side );
+InstallMethodWithSides( QuiverModule,
+                        [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ],
+side -> function( A, dimensions, arrows, matrices_for_arrows )
+  return AsModule( side,
+                   QuiverRepresentation( A^side,
+                                         dimensions, arrows, matrices_for_arrows ) );
 end );
 
-InstallMethod( LeftQuiverModule,
-               [ IsPathAlgebra, IsDenseList, IsList ],
-function( A, dimensions, matrices )
-  return QuiverModule( LEFT, A, dimensions, matrices );
+InstallMethodWithSides( ZeroModule, [ IsQuiverAlgebra ],
+side -> function( A )
+  return AsModule( side, ZeroRepresentation( A^side ) );
 end );
 
-InstallMethod( LeftQuiverModule,
-               [ IsPathAlgebra, IsDenseList, IsDenseList, IsDenseList ],
-function( A, dimensions, arrows, matrices_for_arrows )
-  return QuiverModule( LEFT, A, dimensions, arrows, matrices_for_arrows );
-end );
-
-InstallMethod( RightQuiverModule,
-               [ IsPathAlgebra, IsDenseList, IsList ],
-function( A, dimensions, matrices )
-  return QuiverModule( RIGHT, A, dimensions, matrices );
-end );
-
-InstallMethod( RightQuiverModule,
-               [ IsPathAlgebra, IsDenseList, IsDenseList, IsDenseList ],
-function( A, dimensions, arrows, matrices_for_arrows )
-  return QuiverModule( RIGHT, A, dimensions, arrows, matrices_for_arrows );
-end );
-
-InstallMethod( QuiverBimodule,
-               [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsList ],
-function( A, B, dimensions, matrices )
-  return AsBimodule( QuiverRepresentation( AlgebraForBimodules( A, B ), dimensions, matrices ) );
-end );
-
-InstallMethod( QuiverBimodule,
-               [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsDenseList, IsList ],
-function( A, B, dimensions, arrows, matrices_for_arrows )
-  return AsBimodule( QuiverRepresentation( AlgebraForBimodules( A, B ), dimensions, arrows, matrices_for_arrows ) );
-end );
-
-InstallMethod( LeftZeroModule,
-               [ IsPathAlgebra ],
-function( A )
-  return AsLeftModule
-         ( ZeroRepresentation( AlgebraForLeftModules( A ) ) );
-end );
-
-InstallMethod( RightZeroModule,
-               [ IsPathAlgebra ],
-function( A )
-  return AsRightModule
-         ( ZeroRepresentation( AlgebraForRightModules( A ) ) );
-end );
-
-InstallMethod( \=, [ IsLeftQuiverModule, IsLeftQuiverModule ],
+InstallMethod( \=, [ IsQuiverModule, IsQuiverModule ],
 function( M1, M2 )
-  return UnderlyingRepresentation( M1 ) = UnderlyingRepresentation( M2 );
-end );
-
-InstallMethod( \=, [ IsRightQuiverModule, IsRightQuiverModule ],
-function( M1, M2 )
-  return UnderlyingRepresentation( M1 ) = UnderlyingRepresentation( M2 );
-end );
-
-InstallMethod( \=, [ IsQuiverBimodule, IsQuiverBimodule ],
-function( M1, M2 )
-  return UnderlyingRepresentation( M1 ) = UnderlyingRepresentation( M2 );
+  return Side( M1 ) = Side( M2 )
+         and UnderlyingRepresentation( M1 ) = UnderlyingRepresentation( M2 );
 end );
 
 InstallMethod( String,
@@ -236,16 +127,13 @@ function( e, M )
   if RepresentationOfElement( e ) <> UnderlyingRepresentation( M ) then
     Error( "Element is not from the underlying representation of the module" );
   fi;
-  if IsLeftQuiverModule( M ) then
-    elem_cat := IsLeftQuiverModuleElement;
-  else
-    elem_cat := IsRightQuiverModuleElement;
-  fi;
+  elem_cat := IsQuiverModuleElement^Side( M );
   me := rec();
   ObjectifyWithAttributes( me, NewType( FamilyOfQuiverModuleElements,
                                         elem_cat and IsQuiverModuleRep ),
                            UnderlyingRepresentationElement, e,
-                           ModuleOfElement, M );
+                           ModuleOfElement, M,
+                           Side, Side( M ) );
   return me;
 end );
 
@@ -296,7 +184,7 @@ function( e, v )
 end );
 
 InstallMethod( String,
-               [ IsLeftQuiverModuleElement ],
+               [ IsQuiverModuleElement ],
 function( e )
   return Concatenation( "left module element ", String( ElementVectors( e ) ) );
 end );
@@ -347,6 +235,26 @@ function( me, ae )
     re_ := QuiverAlgebraAction( re, OppositeAlgebraElement( ae ) );
   fi;
   return AsModuleElement( re_, ModuleOfElement( me ) );
+end );
+
+InstallMethod( \^,
+               [ IsQuiverAlgebraElement, IsQuiverBimoduleElement ],
+function( a, m )
+  local M, r, ax1;
+  M := ModuleOfElement( m );
+  r := UnderlyingRepresentationElement( m );
+  ax1 := [ a, One( RightActingAlgebra( M ) ) ]^LEFT_RIGHT;
+  return AsModuleElement( QuiverAlgebraAction( r, ax1 ), M );
+end );
+
+InstallMethod( \^,
+               [ IsQuiverBimoduleElement, IsQuiverAlgebraElement ],
+function( m, a )
+  local M, r, 1xa;
+  M := ModuleOfElement( m );
+  r := UnderlyingRepresentationElement( m );
+  1xa := [ One( LeftActingAlgebra( M ) ), a ]^LEFT_RIGHT;
+  return AsModuleElement( QuiverAlgebraAction( r, 1xa ), M );
 end );
 
 InstallMethod( \=, [ IsQuiverModuleElement, IsQuiverModuleElement ],
@@ -423,25 +331,16 @@ function( B )
   return B!.module;
 end );
 
-
-InstallMethod( AsModuleCategory, [ IsQuiverRepresentationCategory, IsString ],
-function( rep_cat, side )
-  local attr, rep_algebra, Q, _R, _r, _M, _m, algebras, A, B, cat;
-
-  if side = LEFT then attr := AsLeftModuleCategory;
-  elif side = RIGHT then attr := AsRightModuleCategory;
-  elif side = LEFT_RIGHT then attr := AsBimoduleCategory;
-  else Error( "invalid value for side: ", side ); fi;
-  if Tester( attr )( rep_cat ) then
-    return attr( rep_cat );
-  fi;
+InstallMethodWithSides( AsModuleCategory, [ IsQuiverRepresentationCategory ],
+side -> function( rep_cat )
+  local rep_algebra, Q, _R, _r, _M, _m, algebras, A, B, cat;
 
   rep_algebra := AlgebraOfCategory( rep_cat );
   Q := QuiverOfAlgebra( rep_algebra );
 
   _R := UnderlyingRepresentation;
   _r := UnderlyingRepresentationHomomorphism;
-  _M := R -> AsModule( R, side );
+  _M := AsModule^side;
   _m := f -> AsModuleHomomorphism( f, side );
 
   if side = LEFT_RIGHT then
@@ -453,7 +352,7 @@ function( rep_cat, side )
     SetAlgebrasOfCategory( cat, algebras );
   else
     A := rep_algebra^side;
-    cat := CreateCapCategory( Concatenation( side, " modules over ", String( A ) ) );
+    cat := CreateCapCategory( Concatenation( String( side ), " modules over ", String( A ) ) );
     if side = LEFT then
       SetFilterObj( cat, IsLeftQuiverModuleCategory );
     else
@@ -510,36 +409,10 @@ function( rep_cat, side )
 
   Finalize( cat );
 
-  Setter( attr )( rep_cat, cat );
   return cat;
 end );
 
-InstallMethod( AsLeftModuleCategory, [ IsQuiverRepresentationCategory ],
-               rep_cat -> AsModuleCategory( rep_cat, LEFT ) );
-
-InstallMethod( AsRightModuleCategory, [ IsQuiverRepresentationCategory ],
-               rep_cat -> AsModuleCategory( rep_cat, RIGHT ) );
-
-InstallMethod( AsBimoduleCategory, [ IsQuiverRepresentationCategory ],
-               rep_cat -> AsModuleCategory( rep_cat, LEFT_RIGHT ) );
-
-InstallMethod( ModuleCategory,
-               [ IsQuiverAlgebra, IsString ],
-function( A, side )
-  return AsModuleCategory( CategoryOfQuiverRepresentations( A^side ),
-                           side );
-end );
-
-InstallMethod( LeftModuleCategory, [ IsQuiverAlgebra ],
-               A -> ModuleCategory( A, LEFT ) );
-
-InstallMethod( RightModuleCategory, [ IsQuiverAlgebra ],
-               A -> ModuleCategory( A, RIGHT ) );
-
-InstallMethod( BimoduleCategory,
-               [ IsQuiverAlgebra, IsQuiverAlgebra ],
-function( A, B )
-  local T;
-  T := AlgebraForBimodules( A, B );
-  return AsModuleCategory( CategoryOfQuiverRepresentations( T ), LEFT_RIGHT );
+InstallMethodWithSides( ModuleCategory, [ IsQuiverAlgebra ],
+side -> function( A )
+  return AsModuleCategory( side, CategoryOfQuiverRepresentations( A^side ) );
 end );

@@ -11,23 +11,22 @@ DeclareRepresentation( "IsQuiverModuleHomomorphismRep",
                        IsComponentObjectRep and IsAttributeStoringRep,
                        [] );
 
-InstallMethod( AsModuleHomomorphism,
-               [ IsQuiverRepresentationHomomorphism, IsString ],
-function( rf, side )
+DeclareSideOperations( IsQuiverModuleHomomorphism,
+                       IsLeftQuiverModuleHomomorphism, IsRightQuiverModuleHomomorphism, IsQuiverBimoduleHomomorphism );
+DeclareSideOperations( AsModuleHomomorphism,
+                       AsLeftModuleHomomorphism, AsRightModuleHomomorphism, AsBimoduleHomomorphism );
+
+InstallMethodWithSides( AsModuleHomomorphism,
+                        [ IsQuiverRepresentationHomomorphism ],
+side -> function( rf )
   local R1, R2, rep_algebra, cat, hom_type, M1, M2, matrices, f;
   R1 := Source( rf );
   R2 := Range( rf );
-  M1 := AsModule( R1, side );
-  M2 := AsModule( R2, side );
+  M1 := AsModule( side, R1 );
+  M2 := AsModule( side, R2 );
   rep_algebra := AlgebraOfRepresentation( R1 );
-  cat := AsModuleCategory( CapCategory( R1 ), side );
-  if side = LEFT_RIGHT then
-    hom_type := IsQuiverBimoduleHomomorphism;
-  elif side = LEFT then
-    hom_type := IsLeftQuiverModuleHomomorphism;
-  else
-    hom_type := IsRightQuiverModuleHomomorphism;
-  fi;
+  cat := AsModuleCategory( side, CapCategory( R1 ) );
+  hom_type := IsQuiverModuleHomomorphism^side;
   matrices := MatricesOfRepresentationHomomorphism( rf );
   f := rec();
   ObjectifyWithAttributes( f, NewType( FamilyOfQuiverModuleHomomorphisms,
@@ -40,18 +39,6 @@ function( rf, side )
   return f;
 end );
 
-InstallMethod( AsLeftModuleHomomorphism,
-               [ IsQuiverRepresentationHomomorphism ],
-               f -> AsModuleHomomorphism( f, LEFT ) );
-
-InstallMethod( AsRightModuleHomomorphism,
-               [ IsQuiverRepresentationHomomorphism ],
-               f -> AsModuleHomomorphism( f, RIGHT ) );
-
-InstallMethod( AsBimoduleHomomorphism,
-               [ IsQuiverRepresentationHomomorphism ],
-               f -> AsModuleHomomorphism( f, LEFT_RIGHT ) );
-
 InstallMethod( QuiverModuleHomomorphism,
                [ IsQuiverModule, IsQuiverModule, IsList ],
 function( M1, M2, matrices )
@@ -60,7 +47,7 @@ function( M1, M2, matrices )
   R1 := UnderlyingRepresentation( M1 );
   R2 := UnderlyingRepresentation( M2 );
   rf := QuiverRepresentationHomomorphism( R1, R2, matrices );
-  return AsModuleHomomorphism( rf, Side( M1 ) );
+  return AsModuleHomomorphism( Side( M1 ), rf );
 end );
 
 InstallMethod( ImageElm,

@@ -4,12 +4,13 @@
 
 #! @Description
 #!  Category for elements of modules over quiver algebras.
-DeclareCategory( "IsQuiverModuleElement", IsAlgebraModuleElement );
+DeclareCategory( "IsQuiverModuleElement", IsAlgebraModuleElement and IsObjectWithSide );
 
 #! @Description
 #!  Category for modules over quiver algebras.
 DeclareCategory( "IsQuiverModule",
                  IsVectorSpace and IsAlgebraModule and IsCapCategoryObject
+                 and IsObjectWithSide
                  and CategoryCollections( IsQuiverModuleElement ) );
 
 #! @Description
@@ -69,10 +70,10 @@ DeclareCategory( "IsQuiverBimodule",
 #! @Returns <Ref Filt="IsQuiverModule"/>
 #! @Arguments side, A, dimensions, matrices
 DeclareOperation( "QuiverModule",
-                  [ IsString, IsQuiverAlgebra, IsDenseList, IsList ] );
+                  [ IsSide, IsQuiverAlgebra, IsDenseList, IsList ] );
 #! @Arguments side, A, dimensions, arrows, matrices_for_arrows
 DeclareOperation( "QuiverModule",
-                  [ IsString, IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
+                  [ IsSide, IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup
 
 #! @BeginGroup LeftQuiverModule
@@ -113,12 +114,6 @@ DeclareOperation( "LeftQuiverModule",
 #! @EndGroup
 
 #! @Description
-#!  Returns the left zero module over the algebra <A>A</A>.
-#! @Returns <Ref Filt="IsLeftQuiverModule"/>
-#! @Arguments A
-DeclareAttribute( "LeftZeroModule", IsQuiverAlgebra );
-
-#! @Description
 #!  Construct a right module over the quiver algebra <A>A</A>.
 #!  This operation works like <Ref Oper="LeftQuiverModule"/>,
 #!  except that it creates a right module.
@@ -138,11 +133,21 @@ DeclareOperation( "RightQuiverModule",
 DeclareOperation( "RightQuiverModuleByArrows",
                   [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
 
+DeclareOperation( "ZeroModule", [ IsSide, IsQuiverAlgebra ] );
+
+#! @Description
+#!  Returns the left zero module over the algebra <A>A</A>.
+#! @Returns <Ref Filt="IsLeftQuiverModule"/>
+#! @Arguments A
+DeclareAttribute( "LeftZeroModule", IsQuiverAlgebra );
+
 #! @Description
 #!  Returns the left zero module over the algebra <A>A</A>.
 #! @Returns <Ref Filt="IsLeftQuiverModule"/>
 #! @Arguments A
 DeclareAttribute( "RightZeroModule", IsQuiverAlgebra );
+
+DeclareOperation( "ZeroBimodule", [ IsDenseList ] );
 
 #! @Description
 #!  Returns the appropriate algebra to use for representations of left
@@ -175,7 +180,7 @@ DeclareOperation( "AlgebraForBimodules", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
 #!  for creating a left module, right module or bimodule, respectively.
 #! @Returns <Ref Filt="IsQuiverModule"/>
 #! @Arguments R, side
-DeclareOperation( "AsModule", [ IsQuiverRepresentation, IsString ] );
+DeclareOperation( "AsModule", [ IsSide, IsQuiverRepresentation ] );
 
 #! @Description
 #!  The representation <A>R</A> considered as a left module.
@@ -203,13 +208,14 @@ DeclareAttribute( "AsBimodule", IsQuiverRepresentation );
 DeclareOperation( "QuiverBimodule", [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsList ] );
 #! @Arguments A, B, dimensions, arrows, matrices_for_arrows
 DeclareOperation( "QuiverBimodule", [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsDenseList, IsList ] );
+#! @Arguments algebras, dimensions, matrices
+DeclareOperation( "QuiverBimodule", [ IsDenseList, IsDenseList, IsList ] );
+#! @Arguments algebras, dimensions, arrows, matrices_for_arrows
+DeclareOperation( "QuiverBimodule", [ IsDenseList, IsDenseList, IsDenseList, IsList ] );
 #! @EndGroup
 
 
 #! @Section Information about a module
-
-#!
-DeclareAttribute( "Side", IsQuiverModule );
 
 #! @Description
 #!  Returns the quiver representation for the module <A>M</A>.
@@ -343,13 +349,16 @@ DeclareOperation( "\^", [ IsRightQuiverModuleElement, IsQuiverAlgebraElement ] )
 #! @Section Module categories
 
 #!
-DeclareOperation( "ModuleCategory", [ IsQuiverAlgebra, IsString ] );
+DeclareOperation( "ModuleCategory", [ IsSide, IsQuiverAlgebra ] );
 
 #!
 DeclareAttribute( "LeftModuleCategory", IsQuiverAlgebra );
 
 #!
 DeclareAttribute( "RightModuleCategory", IsQuiverAlgebra );
+
+#!
+DeclareOperation( "BimoduleCategory", [ IsDenseList ] );
 
 #!
 DeclareOperation( "BimoduleCategory", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
@@ -367,7 +376,7 @@ DeclareAttribute( "AsLeftModuleCategory", IsQuiverRepresentationCategory );
 DeclareAttribute( "AsRightModuleCategory", IsQuiverRepresentationCategory );
 
 #!
-DeclareOperation( "AsModuleCategory", [ IsQuiverRepresentationCategory, IsString ] );
+DeclareOperation( "AsModuleCategory", [ IsSide, IsQuiverRepresentationCategory ] );
 
 #!
 DeclareAttribute( "AsBimoduleCategory", IsQuiverRepresentationCategory );
