@@ -14,16 +14,22 @@ function( coefficients, paths )
   fi;
 end );
 
-InstallMethod( Coefficients, "for path expression",
+InstallMethod( CoefficientsAttr, "for path expression",
                [ IsPathExpr and IsPathExprRep ],
 function( e )
   return e!.coefficients;
 end );
-InstallMethod( Coefficients, "for path",
+InstallMethod( Coefficients, "for path expression",
+               [ IsPathExpr and IsPathExprRep ],
+CoefficientsAttr );
+InstallMethod( CoefficientsAttr, "for path",
                [ IsPath ],
 function( p )
   return [ 1 ];
 end );
+InstallMethod( Coefficients, "for path",
+               [ IsPath ],
+CoefficientsAttr );
 
 InstallMethod( Paths, "for path expression",
                [ IsPathExpr and IsPathExprRep ],

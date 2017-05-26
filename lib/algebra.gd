@@ -252,7 +252,9 @@ DeclareAttribute( "AlgebraOfElement", IsQuiverAlgebraElement );
 #!  $p_1, \ldots, p_n$ of paths for the element <A>e</A>,
 #!  and this attribute returns the corresponding list
 #!  $c_1, \ldots, c_n$ of coefficients.
-DeclareAttribute( "Coefficients", IsQuiverAlgebraElement );
+DeclareOperation( "Coefficients", [ IsQuiverAlgebraElement ] );
+
+DeclareAttribute( "CoefficientsAttr", IsQuiverAlgebraElement );
 
 #! @Arguments e
 #! @Returns list of <Ref Filt="IsPath"/>
@@ -265,7 +267,7 @@ DeclareAttribute( "Coefficients", IsQuiverAlgebraElement );
 #!  $p_1, \ldots, p_n$ of paths for the element <A>e</A>.
 #!  The corresponding coefficients
 #!  $c_1, \ldots, c_n$ can be obtained by the attribute
-#!  <Ref Attr="Coefficients" Label="for IsQuiverAlgebraElement"/>.
+#!  <Ref Oper="Coefficients" Label="for IsQuiverAlgebraElement"/>.
 #!  <P/>
 #!  The paths are ordered in decreasing order,
 #!  by the path ordering of the quiver.
