@@ -1298,3 +1298,85 @@ function( R )
   fi;
 end
 );
+
+InstallMethod( QuiverRepresentationHomomorphismByImages, 
+        "for two quiver representations, a list of generators and a list of images",
+        [ IsQuiverRepresentation, IsQuiverRepresentation, IsHomogeneousList, IsHomogeneousList ],
+        
+function( R1, R2, generators, images )
+    local   A1,  Q1,  vertices,  num_vert,  spanofgens,  
+            newspanofgens,  queue,  addvector,  g,  v,  temp,  p,  a,  
+            hommatrices,  dim,  basis,  paths,  gens,  matrix,  
+            basischangemat;
+    
+    A1 := AlgebraOfRepresentation( R1 );  
+    if A1 <> AlgebraOfRepresentation( R2 ) then
+        Error( "The entered representations are not over the same algebra," );
+    fi;
+    if not ForAll( generators, g -> g in R1 ) then
+        Error( "The entered generators are not in the first representation," );
+    fi;
+    if not ForAll( images, m -> m in R2 ) then
+        Error( "The entered images are not in the second representation," );
+    fi;
+    Q1 := QuiverOfAlgebra( A1 ); 
+    vertices := Vertices( Q1 ); 
+    num_vert := Length( vertices ); 
+    spanofgens := List( vertices, v -> [ [ ], [ ], [ ] ] );  # Basis, paths, generators 
+    newspanofgens := List( vertices, v -> [ ] );
+    queue := [ ];    
+    addvector := function( p, g )
+        local   target,  vec,  temp;
+        
+        target := Target( p );
+        if Length( spanofgens[ VertexNumber( target ) ][ 1 ] ) = VertexDimension( R1, target ) then
+            return;
+        fi;
+        vec := AsList( ElementVector( PathAction( g, p ), target ) ); 
+        temp := Concatenation( spanofgens[ VertexNumber( target ) ][ 1 ], [ vec ] ); 
+        if RankMat( temp ) = Length( temp ) then 
+            Add( spanofgens[ VertexNumber( target ) ][ 1 ], vec );
+            Add( spanofgens[ VertexNumber( target ) ][ 2 ], p );
+            Add( spanofgens[ VertexNumber( target ) ][ 3 ], g );
+            Add( queue, [ p , g ] ); 
+        fi;        
+    end;
+    
+    for g in generators do
+        for v in vertices do
+            if not IsZero( PathAction( g, v ) ) then
+                addvector( v, g );
+            fi;
+        od;
+    od;
+    while not IsEmpty( queue ) do
+        temp := Remove( queue, 1 );
+        p := temp[ 1 ];
+        g := temp[ 2 ];
+        for a in OutgoingArrows( Target( p ) ) do
+            addvector( ComposePaths( p, a ), g );
+        od;
+    od;
+    if DimensionVector( R1 ) <> List( spanofgens, s -> Length( s[ 1 ] ) ) then
+        Error( "The entered generators doesn't generate the source of the homomorphism,\n" ); 
+    fi;
+    hommatrices := [ ];
+    for v in vertices do
+        dim := VertexDimension( R1, v ); 
+        if dim > 0 then
+            temp := spanofgens[  VertexNumber( v ) ];
+            basis := temp[ 1 ];
+            paths := temp[ 2 ];
+            gens := temp[ 3 ];
+            matrix := List( [ 1..Length( gens ) ], i -> PathAction( images[ Position( generators, gens[ i ] ) ], paths[ i ] ) );
+            matrix := List( matrix, m -> AsList( ElementVector( m, v ) ) );
+            basischangemat := temp[ 1 ]^( -1 );            
+            hommatrices[ VertexNumber( v ) ] := basischangemat * matrix; 
+        fi;
+    od;
+    hommatrices := List( hommatrices, h -> MatrixByRows( LeftActingDomain( R1 ), h ) ); 
+    
+    return QuiverRepresentationHomomorphismByRightMatrices( R1, R2, hommatrices );
+end
+  );
+  

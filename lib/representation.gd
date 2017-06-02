@@ -496,3 +496,6 @@ DeclareCategory( "IsQuiverRepresentationBasis", IsBasis );
 #! number <C>i</C> are in the <C>i</C>th element of the list.
 #! @Arguments B
 DeclareAttribute( "BasisVectorsByVertex", IsQuiverRepresentationBasis );
+
+#! TODO
+DeclareOperation( "QuiverRepresentationHomomorphismByImages", [ IsQuiverRepresentation, IsQuiverRepresentation, IsHomogeneousList, IsHomogeneousList ] );
