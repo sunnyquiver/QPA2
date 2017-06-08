@@ -1307,11 +1307,14 @@ function( R1, R2, generators, images )
     local   A1,  Q1,  vertices,  num_vert,  spanofgens,  
             newspanofgens,  queue,  addvector,  g,  v,  temp,  p,  a,  
             hommatrices,  dim,  basis,  paths,  gens,  matrix,  
-            basischangemat;
+            basischangemat,  f;
     
     A1 := AlgebraOfRepresentation( R1 );  
     if A1 <> AlgebraOfRepresentation( R2 ) then
         Error( "The entered representations are not over the same algebra," );
+    fi;
+    if Length( generators ) <> Length( images ) then
+        Error( "The number of generators and the number of images are different," );
     fi;
     if not ForAll( generators, g -> g in R1 ) then
         Error( "The entered generators are not in the first representation," );
@@ -1375,8 +1378,11 @@ function( R1, R2, generators, images )
         fi;
     od;
     hommatrices := List( hommatrices, h -> MatrixByRows( LeftActingDomain( R1 ), h ) ); 
-    
-    return QuiverRepresentationHomomorphismByRightMatrices( R1, R2, hommatrices );
+    f := QuiverRepresentationHomomorphismByRightMatrices( R1, R2, hommatrices );
+    if ForAll( [ 1..Length( generators ) ], i -> ImageElm( f, generators[ i ] ) = images[ i ] ) then
+        return f;
+    else
+        Error( "The generators and the images are inconsistent," );
+    fi;
 end
   );
-  

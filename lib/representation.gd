@@ -497,5 +497,14 @@ DeclareCategory( "IsQuiverRepresentationBasis", IsBasis );
 #! @Arguments B
 DeclareAttribute( "BasisVectorsByVertex", IsQuiverRepresentationBasis );
 
-#! TODO
+#! @Description
+#!  Create a homomorphism by specifying its action on a generating set.
+#!  
+#!  The arguments <A>R1</A> and <A>R2</A> are representations over the same algebra, <A>generators</A> 
+#!  is a list of generators of <A>R1</A> and <A>images</A> is a list of elements in <A>R2</A> with the 
+#!  same length as <A>generators</A>.  Returns a homomorphism from <A>R1</A> to <A>R2</A> sending the 
+#!  i-th element in <A>generators</A> to the i-th element in <A>images</A>. If there is no such 
+#!  homomorphism, then an error is signalled. 
+#! @Returns IsQuiverRepresentationHomomorphism 
+#! @Arguments R1, R2, generator, images
 DeclareOperation( "QuiverRepresentationHomomorphismByImages", [ IsQuiverRepresentation, IsQuiverRepresentation, IsHomogeneousList, IsHomogeneousList ] );
