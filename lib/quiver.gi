@@ -1335,6 +1335,17 @@ function( Q )
   return Q_op;
 end );
 
+InstallMethod( OppositeQuiver,
+               [ IsProductQuiver ],
+function( QxR )
+  local factors, Q, R;
+  factors := ProductQuiverFactors( QxR );
+  Q := factors[ 1 ];
+  R := factors[ 2 ];
+  return QuiverProduct( OppositeQuiver( Q ), OppositeQuiver( R ) );
+end );
+
+
 InstallMethod( ToggleSuffix, "for two strings", [ IsString, IsString ],
 function( s, suffix )
   if EndsWith( s, suffix ) and Length( s ) > Length( suffix ) then
