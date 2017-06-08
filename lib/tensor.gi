@@ -156,7 +156,37 @@ InstallMethod( TensorProductOfRepresentations,
     end;
     
     SetElementaryTensorFunction( tensorproduct, elementarytensor ); 
+    SetTensorProductFactors( tensorproduct, [ R1, R2 ] );
     
     return tensorproduct;
+end
+  );
+
+InstallMethod( TensorProductOfHomomorphisms,
+        "for two homomorphisms of representations",
+        [ IsQuiverRepresentationHomomorphism, IsQuiverRepresentationHomomorphism, IsQuiverRepresentation, IsQuiverRepresentation ],
+        function( f, g, T1, T2 )
+    
+    local   elementarytensor1,  elementarytensor2,  generatorsf,  
+            generatorsg,  generators,  images,  gf,  gg;
+    
+    if ( TensorProductFactors( T1 ) <> [ Source( f ), Source( g ) ] ) or 
+       ( TensorProductFactors( T2 ) <> [ Range( f ), Range( g ) ] ) then
+        Error( "The entered homomorphisms and tensor products are inconsistent," );
+    fi;    
+    elementarytensor1 := ElementaryTensorFunction( T1 );
+    elementarytensor2 := ElementaryTensorFunction( T2 );
+    generatorsf := MinimalGeneratingSet( Source( f ) );
+    generatorsg := MinimalGeneratingSet( Source( g ) );
+    generators := [ ];
+    images := [ ];
+    for gf in generatorsf do
+        for gg in generatorsg do
+            Add( generators, elementarytensor1( gf, gg ) );
+            Add( images, elementarytensor2( ImageElm( f, gf ), ImageElm( g, gg ) ) );
+        od;
+    od;
+        
+    return QuiverRepresentationHomomorphismByImages( T1, T2, generators, images );
 end
   );
