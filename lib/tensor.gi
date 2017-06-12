@@ -151,8 +151,17 @@ InstallMethod( TensorProductOfRepresentations,
     maps := List( maps, m -> MatrixByRows( K, m ) );
     tensorproduct := QuiverRepresentationByRightMatrices( B3, dimension, arrowsB3, maps );
     
-    elementarytensor := function( r1, r2 ) 
-        return QuiverRepresentationElement( tensorproduct, List( verticesB3, v -> ImageElm( projections[ VertexNumber( v ) ], partialtensor( r1, r2, v ) ) ) );
+    elementarytensor := function( r1, r2 )
+        local   vectors,  v;
+        
+        vectors := [ ];
+        for v in verticesB3 do
+           if dimension[ VertexNumber( v ) ] > 0 then
+               vectors[ VertexNumber( v ) ] := ImageElm( projections[ VertexNumber( v ) ], partialtensor( r1, r2, v ) );
+           fi;
+       od;
+       
+       return QuiverRepresentationElement( tensorproduct, vectors );
     end;
     
     SetElementaryTensorFunction( tensorproduct, elementarytensor ); 
