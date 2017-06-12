@@ -495,5 +495,15 @@ DeclareOperation( "ElementaryTensor", [ IsQuiverAlgebraElement, IsQuiverAlgebraE
 
 DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 
+#! @Section Algebra homomorphisms 
+
+#! @Description
+#!  Category for algebra homomorphisms between quiver algebras.
+DeclareCategory( "IsQuiverAlgebraHomomorphism", IsAlgebraWithOneHomomorphism );
+
+DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ] );
+#! TODO
+DeclareAttribute( "VertexImages", IsQuiverAlgebraHomomorphism );
+DeclareAttribute( "ArrowImages", IsQuiverAlgebraHomomorphism );
 
 #
