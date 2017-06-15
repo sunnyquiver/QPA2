@@ -210,3 +210,6 @@ DeclareOperation( "SubspaceInclusion", [ IsQPAVectorSpace, IsHomogeneousList ] )
 #!  not compatible, that is, number of columns in the matrix <A>M</A> differ from the number 
 #!  of enteries in the vector <A>v</A>. 
 DeclareOperation( "SolutionMat", [ IsQPAMatrix, IsQPARowVector ] );
+
+DeclareAttribute( "LeftInverse", IsLinearTransformation );
+
