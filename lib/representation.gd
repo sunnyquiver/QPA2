@@ -123,6 +123,14 @@ DeclareOperation( "PathAction", [ IsQuiverRepresentationElement, IsPath ] );
 #! @Arguments re, ae
 DeclareOperation( "QuiverAlgebraAction", [ IsQuiverRepresentationElement, IsQuiverAlgebraElement ] );
 
+#! @Arguments R, a
+#! @Description
+#!  Given a quiver representation <A>R</A>, and an algebra element <A>a</A>,
+#!  produces the linear transformation on <C>V</C> given by the action of <A>a</A> on <A>R</A>,
+#!  where <C>V</C> is the underlying vector space of <A>R</A>.
+DeclareOperation( "QuiverAlgebraActionAsLinearTransformation",
+                  [ IsQuiverRepresentation, IsQuiverAlgebraElement ] );
+
 #! @Section Constructing representations
 
 #! @BeginGroup QuiverRepresentation

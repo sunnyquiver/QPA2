@@ -156,6 +156,20 @@ function( re, ae )
                      \* ) );
 end );
 
+InstallMethod( QuiverAlgebraActionAsLinearTransformation,
+               "for quiver representation and element of quiver algebra",
+               [ IsQuiverRepresentation, IsQuiverAlgebraElement ],
+function( R, a )
+  local   F,  V,  B,  m;
+  F := FieldOfRepresentation( R );
+  V := AsVectorSpace( R );
+  B := Basis( V );
+  m := List( B, b -> AsList( AsVector( QuiverAlgebraAction( QuiverRepresentationElement( R, b ),
+                                                            a ) ) ) );
+  return LinearTransformationByRightMatrix( V, V, MatrixByRows( F, m ) );
+end );
+
+
 InstallMethod( \=, "for elements of quiver representation",
                [ IsQuiverRepresentationElement, IsQuiverRepresentationElement ],
 function( e1, e2 )
