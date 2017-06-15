@@ -69,6 +69,12 @@ DeclareOperation( "QuiverRepresentationElementNC",
 DeclareOperation( "QuiverRepresentationElement",
                   [ IsQuiverRepresentation, IsDenseList, IsList ] );
 
+#! @Arguments R, v
+#! @Description
+#!  Create a representation element from a vector.
+DeclareOperation( "QuiverRepresentationElement",
+                  [ IsQuiverRepresentation, IsQPAVector ] );
+
 #! @Section Information about an element
 
 #! @Description
@@ -95,6 +101,11 @@ DeclareOperation( "ElementVector", [ IsQuiverRepresentationElement, IsPosInt ] )
 #! @Returns <Ref BookName="Reference" Filt="IsVector"/>
 #! @Arguments e, v
 DeclareOperation( "ElementVector", [ IsQuiverRepresentationElement, IsVertex ] );
+
+#! @Arguments e
+#! @Description
+#!  The representation element <A>e</A> considered as a vector.
+DeclareAttribute( "AsVector", IsQuiverRepresentationElement );
 
 #! @Section Acting on elements
 
@@ -228,6 +239,11 @@ DeclareOperation( "AsRepresentationOfQuotientAlgebra",
 #! @Returns <Ref Filt="IsQuiverRepresentation"/>
 #! @Arguments R
 DeclareAttribute( "AsRepresentationOfPathAlgebra", IsQuiverRepresentation );
+
+#! @Arguments R
+#! @Description
+#!  The quiver representation <A>R</A> considered as a vector space.
+DeclareAttribute( "AsVectorSpace", IsQuiverRepresentation );
 
 #!
 DeclareAttribute( "UnderlyingCategoryForRepresentations", IsQuiverAlgebra );

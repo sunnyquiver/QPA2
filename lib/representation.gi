@@ -33,13 +33,16 @@ end );
 InstallMethod( QuiverRepresentationElementNC, "for quiver representation and collection",
                [ IsQuiverRepresentation, IsDenseList ],
 function( R, vectors )
-  local type, elem;
+  local type, elem, V, vector;
   type := NewType( FamilyOfQuiverRepresentationElements,
                    IsQuiverRepresentationElement and IsQuiverRepresentationElementRep );
   elem := rec();
+  V := AsVectorSpace( R );
+  vector := Vector( V, Concatenation( List( vectors, AsList ) ) );
   ObjectifyWithAttributes( elem, type,
                            RepresentationOfElement, R,
-                           ElementVectors, vectors );
+                           ElementVectors, vectors,
+                           AsVector, vector );
   return elem;
 end );
 
@@ -70,6 +73,25 @@ function( R, vertices, vectors )
   od;
 
   return QuiverRepresentationElement( R, rep_vectors );
+end );
+
+InstallMethod( QuiverRepresentationElement, "for quiver representation and vector",
+               [ IsQuiverRepresentation, IsQPAVector ],
+function( R, v )
+  local v_list, dim, dim_sums, i, vectors;
+  v_list := AsList( v );
+  dim := DimensionVector( R );
+  dim_sums := [ 0 ];
+  for i in [ 2 .. Length( dim ) + 1 ] do
+    dim_sums[ i ] := dim_sums[ i - 1 ] + dim[ i - 1 ];
+  od;
+  vectors := [];
+  for i in [ 1 .. Length( dim ) ] do
+    if dim[ i ] > 0 then
+      vectors[ i ] := v_list{ [ dim_sums[ i ] + 1 .. dim_sums[ i + 1 ] ] };
+    fi;
+  od;
+  return QuiverRepresentationElement( R, vectors );
 end );
 
 InstallMethod( \in,
@@ -384,7 +406,8 @@ function( cat, objects, morphisms )
       VectorSpacesOfRepresentation, objects,
       MapsOfRepresentation, morphisms,
       MatricesOfRepresentation, List( morphisms, MatrixOfLinearTransformation ),
-      DimensionVector, List( objects, Dimension ) );
+      DimensionVector, List( objects, Dimension ),
+      AsVectorSpace, VectorSpaceConstructor( cat )( Sum( List( objects, Dimension ) ) ) );
   Add( cat, R );
   return R;
 end );
