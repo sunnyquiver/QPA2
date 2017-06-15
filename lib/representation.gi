@@ -859,6 +859,11 @@ function( f, i )
   return MapsOfRepresentationHomomorphism( f )[ i ];
 end );
 
+InstallMethod( AsLinearTransformation, "for quiver representation homomorphism",
+               [ IsQuiverRepresentationHomomorphism ],
+function( f )
+  return DirectSumFunctorial( MapsOfRepresentationHomomorphism( f ) );
+end );
 
 
 InstallMethod( CategoryOfQuiverRepresentations, "for quiver algebra",
