@@ -501,9 +501,29 @@ DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 #!  Category for algebra homomorphisms between quiver algebras.
 DeclareCategory( "IsQuiverAlgebraHomomorphism", IsAlgebraWithOneHomomorphism );
 
+#! @Arguments A, B, verteximages, arrowimages
+#! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
+#! @Description
+#!  Returns the algebra homomorphism from the quiver algebra <A>A</A> to the quiver
+#!  algebra <A>B</A> that maps vertices in <A>A</A> to <A>verteximages</A> and the 
+#!  arrows in <A>A</A> to <A>arrowimages</A>.  It signals an error if the arguments
+#!  do not give a well-defined homomorphism of algebras. 
 DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ] );
-#! TODO
+
+#! @Arguments f
+#! @Returns a list of algebra elements
+#! @Description
+#!  Returns a list of algebra elements in <C>B</C> that the vertices in the quiver algebra <C>A</C> are mapped to
+#!  with the algebra homomorphism <A>f</A> defined from <C>A</C> to <C>B</C>. 
 DeclareAttribute( "VertexImages", IsQuiverAlgebraHomomorphism );
+
+#! @Arguments f
+#! @Returns a list of algebra elements
+#! @Description
+#!  Returns a list of algebra elements in <C>B</C> that the arrows in the quiver algebra <C>A</C> are mapped to
+#!  with the algebra homomorphism <A>f</A> defined from <C>A</C> to <C>B</C>. 
 DeclareAttribute( "ArrowImages", IsQuiverAlgebraHomomorphism );
+
+
 
 #
