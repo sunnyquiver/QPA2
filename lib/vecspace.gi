@@ -647,7 +647,7 @@ end );
 
 InstallMethod( SubspaceInclusion, [ IsQPAVectorSpace, IsHomogeneousList ],
 function( V, gens )
-  local   K,  W,  B,  matrix,  WQPA;
+  local   K,  W,  B,  matrix,  WQPA, f;
   
   if not ForAll( gens, g -> g in V ) then
     Error("not all generators are in the entered vector space,\n");
@@ -661,7 +661,32 @@ function( V, gens )
   matrix := MatrixByRows( K, B );
   WQPA := MakeQPAVectorSpace( V, Length( B ) );
   
-  return LinearTransformationByRightMatrix( WQPA, V, matrix );
+  f := LinearTransformationByRightMatrix( WQPA, V, matrix );
+  SetIsInjective( f, true );
+  return f;
+end );
+
+InstallMethod( LeftInverse, [ IsLinearTransformation ],
+function( f )
+  local   dim_src,  f_mat,  mat,  ort,  basis_change,  proj_mat;
+
+  if not IsInjective( f ) then
+    Error( "non-injective linear transformation do not have left inverses" );
+  fi;
+
+  dim_src := Dimension( Source( f ) );
+
+  if dim_src = 0 then
+    return ZeroMorphism( Range( f ), Source( f ) );
+  fi;
+
+  f_mat := RightMatrixOfLinearTransformation( f );
+  mat := RowsOfMatrix( f_mat );
+  ort := BaseOrthogonalSpaceMat( mat );
+  basis_change := Inverse( Concatenation( mat, ort ) );
+  proj_mat := List( basis_change, row -> row{ [ 1 .. dim_src ] } );
+  return LinearTransformationByRightMatrix( Range( f ), Source( f ),
+                                            MatrixByRows( BaseDomain( f_mat ), proj_mat ) );
 end );
 
 InstallMethod( PreImagesRepresentative, "for a linear transformation and a vector",

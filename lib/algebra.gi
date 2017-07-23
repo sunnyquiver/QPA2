@@ -1189,3 +1189,110 @@ InstallMethodWithSides( IndecProjModules, [ IsQuiverAlgebra ],
 side -> function( A )
   return List( IndecProjRepresentations( A^side ), AsModule^side );
 end );
+
+BindGlobal( "FamilyOfQuiverAlgebraHomomorphisms", NewFamily( "quiver algebra homomorphisms" ) );
+
+InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and two lists of images",
+        [ IsPathAlgebra, IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ], 
+        function( A, B, verteximages, arrowimages )
+    local   QA,  verticesA,  arrowsA,  QB,  verticesB,  arrowsB,  
+            arguments,  images,  n,  i,  j,  a,  position,  leftend,  
+            rightend,  type,  map;
+     
+    QA := QuiverOfAlgebra( A ); 
+    verticesA := Vertices( QA );
+    arrowsA := Arrows( QA );
+    QB := QuiverOfAlgebra( B );
+    verticesB := Vertices( QB );
+    arrowsB := Arrows( QB );
+    if Length( verteximages ) <> Length( verticesA ) then
+        Error( "The enter number of images of the vertices doesn't match the number of vertices in the domain," );
+    fi;
+    if Length( arrowimages ) <> Length( arrowsA ) then
+        Error( "The enter number of images of the arrows doesn't match the number of arrows in the domain," );
+    fi;       
+    if not ForAll( verteximages, v -> v in B ) then
+        Error( "The images of the vertices are not in the range,");
+    fi;
+    if not ForAll( arrowimages, a -> a in B ) then
+        Error( "The images of the arrows are not in the range,");
+    fi;
+    if Sum( verteximages ) <> One( B ) then
+        Error( "The identity is not mapped to the identity," );
+    fi;
+    arguments := Concatenation( verticesA, arrowsA );
+    images := Concatenation( verteximages, arrowimages );
+    n := Length( arguments );
+    for i in [ 1..n ] do
+        for j in [ 1..n ] do
+            if arguments[ i ] * arguments[ j ] = fail then
+                if images[ i ] * images[ j ] <> Zero( B ) then
+                    Error( "The mapping is not well-defined. The pair (",i,", ",j,") is the culprit." );
+                fi;
+            fi;
+        od;
+    od;
+    if not ForAll( verteximages, v -> v = v^2 ) then
+        Error( "The vertices are not mapped to idempotents." );
+    fi;
+    for a in arrowsA do
+        position := ArrowNumber( a );
+        leftend := LeftEnd( a ); 
+        rightend := RightEnd( a );
+        if not ( verteximages[ VertexNumber( leftend ) ] * arrowimages[ position ] = arrowimages[ position ] ) and
+                 ( arrowimages[ position ] * verteximages[ VertexNumber( rightend ) ] = arrowimages[ position ] ) then 
+            Error( "The mapping is not well-defined. The arrow ",a," is the culprit." );
+        fi;
+    od;
+    type := NewType( FamilyOfQuiverAlgebraHomomorphisms,
+                     IsQuiverAlgebraHomomorphism and IsComponentObjectRep and IsAttributeStoringRep );
+    map := rec( ); 
+    ObjectifyWithAttributes( map, type,
+                             VertexImages, verteximages, ArrowImages, arrowimages, Source, A, Range, B );
+    return map; 
+end );
+
+InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and two lists of images",
+        [ IsQuotientOfPathAlgebra, IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ], 
+        function( A, B, verteximages, arrowimages )
+    local   kQ,  f,  relations,  type,  map;
+    
+    kQ := PathAlgebra( A );
+    f := QuiverAlgebraHomomorphism( kQ, B, verteximages, arrowimages ); 
+    relations := RelationsOfAlgebra( A ); 
+    if not ForAll( relations, r -> ImageElm( f, r ) = Zero( B ) ) then
+        Error( "The mapping is not a well-defined homomorphism on the domain." );
+    fi;
+    type := NewType( FamilyOfQuiverAlgebraHomomorphisms,
+                     IsQuiverAlgebraHomomorphism and IsComponentObjectRep and IsAttributeStoringRep );
+    map := rec( ); 
+    ObjectifyWithAttributes( map, type,
+                             VertexImages, verteximages, ArrowImages, arrowimages, Source, A, Range, B );
+    return map; 
+end );
+
+InstallMethod( ImageElm, "for a homomorphism of quiver algebras",
+        [ IsQuiverAlgebraHomomorphism, IsQuiverAlgebraElement ],
+        function( f, x )
+    local   coefficients,  paths,  imageofpaths,  p,  temp,  q;
+    
+    if not x in Source( f ) then
+        Error( "The argument is not in the domain." );
+    fi;
+    coefficients := Coefficients( x );
+    paths := Paths( x ); 
+    imageofpaths := [];
+    for p in paths do
+        if IsVertex( p ) then
+            Add( imageofpaths, VertexImages( f )[ VertexNumber( p ) ] );
+        else
+            temp := One( Range( f ) );
+            for q in ArrowListLR( p ) do
+                temp := temp * ArrowImages( f )[ ArrowNumber( q ) ];
+            od;
+            Add( imageofpaths, temp );
+        fi;
+    od;
+    
+    return Sum( List( [ 1..Length( paths ) ], i -> coefficients[ i ] * imageofpaths[ i ] ) );
+end );

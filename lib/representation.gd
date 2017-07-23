@@ -69,6 +69,12 @@ DeclareOperation( "QuiverRepresentationElementNC",
 DeclareOperation( "QuiverRepresentationElement",
                   [ IsQuiverRepresentation, IsDenseList, IsList ] );
 
+#! @Arguments R, v
+#! @Description
+#!  Create a representation element from a vector.
+DeclareOperation( "QuiverRepresentationElement",
+                  [ IsQuiverRepresentation, IsQPAVector ] );
+
 #! @Section Information about an element
 
 #! @Description
@@ -96,6 +102,11 @@ DeclareOperation( "ElementVector", [ IsQuiverRepresentationElement, IsPosInt ] )
 #! @Arguments e, v
 DeclareOperation( "ElementVector", [ IsQuiverRepresentationElement, IsVertex ] );
 
+#! @Arguments e
+#! @Description
+#!  The representation element <A>e</A> considered as a vector.
+DeclareAttribute( "AsVector", IsQuiverRepresentationElement );
+
 #! @Section Acting on elements
 
 #! @Description
@@ -111,6 +122,14 @@ DeclareOperation( "PathAction", [ IsQuiverRepresentationElement, IsPath ] );
 #! @Returns <Ref Filt="IsQuiverRepresentationElement"/>
 #! @Arguments re, ae
 DeclareOperation( "QuiverAlgebraAction", [ IsQuiverRepresentationElement, IsQuiverAlgebraElement ] );
+
+#! @Arguments R, a
+#! @Description
+#!  Given a quiver representation <A>R</A>, and an algebra element <A>a</A>,
+#!  produces the linear transformation on <C>V</C> given by the action of <A>a</A> on <A>R</A>,
+#!  where <C>V</C> is the underlying vector space of <A>R</A>.
+DeclareOperation( "QuiverAlgebraActionAsLinearTransformation",
+                  [ IsQuiverRepresentation, IsQuiverAlgebraElement ] );
 
 #! @Section Constructing representations
 
@@ -228,6 +247,11 @@ DeclareOperation( "AsRepresentationOfQuotientAlgebra",
 #! @Returns <Ref Filt="IsQuiverRepresentation"/>
 #! @Arguments R
 DeclareAttribute( "AsRepresentationOfPathAlgebra", IsQuiverRepresentation );
+
+#! @Arguments R
+#! @Description
+#!  The quiver representation <A>R</A> considered as a vector space.
+DeclareAttribute( "AsVectorSpace", IsQuiverRepresentation );
 
 #!
 DeclareAttribute( "UnderlyingCategoryForRepresentations", IsQuiverAlgebra );
@@ -384,6 +408,13 @@ DeclareOperation( "MapForVertex",
 DeclareOperation( "MapForVertex",
                   [ IsQuiverRepresentationHomomorphism, IsPosInt ] );
 
+#! @Arguments f
+#! @Returns <Ref Filt="IsLinearTransformation"/>
+#! @Description
+#!  Given a homomorphism <A>f</A> of quiver representations,
+#!  returns the corresponding linear transformation on the underlying vector spaces.
+DeclareAttribute( "AsLinearTransformation", IsQuiverRepresentationHomomorphism );
+
 # DeclareOperation( "ImageElm",
 #                   [ IsQuiverRepresentationHomomorphism,
 #                     IsQuiverRepresentationElement ] );
@@ -496,3 +527,15 @@ DeclareCategory( "IsQuiverRepresentationBasis", IsBasis );
 #! number <C>i</C> are in the <C>i</C>th element of the list.
 #! @Arguments B
 DeclareAttribute( "BasisVectorsByVertex", IsQuiverRepresentationBasis );
+
+#! @Description
+#!  Create a homomorphism by specifying its action on a generating set.
+#!  
+#!  The arguments <A>R1</A> and <A>R2</A> are representations over the same algebra, <A>generators</A> 
+#!  is a list of generators of <A>R1</A> and <A>images</A> is a list of elements in <A>R2</A> with the 
+#!  same length as <A>generators</A>.  Returns a homomorphism from <A>R1</A> to <A>R2</A> sending the 
+#!  i-th element in <A>generators</A> to the i-th element in <A>images</A>. If there is no such 
+#!  homomorphism, then an error is signalled. 
+#! @Returns IsQuiverRepresentationHomomorphism 
+#! @Arguments R1, R2, generator, images
+DeclareOperation( "QuiverRepresentationHomomorphismByImages", [ IsQuiverRepresentation, IsQuiverRepresentation, IsHomogeneousList, IsHomogeneousList ] );
