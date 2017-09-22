@@ -1,5 +1,7 @@
 DeclareCategory( "IsPathExpr", IsRingElement );
 
-DeclareAttribute( "Coefficients", IsPathExpr );
+DeclareAttribute( "CoefficientsAttr", IsPathExpr );
+DeclareAttribute( "Coefficients", [ IsPathExpr ] );
+
 DeclareAttribute( "Paths", IsPathExpr );
 DeclareGlobalFunction( "PathExpr" );

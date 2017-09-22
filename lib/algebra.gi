@@ -96,11 +96,15 @@ function( e )
   return e!.algebra;
 end );
 
-InstallMethod( Coefficients, "for element of path algebra",
+InstallMethod( CoefficientsAttr, "for element of path algebra",
                [ IsPathAlgebraElement and IsPathAlgebraElementRep ],
 function( e )
   return e!.coefficients;
 end );
+
+InstallMethod( Coefficients, "for element of path algebra",
+               [ IsPathAlgebraElement and IsPathAlgebraElementRep ],
+CoefficientsAttr );
 
 InstallMethod( Paths, "for element of path algebra",
                [ IsPathAlgebraElement and IsPathAlgebraElementRep ],
@@ -771,7 +775,7 @@ function( e )
   return e!.representative;
 end );
 
-InstallMethod( Coefficients, "for element of quotient of path algebra",
+InstallMethod( CoefficientsAttr, "for element of quotient of path algebra",
                [ IsQuotientOfPathAlgebraElement ],
 function( e )
   return Coefficients( Representative( e ) );
