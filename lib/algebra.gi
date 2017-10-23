@@ -57,6 +57,24 @@ function( A, p )
   return QuiverAlgebraElementNC( A, [ One( LeftActingDomain( A ) ) ], [ p ] );
 end );
 
+InstallMethod( Vertices, [ IsQuiverAlgebra ],
+function( A )
+  return List( Vertices( QuiverOfAlgebra( A ) ),
+               e -> PathAsAlgebraElement( A, e ) );
+end );
+
+InstallMethod( Arrows, [ IsQuiverAlgebra ],
+function( A )
+  return List( Arrows( QuiverOfAlgebra( A ) ),
+               e -> PathAsAlgebraElement( A, e ) );
+end );
+
+InstallMethod( PrimitivePaths, [ IsQuiverAlgebra ],
+function( A )
+  return List( PrimitivePaths( QuiverOfAlgebra( A ) ),
+               e -> PathAsAlgebraElement( A, e ) );
+end );
+
 InstallMethod( String, "for element of path algebra",
                [ IsPathAlgebraElement ],
 function( e )

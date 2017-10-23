@@ -202,6 +202,15 @@ DeclareOperation( "PathAsAlgebraElement", [ IsQuiverAlgebra, IsPath ] );
 
 #! @InsertChunk Example_PathAsAlgebraElement
 
+#!
+DeclareAttribute( "Vertices", IsQuiverAlgebra );
+
+#!
+DeclareAttribute( "Arrows", IsQuiverAlgebra );
+
+#!
+DeclareAttribute( "PrimitivePaths", IsQuiverAlgebra );
+
 #! @BeginGroup AlgebraElementByLabel
 #! @Description
 #!  Returns the primitive path (vertex or arrow) with label <A>label</A>,
