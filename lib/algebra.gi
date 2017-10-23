@@ -521,7 +521,7 @@ end );
 InstallMethod( GeneratorsOfAlgebra, "for quiver algebra",
                [ IsQuiverAlgebra ],
 function( A )
-  return PrimitivePaths( QuiverOfAlgebra( A ) );
+  return PrimitivePaths( A );
 end );
 
 InstallMethod( RelationsOfAlgebra, "for path algebra",
