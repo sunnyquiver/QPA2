@@ -504,6 +504,8 @@ DeclareAttribute( "TensorProductFactorsLeftRight", IsQuiverAlgebra );
 #!  containing <A>b</A>. 
 DeclareOperation( "ElementaryTensor", [ IsQuiverAlgebraElement, IsQuiverAlgebraElement, IsQuiverAlgebra ] );
 
+DeclareAttribute( "TensorAlgebraInclusions", IsTensorProductOfAlgebras ); 
+
 DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 
 #! @Section Algebra homomorphisms 
@@ -521,6 +523,16 @@ DeclareCategory( "IsQuiverAlgebraHomomorphism", IsAlgebraWithOneHomomorphism );
 #!  do not give a well-defined homomorphism of algebras. 
 DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ] );
 
+#! @Arguments A, B, genimages
+#! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
+#! @Description
+#!  Returns the algebra homomorphism from the quiver algebra <A>A</A> to the quiver
+#!  algebra <A>B</A> that maps the generators (vertices and arrows) in <A>A</A> to <A>genimages</A>. 
+#!  It is assumed that <A>genimages</A> is a list, where the first elements are the images of the vertices 
+#!  and the next elements are the images of the arrows, as elements in the algebra <A>B</A>.  
+#!  It signals an error if the arguments do not give a well-defined homomorphism of algebras. 
+DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsHomogeneousList ] );
+
 #! @Arguments f
 #! @Returns a list of algebra elements
 #! @Description
@@ -534,6 +546,7 @@ DeclareAttribute( "VertexImages", IsQuiverAlgebraHomomorphism );
 #!  Returns a list of algebra elements in <C>B</C> that the arrows in the quiver algebra <C>A</C> are mapped to
 #!  with the algebra homomorphism <A>f</A> defined from <C>A</C> to <C>B</C>. 
 DeclareAttribute( "ArrowImages", IsQuiverAlgebraHomomorphism );
+
 
 
 

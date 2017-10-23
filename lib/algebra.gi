@@ -121,7 +121,7 @@ function( e )
 end );
 
 InstallMethod( Coefficients, "for element of path algebra",
-               [ IsPathAlgebraElement and IsPathAlgebraElementRep ],
+               [ IsQuiverAlgebraElement ],
 CoefficientsAttr );
 
 InstallMethod( Paths, "for element of path algebra",
@@ -1289,6 +1289,22 @@ InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and two lists
     return map; 
 end );
 
+InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and a list of images",
+        [ IsQuiverAlgebra, IsQuiverAlgebra, IsHomogeneousList ], 
+        function( A, B, genimages )
+    local   num_vertices,  num_arrows,  verteximages,  arrowimages;
+    
+    num_vertices := NumberOfVertices( QuiverOfAlgebra( A ) );
+    num_arrows := NumberOfArrows( QuiverOfAlgebra( A ) );
+    if num_vertices + num_arrows <> Length( genimages ) then
+        Error( "Number of images doesn't match number of generators.\n" );
+    fi;
+    verteximages := genimages{ [ 1..num_vertices ] };
+    arrowimages := genimages{ [ num_vertices + 1..Length( genimages ) ] };
+    
+    return QuiverAlgebraHomomorphism( A, B, verteximages, arrowimages ); 
+end );
+
 InstallMethod( ImageElm, "for a homomorphism of quiver algebras",
         [ IsQuiverAlgebraHomomorphism, IsQuiverAlgebraElement ],
         function( f, x )
@@ -1313,4 +1329,18 @@ InstallMethod( ImageElm, "for a homomorphism of quiver algebras",
     od;
     
     return Sum( List( [ 1..Length( paths ) ], i -> coefficients[ i ] * imageofpaths[ i ] ) );
+end );
+
+InstallMethod( TensorAlgebraInclusions, "for a tensor product of algebras",
+        [ IsTensorProductOfAlgebras ], 
+        function ( T )
+    local   decomp,  A,  B,  images1,  images2;
+    
+    decomp := TensorProductFactors( T );
+    A := decomp[ 1 ];
+    B := decomp[ 2 ];
+    images1 := List( PrimitivePaths( A ), x -> ElementaryTensor( x, One( B ), T ) );
+    images2 := List( PrimitivePaths( B ), x -> ElementaryTensor( One( A ), x, T ) );
+    
+    return [ QuiverAlgebraHomomorphism( A, T, images1), QuiverAlgebraHomomorphism( B, T, images2 ) ];
 end );
