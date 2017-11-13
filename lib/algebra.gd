@@ -504,7 +504,30 @@ DeclareAttribute( "TensorProductFactorsLeftRight", IsQuiverAlgebra );
 #!  containing <A>b</A>. 
 DeclareOperation( "ElementaryTensor", [ IsQuiverAlgebraElement, IsQuiverAlgebraElement, IsQuiverAlgebra ] );
 
+#! @Arguments T
+#! @Returns list of <Ref Filt="IsQuiverAlgebraHomomorphism"/>
+#!  Returns two quiver algebra monomorhisms <M>A\to A\otimes_k B</M>
+#! and <M>B\to A\otimes_k B</M> given the tensor product <Arg>T</Arg>
+#! equal to <M>A\otimes_k B</M> for two <M>k</M>-algebra <M>A</M> and
+#! <M>B</M> and a field <M>k</M>.
 DeclareAttribute( "TensorAlgebraInclusions", IsTensorProductOfAlgebras ); 
+
+#! @Arguments T
+#! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
+#! @Description 
+#!  Returns the algebra isomorphism from <M>k\otimes_k B \to B</M>,
+#!  given the tensor product <Arg>T</Arg> equal to <M>k\otiems_k B</M>
+#!  as input, for a field <M>k</M>.  
+DeclareOperation( "TensorAlgebraLeftIdentification", [ IsTensorProductOfAlgebras ] );  
+
+#! @Arguments T
+#! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
+#! @Description 
+#!  Returns the algebra isomorphism from <M>A\otimes_k k \to B</M>,
+#!  given the tensor product <Arg>T</Arg> equal to <M>A\otiems_k k</M>
+#!  as input, for a field <M>k</M>.  
+DeclareOperation( "TensorAlgebraRightIdentification", [ IsTensorProductOfAlgebras ] );  
+
 
 DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 

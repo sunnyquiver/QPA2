@@ -1085,8 +1085,10 @@ function( A )
 end );
 
 InstallMethod( Basis, "for quiver algebra",
-               [ IsQuiverAlgebra ],
-               CanonicalBasis );
+               [ IsQuiverAlgebra ], CanonicalBasis );
+
+InstallMethod( Dimension, "for quiver algebra", 
+        [ IsQuiverAlgebra ], A -> Length( Basis( A ) ) ); 
 
 InstallMethod( Coefficients,
                "for quiver algebra basis and quiver algebra element",
@@ -1343,4 +1345,40 @@ InstallMethod( TensorAlgebraInclusions, "for a tensor product of algebras",
     images2 := List( PrimitivePaths( B ), x -> ElementaryTensor( One( A ), x, T ) );
     
     return [ QuiverAlgebraHomomorphism( A, T, images1), QuiverAlgebraHomomorphism( B, T, images2 ) ];
+end );
+
+InstallMethod( TensorAlgebraRightIdentification, "for a tensor product of algebras",
+        [ IsTensorProductOfAlgebras ], 
+        function ( T )
+    local   decomp,  A,  B,  images,  f;
+    
+    decomp := TensorProductFactors( T );
+    A := decomp[ 1 ];
+    B := decomp[ 2 ];
+    if Dimension( B ) <> 1 then
+        Error( "The algebra on the right of the tensor product is not one dimensional.\n" );
+    fi;          
+    images := List( PrimitivePaths( QuiverOfAlgebra( T ) ), p -> PathAsAlgebraElement( A, ProjectPathFromProductQuiver( 1, p ) ) ); 
+    f := QuiverAlgebraHomomorphism( T, A, images);
+    SetIsIsomorphism( f, true );
+    
+    return f;
+end );
+
+InstallMethod( TensorAlgebraLeftIdentification, "for a tensor product of algebras",
+        [ IsTensorProductOfAlgebras ], 
+        function ( T )
+    local   decomp,  A,  B,  images,  f;
+    
+    decomp := TensorProductFactors( T );
+    A := decomp[ 1 ];
+    B := decomp[ 2 ];
+    if Dimension( A ) <> 1 then
+        Error( "The algebra on the left of the tensor product is not one dimensional.\n" );
+    fi;          
+    images := List( PrimitivePaths( QuiverOfAlgebra( T ) ), p -> PathAsAlgebraElement( B, ProjectPathFromProductQuiver( 2, p ) ) ); 
+    f := QuiverAlgebraHomomorphism( T, B, images);
+    SetIsIsomorphism( f, true );
+    
+    return f;
 end );
