@@ -79,6 +79,19 @@ DeclareOperation( "\/", [ IsPathAlgebra, IsHomogeneousList ] );
 
 #! @InsertChunk Example_QuotientOfPathAlgebra
 
+#! @Arguments K
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+#! @Description
+#!  Returns the one-dimensional (left) quiver algebra over the field <A>K</A>. 
+DeclareAttribute( "FieldAsLeftQuiverAlgebra", IsField );  
+
+#! @Arguments K
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+#! @Description
+#!  Returns the one-dimensional (right) quiver algebra over the field <A>K</A>. 
+DeclareAttribute( "FieldAsRightQuiverAlgebra", IsField );  
+
+
 #! @Section Information about an algebra
 
 #! @Arguments A
