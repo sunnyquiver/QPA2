@@ -406,3 +406,50 @@ DeclareAttribute( "UnderlyingRepresentationCategory", IsQuiverModuleCategory );
 #!
 DeclareAttribute( "ModuleType", IsQuiverModuleCategory );
 
+#! @Section Functors between module categories and representation categories
+
+#! @Description
+#!  For a module category <A>C</A>
+#! @Returns IsCapFunctor
+#! @Arguments C
+DeclareAttribute( "UnderlyingRepresentationFunctor", IsQuiverModuleCategory );
+
+#! @Description
+#!  According to the given argument <A>side</A>, that is, <C>RIGHT</C>, <C>LEFT</C> or 
+#!  <C>LEFT_RIGHT</C>, it returns the functor 
+#!  <Ref Attr="AsLeftModuleFunctor" Label="for IsQuiverRepresentationCategory"/>,
+#!  <Ref Attr="AsRightModuleFunctor" Label="for IsQuiverRepresentationCategory"/>, or
+#!  <Ref Attr="AsBimoduleFunctor" Label="for IsQuiverRepresentationCategory"/>, 
+#!  respectively. 
+#! @Returns IsCapFunctor
+#! @Arguments side, C
+#!
+DeclareOperation( "AsModuleFunctor", [ IsSide, IsQuiverRepresentationCategory ] );
+
+#! @Description
+#!  This is a functor from the entered category of representations of a quiver to 
+#!  the corresponding category of left modules.
+#! @Returns IsCapFunctor
+#! @Arguments C
+#!
+DeclareAttribute( "AsLeftModuleFunctor", IsQuiverRepresentationCategory );
+
+#! @Description
+#!  This is a functor from the entered category of representations of a quiver to 
+#!  the corresponding category of right modules. 
+#! @Returns IsCapFunctor
+#! @Arguments C
+#!
+DeclareAttribute( "AsRightModuleFunctor", IsQuiverRepresentationCategory );
+
+#! @Description
+#!  This is a functor from the entered category of representations of a quiver to 
+#!  the corresponding category of bimodules, given that the entered category of 
+#!  quiver representation is given by a tensor product of two algebras. 
+#! @Returns IsCapFunctor
+#! @Arguments C
+#!
+DeclareAttribute( "AsBimoduleFunctor", IsQuiverRepresentationCategory );
+
+
+

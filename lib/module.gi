@@ -416,3 +416,33 @@ InstallMethodWithSides( ModuleCategory, [ IsQuiverAlgebra ],
 side -> function( A )
   return AsModuleCategory( side, CategoryOfQuiverRepresentations( A^side ) );
 end );
+
+InstallMethod( UnderlyingRepresentationFunctor, "for a module category",
+        [ IsQuiverModuleCategory ], 
+        function( C )
+    
+    local   D,  underlying;
+    
+    D := UnderlyingRepresentationCategory( C );
+    underlying := CapFunctor( "UnderlyingRepresentation", C, D );
+    
+    AddObjectFunction( underlying, UnderlyingRepresentation ); 
+    AddMorphismFunction( underlying, UnderlyingRepresentationHomomorphism );
+    
+    return underlying;
+end );
+
+DeclareSideOperations( AsModuleFunctor, AsLeftModuleFunctor, AsRightModuleFunctor, AsBimoduleFunctor );
+
+InstallMethodWithSides( AsModuleFunctor, 
+        [ IsQuiverRepresentationCategory ],
+side -> function( C )
+    local   F;
+    
+    F := CapFunctor( "RepresentationModuleEquivalence", C, AsModuleCategory( side, C ) );
+    
+    AddObjectFunction( F, AsModule^side ); 
+    AddMorphismFunction( F, AsModuleHomomorphism^side );
+    
+    return F;
+end );
