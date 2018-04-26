@@ -9,7 +9,7 @@ BindGlobal( "FamilyOfQuiverModules",
             CollectionsFamily( FamilyOfQuiverModuleElements ) );
 
 DeclareSideOperations( IsQuiverModule, IsLeftQuiverModule, IsRightQuiverModule, IsQuiverBimodule );
-DeclareSideOperations( AsModule, AsLeftModule, AsRightModule, AsBimodule );
+DeclareSideOperations( AsModule, AsLeftQuiverModule, AsRightQuiverModule, AsBimodule );
 DeclareSideOperations( QuiverModule, LeftQuiverModule, RightQuiverModule, QuiverBimodule );
 DeclareSideOperations( ZeroModule, LeftZeroModule, RightZeroModule, ZeroBimodule );
 DeclareSideOperations( IsQuiverModuleElement,

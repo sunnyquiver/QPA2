@@ -251,7 +251,7 @@ DeclareAttribute( "AsRepresentationOfPathAlgebra", IsQuiverRepresentation );
 #! @Arguments R
 #! @Description
 #!  The quiver representation <A>R</A> considered as a vector space.
-DeclareAttribute( "AsVectorSpace", IsQuiverRepresentation );
+DeclareAttribute( "AsQPAVectorSpace", IsQuiverRepresentation );
 
 #!
 DeclareAttribute( "UnderlyingCategoryForRepresentations", IsQuiverAlgebra );

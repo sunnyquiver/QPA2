@@ -186,13 +186,13 @@ DeclareOperation( "AsModule", [ IsSide, IsQuiverRepresentation ] );
 #!  The representation <A>R</A> considered as a left module.
 #! @Returns <Ref Filt="IsLeftQuiverModule"/>
 #! @Arguments R
-DeclareAttribute( "AsLeftModule", IsQuiverRepresentation );
+DeclareAttribute( "AsLeftQuiverModule", IsQuiverRepresentation );
 
 #! @Description
 #!  The representation <A>R</A> considered as a right module.
 #! @Returns <Ref Filt="IsRightQuiverModule"/>
 #! @Arguments R
-DeclareAttribute( "AsRightModule", IsQuiverRepresentation );
+DeclareAttribute( "AsRightQuiverModule", IsQuiverRepresentation );
 
 #! @Description
 #!  The representation <A>R</A> considered as a bimodule.

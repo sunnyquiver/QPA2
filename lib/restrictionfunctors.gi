@@ -21,7 +21,7 @@ InstallMethod( RestrictionFunctor, "for a homomorphism of quiver algebras",
          
         arrows := Arrows( PathAlgebra( A ) ); 
         newspanningsetbyvertex := List( verteximages, v -> List( Basis( R ), b -> AsVector ( PathAction( b, v ) ) ) );
-        inclusionsbyvertex := List( newspanningsetbyvertex, s -> SubspaceInclusion( AsVectorSpace( R ), s ) ); 
+        inclusionsbyvertex := List( newspanningsetbyvertex, s -> SubspaceInclusion( AsQPAVectorSpace( R ), s ) ); 
         projectionsbyvertex := List( inclusionsbyvertex, LeftInverse );
         linear_transformations := [ ];
         for i in [ 1..Length( arrows ) ] do

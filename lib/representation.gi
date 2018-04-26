@@ -37,7 +37,7 @@ function( R, vectors )
   type := NewType( FamilyOfQuiverRepresentationElements,
                    IsQuiverRepresentationElement and IsQuiverRepresentationElementRep );
   elem := rec();
-  V := AsVectorSpace( R );
+  V := AsQPAVectorSpace( R );
   vector := Vector( V, Concatenation( List( vectors, AsList ) ) );
   ObjectifyWithAttributes( elem, type,
                            RepresentationOfElement, R,
@@ -162,7 +162,7 @@ InstallMethod( QuiverAlgebraActionAsLinearTransformation,
 function( R, a )
   local   F,  V,  B,  m;
   F := FieldOfRepresentation( R );
-  V := AsVectorSpace( R );
+  V := AsQPAVectorSpace( R );
   B := Basis( V );
   m := List( B, b -> AsList( AsVector( QuiverAlgebraAction( QuiverRepresentationElement( R, b ),
                                                             a ) ) ) );
@@ -421,7 +421,7 @@ function( cat, objects, morphisms )
       MapsOfRepresentation, morphisms,
       MatricesOfRepresentation, List( morphisms, MatrixOfLinearTransformation ),
       DimensionVector, List( objects, Dimension ),
-      AsVectorSpace, VectorSpaceConstructor( cat )( Sum( List( objects, Dimension ) ) ) );
+      AsQPAVectorSpace, VectorSpaceConstructor( cat )( Sum( List( objects, Dimension ) ) ) );
   Add( cat, R );
   return R;
 end );
