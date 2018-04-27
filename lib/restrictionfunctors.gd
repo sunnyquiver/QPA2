@@ -23,3 +23,19 @@ DeclareAttribute( "RestrictionToLeftFunctor", IsQuiverBimoduleCategory );
 #! @Returns IsCapFunctor 
 #! @Arguments C
 DeclareAttribute( "RestrictionToRightFunctor", IsQuiverBimoduleCategory );
+
+#! @Description
+#!  Returns the functor from the category of left modules <A>C</A>, given by left
+#!  <M>A</M>-modules, to the category of bimodules over <M>A</M>\otimes <M>k</M>, 
+#!  where <M>A</M> is a <M>k</M>-algebra.
+#! @Returns IsCapFunctor 
+#! @Arguments C
+DeclareAttribute( "LeftModuleToBimoduleFunctor", IsLeftQuiverModuleCategory );
+
+#! @Description
+#!  Returns the functor from the category of right modules <A>C</A>, given by right
+#!  <M>A</M>-modules, to the category of bimodules over <M>k</M>\otimes <M>A</M>, 
+#!  where <M>A</M> is a <M>k</M>-algebra.
+#! @Returns IsCapFunctor 
+#! @Arguments C
+DeclareAttribute( "RightModuleToBimoduleFunctor", IsRightQuiverModuleCategory );

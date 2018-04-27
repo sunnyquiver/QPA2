@@ -82,6 +82,13 @@ DeclareOperation( "\/", [ IsPathAlgebra, IsHomogeneousList ] );
 #! @Arguments K
 #! @Returns <Ref Filt="IsQuiverAlgebra"/>
 #! @Description
+#!  Returns the one-dimensional (left or right) quiver algebra over the field <A>K</A>. 
+#!  First argument is a direction argument, either LEFT or RIGHT.
+DeclareOperation( "FieldAsQuiverAlgebra", [ IsDirection, IsField ] );  
+
+#! @Arguments K
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+#! @Description
 #!  Returns the one-dimensional (left) quiver algebra over the field <A>K</A>. 
 DeclareAttribute( "FieldAsLeftQuiverAlgebra", IsField );  
 

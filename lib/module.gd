@@ -19,15 +19,15 @@ DeclareCategory( "IsQuiverModuleCategory", IsCapCategory );
 
 #! @Description
 #!  Category for left module categories.
-DeclareCategory( "IsLeftQuiverModuleCategory", IsCapCategory );
+DeclareCategory( "IsLeftQuiverModuleCategory", IsQuiverModuleCategory );
 
 #! @Description
 #!  Category for right module categories.
-DeclareCategory( "IsRightQuiverModuleCategory", IsCapCategory );
+DeclareCategory( "IsRightQuiverModuleCategory", IsQuiverModuleCategory );
 
 #! @Description
 #!  Category for bimodule categories.
-DeclareCategory( "IsQuiverBimoduleCategory", IsCapCategory );
+DeclareCategory( "IsQuiverBimoduleCategory", IsQuiverModuleCategory );
 
 #! @Description
 #!  Category for elements of left modules over quiver algebras.

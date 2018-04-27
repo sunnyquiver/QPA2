@@ -427,7 +427,8 @@ InstallMethod( UnderlyingRepresentationFunctor, "for a module category",
     underlying := CapFunctor( "UnderlyingRepresentation", C, D );
     
     AddObjectFunction( underlying, UnderlyingRepresentation ); 
-    AddMorphismFunction( underlying, UnderlyingRepresentationHomomorphism );
+    AddMorphismFunction( underlying, 
+            function( M, f, N ) return UnderlyingRepresentationHomomorphism( f ); end );
     
     return underlying;
 end );
@@ -442,7 +443,8 @@ side -> function( C )
     F := CapFunctor( "RepresentationModuleEquivalence", C, AsModuleCategory( side, C ) );
     
     AddObjectFunction( F, AsModule^side ); 
-    AddMorphismFunction( F, AsModuleHomomorphism^side );
+    AddMorphismFunction( F, 
+            function( M, f, N ) return AsModuleHomomorphism( side, f ); end );
     
     return F;
 end );

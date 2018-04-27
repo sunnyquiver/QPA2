@@ -667,7 +667,7 @@ function( V, gens )
     Error("not all generators are in the entered vector space,\n");
   fi;
   K := LeftActingDomain( V );
-  if Length( gens ) = 0 then
+  if ForAll( gens, IsZero ) then
     return ZeroMorphism( ZeroVectorSpace( K ), V );
   fi;
   W := VectorSpace( K, List( gens, AsList ) );

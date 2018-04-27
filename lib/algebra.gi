@@ -1383,12 +1383,10 @@ InstallMethod( TensorAlgebraLeftIdentification, "for a tensor product of algebra
     return f;
 end );
 
-InstallMethod( FieldAsLeftQuiverAlgebra, "for a field",
+DeclareDirectionOperations( FieldAsQuiverAlgebra, FieldAsLeftQuiverAlgebra, FieldAsRightQuiverAlgebra );
+
+InstallMethodWithDirections( FieldAsQuiverAlgebra,
         [ IsField ],
-        K -> PathAlgebra( K, LeftQuiver( "point(1)" ) )
+        dir -> K -> PathAlgebra( K, Quiver( dir, "point(1)" ) )
 );
 
-InstallMethod( FieldAsRightQuiverAlgebra, "for a field",
-        [ IsField ],
-        K -> PathAlgebra( K, RightQuiver( "point(1)" ) )
-);

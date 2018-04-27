@@ -19,8 +19,8 @@ InstallMethod( RestrictionFunctor, "for a homomorphism of quiver algebras",
                 projectionsbyvertex,  linear_transformations,  i,  
                 source,  target,  lintrans,  rep;
          
-        arrows := Arrows( PathAlgebra( A ) ); 
-        newspanningsetbyvertex := List( verteximages, v -> List( Basis( R ), b -> AsVector ( PathAction( b, v ) ) ) );
+        arrows := Arrows( QuiverOfAlgebra( A ) ); 
+        newspanningsetbyvertex := List( verteximages, v -> List( Basis( R ), b -> AsVector ( QuiverAlgebraAction( b, v ) ) ) );
         inclusionsbyvertex := List( newspanningsetbyvertex, s -> SubspaceInclusion( AsQPAVectorSpace( R ), s ) ); 
         projectionsbyvertex := List( inclusionsbyvertex, LeftInverse );
         linear_transformations := [ ];
@@ -28,7 +28,7 @@ InstallMethod( RestrictionFunctor, "for a homomorphism of quiver algebras",
             source := VertexNumber( Source( arrows[ i ] ) ); 
             target := VertexNumber( Target( arrows[ i ] ) );
             lintrans := PreCompose( [ inclusionsbyvertex[ source ], 
-                                QuiverAlgebraActionAsLinearTransformation( arrowimages[ i ] ), projectionsbyvertex[ target ] ] ); 
+                                QuiverAlgebraActionAsLinearTransformation( R, arrowimages[ i ] ), projectionsbyvertex[ target ] ] ); 
             Add( linear_transformations, lintrans );
         od;
         rep := QuiverRepresentationByObjectsAndMorphisms( D, List( inclusionsbyvertex, Source ), linear_transformations );
@@ -36,7 +36,7 @@ InstallMethod( RestrictionFunctor, "for a homomorphism of quiver algebras",
         return [ rep, inclusionsbyvertex, projectionsbyvertex ];
     end;
     
-    morphism := function( h ) 
+    morphism := function( R1, h, R2 ) 
         local   rep1,  inc,  rep2,  proj,  hlintrans,  morphisms;
         
         rep1 := representation( Source( h ) );
@@ -83,3 +83,34 @@ InstallMethod( RestrictionToRightFunctor, "for a bimodule category",
                    AsRightModuleFunctor( Source( f ) ) ] ); 
 end );
 
+InstallMethod( LeftModuleToBimoduleFunctor, "for a module category",
+        [ IsLeftQuiverModuleCategory ],
+        function ( C )
+    
+    local   A,  K,  B,  f,  repC,  repB;
+    
+    A := AlgebraOfCategory( C );
+    K := FieldAsQuiverAlgebra( Direction( A ), LeftActingDomain( A ) );
+    B := TensorProductOfAlgebras( A, K );
+    f := TensorAlgebraRightIdentification( B );
+    repC := UnderlyingRepresentationCategory( C );
+    repB := CategoryOfQuiverRepresentations( B ); 
+    
+    return PreCompose( [ UnderlyingRepresentationFunctor( C ), RestrictionFunctor( f, repC, repB ), AsBimoduleFunctor( repB ) ] ); 
+end );
+
+InstallMethod( RightModuleToBimoduleFunctor, "for a module category",
+        [ IsRightQuiverModuleCategory ],
+        function ( C )
+    
+    local   A,  K,  B,  f,  repC,  repB;
+    
+    A := AlgebraOfCategory( C );
+    K := FieldAsQuiverAlgebra( Direction( A ), LeftActingDomain( A ) );
+    B := TensorProductOfAlgebras( K, A );
+    f := TensorAlgebraLeftIdentification( B );
+    repC := UnderlyingRepresentationCategory( C );
+    repB := CategoryOfQuiverRepresentations( B ); 
+    
+    return PreCompose( [ UnderlyingRepresentationFunctor( C ), RestrictionFunctor( f, repC, repB ), AsBimoduleFunctor( repB ) ] ); 
+end );
