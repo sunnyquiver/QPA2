@@ -397,6 +397,20 @@ function( m1, m2 )
                                            lm1 + lm2 );
 end );
 
+InstallMethod( \*, [ IsMultiplicativeElement, IsLinearTransformation ],
+function( a, T )
+  if not a in LeftActingDomain( Source( T ) ) then
+    Error( "scalar not from appropriate field" );
+  fi;
+  return LinearTransformationByRightMatrix
+         ( Source( T ),
+           Range( T ),
+           a * RightMatrixOfLinearTransformation( T ) );
+end );
+
+InstallMethod( IsZero, [ IsLinearTransformation ],
+               T -> IsZero( RightMatrixOfLinearTransformation( T ) ) );
+
 InstallMethod( ImageElm, [ IsLinearTransformation, IsQPAVector ],
 function( T, v )
   if not v in Source( T ) then
