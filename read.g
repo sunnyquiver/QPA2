@@ -2,6 +2,7 @@ ReadPackage( "QPA", "lib/side.gi" );
 ReadPackage( "QPA", "lib/matrix.gi" );
 ReadPackage( "QPA", "lib/vecspace.gi" );
 ReadPackage( "QPA", "lib/quiver.gi" );
+ReadPackage( "QPA", "lib/dynkin.gi" );
 ReadPackage( "QPA", "lib/algebra.gi" );
 ReadPackage( "QPA", "lib/representation.gi" );
 ReadPackage( "QPA", "lib/module.gi" );
