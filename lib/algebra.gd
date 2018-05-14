@@ -543,7 +543,7 @@ DeclareOperation( "TensorAlgebraLeftIdentification", [ IsTensorProductOfAlgebras
 #! @Arguments T
 #! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
 #! @Description 
-#!  Returns the algebra isomorphism from <M>A\otimes_k k \to B</M>,
+#!  Returns the algebra isomorphism from <M>A\otimes_k k \to A</M>,
 #!  given the tensor product <Arg>T</Arg> equal to <M>A\otiems_k k</M>
 #!  as input, for a field <M>k</M>.  
 DeclareOperation( "TensorAlgebraRightIdentification", [ IsTensorProductOfAlgebras ] );  

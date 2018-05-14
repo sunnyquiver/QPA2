@@ -11,18 +11,52 @@
 DeclareOperation( "RestrictionFunctor", [ IsQuiverAlgebraHomomorphism, IsCapCategory, IsCapCategory ] );
 
 #! @Description
-#!  Returns the restriction functor from the bimodule category <A>C</A>, given by 
-#!  <M>A</M>-<M>B</M>-bimodules, to the category of left modules over <M>A</M>. 
+#!  Returns the restriction functor which forgets the right module structure. If the 
+#!  argument is a category of right modules, then it returns the restriction functor
+#!  to the category vector spaces. 
 #! @Returns IsCapFunctor 
 #! @Arguments C
-DeclareAttribute( "RestrictionToLeftFunctor", IsQuiverBimoduleCategory );
+DeclareAttribute( "RestrictionToLeftFunctor", IsQuiverModuleCategory );
 
 #! @Description
-#!  Returns the restriction functor from the bimodule category <A>C</A>, given by 
-#!  <M>A</M>-<M>B</M>-bimodules, to the category of right modules over <M>B</M>. 
+#!  Returns the restriction functor which forgets the left module structure. If the 
+#!  argument is a category of left modules, then it returns the restriction functor
+#!  to the category vector spaces. 
 #! @Returns IsCapFunctor 
 #! @Arguments C
-DeclareAttribute( "RestrictionToRightFunctor", IsQuiverBimoduleCategory );
+DeclareAttribute( "RestrictionToRightFunctor", IsQuiverModuleCategory );
+
+#! @Description
+#!  Returns the module where the right module structure is forgotten. If the 
+#!  argument is a right module, then it returns the restriction to the underlying
+#!  vector space. 
+#! @Returns IsCapFunctor 
+#! @Arguments C
+DeclareAttribute( "RestrictionToLeft", IsQuiverModule );
+
+#! @Description
+#!  Returns the homomorphism where the right module structure is forgotten. If the 
+#!  argument is a homomorphism of right modules, then it returns the restriction 
+#!  to the underlying vector spaces. 
+#! @Returns IsCapFunctor 
+#! @Arguments C
+DeclareAttribute( "RestrictionToLeft", IsQuiverModuleHomomorphism );
+
+#! @Description
+#!  Returns the module where the left module structure is forgotten. If the 
+#!  argument is a left module, then it returns the restriction to the underlying
+#!  vector space. 
+#! @Returns IsCapFunctor 
+#! @Arguments C
+DeclareAttribute( "RestrictionToRight", IsQuiverModule );
+
+#! @Description
+#!  Returns the homomorphism where the left module structure is forgotten. If the 
+#!  argument is a homomorphism of left module, then it returns the restriction 
+#!  to the underlying vector space. 
+#! @Returns IsCapFunctor 
+#! @Arguments C
+DeclareAttribute( "RestrictionToRight", IsQuiverModuleHomomorphism );
 
 #! @Description
 #!  Returns the functor from the category of left modules <A>C</A>, given by left
@@ -33,9 +67,39 @@ DeclareAttribute( "RestrictionToRightFunctor", IsQuiverBimoduleCategory );
 DeclareAttribute( "LeftModuleToBimoduleFunctor", IsLeftQuiverModuleCategory );
 
 #! @Description
+#!  Returns the bimodule naturally associated to a left module <A>M</A>.  If <Arg>M</Arg> 
+#!  is a left <M>A</M>-module, then the result is a bimodule over <M>A</M>\otimes <M>k</M>, 
+#!  where <M>A</M> is a <M>k</M>-algebra.
+#! @Returns IsQuiverBimodule 
+#! @Arguments M
+DeclareAttribute( "LeftModuleToBimodule", IsLeftQuiverModule );
+
+#! @Description
 #!  Returns the functor from the category of right modules <A>C</A>, given by right
 #!  <M>A</M>-modules, to the category of bimodules over <M>k</M>\otimes <M>A</M>, 
 #!  where <M>A</M> is a <M>k</M>-algebra.
 #! @Returns IsCapFunctor 
 #! @Arguments C
 DeclareAttribute( "RightModuleToBimoduleFunctor", IsRightQuiverModuleCategory );
+
+#! @Description
+#!  Returns the bimodule naturally associated to a right module <A>M</A>.  If <Arg>M</Arg> 
+#!  is a right <M>A</M>-module, then the result is a bimodule over <M>k</M>\otimes <M>A</M>, 
+#!  where <M>A</M> is a <M>k</M>-algebra.
+#! @Returns IsQuiverBimodule 
+#! @Arguments M
+DeclareAttribute( "RightModuleToBimodule", IsRightQuiverModule );
+
+#! @Description
+#!  Returns the functor from the quiver representation category <A>C</A> to the category
+#!  of vector spaces.  
+#! @Returns IsCapFunctor 
+#! @Arguments C
+DeclareAttribute( "AsVectorSpaceFunctor", IsQuiverRepresentationCategory ); 
+
+#! @Description
+#!  Returns the functor from the quiver module category <A>C</A> to the category of vector
+#!  spaces.  
+#! @Returns IsCapFunctor 
+#! @Arguments C
+DeclareAttribute( "AsVectorSpaceFunctor", IsQuiverModuleCategory ); 

@@ -341,7 +341,7 @@ side -> function( rep_cat )
   _R := UnderlyingRepresentation;
   _r := UnderlyingRepresentationHomomorphism;
   _M := AsModule^side;
-  _m := f -> AsModuleHomomorphism( f, side );
+  _m := f -> AsModuleHomomorphism( side, f );
 
   if side = LEFT_RIGHT then
     algebras := TensorProductFactorsLeftRight( rep_algebra );
