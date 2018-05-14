@@ -277,7 +277,7 @@ function( cat, dimensions, arrows, matrices )
 end );
 
 InstallMethod( QuiverRepresentationByRightMatrices,
-               [ IsQuiverAlgebra, IsDenseList, IsDenseList ],
+               [ IsQuiverAlgebra, IsDenseList, IsList ],
 function( A, dimensions, matrices )
   return QuiverRepresentationByRightMatrices
          ( CategoryOfQuiverRepresentations( A ), dimensions, matrices );
@@ -528,7 +528,10 @@ function( A )
 end );
 
 InstallMethod( \=, [ IsQuiverRepresentation, IsQuiverRepresentation ],
-               IsEqualForObjects );
+function( R1, R2 )
+  return IsIdenticalObj( CapCategory( R1 ), CapCategory( R2 ) )
+         and IsEqualForObjects( R1, R2 );
+end );
 
 InstallMethod( PrintObj, "for quiver representation",
                [ IsQuiverRepresentation ],
@@ -834,7 +837,10 @@ function( f )
 end );
 
 InstallMethod( \=, [ IsQuiverRepresentationHomomorphism, IsQuiverRepresentationHomomorphism ],
-               IsEqualForMorphisms );
+function( m1, m2 )
+  return IsIdenticalObj( CapCategory( m1 ), CapCategory( m2 ) )
+         and IsEqualForMorphisms( m1, m2 );
+end );
 
 InstallMethod( ImageElm,
                [ IsQuiverRepresentationHomomorphism,
