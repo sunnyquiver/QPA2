@@ -7,6 +7,8 @@ ReadPackage( "QPA", "lib/algebra.gd" );
 ReadPackage( "QPA", "lib/representation.gd" );
 ReadPackage( "QPA", "lib/module.gd" );
 ReadPackage( "QPA", "lib/modulehom.gd" );
+ReadPackage( "QPA", "lib/algebra-module.gd" );
+ReadPackage( "QPA", "lib/ideal.gd" );
 ReadPackage( "QPA", "lib/hom.gd" );
 ReadPackage( "QPA", "lib/tensor.gd" );
 ReadPackage( "QPA", "lib/restrictionfunctors.gd" );
