@@ -64,16 +64,16 @@ end );
 InstallMethod( InstallMethodWithSides, [ IsOperation, IsDenseList, IsFunction ],
 function( op, filters, f )
   local side;
-  InstallMethod( op, Concatenation( [ IsSide ], filters ),
+  InstallMethod( op, Concatenation( [ IsSide ], Replace( filters, "algebra", IsQuiverAlgebra ) ),
   function( arg )
     local side;
     side := arg[ 1 ];
     return CallFuncList( op^side, arg{ [ 2 .. Length( arg ) ] } );
   end );
   for side in [ LEFT, RIGHT ] do
-    InstallMethod( op^side, filters, f( side ) );
+    InstallMethod( op^side, Replace( filters, "algebra", IsQuiverAlgebra ), f( side ) );
   od;
-  InstallMethod( op^LEFT_RIGHT, Replace( filters, IsQuiverAlgebra, IsDenseList ),
+  InstallMethod( op^LEFT_RIGHT, Replace( filters, "algebra", IsDenseList ),
                  f( LEFT_RIGHT ) );
   # InstallMethod( op^LEFT_RIGHT, Flat( Replace( filters, IsQuiverAlgebra, [ IsQuiverAlgebra, IsQuiverAlgebra ] ) ),
   #                f( LEFT_RIGHT ) );

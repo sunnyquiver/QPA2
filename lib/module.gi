@@ -54,20 +54,20 @@ side -> function( R )
 end );
 
 InstallMethodWithSides( QuiverModule,
-                        [ IsQuiverAlgebra, IsDenseList, IsList ],
+                        [ "algebra", IsDenseList, IsList ],
 side -> function( A, dimensions, matrices )
   return AsModule( side, QuiverRepresentation( A^side, dimensions, matrices ) );
 end );
 
 InstallMethodWithSides( QuiverModule,
-                        [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ],
+                        [ "algebra", IsDenseList, IsDenseList, IsDenseList ],
 side -> function( A, dimensions, arrows, matrices_for_arrows )
   return AsModule( side,
                    QuiverRepresentation( A^side,
                                          dimensions, arrows, matrices_for_arrows ) );
 end );
 
-InstallMethodWithSides( ZeroModule, [ IsQuiverAlgebra ],
+InstallMethodWithSides( ZeroModule, [ "algebra" ],
 side -> function( A )
   return AsModule( side, ZeroRepresentation( A^side ) );
 end );
@@ -422,7 +422,7 @@ side -> function( rep_cat )
   return cat;
 end );
 
-InstallMethodWithSides( ModuleCategory, [ IsQuiverAlgebra ],
+InstallMethodWithSides( ModuleCategory, [ "algebra" ],
 side -> function( A )
   return AsModuleCategory( side, CategoryOfQuiverRepresentations( A^side ) );
 end );

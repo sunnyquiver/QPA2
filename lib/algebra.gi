@@ -941,6 +941,9 @@ end );
 InstallMethod( \^, [ IsDenseList, IsSide ],
 function( list, side )
   local e1, e2;
+  if not ( ForAll( list, IsQuiverAlgebra ) or ForAll( list, IsQuiverAlgebraElement ) ) then
+    TryNextMethod();
+  fi;
   if side = LEFT_RIGHT and Length( list ) = 2 then
     if IsQuiverAlgebra( list[ 1 ] ) and IsQuiverAlgebra( list[ 2 ] ) then
       return TensorProductOfAlgebras( list[ 1 ]^LEFT, list[ 2 ]^RIGHT );
@@ -1218,7 +1221,7 @@ end );
 DeclareSideOperations( IndecProjModules, IndecProjLeftModules, IndecProjRightModules,
                        IndecProjBimodules );
 
-InstallMethodWithSides( IndecProjModules, [ IsQuiverAlgebra ],
+InstallMethodWithSides( IndecProjModules, [ "algebra" ],
 side -> function( A )
   return List( IndecProjRepresentations( A^side ), AsModule^side );
 end );
