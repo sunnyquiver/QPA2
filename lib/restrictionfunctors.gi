@@ -8,6 +8,14 @@ InstallMethod( RestrictionFunctor, "for a homomorphism of quiver algebras",
     local   restriction,  verteximages,  arrowimages,  A,  
             representation,  morphism;
     
+    if AlgebraOfCategory( C ) <> Range( f ) then
+        Error( "The entered category  C  does not coincide with the representation category",
+               "of the range of the entered algebra homomorphism  f.\n" );
+    fi;
+    if AlgebraOfCategory( D ) <> Source( f ) then
+        Error( "The entered category  D  does not coincide with the representation category",
+               "of the source of the entered algebra homomorphism  f.\n" );
+    fi;
     restriction := CapFunctor( "Restriction", C, D );
     
     verteximages := VertexImages( f );
@@ -67,8 +75,33 @@ InstallMethod( RestrictionToLeftFunctor, "for a bimodule category",
     f := TensorAlgebraInclusions( AlgebraOfCategory( D ) )[ 1 ];
     return PreCompose( [ UnderlyingRepresentationFunctor( C ), 
                    RestrictionFunctor( f, D, CategoryOfQuiverRepresentations( Source( f ) ) ), 
-                   AsLeftModuleFunctor( Source( f ) ) ] ); 
+                   AsLeftModuleFunctor( CategoryOfQuiverRepresentations( Source( f ) ) ) ] ); 
 end );
+
+InstallMethod( RestrictionToLeftFunctor, "for a left module category",
+        [ IsLeftQuiverModuleCategory ],
+        IdentityFunctor );
+
+InstallMethod( RestrictionToLeftFunctor, "for a right module category",
+        [ IsRightQuiverModuleCategory ],
+        AsVectorSpaceFunctor );
+
+InstallMethod( RestrictionToLeft, "for a module",
+        [ IsQuiverModule ],
+        function( M )
+    
+    return ApplyFunctor( RestrictionToLeftFunctor( CapCategory( M ) ), M );
+end
+  );
+
+InstallMethod( RestrictionToLeft, "for a homomorphism",
+        [ IsQuiverModuleHomomorphism ],
+        function( f )
+    
+    return ApplyFunctor( RestrictionToLeftFunctor( CapCategory( f ) ), f );
+end
+  );
+
 
 InstallMethod( RestrictionToRightFunctor, "for a bimodule category",
         [ IsQuiverBimoduleCategory ],
@@ -80,8 +113,32 @@ InstallMethod( RestrictionToRightFunctor, "for a bimodule category",
     f := TensorAlgebraInclusions( AlgebraOfCategory( D ) )[ 2 ];
     return PreCompose( [ UnderlyingRepresentationFunctor( C ), 
                    RestrictionFunctor( f, D, CategoryOfQuiverRepresentations( Source( f ) ) ), 
-                   AsRightModuleFunctor( Source( f ) ) ] ); 
+                   AsRightModuleFunctor( CategoryOfQuiverRepresentations( Source( f ) ) ) ] ); 
 end );
+
+InstallMethod( RestrictionToRightFunctor, "for a right module category",
+        [ IsRightQuiverModuleCategory ],
+        IdentityFunctor );
+
+InstallMethod( RestrictionToRightFunctor, "for a left module category",
+        [ IsLeftQuiverModuleCategory ],
+        AsVectorSpaceFunctor );
+
+InstallMethod( RestrictionToRight, "for a module",
+        [ IsQuiverModule ],
+        function( M )
+    
+    return ApplyFunctor( RestrictionToRightFunctor( CapCategory( M ) ), M );
+end
+  );
+
+InstallMethod( RestrictionToRight, "for a homomorphism",
+        [ IsQuiverModuleHomomorphism ],
+        function( f )
+    
+    return ApplyFunctor( RestrictionToRightFunctor( CapCategory( f ) ), f );
+end
+  );
 
 InstallMethod( LeftModuleToBimoduleFunctor, "for a module category",
         [ IsLeftQuiverModuleCategory ],
@@ -89,15 +146,23 @@ InstallMethod( LeftModuleToBimoduleFunctor, "for a module category",
     
     local   A,  K,  B,  f,  repC,  repB;
     
-    A := AlgebraOfCategory( C );
+    repC := UnderlyingRepresentationCategory( C );
+    A := AlgebraOfCategory( repC );
     K := FieldAsQuiverAlgebra( Direction( A ), LeftActingDomain( A ) );
     B := TensorProductOfAlgebras( A, K );
     f := TensorAlgebraRightIdentification( B );
-    repC := UnderlyingRepresentationCategory( C );
     repB := CategoryOfQuiverRepresentations( B ); 
     
     return PreCompose( [ UnderlyingRepresentationFunctor( C ), RestrictionFunctor( f, repC, repB ), AsBimoduleFunctor( repB ) ] ); 
 end );
+
+InstallMethod( LeftModuleToBimodule, "for a module ",
+        [ IsLeftQuiverModule ],
+        function ( M )
+    
+    return ApplyFunctor( LeftModuleToBimoduleFunctor( CapCategory( M ) ), M );
+end
+  );
 
 InstallMethod( RightModuleToBimoduleFunctor, "for a module category",
         [ IsRightQuiverModuleCategory ],
@@ -105,12 +170,43 @@ InstallMethod( RightModuleToBimoduleFunctor, "for a module category",
     
     local   A,  K,  B,  f,  repC,  repB;
     
-    A := AlgebraOfCategory( C );
+    repC := UnderlyingRepresentationCategory( C );
+    A := AlgebraOfCategory( repC );
     K := FieldAsQuiverAlgebra( Direction( A ), LeftActingDomain( A ) );
     B := TensorProductOfAlgebras( K, A );
     f := TensorAlgebraLeftIdentification( B );
-    repC := UnderlyingRepresentationCategory( C );
     repB := CategoryOfQuiverRepresentations( B ); 
     
     return PreCompose( [ UnderlyingRepresentationFunctor( C ), RestrictionFunctor( f, repC, repB ), AsBimoduleFunctor( repB ) ] ); 
 end );
+
+InstallMethod( RightModuleToBimodule, "for a module ",
+        [ IsRightQuiverModule ],
+        function ( M )
+    
+    return ApplyFunctor( RightModuleToBimoduleFunctor( CapCategory( M ) ), M );
+end
+  );
+
+InstallMethod( AsVectorSpaceFunctor, "for a representation category", 
+        [ IsQuiverRepresentationCategory ],
+        function ( C )
+    
+    local F;
+    
+    F := CapFunctor( "AsVectorSpace", C, VectorSpaceCategory( C ) ); 
+    
+    AddObjectFunction( F, X -> DirectSum( VectorSpacesOfRepresentation( X ) ) );
+    AddMorphismFunction( F, function( X, f, Y ) return DirectSumFunctorial( MapsOfRepresentationHomomorphism( f ) ); end );
+    
+    return F;
+end
+  );
+
+InstallMethod( AsVectorSpaceFunctor, "for a representation category", 
+        [ IsQuiverModuleCategory ],
+        function ( C )
+    
+    return PreCompose( UnderlyingRepresentationFunctor( C ), AsVectorSpaceFunctor( UnderlyingRepresentationCategory( C ) ) );
+end
+  );

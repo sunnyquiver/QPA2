@@ -2,12 +2,12 @@
 
 #! @Section Tensor product
 
-#! @Arguments R1, R2, A1, A2, A3
+#! @Arguments R1, R2
 #! @Returns <Ref Filt="IsQuiverRepresentation"/>
 #! @Description
 #!  Returns the tensor product of the two representations <A>R1</A> and <A>R2</A>. 
-DeclareOperation( "TensorProductOfRepresentations", [ IsQuiverRepresentation, IsQuiverRepresentation, 
-        IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ] );
+DeclareOperation( "TensorProductOfRepresentations", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
+
 #! @Arguments R
 #! @Returns function
 #! @Description
@@ -26,5 +26,11 @@ DeclareAttribute( "TensorProductFactors", IsQuiverRepresentation );
 #! TODO
 DeclareOperation( "TensorProductOfHomomorphisms",
         [ IsQuiverRepresentationHomomorphism, IsQuiverRepresentationHomomorphism, IsQuiverRepresentation, IsQuiverRepresentation ] );
+
+#! @Arguments M1, M2
+#! @Returns <Ref Filt="IsQuiverModule"/> or <Ref Filt="IsQPAVectorSpace"/>
+#! @Description
+#!  Returns the tensor product of the two modules <A>M1</A> and <A>M2</A>. 
+DeclareOperation( "TensorProductOfModules", [ IsQuiverModule, IsQuiverModule ] );
 
 #

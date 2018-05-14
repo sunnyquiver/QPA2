@@ -59,7 +59,7 @@ DeclareCategory( "IsQuiverBimoduleElement",
 #! @Description
 #!  Category for bimodules over quiver algebras.
 DeclareCategory( "IsQuiverBimodule",
-                 IsLeftQuiverModule and IsRightQuiverModule
+                 IsQuiverModule
                  and CategoryCollections( IsQuiverBimoduleElement ) );
 
 #! @Section Constructing modules

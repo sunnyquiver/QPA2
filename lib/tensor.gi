@@ -1,24 +1,29 @@
 InstallMethod( TensorProductOfRepresentations,
         "for two representations of (two) quivers",
-        [ IsQuiverRepresentation, IsQuiverRepresentation, IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ],
-        function( R1, R2, A1, A2, A3 )
+        [ IsQuiverRepresentation, IsQuiverRepresentation ],
+        function( R1, R2 )
     
-    local   K,  B1,  B2,  QB1,  QB2,  B3,  QB3,  verticesB3,  
-            verticesA2,  partialtensor,  projections,  v,  tempdim,  
-            i,  l,  j,  ij,  jl,  temprelations,  a,  start,  target,  
-            istart,  targetl,  b1,  b2,  V,  arrowsB3,  maps,  
+    local   B1,  B2,  A1,  A2,  A3,  K,  QB1,  QB2,  B3,  QB3,  
+            verticesB3,  verticesA2,  partialtensor,  projections,  v,  
+            tempdim,  i,  l,  j,  ij,  jl,  temprelations,  a,  start,  
+            target,  istart,  targetl,  b1,  b2,  V,  arrowsB3,  maps,  
             dimension,  alpha,  source,  basis_i_j,  images_iprime_j,  
             beta,  iprime,  iB1,  iprimeB1,  basisR1_i_l,  
             basisR2_l_j,  b,  bprime,  matrix,  images_i_jprime,  
             jprime,  jB2,  jprimeB2,  tensorproduct,  
             elementarytensor;
     
-    K := LeftActingDomain( A1 );
     B1 := AlgebraOfRepresentation( R1 );
     B2 := AlgebraOfRepresentation( R2 );
-    if not ( IsTensorProductOfAlgebras( B1 ) and TensorProductFactors( B1 ) = [ A1, A2 ] ) or 
-       not ( IsTensorProductOfAlgebras( B2 ) and TensorProductFactors( B1 ) = [ OppositeAlgebra( A2 ), A3 ] ) then
-        Error( "Entered modules are not over the appropriate algebras,\n" );
+    if not ( IsTensorProductOfAlgebras( B1 ) and IsTensorProductOfAlgebras( B2 ) ) then
+        Error( "Entered representations are not representations over a tensor product,\n" );
+    fi;
+    A1 := TensorProductFactors( B1 )[ 1 ];
+    A2 := TensorProductFactors( B1 )[ 2 ];
+    A3 := TensorProductFactors( B2 )[ 2 ];
+    K := LeftActingDomain( A1 );
+    if OppositeAlgebra( A2 ) <> TensorProductFactors( B2 )[ 1 ] then 
+        Error( "Entered modules are compatible for taking the tensor product,\n" );
     fi;
     
     QB1 := QuiverOfAlgebra( B1 );
@@ -197,5 +202,37 @@ InstallMethod( TensorProductOfHomomorphisms,
     od;
         
     return QuiverRepresentationHomomorphismByImages( T1, T2, generators, images );
+end
+  );
+
+InstallMethod( TensorProductOfModules,
+        "for two modules of (two) quivers",
+        [ IsQuiverBimodule, IsQuiverBimodule ],
+        function( M1, M2 )
+    
+    local   R1,  R2;
+
+    R1 := UnderlyingRepresentation( M1 );
+    R2 := UnderlyingRepresentation( M2 );
+    
+    return AsBimodule( TensorProductOfRepresentations( R1, R2 ) );
+end
+  );
+
+InstallMethod( TensorProductOfModules,
+        "for two modules of (two) quivers",
+        [ IsRightQuiverModule, IsQuiverModule ],
+        function( M1, M2 )
+    
+    return RestrictionToRight( TensorProductOfModules( RightModuleToBimodule( M1 ), M2 ) );
+end
+  );
+
+InstallMethod( TensorProductOfModules,
+        "for two modules of (two) quivers",
+        [ IsQuiverModule, IsLeftQuiverModule ],
+        function( M1, M2 )
+    
+    return RestrictionToLeft( TensorProductOfModules( M1, LeftModuleToBimodule( M2 ) ) );
 end
   );
