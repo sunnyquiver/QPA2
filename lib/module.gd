@@ -286,6 +286,32 @@ DeclareOperation( "QuiverModuleElement", [ IsQuiverModule, IsDenseList, IsList ]
 #! @Arguments e, M
 DeclareOperation( "AsModuleElement", [ IsQuiverRepresentationElement, IsQuiverModule ] );
 
+#! @Description
+#!  Returns the representation element <A>r</A> as a module element.
+#!  The argument <A>side</A> determines if the module element should be
+#!  in a left module, right module or bimodule.
+#! @Returns <Ref Filt="IsQuiverModuleElement"/>
+#! @Arguments side, r
+DeclareOperation( "AsModuleElement", [ IsSide, IsQuiverRepresentationElement ] );
+
+#! @Description
+#!  Returns the representation element <A>r</A> as a left module element.
+#! @Returns <Ref Filt="IsLeftQuiverModuleElement"/>
+#! @Arguments side, r
+DeclareAttribute( "AsLeftModuleElement", IsQuiverRepresentationElement );
+
+#! @Description
+#!  Returns the representation element <A>r</A> as a right module element.
+#! @Returns <Ref Filt="IsRightQuiverModuleElement"/>
+#! @Arguments side, r
+DeclareAttribute( "AsRightModuleElement", IsQuiverRepresentationElement );
+
+#! @Description
+#!  Returns the representation element <A>r</A> as a bimodule element.
+#! @Returns <Ref Filt="IsQuiverBimoduleElement"/>
+#! @Arguments side, r
+DeclareAttribute( "AsBimoduleElement", IsQuiverRepresentationElement );
+
 #! @Section Information about an element
 
 #! @Description

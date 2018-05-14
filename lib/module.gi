@@ -137,6 +137,16 @@ function( e, M )
   return me;
 end );
 
+DeclareSideOperations( AsModuleElement, AsLeftModuleElement, AsRightModuleElement,
+                       AsBimoduleElement );
+
+InstallMethodWithSides( AsModuleElement,
+                        [ IsQuiverRepresentationElement ],
+side -> function( r )
+  return AsModuleElement( r, AsModule( side, RepresentationOfElement( r ) ) );
+end );
+
+
 InstallMethod( QuiverModuleElement,
                [ IsQuiverModule, IsList ],
 function( M, vectors )
