@@ -1,100 +1,131 @@
-InstallMethod( DynkinGraphAn, [ IsPosInt ],
-function( n )
-  return List( [ 1 .. ( n - 1 ) ], i -> [ i, i + 1 ] );
+DeclareDirectionOperations( DynkinQuiver, LeftDynkinQuiver, RightDynkinQuiver );
+
+InstallMethodWithDirections( DynkinQuiver, [ IsString ],
+dir -> function( str )
+  local tuple, type, n, orientation;
+  tuple := ParseDynkinQuiverString( str );
+  type := tuple[ 1 ];
+  n := tuple[ 2 ];
+  orientation := tuple[ 3 ];
+  return DynkinQuiver( dir, type, n, orientation );
 end );
 
-InstallMethod( DynkinGraphDn, [ IsPosInt ],
-function( n )
-  if n < 4 then
-    Error( "Dynkin type Dn only defined for n >= 4, not ", n );
-  fi;
-  return Concatenation( [ [ 1, 3 ],
-                          [ 2, 3 ] ],
-                        List( [ 3 .. ( n - 1 ) ], i -> [ i, i + 1 ] ) );
+InstallMethodWithDirections( DynkinQuiver, [ IsString, IsPosInt ],
+dir -> function( type, n )
+  return DynkinQuiver( dir, type, n, "" );
 end );
 
-InstallMethod( DynkinGraphEn, [ IsPosInt ],
-function( n )
-  if n = 6 then
-    return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ],
-             [ 3, 6 ] ];
-  elif n = 7 then
-    return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ], [ 5, 6 ],
-             [ 3, 7 ] ];
-  elif n = 8 then
-    return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ], [ 5, 6 ], [ 6, 7 ],
-             [ 3, 8 ] ];
+InstallMethodWithDirections( DynkinQuiver, [ IsString, IsPosInt, IsString ],
+dir -> function( type, n, orientation )
+  local G, extended, num_vertices, num_arrows, label, vertex_pattern, arrow_pattern;
+
+  G := DynkinGraph( type, n, orientation );
+  extended := ( Length( type ) = 2 );
+  if extended then
+    num_vertices := n + 1;
   else
-    Error( "type En only defined for n = 6, 7 or 8; not ", n );
+    num_vertices := n;
   fi;
+  num_arrows := Length( G );
+
+  label := Concatenation( type, String( n ) );
+  vertex_pattern := "1";
+  if num_arrows < 27 then
+    # at most 26 arrows; label them 'a', 'b', 'c', ...
+    arrow_pattern := "a";
+  else
+    # more than 26 arrows; label them "a1", "a2", "a3", ...
+    arrow_pattern := "a1";
+  fi;
+
+  return Quiver( dir, [ label, vertex_pattern, arrow_pattern ],
+                 num_vertices, [], G );
 end );
 
-InstallMethod( DynkinGraph, [ IsChar, IsPosInt ],
+InstallMethod( DynkinGraph, [ IsString, IsPosInt ],
 function( type, n )
-  if type = 'A' then
-    return DynkinGraphAn( n );
-  elif type = 'D' then
-    return DynkinGraphDn( n );
-  elif type = 'E' then
-    return DynkinGraphEn( n );
+  if type = "A" then
+    return List( [ 1 .. ( n - 1 ) ], i -> [ i, i + 1 ] );
+  elif type = "D" then
+    if n < 4 then
+      Error( "Dynkin type D only defined for n >= 4, not ", n );
+    fi;
+    return Concatenation( [ [ 1, 3 ],
+                            [ 2, 3 ] ],
+                          List( [ 3 .. ( n - 1 ) ], i -> [ i, i + 1 ] ) );
+  elif type = "E" then
+    if n = 6 then
+      return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ],
+               [ 3, 6 ] ];
+    elif n = 7 then
+      return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ], [ 5, 6 ],
+               [ 3, 7 ] ];
+    elif n = 8 then
+      return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ], [ 5, 6 ], [ 6, 7 ],
+               [ 3, 8 ] ];
+    else
+      Error( "Dynkin type E only defined for n = 6, 7 or 8; not ", n );
+    fi;
+  elif type = "A~" then
+    return Concatenation( DynkinGraph( "A", n + 1 ), [ [ n + 1, 1 ] ] );
+  elif type = "D~" then
+    return Concatenation( DynkinGraph( "D", n ), [ [ n - 1, n + 1 ] ] );
+  elif type = "E~" then
+    if n = 6 then
+      return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ],
+               [ 3, 6 ], [ 6, 7 ] ];
+    elif n = 7 then
+      return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ], [ 5, 6 ], [ 6, 7 ],
+               [ 4, 8 ] ];
+    elif n = 8 then
+      return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ], [ 5, 6 ], [ 6, 7 ], [ 7, 8 ],
+               [ 3, 9 ] ];
+    else
+      Error( "Dynkin type E only defined for n = 6, 7 or 8; not ", n );
+    fi;
   else
-    Error( "type must be 'A', 'D' or 'E'; not ", type );
+    Error( "Dynkin type must be \"A\", \"D\", \"E\", ",
+           "\"A~\", \"D~\" or \"E~\"; not ", type );
   fi;
 end );
 
-InstallMethod( EuclideanGraphAn, [ IsPosInt ],
-function( n )
-  return Concatenation( DynkinGraphAn( n + 1 ), [ [ n + 1, 1 ] ] );
-end );
-
-InstallMethod( EuclideanGraphDn, [ IsPosInt ],
-function( n )
-  return Concatenation( DynkinGraphDn( n ), [ [ n - 1, n + 1 ] ] );
-end );
-
-InstallMethod( EuclideanGraphEn, [ IsPosInt ],
-function( n )
-  if n = 6 then
-    return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ],
-             [ 3, 6 ], [ 6, 7 ] ];
-  elif n = 7 then
-    return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ], [ 5, 6 ], [ 6, 7 ],
-             [ 4, 7 ] ];
-  elif n = 8 then
-    return [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ], [ 5, 6 ], [ 6, 7 ], [ 7, 8 ],
-             [ 3, 9 ] ];
-  else
-    Error( "type En only defined for n = 6, 7 or 8; not ", n );
+InstallMethod( DynkinGraph, [ IsString, IsPosInt, IsString ],
+function( type, n, orientation )
+  local G, num_arrows, i;
+  G := DynkinGraph( type, n );
+  num_arrows := Length( G );
+  if Length( orientation ) > 0 then
+    if Length( orientation ) <> num_arrows then
+      Error( "length of orientation string \"", orientation, "\" (", Length( orientation ), ") ",
+             "not the same as number of arrows (", num_arrows );
+    fi;
+    for i in [ 1 .. num_arrows ] do
+      if orientation[ i ] = '<' then
+        G[ i ] := [ G[ i ][ 2 ], G[ i ][ 1 ] ];
+      elif orientation[ i ] <> '>' then
+        Error( "orientation string for Dynkin graph must contain only '<' and '>', not ",
+               orientation[ i ] );
+      fi;
+    od;
   fi;
+  return G;
 end );
 
-InstallMethod( EuclideanGraph, [ IsChar, IsPosInt ],
-function( type, n )
-  if type = 'A' then
-    return EuclideanGraphAn( n );
-  elif type = 'D' then
-    return EuclideanGraphDn( n );
-  elif type = 'E' then
-    return EuclideanGraphEn( n );
-  else
-    Error( "type must be 'A', 'D' or 'E'; not ", type );
-  fi;
-end );
-
-InstallMethod( ParseDynkinOrEuclideanDescriptionString, [ IsString ],
+InstallMethod( ParseDynkinQuiverString, [ IsString ],
 function( str )
-  local err_invalid, type, i, euclidean, n_start, n_end, n, num_arrows, orientation;
+  local err_invalid, type, extended, n_start, n_end, i, n, num_arrows, orientation;
   err_invalid := Concatenation( "the string \"", str, "\" is not ",
-                                "a valid description of a Dynkin/Euclidean graph" );
+                                "a valid description of a Dynkin quiver" );
   if Length( str ) < 2 or not ( str[ 1 ] in "ADE" ) then
     Error( err_invalid );
   fi;
-  type := str[ 1 ];
   if str[ 2 ] = '~' then
-    euclidean := true;
+    type := str{ [ 1, 2 ] };
+    extended := true;
     n_start := 3;
   else
-    euclidean := false;
+    type := str{ [ 1 ] };
+    extended := false;
     n_start := 2;
   fi;
   if not IsDigitChar( str[ n_start ] ) then
@@ -106,8 +137,8 @@ function( str )
   od;
   n_end := i - 1;
   n := Int( str{ [ n_start .. n_end ] } );
-  if euclidean then
-    if type = 'A' then
+  if extended then
+    if type = "A~" then
       num_arrows := n + 2;
     else
       num_arrows := n + 1;
@@ -120,128 +151,5 @@ function( str )
            and ForAll( orientation, c -> c in "<>" ) ) then
     Error( err_invalid );
   fi;
-  return [ type, euclidean, n, orientation ];
-end );
-
-InstallMethod( DynkinOrEuclideanGraph, [ IsChar, IsBool, IsPosInt ],
-function( type, euclidean, n )
-  return DynkinOrEuclideanGraph( type, euclidean, n, "" );
-end );
-
-InstallMethod( DynkinOrEuclideanGraph, [ IsChar, IsBool, IsPosInt, IsString ],
-function( type, euclidean, n, orientation )
-  local G, num_arrows, i;
-  if euclidean then
-    G := EuclideanGraph( type, n );
-  else
-    G := DynkinGraph( type, n );
-  fi;
-  num_arrows := Length( G );
-  if Length( orientation ) > 0 then
-    if Length( orientation ) <> num_arrows then
-      Error( "length of orientation string \"", orientation, "\" (", Length( orientation ), ") ",
-             "not the same as number of arrows (", num_arrows );
-    fi;
-    for i in [ 1 .. num_arrows ] do
-      if orientation[ i ] = '<' then
-        G[ i ] := [ G[ i ][ 2 ], G[ i ][ 1 ] ];
-      elif orientation[ i ] <> '>' then
-        Error( "orientation string for Dynkin/Euclidean graph must contain only '<' and '>', not ",
-               orientation[ i ] );
-      fi;
-    od;
-  fi;
-  return G;
-end );
-
-
-DeclareDirectionOperations( DynkinOrEuclideanQuiver,
-                            LeftDynkinOrEuclideanQuiver, RightDynkinOrEuclideanQuiver );
-DeclareDirectionOperations( DynkinQuiver,
-                            LeftDynkinQuiver, RightDynkinQuiver );
-DeclareDirectionOperations( EuclideanQuiver,
-                            LeftEuclideanQuiver, RightEuclideanQuiver );
-
-InstallMethodWithDirections( DynkinOrEuclideanQuiver,
-                             [ IsString ],
-dir -> function( str )
-  local tuple, type, euclidean, n, orientation;
-  tuple := ParseDynkinOrEuclideanDescriptionString( str );
-  type := tuple[ 1 ];
-  euclidean := tuple[ 2 ];
-  n := tuple[ 3 ];
-  orientation := tuple[ 4 ];
-  return DynkinOrEuclideanQuiver( dir, type, euclidean, n, orientation );
-end );
-
-InstallMethodWithDirections( DynkinOrEuclideanQuiver,
-                             [ IsChar, IsBool, IsPosInt ],
-dir -> function( type, euclidean, n )
-  return DynkinOrEuclideanQuiver( dir, type, euclidean, n, "" );
-end );
-
-InstallMethodWithDirections( DynkinOrEuclideanQuiver,
-                             [ IsChar, IsBool, IsPosInt, IsString ],
-dir -> function( type, euclidean, n, orientation )
-  local label, vertex_pattern, arrow_pattern;
-  if euclidean then
-    label := Concatenation( [ type ], "~", String( n ) );
-  else
-    label := Concatenation( [ type ], String( n ) );
-  fi;
-  vertex_pattern := "1";
-  if n < 27 then
-    # at most 26 arrows; label them 'a', 'b', 'c', ...
-    arrow_pattern := "a";
-  else
-    # more than 26 arrows; label them "a1", "a2", "a3", ...
-    arrow_pattern := "a1";
-  fi;
-  return DynkinOrEuclideanQuiver( dir, type, euclidean, n, orientation,
-                                  [ label, vertex_pattern, arrow_pattern ] );
-end );
-
-InstallMethodWithDirections( DynkinOrEuclideanQuiver,
-                             [ IsChar, IsBool, IsPosInt, IsString, IsList ],
-dir -> function( type, euclidean, n, orientation, label_with_patterns_list )
-  local num_vertices;
-  if euclidean then
-    num_vertices := n + 1;
-  else
-    num_vertices := n;
-  fi;
-  return Quiver( dir, label_with_patterns_list, num_vertices, [],
-                 DynkinOrEuclideanGraph( type, euclidean, n, orientation ) );
-end );
-
-InstallMethodWithDirections( DynkinQuiver,
-                             [ IsString ],
-dir -> function( str )
-  if ParseDynkinOrEuclideanDescriptionString( str )[ 2 ] then
-    Error( "the string \"", str, "\" ",
-           "describes a Euclidean quiver, not a Dynkin quiver" );
-  fi;
-  return DynkinOrEuclideanQuiver( dir, str );
-end );
-
-InstallMethodWithDirections( DynkinQuiver,
-                             [ IsChar, IsPosInt ],
-dir -> function( type, n )
-  return DynkinOrEuclideanQuiver( dir, type, false, n );
-end );
-
-InstallMethodWithDirections( EuclideanQuiver,
-                             [ IsString ],
-dir -> function( str )
-  if not ParseDynkinOrEuclideanDescriptionString( str )[ 2 ] then
-    Error( "the string \"", str, "\" ",
-           "describes a Dynkin quiver, not a Euclidean quiver" );
-  fi;
-  return DynkinOrEuclideanQuiver( dir, str );
-end );
-
-InstallMethodWithDirections( EuclideanQuiver,
-                             [ IsChar, IsPosInt ],
-dir -> function( type, n )
-  return DynkinOrEuclideanQuiver( dir, type, true, n );
+  return [ type, n, orientation ];
 end );

@@ -22,6 +22,8 @@ AutoDoc( "QPA" :
                                              [ "Modules", "" ],
                                              [ "Representations", "" ],
                                              [ "Vector spaces", "" ],
+                                             [ "Functors", "" ],
+                                             [ "Special quivers, algebras and modules", "" ],
                                              ] ),
          scaffold := rec( TitlePage := rec( TitleComment := make_qpa_version_string() ) ),
          maketest := rec( commands := [ "LoadPackage( \"QPA\" );" ] )
