@@ -608,7 +608,7 @@ DeclareRepresentation( "IsPathIdealRep", IsComponentObjectRep and IsAttributeSto
                        [ "algebra", "generators", "groebnerBasis" ] );
 
 InstallMethod( TwoSidedIdealByGenerators, "for path algebra and collection",
-               [ IsPathAlgebra, IsCollection ],
+               [ IsPathAlgebra, IsDenseList ],
 function( A, generators )
   local groebnerBasis;
   groebnerBasis := ComputeGroebnerBasis( generators );
