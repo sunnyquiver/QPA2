@@ -256,6 +256,19 @@ function( e, c )
   fi;
 end );
 
+InstallMethod( PathAction, "for element of quiver algebra and path",
+               [ IsQuiverAlgebraElement, IsPath ],
+function( a, p )
+  local Cs, Ps, nonzeros;
+  Cs := Coefficients( a );
+  Ps := List( Paths( a ), q -> ComposePaths( q, p ) );
+  nonzeros := PositionsProperty( Ps, q -> q <> fail );
+  return QuiverAlgebraElement
+         ( AlgebraOfElement( a ),
+           Cs{ nonzeros },
+           Ps{ nonzeros } );
+end );
+
 InstallMethod( TranslateAlgebraElement,
                [ IsQuiverAlgebraElement, IsPathAlgebra, IsFunction ],
 function( e, A, f )

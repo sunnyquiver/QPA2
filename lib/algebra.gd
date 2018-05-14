@@ -332,6 +332,21 @@ DeclareOperation( "CoefficientsOfPaths", [ IsList, IsQuiverAlgebraElement ] );
 DeclareOperation( "CoefficientsOfPathsSorted", [ IsList, IsQuiverAlgebraElement ] );
 
 
+#! @Section Acting on elements
+
+#! @Arguments a1, a2
+#! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
+#! @Description
+#!  Multiply algebra elements <A>a1</A> and <A>a2</A>.
+# DeclareOperation( "\*", [ IsQuiverAlgebraElement, IsQuiverAlgebraElement ] );
+
+#! @Arguments a, p
+#! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
+#! @Description
+#!  Act on the algebra element <A>a</A> with the path <A>p</A>.
+DeclareOperation( "PathAction", [ IsQuiverAlgebraElement, IsPath ] );
+
+
 #! @Section Manipulation of elements
 
 #! @Arguments e, A, f
