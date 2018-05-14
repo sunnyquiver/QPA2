@@ -57,5 +57,27 @@ function( f, m )
   M := ModuleOfElement( m );
   r := UnderlyingRepresentationElement( m );
   F := UnderlyingRepresentationHomomorphism( f );
-  return AsModuleElement( ImageElm( F, r ), M );
+  return AsModuleElement( ImageElm( F, r ), Range( f ) );
 end );
+
+InstallMethod( PreImagesRepresentative, [ IsQuiverModuleHomomorphism, IsQuiverModuleElement ],
+function( h, m )
+  local preim_r;
+  preim_r := PreImagesRepresentative( UnderlyingRepresentationHomomorphism( h ),
+                                      UnderlyingRepresentationElement( m ) );
+  if preim_r = fail then
+    return fail;
+  else
+    return AsModuleElement( preim_r, Source( h ) );
+  fi;
+end );
+
+InstallMethod( SubmoduleInclusion, [ IsQuiverModule, IsHomogeneousList ],
+function( M, gens )
+  local R, r_gens, r_inc;
+  R := UnderlyingRepresentation( M );
+  r_gens := List( gens, UnderlyingRepresentationElement );
+  r_inc := SubrepresentationInclusion( R, r_gens );
+  return AsModuleHomomorphism( Side( M ), r_inc );
+end );
+
