@@ -345,7 +345,7 @@ end );
 InstallMethod( SolutionMat, "for QPA matrix and a row vector",
 	       [ IsQPAMatrix, IsQPARowVector ], NICE_FLAGS + 1000, 
 function( M, v )
-  local   dim,  V;
+  local dim, V, solution_as_list;
 
   dim := DimensionsMat( M );
   if dim[ 2 ] <> Length( v ) then
@@ -363,7 +363,12 @@ function( M, v )
   if dim[ 2 ] = 0 then
     return Zero( V );
   else
-    return Vector( V, SolutionMat( RowsOfMatrix( M ), AsList( v ) ) );
+    solution_as_list := SolutionMat( RowsOfMatrix( M ), AsList( v ) );
+    if solution_as_list = fail then
+      return fail;
+    else
+      return Vector( V, solution_as_list );
+    fi;
   fi;
 end 
 );
