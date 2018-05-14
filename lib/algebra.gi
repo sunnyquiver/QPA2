@@ -1049,6 +1049,13 @@ InstallMethod( ElementaryTensor,
 end
   );
 
+InstallMethod( EnvelopingAlgebra, "for quiver algebra",
+               [ IsQuiverAlgebra ],
+function( A )
+  return TensorProductOfAlgebras( A^LEFT, A^RIGHT );
+end );
+
+
 BindGlobal( "FamilyOfQuiverAlgebraBases",
             NewFamily( "quiver algebra bases" ) );
 

@@ -563,7 +563,10 @@ DeclareOperation( "TensorAlgebraLeftIdentification", [ IsTensorProductOfAlgebras
 #!  as input, for a field <M>k</M>.  
 DeclareOperation( "TensorAlgebraRightIdentification", [ IsTensorProductOfAlgebras ] );  
 
-
+#! @Arguments A
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+#! @Description
+#!  Returns the enveloping algebra of <A>A</A>.
 DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 
 #! @Section Algebra homomorphisms 
