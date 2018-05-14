@@ -447,6 +447,10 @@ dir -> function( label, vertex_labels, arrow_labels,
   for i in [ 1 .. num_vertices ] do
     SetOutgoingArrows( Q!.vertices[ i ], outgoing_arrows[ i ] );
     SetIncomingArrows( Q!.vertices[ i ], incoming_arrows[ i ] );
+    SetOutdegree( Q!.vertices[ i ], Length( outgoing_arrows[ i ] ) );
+    SetIndegree( Q!.vertices[ i ], Length( incoming_arrows[ i ] ) );
+    SetDegreeOfVertex( Q!.vertices[ i ],
+                       Length( outgoing_arrows[ i ] ) + Length( incoming_arrows[ i ] ) );
   od;
 
   return Q;
@@ -501,6 +505,28 @@ InstallMethod( LeftEnd, "for left path", [ IsLeftPath ], Target );
 InstallMethod( RightEnd, "for left path", [ IsLeftPath ], Source );
 InstallMethod( LeftEnd, "for right path", [ IsRightPath ], Source );
 InstallMethod( RightEnd, "for right path", [ IsRightPath ], Target );
+
+InstallMethod( Neighbors, "for vertex", [ IsVertex ],
+function( v )
+  local Q, n, vertices, is_neighbor, a, i, neighbors;
+  Q := QuiverOfPath( v );
+  n := NumberOfVertices( Q );
+  vertices := Vertices( Q );
+  is_neighbor := List( [ 1 .. n ], i -> false );
+  for a in OutgoingArrows( v ) do
+    is_neighbor[ VertexNumber( Target( a ) ) ] := true;
+  od;
+  for a in IncomingArrows( v ) do
+    is_neighbor[ VertexNumber( Source( a ) ) ] := true;
+  od;
+  neighbors := [];
+  for i in [ 1 .. n ] do
+    if is_neighbor[ i ] then
+      Add( neighbors, vertices[ i ] );
+    fi;
+  od;
+  return neighbors;
+end );
 
 InstallMethod( Length,
                "for vertex",
@@ -1168,6 +1194,16 @@ function( Q, string_as_int )
   return PathFromString( Q, NameRNam( string_as_int ) );
 end );
 
+InstallMethod( SourceVertices, "for quiver", [ IsQuiver ],
+function( Q )
+  return Filtered( Vertices( Q ), v -> Indegree( v ) = 0 );
+end );
+
+InstallMethod( SinkVertices, "for quiver", [ IsQuiver ],
+function( Q )
+  return Filtered( Vertices( Q ), v -> Outdegree( v ) = 0 );
+end );
+
 InstallMethod( String, "for primitive path",
                [ IsPrimitivePath ],
                LabelAsString );
@@ -1321,6 +1357,13 @@ function( p, Q )
 end );
 
 
+InstallMethod( RenameQuiver, "for a quiver and an object", [ IsObject, IsQuiver ],
+function( label, Q )
+  return Quiver( Direction( Q ), label,
+                 VertexLabels( Q ), ArrowLabels( Q ),
+                 ArrowSourceIndices( Q ), ArrowTargetIndices( Q ) );
+end );
+
 InstallMethod( OppositeQuiver,
                [ IsQuiver ],
 function( Q )
@@ -1396,6 +1439,7 @@ function( Q, R )
                        make_index ) );
   SetIsProductQuiver( QxR, true );
   SetProductQuiverFactors( QxR, [ Q, R ] );
+  SetProductQuiverFactorsLeftRight( QxR, [ Q ^ LEFT, R ^ RIGHT ] );
   return QxR;
 end );
 
@@ -1579,6 +1623,22 @@ function( n, p )
                  a -> ProjectPathFromProductQuiver( n, a ) ) );
 end );
 
+InstallMethod( ProductPathFactors, [ IsPath ],
+function( p )
+  return List( [ 1 .. Length( ProductQuiverFactors( QuiverOfPath( p ) ) ) ],
+               i -> ProjectPathFromProductQuiver( i, p ) );
+end );
+
+InstallMethod( ProductPathFactorsLeftRight, [ IsPath ],
+function( p )
+  local factors;
+  factors := ProductPathFactors( p );
+  if Length( factors ) <> 2 then
+    Error( "left/right factors not defined for products of more than two quivers" );
+  fi;
+  return [ factors[ 1 ] ^ LEFT, factors[ 2 ] ^ RIGHT ];
+end );
+
 InstallMethod( IncludePathInProductQuiver,
                [ IsProductQuiver, IsPosInt, IsList, IsPrimitivePath ],
 function( PQ, n, vertices, p )
@@ -1646,6 +1706,84 @@ function( PQ, paths )
   return PathInProductQuiver( PQ, paths, () );
 end );
 
+# InstallMethod( AsLeftQuiver, "for left quiver", [ IsLeftQuiver ], IdFunc );
+# InstallMethod( AsLeftQuiver, "for right quiver", [ IsRightQuiver ], OppositeQuiver );
+# InstallMethod( AsRightQuiver, "for left quiver", [ IsLeftQuiver ], OppositeQuiver );
+# InstallMethod( AsRightQuiver, "for right quiver", [ IsRightQuiver ], IdFunc );
+
+InstallMethod( \^, "for quiver and direction", [ IsQuiver, IsDirection ],
+function( Q, dir )
+  if dir = Direction( Q ) then
+    return Q;
+  else
+    return OppositeQuiver( Q );
+  fi;
+end );
+
+InstallMethod( \^, "for list of quivers and side", [ IsDenseList, IsSide ],
+function( list, side )
+  local Q1, Q2;
+  if not ForAll( list, IsQuiver ) then
+    TryNextMethod();
+  fi;
+  if side = LEFT_RIGHT and Length( list ) = 2 then
+    Q1 := list[ 1 ];
+    Q2 := list[ 2 ];
+    return QuiverProduct( Q1 ^ LEFT, Q2 ^ RIGHT );
+  else
+    return fail;
+  fi;
+end );
+
+InstallMethod( \^, "for quiver and side", [ IsQuiver, IsSide ],
+function( Q, side )
+  if side = LEFT_RIGHT then
+    return ProductQuiverFactorsLeftRight( Q );
+  else
+    TryNextMethod();
+  fi;
+end );
+
+# InstallMethod( AsLeftPath, "for left path", [ IsLeftPath ], IdFunc );
+# InstallMethod( AsLeftPath, "for right path", [ IsRightPath ], OppositePath );
+# InstallMethod( AsRightPath, "for left path", [ IsLeftPath ], OppositePath );
+# InstallMethod( AsRightPath, "for right path", [ IsRightPath ], IdFunc );
+
+InstallMethod( \^, "for path and direction", [ IsPath, IsDirection ],
+function( p, dir )
+  if dir = Direction( p ) then
+    return p;
+  else
+    return OppositePath( p );
+  fi;
+end );
+
+InstallMethod( \^, "for list of paths and side", [ IsDenseList, IsSide ],
+function( list, side )
+  local p1, p2, Q1, Q2;
+  if not ForAll( list, IsPath ) then
+    TryNextMethod();
+  fi;
+  if side = LEFT_RIGHT and Length( list ) = 2 then
+    p1 := list[ 1 ];
+    p2 := list[ 2 ];
+    Q1 := QuiverOfPath( p1 );
+    Q2 := QuiverOfPath( p2 );
+    return PathInProductQuiver( [ Q1, Q2 ] ^ LEFT_RIGHT, [ p1 ^ LEFT, p2 ^ RIGHT ] );
+  else
+    return fail;
+  fi;
+end );
+
+InstallMethod( \^, "for path and side", [ IsPath, IsSide ],
+function( p, side )
+  if side = LEFT_RIGHT then
+    return ProductPathFactorsLeftRight( p );
+  else
+    TryNextMethod();
+  fi;
+end );
+
 
 InstallMethod( PathIterator, [ IsQuiver ],
 function( Q )
@@ -1699,3 +1837,130 @@ function( Q )
   od;
   return list;
 end );
+
+
+InstallMethod( Subquiver, "for quiver and lists", [ IsQuiver, IsDenseList, IsDenseList ],
+function( Q, vertices, arrows )
+  local new_vertex_number, i, a, vertex_labels, arrow_labels,
+        source_indices, target_indices, label;
+  new_vertex_number := List( [ 1 .. NumberOfVertices( Q ) ], i -> fail );
+  for i in [ 1 .. Length( vertices ) ] do
+    new_vertex_number[ VertexNumber( vertices[ i ] ) ] := i;
+  od;
+  for a in arrows do
+    if new_vertex_number[ VertexNumber( Source( a ) ) ] = fail then
+      Error( "attempt to create subquiver containing arrow ", a, " but not its source vertex" );
+    elif new_vertex_number[ VertexNumber( Target( a ) ) ] = fail then
+      Error( "attempt to create subquiver containing arrow ", a, " but not its target vertex" );
+    fi;
+  od;
+  vertex_labels := List( vertices, Label );
+  arrow_labels := List( arrows, Label );
+  source_indices := List( arrows, a -> new_vertex_number[ VertexNumber( Source( a ) ) ] );
+  target_indices := List( arrows, a -> new_vertex_number[ VertexNumber( Target( a ) ) ] );
+  if IsString( Label( Q ) ) then
+    label := Concatenation( Label( Q ), "_sub" );
+  else
+    label := Label( Q );
+  fi;
+  return Quiver( Direction( Q ), label, vertex_labels, arrow_labels,
+                 source_indices, target_indices );
+end );
+
+InstallMethod( Subquiver, "for quiver and list", [ IsQuiver, IsDenseList ],
+function( Q, arrows )
+  local vertex_included, a, vertices;
+  vertex_included := List( [ 1 .. NumberOfVertices( Q ) ], i -> false );
+  for a in arrows do
+    vertex_included[ VertexNumber( Source( a ) ) ] := true;
+    vertex_included[ VertexNumber( Target( a ) ) ] := true;
+  od;
+  vertices := Vertices( Q ){ Positions( vertex_included, true ) };
+  return Subquiver( Q, vertices, arrows );
+end );
+
+InstallMethod( FullSubquiver, "for quiver and list", [ IsQuiver, IsDenseList ],
+function( Q, vertices )
+  local vertex_included, v, arrows, a;
+  vertex_included := List( [ 1 .. NumberOfVertices( Q ) ], i -> false );
+  for v in vertices do
+    vertex_included[ VertexNumber( v ) ] := true;
+  od;
+  arrows := [];
+  for a in Arrows( Q ) do
+    if vertex_included[ VertexNumber( Source( a ) ) ] and
+       vertex_included[ VertexNumber( Target( a ) ) ] then
+      Add( arrows, a );
+    fi;
+  od;
+  return Subquiver( Q, vertices, arrows );
+end );
+
+
+InstallMethod( IsConnected, "for quiver", [ IsQuiver ],
+function( Q )
+  local n, queue, i, visited, v;
+  n := NumberOfVertices( Q );
+  queue := [ Vertex( Q, 1 ) ];
+  i := 1;
+  visited := List( [ 1 .. n ], i -> false );
+  while i <= Length( queue ) do
+    v := queue[ i ];
+    visited[ VertexNumber( v ) ] := true;
+    for n in Neighbors( v ) do
+      if not visited[ VertexNumber( n ) ] then
+        Add( queue, n );
+      fi;
+    od;
+    i := i + 1;
+  od;
+  return ForAll( visited, IdFunc );
+end );
+
+InstallMethod( ConnectedComponents, "for quiver", [ IsQuiver ],
+function( Q )
+  local component_numbers, mark_component, num_components, v, component_name;
+
+  component_numbers := List( [ 1 .. NumberOfVertices( Q ) ], i -> 0 );
+
+  mark_component := function( start_vertex, comp_nr )
+    local queue, i, v, n;
+    queue := [ start_vertex ];
+    i := 1;
+    while i <= Length( queue ) do
+      v := queue[ i ];
+      component_numbers[ VertexNumber( v ) ] := comp_nr;
+      for n in Neighbors( v ) do
+        if component_numbers[ VertexNumber( n ) ] = 0 then
+          Add( queue, n );
+          component_numbers[ VertexNumber( n ) ] := comp_nr;
+        fi;
+      od;
+      i := i + 1;
+    od;
+  end;
+
+  num_components := 0;
+  for v in Vertices( Q ) do
+    if component_numbers[ VertexNumber( v ) ] > 0 then
+      continue;
+    fi;
+    num_components := num_components + 1;
+    mark_component( v, num_components );
+  od;
+
+  if IsString( Label( Q ) ) then
+    component_name := function( i )
+      return Concatenation( Label( Q ), "_comp", String( i ) );
+    end;
+  else
+    component_name := i -> Label( Q );
+  fi;
+
+  return List( [ 1 .. num_components ],
+               i -> RenameQuiver
+                    ( component_name( i ),
+                      FullSubquiver( Q, Vertices( Q ){ Positions( component_numbers, i ) } ) ) );
+end );
+
+

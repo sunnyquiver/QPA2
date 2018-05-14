@@ -466,6 +466,21 @@ DeclareOperation( "PathFromString", [ IsQuiver, IsString ] );
 #DeclareOperation( "\.", [ IsQuiver, IsPosInt ] );
 
 
+#! @Arguments Q
+#! @Returns list of vertices
+#! @Description
+#!  Returns a list of all the vertices that are sources in the quiver,
+#!  in the sense that no arrow ends in them.
+DeclareAttribute( "SourceVertices", IsQuiver );
+
+#! @Arguments Q
+#! @Returns list of vertices
+#! @Description
+#!  Returns a list of all the vertices that are sinks in the quiver,
+#!  in the sense that no arrow starts in them.
+DeclareAttribute( "SinkVertices", IsQuiver );
+
+
 #! @Section Information about a path
 
 #! @Arguments p
@@ -548,6 +563,35 @@ DeclareAttribute( "OutgoingArrows", IsVertex );
 #! @Description
 #!  A list containing all arrows ending in the vertex <A>v</A>.
 DeclareAttribute( "IncomingArrows", IsVertex );
+
+#! @Arguments v
+#! @Returns IsInt
+#! @Description
+#!  The outdegree of the vertex <A>v</A>; that is, the number of arrows
+#!  starting in <A>v</A>.
+DeclareAttribute( "Outdegree", IsVertex );
+
+#! @Arguments v
+#! @Returns IsInt
+#! @Description
+#!  The indegree of the vertex <A>v</A>; that is, the number of arrows
+#!  ending in <A>v</A>.
+DeclareAttribute( "Indegree", IsVertex );
+
+#! @Arguments v
+#! @Returns IsInt
+#! @Description
+#!  The degree of the vertex <A>v</A>; that is, the number of arrows
+#!  starting or ending in <A>v</A>.
+DeclareAttribute( "DegreeOfVertex", IsVertex );
+
+#! @Arguments v
+#! @Returns list of vertices
+#! @Description
+#!  Returns a list containing the neighbors of the vertex <A>v</A>;
+#!  that is, all vertices <C>w</C> such that there is an arrow from
+#!  <A>v</A> to <C>w</C> or from <C>w</C> to <A>v</A>.
+DeclareAttribute( "Neighbors", IsVertex );
 
 
 #! @Section Composition of paths
@@ -752,6 +796,13 @@ DeclareOperation( "PathOverlaps", [ IsPath, IsPath ] );
 
 #! @Section Quiver constructions
 
+#! @Arguments Q, label
+#! @Returns <Ref Filt="IsQuiver"/>
+#! @Description
+#!  Returns a new quiver which is equal to the quiver <A>Q</A>
+#!  but has the object <A>label</A> as its label.
+DeclareOperation( "RenameQuiver", [ IsObject, IsQuiver ] );
+
 #! @Arguments Q
 #! @Returns <Ref Filt="IsQuiver"/>
 #! @Description
@@ -787,10 +838,16 @@ DeclareProperty( "IsProductQuiver", IsQuiver );
 
 DeclareAttribute( "ProductQuiverFactors", IsQuiver );
 
+DeclareAttribute( "ProductQuiverFactorsLeftRight", IsQuiver );
+
 DeclareOperation( "ProductQuiverFactor", [ IsProductQuiver, IsPosInt ] );
 
 #! @Arguments n, p
 DeclareOperation( "ProjectPathFromProductQuiver", [ IsPosInt, IsPath ] );
+
+DeclareAttribute( "ProductPathFactors", IsPath );
+
+DeclareAttribute( "ProductPathFactorsLeftRight", IsPath );
 
 #! @Arguments PQ, n, vertices, p
 DeclareOperation( "IncludePathInProductQuiver", [ IsProductQuiver, IsPosInt, IsList, IsPath ] );
@@ -802,6 +859,9 @@ DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsHomogeneousList, I
 DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsHomogeneousList ] );
 
 DeclareOperation( "Decartesian", [ IsList ] );
+
+DeclareOperation( "\^", [ IsQuiver, IsSide ] );
+DeclareOperation( "\^", [ IsPath, IsSide ] );
 
 
 #! @Section Path iterators
@@ -835,3 +895,44 @@ DeclareOperation( "FilteredPathIterator", [ IsQuiver, IsFunction ] );
 #!  This works only for acyclic quivers.
 #!  Raises an error if called with a quiver which is not acyclic.
 DeclareOperation( "PathList", [ IsQuiver ] );
+
+
+#! @Section Subquivers
+
+#! @Arguments Q, vertices, arrows
+#! @Returns <Ref Filt="IsQuiver"/>
+#! @Description
+#!  Construct a subquiver of the quiver <A>Q</A> consisting of
+#!  the vertices in the list <A>vertices</A> and
+#!  the arrows in the list <A>arrows</A>.
+DeclareOperation( "Subquiver", [ IsQuiver, IsDenseList, IsDenseList ] );
+
+#! @Arguments Q, arrows
+#! @Returns <Ref Filt="IsQuiver"/>
+#! @Description
+#!  Construct a subquiver of the quiver <A>Q</A> consisting of
+#!  the arrows in the list <A>arrows</A> and all vertices adjacent to
+#!  these arrows.
+DeclareOperation( "Subquiver", [ IsQuiver, IsDenseList ] );
+
+#! @Arguments Q, vertices
+#! @Returns <Ref Filt="IsQuiver"/>
+#! @Description
+#!  Returns the subquiver of <A>Q</A> containing only the vertices
+#!  in the list <A>vertices</A>, and all arrows between these vertices.
+DeclareOperation( "FullSubquiver", [ IsQuiver, IsDenseList ] );
+
+
+#! @Section Connected components
+
+#! @Arguments Q
+#! @Returns IsBool
+#! @Description
+#!  Check if the quiver <A>Q</A> is connected.
+DeclareAttribute( "IsConnected", IsQuiver );
+
+#! @Arguments Q
+#! @Returns list of quivers
+#! @Description
+#!  Returns a list of the connected components of the quiver <A>Q</A>.
+DeclareAttribute( "ConnectedComponents", IsQuiver );
