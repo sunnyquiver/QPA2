@@ -1413,3 +1413,46 @@ InstallMethodWithDirections( FieldAsQuiverAlgebra,
         dir -> K -> PathAlgebra( K, Quiver( dir, "point(1)" ) )
 );
 
+
+InstallMethod( IsFiniteDimensional, [ IsPathAlgebra ],
+               kQ -> IsAcyclicQuiver( QuiverOfAlgebra( kQ ) ) );
+
+
+InstallMethod( IsFiniteDimensional, [ IsQuotientOfPathAlgebra ],
+function( A )
+  local Q, I, is_nonreducible, path_length, paths, next_paths,
+        cycle_length_limit, p, a;
+
+  Q := QuiverOfAlgebra( A );
+  I := IdealOfQuotient( A );
+
+  is_nonreducible :=
+    p ->
+    ( Representative( PathAsAlgebraElement( A, p ) )
+      = PathAsAlgebraElement( PathAlgebra( A ), p ) );
+
+  path_length := 1;
+  paths := Arrows( Q );
+  next_paths := [];
+
+  cycle_length_limit := 2 * Maximum( List( GeneratorsOfIdeal( I ),
+                                           g -> Length( LeadingPath( g ) ) ) );
+
+  while not IsEmpty( paths ) do
+    for p in paths do
+      if is_nonreducible( p ) then
+        for a in OutgoingArrows( Target( p ) ) do
+          Add( next_paths, ComposePaths( p, a ) );
+        od;
+        if Source( p ) = Target( p ) and path_length >= cycle_length_limit then
+          return false;
+        fi;
+      fi;
+    od;
+    path_length := path_length + 1;
+    paths := next_paths;
+    next_paths := [];
+  od;
+
+  return true;
+end );

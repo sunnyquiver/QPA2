@@ -145,6 +145,11 @@ DeclareAttribute( "PathAlgebra", IsQuiverAlgebra );
 #! @Returns <C>"left"</C> or <C>"right"</C>
 #DeclareAttribute( "Orientation", IsQuiverAlgebra );
 
+#! @Description
+#!  Checks whether the quiver algebra <A>A</A> is finite-dimensional.
+#! @Arguments A
+#DeclareProperty( "IsFiniteDimensional", IsQuiverAlgebra );
+
 #!
 DeclareCategory( "IsQuiverAlgebraBasis", IsBasis );
 
