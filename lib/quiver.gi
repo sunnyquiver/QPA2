@@ -1083,7 +1083,7 @@ function( Q )
         od;
       fi;
     od;
-    for i in to_remove do
+    for i in Reversed( to_remove ) do
       Remove( vertices, i );
     od;
   until Length( vertices ) = 0 or Length( to_remove ) = 0;
