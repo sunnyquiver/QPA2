@@ -560,7 +560,15 @@ function( F )
   AddColiftAlongEpimorphism( cat, epi_colift );
 
   direct_sum := function( summands )
-    return MakeQPAVectorSpace( summands[ 1 ], # TODO look at all summands?
+    local type;
+    if ForAll( summands, IsRowVectorSpace ) then
+      type := "row";
+    elif ForAll( summands, IsColVectorSpace ) then
+      type := "col";
+    else
+      Error( "not implemented" );
+    fi;
+    return MakeQPAVectorSpace( type, F,
                                Sum( List( summands, Dimension ) ) );
   end;
   AddDirectSum( cat, direct_sum );
