@@ -615,6 +615,12 @@ DeclareAttribute( "VertexImages", IsQuiverAlgebraHomomorphism );
 DeclareAttribute( "ArrowImages", IsQuiverAlgebraHomomorphism );
 
 
-
+#! @Description
+#!  Creates the natural homomorphism from the algebra <A>A</A>
+#!  to the quotient algebra <A>A</A>/<A>I</A>,
+#!  where <A>I</A> is an ideal in <A>A</A>.
+#! @Returns IsQuiverAlgebraHomomorphism
+#! @Arguments A, I
+# DeclareOperation( "NaturalHomomorphismByIdeal", [ IsQuiverAlgebra, IsQuiverAlgebraIdeal ] )
 
 #

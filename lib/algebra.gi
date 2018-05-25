@@ -1397,3 +1397,14 @@ function( A )
 
   return true;
 end );
+
+
+InstallMethod( NaturalHomomorphismByIdeal, [ IsPathAlgebra, IsQuiverAlgebraTwoSidedIdeal ],
+# TODO: case where the algebra is a quotient of a path algebra
+function( kQ, I )
+  local Q, A, images;
+  Q := QuiverOfAlgebra( kQ );
+  A := kQ / I;
+  images := List( PrimitivePaths( Q ), p -> PathAsAlgebraElement( A, p ) );
+  return QuiverAlgebraHomomorphism( kQ, A, images );
+end );
