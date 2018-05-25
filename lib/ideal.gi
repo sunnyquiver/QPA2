@@ -26,6 +26,14 @@ side -> function( A, gens )
   return I;
 end );
 
+InstallMethod( LeftIdealByGenerators, [ IsQuiverAlgebra, IsCollection and IsDenseList ],
+               QuiverAlgebraLeftIdeal );
+InstallMethod( RightIdealByGenerators, [ IsQuiverAlgebra, IsCollection and IsDenseList ],
+               QuiverAlgebraRightIdeal );
+InstallMethod( TwoSidedIdealByGenerators, [ IsQuiverAlgebra, IsCollection and IsDenseList ],
+               QuiverAlgebraTwoSidedIdeal );
+               
+
 InstallMethod( String, "for quiver algebra ideal",
                [ IsQuiverAlgebraIdeal ],
 function( I )
