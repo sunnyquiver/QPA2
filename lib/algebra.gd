@@ -4,7 +4,7 @@
 #! either a path algebra or a quotient of a path algebra by
 #! some ideal.
 
-#! @Section Categories for algebras, elements and ideals
+#! @Section Categories for algebras and algebra elements
 
 #! @Description
 #!  Category for elements of quiver algebras.
@@ -21,16 +21,23 @@ DeclareCategory( "IsLeftQuiverAlgebra", IsQuiverAlgebra );
 DeclareCategory( "IsRightQuiverAlgebra", IsQuiverAlgebra );
 
 #! @Description
+#!  Category for ideals in quiver algebras.
+DeclareCategory( "IsQuiverAlgebraIdeal",
+                 IsRing and IsVectorSpace
+                 and CategoryCollections( IsQuiverAlgebraElement )
+                 and IsObjectWithSide );
+
+#! @Description
+#!  Category for (two-sided) ideals in path algebras.
+DeclareCategory( "IsPathAlgebraIdeal", IsQuiverAlgebraIdeal );
+
+#! @Description
 #!  Category for elements of path algebras.
 DeclareCategory( "IsPathAlgebraElement", IsQuiverAlgebraElement );
 
 #! @Description
 #!  Category for path algebras.
 DeclareCategory( "IsPathAlgebra", IsQuiverAlgebra );
-
-#! @Description
-#!  Category for (two-sided) ideals in path algebras.
-DeclareCategory( "IsPathIdeal", IsRing );
 
 #! @Description
 #!  Category for elements of quotients of path algebras.
@@ -68,11 +75,11 @@ DeclareOperation( "PathAlgebra", [ IsField, IsQuiver ] );
 #!  <C><A>kQ</A>/<A>I</A></C> or
 #!  <C><A>kQ</A>/<A>relations</A></C>.
 #! @Arguments kQ, I
-DeclareOperation( "QuotientOfPathAlgebra", [ IsPathAlgebra, IsPathIdeal ] );
+DeclareOperation( "QuotientOfPathAlgebra", [ IsPathAlgebra, IsPathAlgebraIdeal ] );
 #! @Arguments kQ, relations
 DeclareOperation( "QuotientOfPathAlgebra", [ IsPathAlgebra, IsHomogeneousList ] );
 #! @Arguments kQ, I
-DeclareOperation( "\/", [ IsPathAlgebra, IsPathIdeal ] );
+DeclareOperation( "\/", [ IsPathAlgebra, IsPathAlgebraIdeal ] );
 #! @Arguments kQ, relations
 DeclareOperation( "\/", [ IsPathAlgebra, IsHomogeneousList ] );
 #! @EndGroup
@@ -117,11 +124,11 @@ DeclareAttribute( "QuiverOfAlgebra", IsQuiverAlgebra );
 DeclareAttribute( "RelationsOfAlgebra", IsQuiverAlgebra );
 
 #! @Arguments A
-#! @Returns <Ref Filt="IsPathIdeal"/>
+#! @Returns <Ref Filt="IsPathAlgebraIdeal"/>
 #! @Description
 #!  For a quotient <A>A</A> = $kQ/I$ of a path algebra,
 #!  this operation returns the ideal $I$.
-DeclareAttribute( "IdealOfQuotient", IsQuotientOfPathAlgebra );
+DeclareAttribute( "IdealOfQuotient", IsQuiverAlgebra );
 
 # field of a QuiverAlgebra: LeftActingDomain
 #! <ManSection>
@@ -485,12 +492,6 @@ DeclareOperation( "TipReduce", [ IsHomogeneousList ] );
 #!  Given a list <A>G</A> of generators for an ideal $I$ in a path algebra,
 #!  this operation produces a Groebner basis for the ideal $I$.
 DeclareOperation( "ComputeGroebnerBasis", [ IsHomogeneousList ] );
-
-#! @Arguments I
-#! @Returns list of <Ref Filt="IsPathAlgebraElement"/>
-#! @Description
-#!  A Groebner basis for the ideal <A>I</A>.
-DeclareAttribute( "GroebnerBasis", IsPathIdeal );
 
 #! @Section Algebra constructions
 

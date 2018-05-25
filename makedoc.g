@@ -21,6 +21,7 @@ AutoDoc( "QPA" :
                                              [ "Quiver algebras", "" ],
                                              [ "Modules", "" ],
                                              [ "Representations", "" ],
+                                             [ "Ideals", "" ],
                                              [ "Vector spaces", "" ],
                                              [ "Functors", "" ],
                                              [ "Special quivers, algebras and modules", "" ],
