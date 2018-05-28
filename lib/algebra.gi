@@ -496,7 +496,7 @@ function( k, Q )
   A := Objectify( algebraType,
                   rec( field := k,
                        quiver := Q ) );
-  return A;
+  return Intern( A );
 end );
 
 InstallMethod( PrintObj, "for path algebra",
@@ -547,6 +547,12 @@ InstallMethod( PathAlgebra, "for path algebra",
                [ IsPathAlgebra ],
 function( A )
   return A;
+end );
+
+InstallMethod( Hash, "for quiver algebra",
+               [ IsQuiverAlgebra ],
+function( A )
+  return ( Hash( QuiverOfAlgebra( A ) ) + Hash( LeftActingDomain( A ) ) ) mod HashMod;
 end );
 
 InstallMethod( \in, "for element of path algebra and path algebra",
@@ -617,13 +623,15 @@ end );
 
 InstallMethod( QuotientOfPathAlgebra, "for path algebra and path ideal",
                [ IsPathAlgebra, IsPathAlgebraIdeal ],
-function( A, I )
-  return Objectify( NewType( FamilyObj( A ),
-                             IsQuotientOfPathAlgebra and IsQuiverAlgebra^Direction( A )
-                             and IsQuotientOfPathAlgebraRep ),
-                    rec( pathAlgebra := A,
-                         relations := GeneratorsOfIdeal( I ),
-                         ideal := I ) );
+function( kQ, I )
+  local A;
+  A := Objectify( NewType( FamilyObj( kQ ),
+                           IsQuotientOfPathAlgebra and IsQuiverAlgebra^Direction( kQ )
+                           and IsQuotientOfPathAlgebraRep ),
+                  rec( pathAlgebra := kQ,
+                       relations := GeneratorsOfIdeal( I ),
+                       ideal := I ) );
+  return Intern( A );
 end );  
 
 InstallMethod( PrintObj, "for quotient of path algebra",

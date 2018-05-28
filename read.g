@@ -13,3 +13,5 @@ ReadPackage( "QPA", "lib/ideal.gi" );
 ReadPackage( "QPA", "lib/hom.gi" );
 ReadPackage( "QPA", "lib/tensor.gi" );
 ReadPackage( "QPA", "lib/restrictionfunctors.gi" );
+ReadPackage( "QPA", "lib/hash.gi" );
+ReadPackage( "QPA", "lib/intern.gi" );

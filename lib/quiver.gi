@@ -453,7 +453,7 @@ dir -> function( label, vertex_labels, arrow_labels,
                        Length( outgoing_arrows[ i ] ) + Length( incoming_arrows[ i ] ) );
   od;
 
-  return Q;
+  return Intern( Q );
 end );
 
 InstallMethod( QuiverOfPath,

@@ -13,3 +13,5 @@ ReadPackage( "QPA", "lib/ideal.gd" );
 ReadPackage( "QPA", "lib/hom.gd" );
 ReadPackage( "QPA", "lib/tensor.gd" );
 ReadPackage( "QPA", "lib/restrictionfunctors.gd" );
+ReadPackage( "QPA", "lib/hash.gd" );
+ReadPackage( "QPA", "lib/intern.gd" );
