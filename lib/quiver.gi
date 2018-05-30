@@ -1642,7 +1642,7 @@ end );
 InstallMethod( IncludePathInProductQuiver,
                [ IsProductQuiver, IsPosInt, IsList, IsPrimitivePath ],
 function( PQ, n, vertices, p )
-  local label, i;
+  local label, i, paths, p1, p2, Q1, Q2;
   if ProductQuiverFactor( PQ, n ) <> QuiverOfPath( p ) then
     Error( "The path ", p, " is not in factor ", n, " of the product quiver" );
   fi;
@@ -1660,6 +1660,24 @@ function( PQ, n, vertices, p )
     fi;
     label[ i ] := Label( vertices[ i ] );
   od;
+  if Length( label ) = 2 then
+    paths := [];
+    paths[ n ] := p;
+    paths[ 3 - n ] := vertices[ 3 - n ];
+    p1 := paths[ 1 ];
+    p2 := paths[ 2 ];
+    Q1 := ProductQuiverFactors( PQ )[ 1 ];
+    Q2 := ProductQuiverFactors( PQ )[ 2 ];
+    if IsVertex( p1 ) and IsVertex( p2 ) then
+      return Vertex( PQ, ( VertexNumber( p1 ) - 1 ) * NumberOfVertices( Q2 ) + VertexNumber( p2 ) );
+    elif IsVertex( p1 ) then # IsArrow( p2 )
+      return Arrow( PQ, ( VertexNumber( p1 ) - 1 ) * NumberOfArrows( Q2 ) + ArrowNumber( p2 ) );
+    else # IsArrow( p1 ) and IsVertex( p2 )
+      return Arrow( PQ,
+                    ( NumberOfVertices( Q1 ) * NumberOfArrows( Q2 ) +
+                      ( ArrowNumber( p1 ) - 1 ) * NumberOfVertices( Q2 ) + VertexNumber( p2 ) ) );
+    fi;
+  fi;
   return PrimitivePathByLabel( PQ, label );
 end );
 
