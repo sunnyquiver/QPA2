@@ -832,33 +832,113 @@ DeclareOperation( "QuiverProduct", [ IsQuiver, IsQuiver ] );
 #! @Returns <Ref Filt="IsQuiver"/>
 #! @Description
 #!  Returns the product quiver of the quivers in the list <A>L</A>.
-DeclareOperation( "QuiverProduct", [ IsHomogeneousList ] );
+DeclareOperation( "QuiverProduct", [ IsDenseList ] );
 
+#! @Description
+#!  Checks whether <A>Q</A> is a product quiver.
+#! @Returns IsBool
+#! @Arguments Q
 DeclareProperty( "IsProductQuiver", IsQuiver );
 
+#! @Description
+#!  Factor a product quiver.
+#!  Given a product quiver <A>Q</A>, returns the quivers
+#!  that <A>Q</A> is a product of.
+#! @Returns list of quivers
+#! @Arguments Q
 DeclareAttribute( "ProductQuiverFactors", IsQuiver );
 
-DeclareAttribute( "ProductQuiverFactorsLeftRight", IsQuiver );
-
+#! @Description
+#!  Returns the <A>i</A>-th factor of the product quiver <A>Q</A>.
+#! @Returns IsQuiver
+#! @Arguments Q, i
 DeclareOperation( "ProductQuiverFactor", [ IsProductQuiver, IsPosInt ] );
 
-#! @Arguments n, p
+#! @Description
+#!  Factor a product quiver, with left/right translation.
+#!
+#!  Given a product quiver <A>Q</A> which is the product of exactly
+#!  two quivers, this function returns a list containing one of these
+#!  quivers and the opposite of the other.
+#! @Returns list of quivers
+#! @Arguments Q
+DeclareAttribute( "ProductQuiverFactorsLeftRight", IsQuiver );
+
+#! @Description
+#!  Project a path from a product quiver to one of the factors.
+#!  The argument <A>i</A> is a positive integer, and <A>p</A> is a
+#!  path in a product quiver.
+#!  The result is the projection of <A>p</A> to the <A>i</A>-th factor
+#!  of the product quiver.
+#! @Returns IsPath
+#! @Arguments i, p
 DeclareOperation( "ProjectPathFromProductQuiver", [ IsPosInt, IsPath ] );
 
+#! @Description
+#!  Project a path from a product quiver to all factors.
+#! @Returns list of paths
+#! @Arguments p
 DeclareAttribute( "ProductPathFactors", IsPath );
 
+#! @Description
+#!  Project a path from a product quiver to both factors,
+#!  with left/right translation.
+#! @Returns list of paths
+#! @Arguments p
 DeclareAttribute( "ProductPathFactorsLeftRight", IsPath );
 
+#! @Description
+#!  Include a path into a product quiver.
+#! @Returns IsPath
 #! @Arguments PQ, n, vertices, p
 DeclareOperation( "IncludePathInProductQuiver", [ IsProductQuiver, IsPosInt, IsList, IsPath ] );
 
-#! @Arguments PQ, paths, permutation
-DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsHomogeneousList, IsPerm ] );
+#! @Description
+#!  Create a path in a product quiver.
+#!  The argument <A>Q</A> is a product quiver,
+#!  and <A>paths</A> is a list of paths from each factor of <A>Q</A>.
+#!  The result is a path in <A>Q</A> with <A>paths</A> as its projections
+#!  to each factor.
+#! @Arguments Q, paths
+DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList ] );
 
-#! @Arguments PQ, paths
-DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsHomogeneousList ] );
+#! @Description
+#!  Create a path in a product quiver.
+#!  The argument <A>Q</A> is a product quiver,
+#!  and <A>paths</A> is a list of paths from each factor of <A>Q</A>.
+#!  The result is a path in <A>Q</A> with <A>paths</A> as its projections
+#!  to each factor.
+#!
+#!  The argument <A>permutation</A> is a permutation which describes
+#!  in which order the given paths should appear in the resulting path.
+#! @Arguments Q, paths, permutation
+DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList, IsPerm ] );
 
-DeclareOperation( "Decartesian", [ IsList ] );
+#! @Description
+#!  Gives the vertex number of a certain vertex in a product quiver.
+#!  The argument <A>quivers</A> is a list of quivers,
+#!  and the argument <A>vertex_numbers</A> is a list of positive integers.
+#!  The result is the number of the vertex in <C>QuiverProduct( quivers )</C>
+#!  which is made by combining the vertices with the given vertex numbers
+#!  from each quiver.
+#! @Returns positive integer
+#! @Arguments quivers, vertex_numbers
+DeclareOperation( "ProductQuiverVertexNumber", [ IsDenseList, IsDenseList ] );
+
+#! @Description
+#!  Gives the arrow number of a certain arrow in a product quiver.
+#!  The argument <A>quivers</A> is a list of quivers,
+#!  <A>i</A> is a positive integer, and
+#!  <A>path_numbers</A> is a list of positive integers.
+#!  Each element in <A>path_numbers</A> should be the number of a vertex
+#!  in the corresponding quiver, except <C>path_numbers[i]</C>, which
+#!  is the number of an arrow.
+#!  The result is the number of the arrow in <C>QuiverProduct( quivers )</C>
+#!  which is made by combining the given arrow and vertices.
+#! @Returns positive integer
+#! @Arguments quivers, i, path_numbers
+DeclareOperation( "ProductQuiverArrowNumber", [ IsDenseList, IsPosInt, IsDenseList ] );
+
 
 DeclareOperation( "\^", [ IsQuiver, IsSide ] );
 DeclareOperation( "\^", [ IsPath, IsSide ] );
