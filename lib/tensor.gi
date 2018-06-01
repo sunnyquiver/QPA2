@@ -236,3 +236,66 @@ InstallMethod( TensorProductOfModules,
     return RestrictionToLeft( TensorProductOfModules( M1, LeftModuleToBimodule( M2 ) ) );
 end
   );
+
+InstallMethod( TensorProductOfHomomorphisms,
+        "for two homomorphisms of modules",
+        [ IsQuiverBimoduleHomomorphism, IsQuiverBimoduleHomomorphism, IsQuiverBimodule, IsQuiverBimodule ],
+        function( f, g, T1, T2 )
+    
+    local   rf,  rg,  RT1,  RT2;
+    
+    rf := UnderlyingRepresentationHomomorphism( f );
+    rg := UnderlyingRepresentationHomomorphism( g );
+    RT1 := UnderlyingRepresentation( T1 );
+    RT2 := UnderlyingRepresentation( T2 );
+    
+    return AsBimoduleHomomorphism( TensorProductOfHomomorphisms( rf, rg, RT1, RT2 ) ); 
+end
+  );
+
+
+InstallMethod( LeftTensorFunctor, 
+        "for a quiver module and a quiver module category",
+        [ IsQuiverBimodule, IsQuiverBimoduleCategory ], 
+        function( M, AmodC )
+    local   A,  B,  C,  BmodC,  tensor;
+    
+    A := RightActingAlgebra( M );
+    B := LeftActingAlgebra( M );
+    C := AlgebrasOfCategory( AmodC )[ 2 ];
+    if A <> AlgebrasOfCategory( AmodC )[ 1 ] then
+        Error( "Entered bimodule and category has incompatible structures,\n" );
+    fi;
+    BmodC := BimoduleCategory( B, C );
+    tensor := CapFunctor( "LeftTensor", AmodC, BmodC );
+    
+    AddObjectFunction( tensor, X -> TensorProductOfModules( M, X ) ); 
+    
+    AddMorphismFunction( tensor, function( R1, f, R2 ) return TensorProductOfHomomorphisms( IdentityMorphism( M ), f, R1, R2 ); end );
+    
+    return tensor;
+end
+  );
+
+InstallMethod( RightTensorFunctor, 
+        "for a quiver module and a quiver module category",
+        [ IsQuiverBimodule, IsQuiverBimoduleCategory ], 
+        function( M, CmodA )
+    local   A,  B,  C,  CmodB,  tensor;
+    
+    A := LeftActingAlgebra( M );
+    B := RightActingAlgebra( M );
+    C := AlgebrasOfCategory( CmodA )[ 1 ];
+    if A <> AlgebrasOfCategory( CmodA )[ 2 ] then
+        Error( "Entered bimodule and category has incompatible structures,\n" );
+    fi;
+    CmodB := BimoduleCategory( C, B );
+    tensor := CapFunctor( "RightTensor", CmodA, CmodB );
+    
+    AddObjectFunction( tensor, X -> TensorProductOfModules( X, M ) ); 
+    
+    AddMorphismFunction( tensor, function( R1, f, R2 ) return TensorProductOfHomomorphisms( f, IdentityMorphism( M ), R1, R2 ); end );
+    
+    return tensor;
+end
+  );
