@@ -1076,7 +1076,8 @@ function( paths, e )
   Ps := Paths( e );
   Cs := Coefficients( e );
   zero := Zero( LeftActingDomain( AlgebraOfElement( e ) ) );
-  coeffs := List( paths, p -> zero );
+  #coeffs := List( paths, p -> zero );
+  coeffs := [];
   j := Length( Ps );
   for i in [ 1 .. Length( paths ) ] do
     if j = 0 then
@@ -1085,7 +1086,13 @@ function( paths, e )
     if paths[ i ] = Ps[ j ] then
       coeffs[ i ] := Cs[ j ];
       j := j - 1;
+    else
+      coeffs[ i ] := zero;
     fi;
+  od;
+  while i <= Length( paths ) do
+    coeffs[ i ] := zero;
+    i := i + 1;
   od;
   return coeffs;
 end );

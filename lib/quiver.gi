@@ -7,7 +7,7 @@ DeclareRepresentation( "IsVertexRep", IsComponentObjectRep and IsAttributeStorin
                        [ "quiver", "number" ] );
 DeclareRepresentation( "IsArrowRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "quiver", "label", "number", "source", "target" ] );
-DeclareRepresentation( "IsCompositePathRep", IsComponentObjectRep,
+DeclareRepresentation( "IsCompositePathRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "arrows" ] );
 DeclareRepresentation( "IsQuiverRep", IsComponentObjectRep and IsAttributeStoringRep,
 		       [ "label", "vertices", "arrows", "primitive_paths",
@@ -1294,28 +1294,28 @@ function( Q )
   return Q!.label;
 end );
 
-InstallMethod( \=, "for vertices",
- 	       [ IsVertex and IsVertexRep, IsVertex and IsVertexRep ],
-function( v1, v2 )
-  return QuiverOfPath( v1 ) = QuiverOfPath( v2 )
-         and VertexNumber( v1 ) = VertexNumber( v2 );
-end );
-
-InstallMethod( \=,
-               "for arrows",
- 	       [ IsArrow and IsArrowRep, IsArrow and IsArrowRep ],
-function( a1, a2 )
-  return QuiverOfPath( a1 ) = QuiverOfPath( a2 )
-         and ArrowNumber( a1 ) = ArrowNumber( a2 );
-end );
-
 # InstallMethod( \=, "for vertices",
-#                [ IsVertex and IsVertexRep, IsVertex and IsVertexRep ],
-#                IsIdenticalObj );
+#  	       [ IsVertex and IsVertexRep, IsVertex and IsVertexRep ],
+# function( v1, v2 )
+#   return QuiverOfPath( v1 ) = QuiverOfPath( v2 )
+#          and VertexNumber( v1 ) = VertexNumber( v2 );
+# end );
 
-# InstallMethod( \=, "for arrows",
-#                [ IsArrow and IsArrowRep, IsArrow and IsArrowRep ],
-#                IsIdenticalObj );
+# InstallMethod( \=,
+#                "for arrows",
+#  	       [ IsArrow and IsArrowRep, IsArrow and IsArrowRep ],
+# function( a1, a2 )
+#   return QuiverOfPath( a1 ) = QuiverOfPath( a2 )
+#          and ArrowNumber( a1 ) = ArrowNumber( a2 );
+# end );
+
+InstallMethod( \=, "for vertices",
+               [ IsVertex and IsVertexRep, IsVertex and IsVertexRep ],
+               IsIdenticalObj );
+
+InstallMethod( \=, "for arrows",
+               [ IsArrow and IsArrowRep, IsArrow and IsArrowRep ],
+               IsIdenticalObj );
 
 InstallMethod( \=,
                "for vertex and nontrivial path",
