@@ -1,3 +1,60 @@
+BindGlobal( "FamilyOfQuiverRepresentationHomSpaces",
+            NewFamily( "quiver representation hom spaces" ) );
+DeclareRepresentation( "IsQuiverRepresentationHomSpaceRep",
+                       IsComponentObjectRep and IsAttributeStoringRep,
+                       [ ] );
+
+InstallMethod( Hom,
+               [ IsQuiverRepresentation, IsQuiverRepresentation ],
+function( R1, R2 )
+  local type, hom;
+  type := NewType( FamilyOfQuiverRepresentationHomSpaces,
+                   IsQuiverRepresentationHomSpace and IsQuiverRepresentationHomSpaceRep );
+  hom := rec();
+  ObjectifyWithAttributes( hom, type,
+                           Source, R1,
+                           Range, R2 );
+  return Intern( hom );
+end );
+
+InstallMethod( CanonicalBasis, [ IsQuiverRepresentationHomSpace ],
+function( hom )
+  local basis, basis_vectors;
+  basis_vectors := BasisOfHom( Source( hom ), Range( hom ) );
+  basis := rec();
+  ObjectifyWithAttributes( basis,
+                           NewType( FamilyOfVectorSpaceBases,
+                                    IsBasis and IsVectorSpaceBasisRep ),
+                           BasisVectors, basis_vectors,
+                           UnderlyingLeftModule, hom );
+  return basis;
+end );
+
+InstallMethod( Dimension, [ IsQuiverRepresentationHomSpace ],
+               hom -> Length( CanonicalBasis( hom ) ) );
+
+InstallMethod( String, [ IsQuiverRepresentationHomSpace ],
+function( hom )
+  return Concatenation( "Hom(", String( Source( hom ) ),
+                        ", ", String( Range( hom ) ), ")" );
+end );
+
+InstallMethod( PrintObj, [ IsQuiverRepresentationHomSpace ],
+function( hom )
+  Print( String( hom ) );
+end );
+
+InstallMethod( ViewObj, [ IsQuiverRepresentationHomSpace ],
+function( hom )
+  Print( String( hom ) );
+end );
+
+InstallMethod( \=, [ IsQuiverRepresentationHomSpace, IsQuiverRepresentationHomSpace ],
+function( hom1, hom2 )
+  return Source( hom1 ) = Source( hom2 )
+         and Range( hom1 ) = Range( hom2 );
+end );
+
 InstallMethod( BasisOfHom,
         "for two representations of a quiver",
         [ IsQuiverRepresentation, IsQuiverRepresentation ],

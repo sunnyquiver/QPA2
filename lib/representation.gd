@@ -360,7 +360,7 @@ DeclareOperation( "MapForAlgebraElement", [ IsQuiverRepresentation, IsQuiverAlge
 #!
 DeclareCategory( "IsQuiverRepresentationHomomorphism",
                  IsMapping and IsSPGeneralMapping and IsVectorSpaceHomomorphism
-                 and IsCapCategoryMorphism );
+                 and IsCapCategoryMorphism and IsQPAVector );
 
 #!
 DeclareOperation( "QuiverRepresentationHomomorphism",

@@ -837,6 +837,11 @@ function( source, range, maps )
   return f;
 end );
 
+InstallMethod( SpaceContainingVector,
+               "for quiver representation homomorphism",
+               [ IsQuiverRepresentationHomomorphism ],
+               f -> Hom( Source( f ), Range( f ) ) );
+
 InstallMethod( String,
                "for quiver representation homomorphism",
                [ IsQuiverRepresentationHomomorphism ],
@@ -856,6 +861,8 @@ end );
 InstallMethod( \=, [ IsQuiverRepresentationHomomorphism, IsQuiverRepresentationHomomorphism ],
 function( m1, m2 )
   return IsIdenticalObj( CapCategory( m1 ), CapCategory( m2 ) )
+         and Source( m1 ) = Source( m2 )
+         and Range( m1 ) = Range( m2 )
          and IsEqualForMorphisms( m1, m2 );
 end );
 

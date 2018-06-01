@@ -129,7 +129,15 @@ function( v )
   return Length( v!.entries );
 end );
 
-InstallMethod( \+, [ IsQPAVector, IsQPAVector ],
+InstallMethod( \+, [ IsQPARowVector, IsQPARowVector ],
+function( v1, v2 )
+  if SpaceContainingVector( v1 ) <> SpaceContainingVector( v2 ) then
+    Error( "vectors from different vector spaces" );
+  fi;
+  return MakeQPAVector( v1!.type, v1!.field, v1!.entries + v2!.entries );
+end );
+
+InstallMethod( \+, [ IsQPAColVector, IsQPAColVector ],
 function( v1, v2 )
   if SpaceContainingVector( v1 ) <> SpaceContainingVector( v2 ) then
     Error( "vectors from different vector spaces" );
