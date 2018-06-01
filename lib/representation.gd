@@ -36,7 +36,7 @@ DeclareAttribute( "LinearTransformationConstructor", IsQuiverRepresentationCateg
 
 #!
 DeclareOperation( "CategoryOfQuiverRepresentationsOverVectorSpaceCategory",
-                  [ IsQuiverAlgebra, IsVectorSpaceCategory ] );
+                  [ IsQuiverAlgebra, IsAbelianCategory ] );
 
 
 #! @Section Constructing elements

@@ -418,13 +418,26 @@ function( cat, objects, morphisms )
     ( R, repType,
       AlgebraOfRepresentation, A,
       VectorSpacesOfRepresentation, objects,
-      MapsOfRepresentation, morphisms,
-      MatricesOfRepresentation, List( morphisms, MatrixOfLinearTransformation ),
-      DimensionVector, List( objects, Dimension ),
-      AsQPAVectorSpace, VectorSpaceConstructor( cat )( Sum( List( objects, Dimension ) ) ) );
+      MapsOfRepresentation, morphisms
+#      MatricesOfRepresentation, List( morphisms, MatrixOfLinearTransformation ),
+#      DimensionVector, List( objects, Dimension ),
+#      AsQPAVectorSpace, VectorSpaceConstructor( cat )( Sum( List( objects, Dimension ) ) )
+      );
   Add( cat, R );
   return R;
 end );
+
+InstallMethod( MatricesOfRepresentation,
+               [ IsQuiverRepresentation ],
+               R -> List( MapsOfRepresentation( R ), MatrixOfLinearTransformation ) );
+
+InstallMethod( DimensionVector,
+               [ IsQuiverRepresentation ],
+               R -> List( VectorSpacesOfRepresentation( R ), Dimension ) );
+
+InstallMethod( AsQPAVectorSpace,
+               [ IsQuiverRepresentation ],
+               R -> VectorSpaceConstructor( CapCategory( R ) )( Sum( DimensionVector( R ) ) ) );
 
 InstallMethod( UnderlyingCategoryForRepresentations, [ IsQuiverAlgebra ],
 function( A )
@@ -546,8 +559,12 @@ end );
 InstallMethod( String, "for quiver representation",
                [ IsQuiverRepresentation ],
 function( R )
-  return JoinStringsWithSeparator( DimensionVector( R ),
-                                   "," );
+  if IsVectorSpaceCategory( VectorSpaceCategory( CapCategory( R ) ) ) then
+    return JoinStringsWithSeparator( DimensionVector( R ),
+                                     "," );
+  else
+    return "representation";
+  fi;
 end );
 
 InstallMethod( ViewObj, "for quiver representation",
@@ -881,7 +898,7 @@ end );
 
 InstallMethod( CategoryOfQuiverRepresentationsOverVectorSpaceCategory,
                "for quiver algebra and vector space category",
-               [ IsQuiverAlgebra, IsVectorSpaceCategory ],
+               [ IsQuiverAlgebra, IsAbelianCategory ],
 function( A, vecspace_cat )
   local Q, cat, equal_objects, equal_morphisms, zero_object, zero_morphism,
         identity_morphism, pre_compose, addition, additive_inverse,
