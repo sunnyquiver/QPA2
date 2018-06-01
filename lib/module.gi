@@ -67,6 +67,18 @@ side -> function( A, dimensions, arrows, matrices_for_arrows )
                                          dimensions, arrows, matrices_for_arrows ) );
 end );
 
+InstallMethod( QuiverBimodule,
+               [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsList ],
+function( A, B, dimensions, matrices )
+  return QuiverBimodule( [ A, B ], dimensions, matrices );
+end );
+
+InstallMethod( QuiverBimodule,
+               [ IsQuiverAlgebra, IsQuiverAlgebra, IsDenseList, IsDenseList, IsList ],
+function( A, B, dimensions, arrows, matrices_for_arrows )
+  return QuiverBimodule( [ A, B ], dimensions, arrows, matrices_for_arrows );
+end );
+
 InstallMethodWithSides( ZeroModule, [ "algebra" ],
 side -> function( A )
   return AsModule( side, ZeroRepresentation( A^side ) );
@@ -425,6 +437,11 @@ end );
 InstallMethodWithSides( ModuleCategory, [ "algebra" ],
 side -> function( A )
   return AsModuleCategory( side, CategoryOfQuiverRepresentations( A^side ) );
+end );
+
+InstallMethod( BimoduleCategory, [ IsQuiverAlgebra, IsQuiverAlgebra ],
+function( A, B )
+  return BimoduleCategory( [ A, B ] );
 end );
 
 InstallMethod( UnderlyingRepresentationFunctor, "for a module category",
