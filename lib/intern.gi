@@ -6,7 +6,7 @@ InstallMethod( Intern, "for object", [ IsObject ],
 function( obj )
   local H, h, wp, i, interned, new_wp_list;
   H := Hash( obj );
-  h := H mod INTERN_HASH_TABLE_SIZE;
+  h := ( H mod INTERN_HASH_TABLE_SIZE ) + 1;
   wp := INTERN_HASH_TABLE[ h ];
   for i in [ 1 .. LengthWPObj( wp ) ] do
     interned := ElmWPObj( wp, i );
