@@ -1,3 +1,5 @@
+InstallMethod( \=, [ IsHomSpace, IsHomSpace ], ReturnFalse );
+
 BindGlobal( "FamilyOfQuiverRepresentationHomSpaces",
             NewFamily( "quiver representation hom spaces" ) );
 DeclareRepresentation( "IsQuiverRepresentationHomSpaceRep",
@@ -8,6 +10,9 @@ InstallMethod( Hom,
                [ IsQuiverRepresentation, IsQuiverRepresentation ],
 function( R1, R2 )
   local type, hom;
+  if not IsIdenticalObj( CapCategory( R1 ), CapCategory( R2 ) ) then
+    Error( "representations from different categories" );
+  fi;
   type := NewType( FamilyOfQuiverRepresentationHomSpaces,
                    IsQuiverRepresentationHomSpace and IsQuiverRepresentationHomSpaceRep );
   hom := rec();
@@ -50,6 +55,75 @@ function( hom )
 end );
 
 InstallMethod( \=, [ IsQuiverRepresentationHomSpace, IsQuiverRepresentationHomSpace ],
+function( hom1, hom2 )
+  return Source( hom1 ) = Source( hom2 )
+         and Range( hom1 ) = Range( hom2 );
+end );
+
+DeclareSideOperations( IsQuiverModuleHomSpace,
+                       IsLeftQuiverModuleHomSpace, IsRightQuiverModuleHomSpace,
+                       IsQuiverBimoduleHomSpace );
+
+BindGlobal( "FamilyOfQuiverModuleHomSpaces",
+            NewFamily( "quiver module hom spaces" ) );
+DeclareRepresentation( "IsQuiverModuleHomSpaceRep",
+                       IsComponentObjectRep and IsAttributeStoringRep,
+                       [ ] );
+
+InstallMethod( Hom,
+               [ IsQuiverModule, IsQuiverModule ],
+function( M1, M2 )
+  local type, hom, rep_hom;
+  if not IsIdenticalObj( CapCategory( M1 ), CapCategory( M2 ) ) then
+    Error( "modules from different categories" );
+  fi;
+  rep_hom := Hom( UnderlyingRepresentation( M1 ),
+                  UnderlyingRepresentation( M2 ) );
+  type := NewType( FamilyOfQuiverModuleHomSpaces,
+                   IsQuiverModuleHomSpace and IsQuiverModuleHomSpaceRep );
+  hom := rec();
+  ObjectifyWithAttributes( hom, type,
+                           Source, M1,
+                           Range, M2,
+                           Side, Side( M1 ),
+                           UnderlyingRepresentationHomSpace, rep_hom );
+  return Intern( hom );
+end );
+
+InstallMethod( CanonicalBasis, [ IsQuiverModuleHomSpace ],
+function( hom )
+  local basis, basis_vectors;
+  basis_vectors := List( CanonicalBasis( UnderlyingRepresentationHomSpace( hom ) ),
+                         AsModuleHomomorphism ^ Side( hom ) );
+  basis := rec();
+  ObjectifyWithAttributes( basis,
+                           NewType( FamilyOfVectorSpaceBases,
+                                    IsBasis and IsVectorSpaceBasisRep ),
+                           BasisVectors, basis_vectors,
+                           UnderlyingLeftModule, hom );
+  return basis;
+end );
+
+InstallMethod( Dimension, [ IsQuiverModuleHomSpace ],
+               hom -> Length( CanonicalBasis( hom ) ) );
+
+InstallMethod( String, [ IsQuiverModuleHomSpace ],
+function( hom )
+  return Concatenation( "Hom(", String( Source( hom ) ),
+                        ", ", String( Range( hom ) ), ")" );
+end );
+
+InstallMethod( PrintObj, [ IsQuiverModuleHomSpace ],
+function( hom )
+  Print( String( hom ) );
+end );
+
+InstallMethod( ViewObj, [ IsQuiverModuleHomSpace ],
+function( hom )
+  Print( String( hom ) );
+end );
+
+InstallMethod( \=, [ IsQuiverModuleHomSpace, IsQuiverModuleHomSpace ],
 function( hom1, hom2 )
   return Source( hom1 ) = Source( hom2 )
          and Range( hom1 ) = Range( hom2 );

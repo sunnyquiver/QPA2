@@ -4,7 +4,7 @@
 
 DeclareCategory( "IsHomSpace", IsQPAVectorSpace );
 DeclareCategory( "IsQuiverRepresentationHomSpace", IsHomSpace );
-DeclareCategory( "IsQuiverModuleHomSpace", IsHomSpace );
+DeclareCategory( "IsQuiverModuleHomSpace", IsHomSpace and IsObjectWithSide );
 DeclareCategory( "IsLeftQuiverModuleHomSpace", IsQuiverModuleHomSpace );
 DeclareCategory( "IsRightQuiverModuleHomSpace", IsQuiverModuleHomSpace );
 DeclareCategory( "IsQuiverBimoduleHomSpace", IsQuiverModuleHomSpace );
@@ -14,6 +14,9 @@ DeclareOperation( "Hom", [ IsQuiverModule, IsQuiverModule ] );
 
 DeclareAttribute( "Source", IsHomSpace );
 DeclareAttribute( "Range", IsHomSpace );
+
+DeclareAttribute( "Side", IsQuiverModuleHomSpace );
+DeclareAttribute( "UnderlyingRepresentationHomSpace", IsQuiverModuleHomSpace );
 
 #! @Description
 #!  Given two representations  <A>R1</A> and <A>R2</A> this constructs
