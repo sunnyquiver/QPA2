@@ -37,32 +37,67 @@ DeclareOperation( "TensorProductOfHomomorphisms",
 #!  Returns the tensor product of the two modules <A>M1</A> and <A>M2</A>. 
 DeclareOperation( "TensorProductOfModules", [ IsQuiverModule, IsQuiverModule ] );
 
-#! @Arguments M, C
+#! @Arguments M, cat
 #! @Returns IsCapFunctor
 #! @Description
-#! Creates a tensor functor <M>T = M\otimes - </M> for a module <A>M</A>. The module <A>M</A> 
-#! can be a right module <M>M_A</M> or a bimodule <M>_B M_A</M>, and the category <A>C</A> can
-#! be <M>A-\mod</M> or <M>A-\mod-C</M>. This gives four possibilities 
+#! Creates a tensor functor <M>T = M\otimes - </M> for a module <A>M</A>.
+#! The argument <A>cat</A> is the source category of the functor.
+#!
+#! The module <A>M</A> is either a right module <M>M_A</M> or a bimodule
+#! <Alt Not="Text"><M>_B M_A</M></Alt><Alt Only="Text">B_M_A</Alt>,
+#! and the category <A>cat</A> is either
+#! a left module category <M>A\text{-mod}</M> or a bimodule category <M>A\text{-mod-}C</M>.
+#! This gives four possibilities for the resulting functor:
+#! <Alt Not="Text">
 #! <Display>
-#!         M_A\otimes_A-\colon &amp; A-\mod \to \vec(k)\\
-#!         M_A\otimes_A-\colon &amp; A-\mod-C\to \mod-C\\
-#!       _BM_A\otimes_A-\colon &amp; A-\mod \to B-\mod\\
-#!       _BM_A\otimes_A-\colon &amp; A-\mod-C\to B-\mod-C
+#! \begin{aligned}
+#!         M_A \otimes_A - \colon &amp; A\text{-mod}   \to \operatorname{vec} k \\
+#!         M_A \otimes_A - \colon &amp; A\text{-mod-}C \to \text{mod-}C         \\
+#!       _BM_A \otimes_A - \colon &amp; A\text{-mod}   \to B\text{-mod}         \\
+#!       _BM_A \otimes_A - \colon &amp; A\text{-mod-}C \to B\text{-mod-}C
+#! \end{aligned}
 #! </Display>
+#! </Alt>
+#! <Alt Only="Text">
+#! <Verb>
+#!   M_A tensor - : A-mod   -> vec k
+#!   M_A tensor - : A-mod-C -> mod-C
+#! B_M_A tensor - : A-mod   -> B-mod
+#! B_M_A tensor - : A-mod-C -> B-mod-C
+#! </Verb>
+#! </Alt>
 DeclareOperation( "LeftTensorFunctor", [ IsQuiverModule, IsQuiverModuleCategory ] );
 
 #! @Arguments M, C
 #! @Returns IsCapFunctor
 #! @Description
-#! Creates a tensor functor <M>T = -\otimes M</M> for a module <A>M</A>. The module <A>M</A> 
-#! can be a left module <M>_AM</M> or a bimodule <M>_A M_B</M>, and the category <A>C</A> can
-#! be <M>\mod-A</M> or <M>C-\mod-A</M>. This gives four possibilities 
+#! Creates a tensor functor <M>T = - \otimes M</M> for a module <A>M</A>.
+#! The argument <A>cat</A> is the source category of the functor.
+#!
+#! The module <A>M</A> is either a left module
+#! <Alt Not="Text"><M>{}_A M</M></Alt><Alt Only="Text">A_M</Alt> or a bimodule
+#! <Alt Not="Text"><M>{}_A M_B</M></Alt><Alt Only="Text">A_M_B</Alt>,
+#! and the category <A>cat</A> is either
+#! a right module category <M>\text{mod-}A</M> or a bimodule category <M>C\text{-mod-}A</M>.
+#! This gives four possibilities for the resulting functor:
+#! <Alt Not="Text">
 #! <Display>
-#!         -\otimes_A {_AM}-\colon &amp; \mod-A \to \vec(k)\\
-#!         -\otimes_A-{_AM}\colon &amp; C-\mod-A\to C-\mod\\
-#!         -\otimes_A-{_AM_B}\colon &amp; \mod-A \to \mod-B\\
-#!         -\otimes_A-{_AM_B}\colon &amp; C-\mod-A\to C-\mod-B
+#! \begin{aligned}
+#!   -\otimes_A {}_A M   \colon &amp;   \text{mod-}A \to \operatorname{vec} k \\
+#!   -\otimes_A {}_A M   \colon &amp; C\text{-mod-}A \to C-\text{-mod}        \\
+#!   -\otimes_A {}_A M_B \colon &amp;   \text{mod-}A \to    \text{mod-}B      \\
+#!   -\otimes_A {}_A M_B \colon &amp; C\text{-mod-}A \to C-\text{-mod-}B
+#! \end{aligned}
 #! </Display>
+#! </Alt>
+#! <Alt Only="Text">
+#! <Verb>
+#! -tensor A_M   : mod-A   -> vec k
+#! -tensor A_M   : C-mod-A -> C-mod
+#! -tensor A_M_B : mod-A   -> mod-B
+#! -tensor A_M_B : C-mod-A -> C-mod-B
+#! </Verb>
+#! </Alt>
 DeclareOperation( "RightTensorFunctor", [ IsQuiverModule, IsQuiverModuleCategory ] );
 
 #
