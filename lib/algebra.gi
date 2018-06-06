@@ -1081,6 +1081,10 @@ function( paths, e )
   j := Length( Ps );
   for i in [ 1 .. Length( paths ) ] do
     if j = 0 then
+      while i <= Length( paths ) do
+        coeffs[ i ] := zero;
+        i := i + 1;
+      od;
       break;
     fi;
     if paths[ i ] = Ps[ j ] then
@@ -1089,10 +1093,6 @@ function( paths, e )
     else
       coeffs[ i ] := zero;
     fi;
-  od;
-  while i <= Length( paths ) do
-    coeffs[ i ] := zero;
-    i := i + 1;
   od;
   return coeffs;
 end );
