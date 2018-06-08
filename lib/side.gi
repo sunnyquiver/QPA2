@@ -17,6 +17,15 @@ InstallValue( LEFT_RIGHT,
 
 InstallMethod( \=, "for sides", [ IsSide, IsSide ], IsIdenticalObj );
 
+InstallMethod( Opposite, "for direction", [ IsDirection ],
+function( d )
+  if d = LEFT then
+    return RIGHT;
+  else
+    return LEFT;
+  fi;
+end );
+
 InstallValue( OPERATIONS_WITH_SIDE_VERSIONS, rec() );
 
 InstallMethod( String, "for side", [ IsSide ],

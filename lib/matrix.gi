@@ -39,6 +39,36 @@ function( R, M, type )
   return matrix;
 end );
 
+InstallMethod( MatrixByRows, "for ring, list and matrix",
+               [ IsRing, IsDenseList, IsMatrix ],
+function( R, dim, M )
+  if Length( dim ) <> 2 then
+    Error( "matrix dimension must be a list of length 2" );
+  fi;
+  if dim[ 1 ] = 0 or dim[ 2 ] = 0 then
+    return MakeZeroMatrix( R, dim[ 1 ], dim[ 2 ] );
+  fi;
+  if dim <> DimensionsMat( M ) then
+    Error( "list of rows has wrong dimensions" );
+  fi;
+  return MAKE_QPA_MATRIX( R, M, IsRowMatrixRep );
+end );
+
+InstallMethod( MatrixByCols, "for ring, list and matrix",
+               [ IsRing, IsDenseList, IsMatrix ],
+function( R, dim, M )
+  if Length( dim ) <> 2 then
+    Error( "matrix dimension must be a list of length 2" );
+  fi;
+  if dim[ 1 ] = 0 or dim[ 2 ] = 0 then
+    return MakeZeroMatrix( R, dim[ 1 ], dim[ 2 ] );
+  fi;
+  if [ dim[ 2 ], dim[ 1 ] ] <> DimensionsMat( M ) then
+    Error( "list of cols has wrong dimensions" );
+  fi;
+  return MAKE_QPA_MATRIX( R, M, IsColMatrixRep );
+end );
+
 InstallMethod( MatrixByRows, "for ring and matrix",
                [ IsRing, IsMatrix ],
 function( R, M )
@@ -283,8 +313,8 @@ function( M )
   fi;
 end );
 
-InstallMethod( \*, "for QPA row vector and QPA matrix",
-               [ IsQPARowVector, IsQPAMatrix ],
+InstallMethod( \*, "for standard vector and QPA matrix",
+               [ IsStandardVector, IsQPAMatrix ],
 function( v, M )
   local R, dim;
   R := BaseDomain( M );
@@ -298,16 +328,16 @@ function( v, M )
   if dim[ 2 ] = 0 then
     return EmptyVector( R );
   elif dim[ 1 ] = 0 then
-    return Zero( RowVectorSpace( R, dim[ 2 ] ) );
+    return Zero( StandardVectorSpace( R, dim[ 2 ] ) );
   else
-    return RowVector( R, AsList( v ) * RowsOfMatrix( M ) );
+    return StandardVector( R, AsList( v ) * RowsOfMatrix( M ) );
   fi;
 end );
 
-InstallMethod( \*, "for QPA matrix and QPA column matrix",
-               [ IsQPAMatrix, IsQPAColVector ],
+InstallMethod( \*, "for QPA matrix and standard vector",
+               [ IsQPAMatrix, IsStandardVector ],
 function( M, v )
-  Error( "not implemented" ); #TODO fix
+  return v * TransposedMat( M );
 end );
 
 InstallMethod( \=, "for QPA matrices",
@@ -342,8 +372,8 @@ function( M )
   return true;
 end );
 
-InstallMethod( SolutionMat, "for QPA matrix and a row vector",
-	       [ IsQPAMatrix, IsQPARowVector ], NICE_FLAGS + 1000, 
+InstallMethod( SolutionMat, "for QPA matrix and standard vector",
+	       [ IsQPAMatrix, IsStandardVector ], NICE_FLAGS + 1000,
 function( M, v )
   local dim, V, solution_as_list;
 
@@ -359,7 +389,7 @@ function( M, v )
       return fail;
     fi;
   fi;
-  V :=  RowVectorSpace( BaseDomain( M ), dim[ 1 ] );
+  V := StandardVectorSpace( BaseDomain( M ), dim[ 1 ] );
   if dim[ 2 ] = 0 then
     return Zero( V );
   else

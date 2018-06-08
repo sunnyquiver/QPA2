@@ -429,7 +429,8 @@ end );
 
 InstallMethod( MatricesOfRepresentation,
                [ IsQuiverRepresentation ],
-               R -> List( MapsOfRepresentation( R ), MatrixOfLinearTransformation ) );
+               R -> List( MapsOfRepresentation( R ),
+                          MatrixOfLinearTransformation ^ Direction( AlgebraOfRepresentation( R ) ) ) );
 
 InstallMethod( DimensionVector,
                [ IsQuiverRepresentation ],
@@ -444,36 +445,19 @@ function( A )
   return CategoryOfVectorSpaces( LeftActingDomain( A ) );
 end );
 
-InstallMethod( VectorSpaceTypeForRepresentations, [ IsQuiverAlgebra ],
-function( A )
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    return "col";
-  else
-    return "row";
-  fi;
-end );
-
 InstallMethod( VectorSpaceConstructor, [ IsQuiverRepresentationCategory ],
 function( cat )
   local A, F;
   A := AlgebraOfCategory( cat );
   F := LeftActingDomain( A );
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    return dim -> ColVectorSpace( F, dim );
-  else
-    return dim -> RowVectorSpace( F, dim );
-  fi;
+  return dim -> StandardVectorSpace( F, dim );
 end );
 
 InstallMethod( LinearTransformationConstructor, [ IsQuiverRepresentationCategory ],
 function( cat )
   local A;
   A := AlgebraOfCategory( cat );
-  if IsLeftQuiver( QuiverOfAlgebra( A ) ) then
-    return LinearTransformationOfColSpaces;
-  else
-    return LinearTransformationOfRowSpaces;
-  fi;
+  return LinearTransformation ^ Direction( A );
 end );
 
 # InstallMethod( LinearTransformationConstructor, [ IsQuiverRepresentationCategory ],
@@ -832,7 +816,7 @@ function( source, range, maps )
       Source, source,
       Range, range,
       MapsOfRepresentationHomomorphism, maps,
-      MatricesOfRepresentationHomomorphism, List( maps, MatrixOfLinearTransformation ) );
+      MatricesOfRepresentationHomomorphism, List( maps, MatrixOfLinearTransformation ^ Direction( AlgebraOfRepresentation( source ) ) ) );
   Add( CapCategory( source ), f );
   return f;
 end );

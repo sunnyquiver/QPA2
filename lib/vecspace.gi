@@ -6,7 +6,7 @@ DeclareRepresentation( "IsVectorSpaceBasisRep",
                        [ ] );
 DeclareRepresentation( "IsQPAVectorRep",
                        IsComponentObjectRep and IsAttributeStoringRep,
-                       [ "type", "field", "entries" ] );
+                       [ ] );
 DeclareRepresentation( "IsLinearTransformationRep",
                        IsComponentObjectRep and IsAttributeStoringRep,
                        [ ] );
@@ -20,54 +20,35 @@ BindGlobal( "FamilyOfVectorSpaceBases",
 BindGlobal( "FamilyOfLinearTransformations",
             NewFamily( "linear transformations" ) );
 
-InstallMethod( MakeQPAVector, [ IsString, IsField, IsDenseList ],
-function( type_str, F, entries )
-  local type, space, v;
+InstallMethod( StandardVector, [ IsField, IsDenseList ],
+function( F, entries )
+  local space, type, v;
   if Length( entries ) = 0 then
     return EmptyVector( F );
   fi;
-  v := rec( type := type_str,
-            field := F,
-            entries := entries );
-  if type_str = "row" then
-    type := NewType( FamilyOfQPAVectors,
-                     IsQPARowVector and IsQPAVectorRep );
-    space := RowVectorSpace( F, Length( entries ) );
-  elif type_str = "col" then
-    type := NewType( FamilyOfQPAVectors,
-                     IsQPAColVector and IsQPAVectorRep );
-    space := ColVectorSpace( F, Length( entries ) );
-  else
-    Error( "type must be \"row\" or \"col\"" );
-  fi;
+  space := StandardVectorSpace( F, Length( entries ) );
+  type := NewType( FamilyOfQPAVectors, IsStandardVector and IsQPAVectorRep );
+  v := rec();
   ObjectifyWithAttributes( v, type,
-                           SpaceContainingVector, space );
+                           UnderlyingField, F,
+                           SpaceContainingVector, space,
+                           AsList, entries );
   return v;
 end );
 
-InstallMethod( RowVector, [ IsField, IsDenseList ],
-function( F, entries )
-  return MakeQPAVector( "row", F, entries );
+InstallMethod( Vector, [ IsStandardVectorSpace, IsDenseList ],
+function( V, coeffs )
+  return StandardVector( UnderlyingField( V ), coeffs );
 end );
 
-InstallMethod( ColVector, [ IsField, IsDenseList ],
-function( F, entries )
-  return MakeQPAVector( "col", F, entries );
-end );
-
-InstallMethod( Vector, [ IsQPAVectorSpace, IsList ],
+InstallMethod( Vector, [ IsQPAVectorSpace, IsDenseList ],
 function( V, coeffs )
   return LinearCombination( CanonicalBasis( V ), coeffs );
 end );
 
-InstallMethod( Vector, [ IsQPAVectorSpace, IsQPARowVector ],
-function( V, row_vec )
-  return Vector( V, AsList( row_vec ) );
-end );
-
-InstallMethod( Vector, [ IsQPAVectorSpace, IsQPAColVector ],
-function( V, col_vec )
-  return Vector( V, AsList( col_vec ) );
+InstallMethod( Vector, [ IsQPAVectorSpace, IsQPAVector ],
+function( V, vec )
+  return Vector( V, AsList( vec ) );
 end );
 
 InstallMethod( Vector, [ IsZeroVectorSpace, IsList ],
@@ -75,26 +56,9 @@ function( V, coeffs )
   return Zero( V );
 end );
 
-InstallMethod( Vector, [ IsZeroVectorSpace, IsQPARowVector ],
+InstallMethod( Vector, [ IsZeroVectorSpace, IsQPAVector ],
 function( V, row_vec )
   return Zero( V );
-end );
-
-InstallMethod( Vector, [ IsZeroVectorSpace, IsQPAColVector ],
-function( V, col_vec )
-  return Zero( V );
-end );
-
-InstallMethod( AsRowVector, [ IsQPAVector ],
-function( v )
-  return RowVector( LeftActingDomain( SpaceContainingVector( v ) ),
-                    AsList( v ) );
-end );
-
-InstallMethod( AsColVector, [ IsQPAVector ],
-function( v )
-  return ColVector( LeftActingDomain( SpaceContainingVector( v ) ),
-                    AsList( v ) );
 end );
 
 InstallMethod( AsList, [ IsQPAVector ],
@@ -102,15 +66,20 @@ function( v )
   return Coefficients( CanonicalBasis( SpaceContainingVector( v ) ), v );
 end );
 
+InstallMethod( AsStandardVector, [ IsQPAVector ],
+function( v )
+  return StandardVector( UnderlyingField( v ), AsList( v ) );
+end );
+
 InstallMethod( String, [ IsQPAVector ],
 function( v )
-  return Concatenation( "<", v!.type, " vector ", String( v!.entries ), ">" );
+  return Concatenation( "<vector ", String( AsList( v ) ), ">" );
 end );
 
 InstallMethod( String, [ IsEmptyVector ],
 function( v )
   return Concatenation( "<empty vector over ",
-                        String( LeftActingDomain( SpaceContainingVector( v ) ) ),
+                        String( UnderlyingField( v ) ),
                         ">" );
 end );
 
@@ -121,33 +90,25 @@ end );
 
 InstallMethod( \[\], [ IsQPAVector, IsPosInt ],
 function( v, i )
-  return v!.entries[ i ];
+  return AsList( v )[ i ];
 end );
 
 InstallMethod( Length, [ IsQPAVector ],
 function( v )
-  return Length( v!.entries );
+  return Length( AsList( v ) );
 end );
 
-InstallMethod( \+, [ IsQPARowVector, IsQPARowVector ],
+InstallMethod( \+, [ IsQPAVector, IsQPAVector ],
 function( v1, v2 )
   if SpaceContainingVector( v1 ) <> SpaceContainingVector( v2 ) then
     Error( "vectors from different vector spaces" );
   fi;
-  return MakeQPAVector( v1!.type, v1!.field, v1!.entries + v2!.entries );
-end );
-
-InstallMethod( \+, [ IsQPAColVector, IsQPAColVector ],
-function( v1, v2 )
-  if SpaceContainingVector( v1 ) <> SpaceContainingVector( v2 ) then
-    Error( "vectors from different vector spaces" );
-  fi;
-  return MakeQPAVector( v1!.type, v1!.field, v1!.entries + v2!.entries );
+  return Vector( SpaceContainingVector( v1 ), AsList( v1 ) + AsList( v2 ) );
 end );
 
 InstallMethod( AdditiveInverseMutable, [ IsQPAVector ],
 function( v )
-  return MakeQPAVector( v!.type, v!.field, - v!.entries );
+  return Vector( SpaceContainingVector( v ), - AsList( v ) );
 end );
 
 InstallMethod( ZeroMutable, [ IsQPAVector ],
@@ -157,10 +118,10 @@ end );
 
 InstallMethod( \*, [ IsMultiplicativeElement, IsQPAVector ],
 function( a, v )
-  if not a in v!.field then
+  if not a in UnderlyingField( v ) then
     Error( "scalar not from appropriate field" );
   fi;
-  return MakeQPAVector( v!.type, v!.field, a * v!.entries );
+  return Vector( SpaceContainingVector( v ), a * AsList( v ) );
 end );
 
 InstallMethod( \in, [ IsQPAVector, IsQPAVectorSpace ],
@@ -171,7 +132,7 @@ end );
 InstallMethod( \=, [ IsQPAVector, IsQPAVector ],
 function( v1, v2 )
   return SpaceContainingVector( v1 ) = SpaceContainingVector( v2 ) and
-         v1!.entries = v2!.entries;
+         AsList( v1 ) = AsList( v2 );
 end );
 
 InstallMethod( ZeroVectorSpace, [ IsField ],
@@ -183,6 +144,7 @@ function( F )
   cat := CategoryOfVectorSpaces( F );
   ObjectifyWithAttributes( space, type,
                            LeftActingDomain, F,
+                           UnderlyingField, F,
                            Dimension, 0 );
   Add( cat, space );
   return space;
@@ -192,13 +154,13 @@ InstallMethod( EmptyVector, [ IsField ],
 function( F )
   local v, type, V;
   V := ZeroVectorSpace( F );
-  v := rec( type := "zero",
-            field := F,
-            entries := [] );
+  v := rec( );
   type := NewType( FamilyOfQPAVectors,
                    IsEmptyVector and IsQPAVectorRep );
   ObjectifyWithAttributes( v, type,
+                           UnderlyingField, F,
                            SpaceContainingVector, V,
+                           AsList, [],
                            IsZero, true );
   return v;
 end );
@@ -208,80 +170,51 @@ function( V )
   return EmptyVector( LeftActingDomain( V ) );
 end );
 
-InstallMethod( MakeQPAVectorSpace, [ IsString, IsField, IsInt ],
-function( type_str, F, dim )
+InstallMethod( StandardVectorSpace, [ IsField, IsInt ],
+function( F, dim )
   local type, space, cat;
   if dim = 0 then
     return ZeroVectorSpace( F );
   fi;
-  space := rec( type := type_str );
-  if type_str = "row" then
-    type := NewType( FamilyOfQPAVectorSpaces,
-                     IsRowVectorSpace and IsQPAVectorSpaceRep );
-    cat := CategoryOfVectorSpaces( F );
-  elif type_str = "col" then
-    type := NewType( FamilyOfQPAVectorSpaces,
-                     IsColVectorSpace and IsQPAVectorSpaceRep );
-    cat := CategoryOfVectorSpaces( F );
-  else
-    Error( "type must be \"row\" or \"col\"" );
-  fi;
+  type := NewType( FamilyOfQPAVectorSpaces,
+                   IsStandardVectorSpace and IsQPAVectorSpaceRep );
+  space := rec( );
+  cat := CategoryOfVectorSpaces( F );
   ObjectifyWithAttributes( space, type,
+                           UnderlyingField, F,
                            LeftActingDomain, F,
                            Dimension, dim );
   Add( cat, space );
   return space;
 end );
 
-InstallMethod( MakeQPAVectorSpace, [ IsQPAVectorSpace, IsInt ],
-function( prototype_space, dim )
-  if IsRowVectorSpace( prototype_space ) then
-    return MakeQPAVectorSpace( "row", LeftActingDomain( prototype_space ), dim );
-  elif IsColVectorSpace( prototype_space ) then
-    return MakeQPAVectorSpace( "col", LeftActingDomain( prototype_space ), dim );
-  else
-    Error( "not implemented" ); # TODO fix
-  fi;
-end );
-
-InstallMethod( RowVectorSpace, [ IsField, IsInt ],
-function( F, dim )
-  return MakeQPAVectorSpace( "row", F, dim );
-end );
-
-InstallMethod( ColVectorSpace, [ IsField, IsInt ],
-function( F, dim )
-  return MakeQPAVectorSpace( "col", F, dim );
-end );
-
-InstallMethod( \=, [ IsQPAVectorSpace, IsQPAVectorSpace ],
+InstallMethod( \=, [ IsStandardVectorSpace, IsStandardVectorSpace ],
 function( V1, V2 )
-  return V1!.type = V2!.type and
-         LeftActingDomain( V1 ) = LeftActingDomain( V2 ) and
+  return UnderlyingField( V1 ) = UnderlyingField( V2 ) and
          Dimension( V1 ) = Dimension( V2 );
 end );
 
 InstallMethod( Zero, [ IsQPAVectorSpace ],
 function( V )
-  local F;
-  F := LeftActingDomain( V );
-  return MakeQPAVector( V!.type, F,
-                        List( [ 1 .. Dimension( V ) ], i -> Zero( F ) ) );
+  local F, dim;
+  F := UnderlyingField( V );
+  dim := Dimension( V );
+  return Vector( V, List( [ 1 .. dim ], i -> Zero( F ) ) );
 end );
 
-InstallMethod( CanonicalBasis, [ IsQPAVectorSpace ],
+InstallMethod( CanonicalBasis, [ IsStandardVectorSpace ],
 function( V )
   local basis, basis_vectors;
   if Dimension( V ) = 0 then
     basis_vectors := [];
   else
     basis_vectors := List( IdentityMat( Dimension( V ) ),
-                           v -> MakeQPAVector( V!.type, LeftActingDomain( V ), v ) );
+                           v -> StandardVector( UnderlyingField( V ), v ) );
   fi;
   basis := rec();
   ObjectifyWithAttributes( basis,
                            NewType( FamilyOfVectorSpaceBases,
-                                    IsBasis and IsVectorSpaceBasisRep ),
+                                    IsStandardVectorSpaceBasis and IsVectorSpaceBasisRep ),
                            BasisVectors, basis_vectors,
                            UnderlyingLeftModule, V );
   return basis;
@@ -290,124 +223,109 @@ end );
 InstallMethod( Basis, [ IsQPAVectorSpace ], CanonicalBasis );
 
 InstallMethod( Coefficients,
-               [ IsBasis and IsVectorSpaceBasisRep,
-                 IsQPAVector ],
+               [ IsStandardVectorSpaceBasis,
+                 IsStandardVector ],
 function( B, v )
-  return v!.entries;
+  return AsList( v );
 end );
 
-InstallMethod( MakeLinearTransformation, "for vector spaces and matrices",
-               [ IsQPAVectorSpace, IsQPAVectorSpace, IsQPAMatrix, IsQPAMatrix ],
-function( source, range, left_matrix, right_matrix )
-  local T, type, cat, dim_source, dim_range, i, j;
-  cat := CapCategory( source );
-  if cat <> CapCategory( range ) then
+DeclareDirectionOperations( LinearTransformation,
+                            LinearTransformationByLeftMatrix,
+                            LinearTransformationByRightMatrix );
+
+DeclareDirectionOperations( MatrixOfLinearTransformation,
+                            LeftMatrixOfLinearTransformation,
+                            RightMatrixOfLinearTransformation );
+
+InstallMethodWithDirections( LinearTransformation,
+                             [ IsQPAVectorSpace, IsQPAVectorSpace, IsDenseList ],
+dir -> function( V1, V2, list )
+  local F, dim1, dim2, mat;
+  F := UnderlyingField( V1 );
+  dim1 := Dimension( V1 );
+  dim2 := Dimension( V2 );
+  if dir = LEFT then
+    mat := MatrixByCols( F, [ dim2, dim1 ], list );
+  else
+    mat := MatrixByRows( F, [ dim1, dim2 ], list );
+  fi;
+  return LinearTransformation( dir, V1, V2, mat );
+end );
+
+InstallMethodWithDirections( LinearTransformation,
+                             [ IsQPAVectorSpace, IsQPAVectorSpace, IsQPAMatrix ],
+dir -> function( V1, V2, mat )
+  local cat, mats, dim1, dim2, T, type;
+  cat := CapCategory( V1 );
+  if cat <> CapCategory( V2 ) then
     Error( "vector spaces in different categories" );
   fi;
-  dim_source := Dimension( source );
-  dim_range := Dimension( range );
-  if DimensionsMat( left_matrix ) <> [ dim_range, dim_source ] then
-    Error( "wrong dimensions of left matrix" );
-  elif DimensionsMat( right_matrix ) <> [ dim_source, dim_range ] then
-    Error( "wrong dimensions of right matrix" );
+  mats := [];
+  mats[ Int( dir ) ] := mat;
+  mats[ Int( Opposite( dir ) ) ] := TransposedMat( mat );
+  dim1 := Dimension( V1 );
+  dim2 := Dimension( V2 );
+  if DimensionsMat( mats[ Int( RIGHT ) ] ) <> [ dim1, dim2 ] then
+    Error( "wrong dimensions of matrix" );
   fi;
-  for i in [ 1 .. dim_source ] do
-    for j in [ 1 .. dim_range ] do
-      if MatElm( right_matrix, i, j ) <> MatElm( left_matrix, j, i ) then
-        Error( "left and right matrix not equivalent" );
-      fi;
-    od;
-  od;
   T := rec();
   type := NewType( FamilyOfLinearTransformations,
                    IsLinearTransformation and IsLinearTransformationRep );
   ObjectifyWithAttributes
     ( T, type,
-      Source, source,
-      Range, range,
-      LeftMatrixOfLinearTransformation, left_matrix,
-      RightMatrixOfLinearTransformation, right_matrix );
+      Source, V1,
+      Range, V2,
+      LeftMatrixOfLinearTransformation, mats[ Int( LEFT ) ],
+      RightMatrixOfLinearTransformation, mats[ Int( RIGHT ) ],
+      UnderlyingField, UnderlyingField( cat )
+      );
   Add( cat, T );
   return T;
 end );
 
-InstallMethod( LinearTransformationByLeftMatrix, "for vector spaces and matrix",
-               [ IsQPAVectorSpace, IsQPAVectorSpace, IsQPAMatrix ],
-function( source, range, left_matrix )
-  return MakeLinearTransformation( source, range, left_matrix, TransposedMat( left_matrix ) );
-end );
-
-InstallMethod( LinearTransformationByRightMatrix, "for vector spaces and matrix",
-               [ IsQPAVectorSpace, IsQPAVectorSpace, IsQPAMatrix ],
-function( source, range, right_matrix )
-  return MakeLinearTransformation( source, range, TransposedMat( right_matrix ), right_matrix );
-end );
-
-InstallMethod( LinearTransformationOfRowSpaces, "for matrix",
-               [ IsQPAMatrix ],
-function( matrix )
-  local d, F;
-  d := DimensionsMat( matrix );
-  F := BaseDomain( matrix );
-  return LinearTransformationByRightMatrix
-         ( RowVectorSpace( F, d[ 1 ] ),
-           RowVectorSpace( F, d[ 2 ] ),
-           matrix );
-end );
-
-InstallMethod( LinearTransformationOfColSpaces, "for matrix",
-               [ IsQPAMatrix ],
-function( matrix )
-  local d, F;
-  d := DimensionsMat( matrix );
-  F := BaseDomain( matrix );
-  return LinearTransformationByLeftMatrix
-         ( ColVectorSpace( F, d[ 2 ] ),
-           ColVectorSpace( F, d[ 1 ] ),
-           matrix );
-end );
-
 InstallMethod( MatrixOfLinearTransformation, "for linear transformation",
-               [ IsLinearTransformation ],
-function( T )
-  if IsRowVectorSpace( Source( T ) ) and IsRowVectorSpace( Range( T ) ) then
-    return RightMatrixOfLinearTransformation( T );
-  elif IsColVectorSpace( Source( T ) ) and IsColVectorSpace( Range( T ) ) then
-    return LeftMatrixOfLinearTransformation( T );
-  else
-    Error( "MatrixOfLinearTransformation undefined for ", T );
-  fi;
+               [ IsDirection, IsLinearTransformation ],
+function( dir, T )
+  return ( MatrixOfLinearTransformation ^ dir )( T );
 end );
 
 InstallMethod( String, [ IsLinearTransformation ],
-function( m )
+function( T )
   return Concatenation( "linear transformation ",
-                        String( Dimension( Source( m ) ) ), "->",
-                        String( Dimension( Range( m ) ) ) );
+                        String( Dimension( Source( T ) ) ), "->",
+                        String( Dimension( Range( T ) ) ) );
 end );
 
 InstallMethod( ViewObj, [ IsLinearTransformation ],
-function( m )
-  Print( String( m ) );
+function( T )
+  Print( String( T ) );
+end );
+
+InstallMethod( \=, "for linear transformations",
+               [ IsLinearTransformation, IsLinearTransformation ],
+function( T1, T2 )
+  return Source( T1 ) = Source( T2 ) and
+         Range( T1 ) = Range( T2 ) and
+         RightMatrixOfLinearTransformation( T1 ) = RightMatrixOfLinearTransformation( T2 );
 end );
 
 InstallMethod( \+, [ IsLinearTransformation, IsLinearTransformation ],
-function( m1, m2 )
-  local mat1, mat2, lm1, lm2;
-  if Source( m1 ) <> Source( m2 ) then
+function( T1, T2 )
+  local mat1, mat2;
+  if Source( T1 ) <> Source( T2 ) then
     Error( "cannot add linear transformations with different source spaces" );
-  elif Range( m1 ) <> Range( m2 ) then
+  elif Range( T1 ) <> Range( T2 ) then
     Error( "cannot add linear transformations with different range spaces" );
   fi;
-  lm1 := LeftMatrixOfLinearTransformation( m1 );
-  lm2 := LeftMatrixOfLinearTransformation( m2 );
-  return LinearTransformationByLeftMatrix( Source( m1 ), Range( m1 ),
-                                           lm1 + lm2 );
+  mat1 := RightMatrixOfLinearTransformation( T1 );
+  mat2 := RightMatrixOfLinearTransformation( T2 );
+  return LinearTransformationByRightMatrix( Source( T1 ), Range( T1 ),
+                                            mat1 + mat2 );
 end );
 
 InstallMethod( \*, [ IsMultiplicativeElement, IsLinearTransformation ],
 function( a, T )
-  if not a in LeftActingDomain( Source( T ) ) then
+  if not a in UnderlyingField( T ) then
     Error( "scalar not from appropriate field" );
   fi;
   return LinearTransformationByRightMatrix
@@ -428,7 +346,7 @@ function( T, v )
     return Zero( Range( T ) );
   fi;
   return Vector( Range( T ),
-                 AsRowVector( v ) *
+                 AsStandardVector( v ) *
                  RightMatrixOfLinearTransformation( T ) );
   # return LinearCombination( CanonicalBasis( Range( T ) ),
   #                           Coefficients( CanonicalBasis( Source( T ) ), v )
@@ -453,28 +371,12 @@ function( F )
 
   cat := CreateCapCategory( Concatenation( "vector spaces over ", String( F ) ) );
   SetFilterObj( cat, IsVectorSpaceCategory );
+  SetUnderlyingField( cat, F );
 
   SetIsAbelianCategory( cat, true );
 
-  equal_objects := function( V1, V2 )
-    if IsRowVectorSpace( V1 ) or IsRowVectorSpace( V2 ) or
-       IsColVectorSpace( V1 ) or IsColVectorSpace( V2 ) then
-      return ( ( IsRowVectorSpace( V1 ) and IsRowVectorSpace( V2 ) )
-               or
-               ( IsColVectorSpace( V1 ) and IsColVectorSpace( V2 ) ) )
-             and
-             ( Dimension( V1 ) = Dimension( V2 ) );
-    else
-      return false; # TODO fix
-    fi;
-  end;
-  AddIsEqualForObjects( cat, equal_objects );
-                        
-  equal_morphisms := function( m1, m2 )
-    return RightMatrixOfLinearTransformation( m1 )
-           = RightMatrixOfLinearTransformation( m2 );
-  end;
-  AddIsEqualForMorphisms( cat, equal_morphisms );
+  AddIsEqualForObjects( cat, \= );
+  AddIsEqualForMorphisms( cat, \= );
 
   zero_object := function()
     return ZeroVectorSpace( F );
@@ -525,7 +427,7 @@ function( F )
     kernel_mat := NullspaceMat( RightMatrixOfLinearTransformation( m ) );
     dim := DimensionsMat( kernel_mat )[ 1 ];
     return LinearTransformationByRightMatrix
-           ( MakeQPAVectorSpace( Source( m ), dim ), Source( m ),
+           ( StandardVectorSpace( F, dim ), Source( m ),
              kernel_mat );
   end;
   AddKernelEmbedding( cat, kernel_emb );
@@ -536,7 +438,7 @@ function( F )
     coker_mat := TransposedMat( NullspaceMat( TransposedMat( mat ) ) );
     dim := DimensionsMat( coker_mat )[ 2 ];
     return LinearTransformationByRightMatrix
-           ( Range( m ), MakeQPAVectorSpace( Range( m ), dim ), coker_mat );
+           ( Range( m ), StandardVectorSpace( F, dim ), coker_mat );
   end;
   AddCokernelProjection( cat, coker_proj );
 
@@ -568,16 +470,7 @@ function( F )
   AddColiftAlongEpimorphism( cat, epi_colift );
 
   direct_sum := function( summands )
-    local type;
-    if ForAll( summands, IsRowVectorSpace ) then
-      type := "row";
-    elif ForAll( summands, IsColVectorSpace ) then
-      type := "col";
-    else
-      Error( "not implemented" );
-    fi;
-    return MakeQPAVectorSpace( type, F,
-                               Sum( List( summands, Dimension ) ) );
+    return StandardVectorSpace( F, Sum( List( summands, Dimension ) ) );
   end;
   AddDirectSum( cat, direct_sum );
 
@@ -682,14 +575,14 @@ function( V, gens )
   if not ForAll( gens, g -> g in V ) then
     Error("not all generators are in the entered vector space,\n");
   fi;
-  K := LeftActingDomain( V );
+  K := UnderlyingField( V );
   if ForAll( gens, IsZero ) then
     return ZeroMorphism( ZeroVectorSpace( K ), V );
   fi;
   W := VectorSpace( K, List( gens, AsList ) );
   B := BasisVectors( CanonicalBasis( W ) );
   matrix := MatrixByRows( K, B );
-  WQPA := MakeQPAVectorSpace( V, Length( B ) );
+  WQPA := StandardVectorSpace( K, Length( B ) );
   
   f := LinearTransformationByRightMatrix( WQPA, V, matrix );
   SetIsInjective( f, true );
@@ -716,7 +609,7 @@ function( f )
   basis_change := Inverse( Concatenation( mat, ort ) );
   proj_mat := List( basis_change, row -> row{ [ 1 .. dim_src ] } );
   return LinearTransformationByRightMatrix( Range( f ), Source( f ),
-                                            MatrixByRows( BaseDomain( f_mat ), proj_mat ) );
+                                            MatrixByRows( UnderlyingField( f ), proj_mat ) );
 end );
 
 InstallMethod( PreImagesRepresentative, "for a linear transformation and a vector",
@@ -727,7 +620,7 @@ function( f, v )
   if not v in Range( f ) then
     Error("the entered element is not in the range for the entered linear transformation,\n");
   fi;
-  temp := SolutionMat( RightMatrixOfLinearTransformation( f ), AsRowVector( v ) );
+  temp := SolutionMat( RightMatrixOfLinearTransformation( f ), AsStandardVector( v ) );
   if temp <> fail then 
     return Vector( Source( f ), temp );
   else

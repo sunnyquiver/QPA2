@@ -256,9 +256,6 @@ DeclareAttribute( "AsQPAVectorSpace", IsQuiverRepresentation );
 #!
 DeclareAttribute( "UnderlyingCategoryForRepresentations", IsQuiverAlgebra );
 
-#!
-DeclareAttribute( "VectorSpaceTypeForRepresentations", IsQuiverAlgebra );
-
 #! @Description
 #!  Produces the zero representation over the quiver algebra <A>A</A>.
 #! @Returns <Ref Filt="IsQuiverRepresentation"/>
