@@ -34,7 +34,8 @@ DeclareCategory( "IsQPAMatrix", IsMatrixObj );
 #!  Each sublist of <A>L</A> is taken as a row of the resulting matrix <C>M</C>;
 #!  that is, the element <C>L[i][j]</C> will be <C>MatElm(M,i,j)</C>.
 DeclareOperation( "MatrixByRows", [ IsRing, IsMatrix ] );
-DeclareOperation( "MatrixByRows", [ IsRing, IsDenseList, IsMatrix ] );
+#DeclareOperation( "MatrixByRows", [ IsRing, IsDenseList, IsMatrix ] );
+DeclareOperation( "MatrixByRows", [ IsRing, IsDenseList, IsDenseList ] );
 
 #! @Arguments R, L
 #! @Returns <Ref Filt="IsQPAMatrix"/>
@@ -44,7 +45,8 @@ DeclareOperation( "MatrixByRows", [ IsRing, IsDenseList, IsMatrix ] );
 #!  Each sublist of <A>L</A> is taken as a column of the resulting matrix <C>M</C>;
 #!  that is, the element <C>L[i][j]</C> will be <C>MatElm(M,j,i)</C>.
 DeclareOperation( "MatrixByCols", [ IsRing, IsMatrix ] );
-DeclareOperation( "MatrixByCols", [ IsRing, IsDenseList, IsMatrix ] );
+#DeclareOperation( "MatrixByCols", [ IsRing, IsDenseList, IsMatrix ] );
+DeclareOperation( "MatrixByCols", [ IsRing, IsDenseList, IsDenseList ] );
 
 #! @Arguments R, m, n
 #! @Returns <Ref Filt="IsQPAMatrix"/>

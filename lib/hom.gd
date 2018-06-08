@@ -3,12 +3,14 @@
 #! @Section Hom-functors
 
 DeclareCategory( "IsHomSpace", IsQPAVectorSpace );
+DeclareCategory( "IsVectorSpaceHomSpace", IsHomSpace );
 DeclareCategory( "IsQuiverRepresentationHomSpace", IsHomSpace );
 DeclareCategory( "IsQuiverModuleHomSpace", IsHomSpace and IsObjectWithSide );
 DeclareCategory( "IsLeftQuiverModuleHomSpace", IsQuiverModuleHomSpace );
 DeclareCategory( "IsRightQuiverModuleHomSpace", IsQuiverModuleHomSpace );
 DeclareCategory( "IsQuiverBimoduleHomSpace", IsQuiverModuleHomSpace );
 
+DeclareOperation( "Hom", [ IsQPAVectorSpace, IsQPAVectorSpace ] );
 DeclareOperation( "Hom", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 DeclareOperation( "Hom", [ IsQuiverModule, IsQuiverModule ] );
 

@@ -283,6 +283,10 @@ dir -> function( V1, V2, mat )
   return T;
 end );
 
+InstallMethod( SpaceContainingVector, "for linear transformation",
+               [ IsLinearTransformation ],
+               f -> Hom( Source( f ), Range( f ) ) );
+
 InstallMethod( MatrixOfLinearTransformation, "for linear transformation",
                [ IsDirection, IsLinearTransformation ],
 function( dir, T )

@@ -1,5 +1,78 @@
 InstallMethod( \=, [ IsHomSpace, IsHomSpace ], ReturnFalse );
 
+BindGlobal( "FamilyOfVectorSpaceHomSpaces",
+            NewFamily( "vector space hom spaces" ) );
+DeclareRepresentation( "IsVectorSpaceHomSpaceRep",
+                       IsComponentObjectRep and IsAttributeStoringRep,
+                       [] );
+
+InstallMethod( Hom,
+               [ IsQPAVectorSpace, IsQPAVectorSpace ],
+function( V1, V2 )
+  local type, hom;
+  if not IsIdenticalObj( CapCategory( V1 ), CapCategory( V2 ) ) then
+    Error( "vector spaces from differenct categories" );
+  fi;
+  type := NewType( FamilyOfVectorSpaceHomSpaces,
+                   IsVectorSpaceHomSpace and IsVectorSpaceHomSpaceRep );
+  hom := rec();
+  ObjectifyWithAttributes( hom, type,
+                           Source, V1,
+                           Range, V2,
+                           UnderlyingField, UnderlyingField( V1 ) );
+  return Intern( hom );
+end );
+
+InstallMethod( CanonicalBasis, [ IsVectorSpaceHomSpace ],
+function( hom )
+  local V1, V2, dim, basis_vectors, F, lists, basis;
+  V1 := Source( hom );
+  V2 := Range( hom );
+  dim := Dimension( hom );
+  if dim = 0 then
+    basis_vectors := [];
+  else
+    F := UnderlyingField( hom );
+    lists := IdentityMat( dim, F );
+    basis_vectors := List( lists,
+                           l -> LinearTransformationByRightMatrix( V1, V2, l ) );
+  fi;
+  basis := rec();
+  ObjectifyWithAttributes( basis,
+                           NewType( FamilyOfVectorSpaceBases,
+                                    IsBasis and IsVectorSpaceBasisRep ),
+                           BasisVectors, basis_vectors,
+                           UnderlyingLeftModule, hom );
+  return basis;
+end );
+  
+InstallMethod( Dimension, [ IsVectorSpaceHomSpace ],
+function( hom )
+  return Dimension( Source( hom ) ) * Dimension( Range( hom ) );
+end );
+
+InstallMethod( String, [ IsVectorSpaceHomSpace ],
+function( hom )
+  return Concatenation( "Hom(", String( Source( hom ) ),
+                        ", ", String( Range( hom ) ), ")" );
+end );
+
+InstallMethod( PrintObj, [ IsVectorSpaceHomSpace ],
+function( hom )
+  Print( String( hom ) );
+end );
+
+InstallMethod( ViewObj, [ IsVectorSpaceHomSpace ],
+function( hom )
+  Print( String( hom ) );
+end );
+
+InstallMethod( \=, [ IsVectorSpaceHomSpace, IsVectorSpaceHomSpace ],
+function( hom1, hom2 )
+  return Source( hom1 ) = Source( hom2 )
+         and Range( hom1 ) = Range( hom2 );
+end );
+
 BindGlobal( "FamilyOfQuiverRepresentationHomSpaces",
             NewFamily( "quiver representation hom spaces" ) );
 DeclareRepresentation( "IsQuiverRepresentationHomSpaceRep",

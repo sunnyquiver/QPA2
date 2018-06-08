@@ -40,33 +40,53 @@ function( R, M, type )
 end );
 
 InstallMethod( MatrixByRows, "for ring, list and matrix",
-               [ IsRing, IsDenseList, IsMatrix ],
-function( R, dim, M )
+               [ IsRing, IsDenseList, IsDenseList ],
+function( R, dim, lst )
+  local M;
   if Length( dim ) <> 2 then
     Error( "matrix dimension must be a list of length 2" );
   fi;
   if dim[ 1 ] = 0 or dim[ 2 ] = 0 then
     return MakeZeroMatrix( R, dim[ 1 ], dim[ 2 ] );
   fi;
-  if dim <> DimensionsMat( M ) then
-    Error( "list of rows has wrong dimensions" );
+  if IsMatrix( lst ) then
+    M := lst;
+    if dim <> DimensionsMat( M ) then
+      Error( "list of rows has wrong dimensions" );
+    fi;
+  else
+    if dim[ 1 ] * dim[ 2 ] <> Length( lst ) then
+      Error( "matrix list has wrong length" );
+    fi;
+    M := List( [ 0 .. ( dim[ 1 ] - 1 ) ],
+               i -> lst{ ( i * dim[ 2 ] ) + [ 1 .. dim[ 2 ] ] } );
   fi;
   return MAKE_QPA_MATRIX( R, M, IsRowMatrixRep );
 end );
 
 InstallMethod( MatrixByCols, "for ring, list and matrix",
-               [ IsRing, IsDenseList, IsMatrix ],
-function( R, dim, M )
+               [ IsRing, IsDenseList, IsDenseList ],
+function( R, dim, lst )
+  local M;
   if Length( dim ) <> 2 then
     Error( "matrix dimension must be a list of length 2" );
   fi;
   if dim[ 1 ] = 0 or dim[ 2 ] = 0 then
     return MakeZeroMatrix( R, dim[ 1 ], dim[ 2 ] );
   fi;
-  if [ dim[ 2 ], dim[ 1 ] ] <> DimensionsMat( M ) then
-    Error( "list of cols has wrong dimensions" );
+  if IsMatrix( lst ) then
+    M := lst;
+    if [ dim[ 2 ], dim[ 1 ] ] <> DimensionsMat( M ) then
+      Error( "list of columns has wrong dimensions" );
+    fi;
+  else
+    if dim[ 1 ] * dim[ 2 ] <> Length( lst ) then
+      Error( "matrix list has wrong length" );
+    fi;
+    M := List( [ 0 .. ( dim[ 1 ] - 1 ) ],
+               i -> lst{ ( i * dim[ 2 ] ) + [ 1 .. dim[ 2 ] ] } );
   fi;
-  return MAKE_QPA_MATRIX( R, M, IsColMatrixRep );
+  return MAKE_QPA_MATRIX( R, M, IsRowMatrixRep );
 end );
 
 InstallMethod( MatrixByRows, "for ring and matrix",
