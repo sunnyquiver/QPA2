@@ -1,5 +1,10 @@
 InstallMethod( \=, [ IsHomSpace, IsHomSpace ], ReturnFalse );
 
+InstallMethod( Zero, [ IsHomSpace ],
+function( hom )
+  return ZeroMorphism( Source( hom ), Range( hom ) );
+end );
+
 BindGlobal( "FamilyOfVectorSpaceHomSpaces",
             NewFamily( "vector space hom spaces" ) );
 DeclareRepresentation( "IsVectorSpaceHomSpaceRep",
@@ -9,17 +14,20 @@ DeclareRepresentation( "IsVectorSpaceHomSpaceRep",
 InstallMethod( Hom,
                [ IsQPAVectorSpace, IsQPAVectorSpace ],
 function( V1, V2 )
-  local type, hom;
+  local F, cat, type, hom;
   if not IsIdenticalObj( CapCategory( V1 ), CapCategory( V2 ) ) then
     Error( "vector spaces from differenct categories" );
   fi;
-  type := NewType( FamilyOfVectorSpaceHomSpaces,
+  F := UnderlyingField( V1 );
+  cat := CategoryOfVectorSpaces( F );
+  type := NewType( FamilyOfQPAVectorSpaces,
                    IsVectorSpaceHomSpace and IsVectorSpaceHomSpaceRep );
   hom := rec();
   ObjectifyWithAttributes( hom, type,
                            Source, V1,
                            Range, V2,
-                           UnderlyingField, UnderlyingField( V1 ) );
+                           UnderlyingField, F );
+  Add( cat, hom );
   return Intern( hom );
 end );
 
@@ -39,7 +47,7 @@ function( hom )
   fi;
   basis := rec();
   ObjectifyWithAttributes( basis,
-                           NewType( FamilyOfVectorSpaceBases,
+                           NewType( FamilyOfQPAVectorSpaces,
                                     IsBasis and IsVectorSpaceBasisRep ),
                            BasisVectors, basis_vectors,
                            UnderlyingLeftModule, hom );
@@ -73,6 +81,42 @@ function( hom1, hom2 )
          and Range( hom1 ) = Range( hom2 );
 end );
 
+InstallMethod( Hom, [ IsLinearTransformation, IsQPAVectorSpace ],
+function( T, V )
+  local W1, W2;
+  W1 := Source( T );
+  W2 := Range( T );
+  #      T
+  # W1 ----> W2
+  #   \     /
+  #    .   .
+  #      V
+  #
+  # T* : Hom( W2, V ) -> Hom( W1, V )
+  #            f     |-> PreCompose( T, f )
+  return LinearTransformationByFunction( Hom( W2, V ),
+                                         Hom( W1, V ),
+                                         f -> PreCompose( T, f ) );
+end );
+
+InstallMethod( Hom, [ IsQPAVectorSpace, IsLinearTransformation ],
+function( V, T )
+  local W1, W2;
+  W1 := Source( T );
+  W2 := Range( T );
+  #      V
+  #    /   \
+  #   .     .
+  # W1 ----> W2
+  #      T
+  #
+  # T_* : Hom( V, W1 ) -> Hom( V, W2 )
+  #             f     |-> PreCompose( f, T )
+  return LinearTransformationByFunction( Hom( V, W1 ),
+                                         Hom( V, W2 ),
+                                         f -> PreCompose( f, T ) );
+end );
+
 BindGlobal( "FamilyOfQuiverRepresentationHomSpaces",
             NewFamily( "quiver representation hom spaces" ) );
 DeclareRepresentation( "IsQuiverRepresentationHomSpaceRep",
@@ -82,28 +126,52 @@ DeclareRepresentation( "IsQuiverRepresentationHomSpaceRep",
 InstallMethod( Hom,
                [ IsQuiverRepresentation, IsQuiverRepresentation ],
 function( R1, R2 )
-  local type, hom;
+  local F, cat, type, hom;
   if not IsIdenticalObj( CapCategory( R1 ), CapCategory( R2 ) ) then
     Error( "representations from different categories" );
   fi;
-  type := NewType( FamilyOfQuiverRepresentationHomSpaces,
+  F := FieldOfRepresentation( R1 );
+  cat := CategoryOfVectorSpaces( F );
+  type := NewType( FamilyOfQPAVectorSpaces,
                    IsQuiverRepresentationHomSpace and IsQuiverRepresentationHomSpaceRep );
   hom := rec();
   ObjectifyWithAttributes( hom, type,
                            Source, R1,
-                           Range, R2 );
+                           Range, R2,
+                           UnderlyingField, F );
+  Add( cat, hom );
   return Intern( hom );
 end );
 
 InstallMethod( CanonicalBasis, [ IsQuiverRepresentationHomSpace ],
 function( hom )
-  local basis, basis_vectors;
-  basis_vectors := BasisOfHom( Source( hom ), Range( hom ) );
+  local ker, ker_basis, vertex_spaces, vertex_projection_maps, 
+        ker_to_morphism, basis_morphisms, basis;
+
+  ker := KernelEmbedding( HomSpaceVertexToArrowMap( hom ) );
+  ker_basis := Basis( Source( ker ) );
+
+  vertex_spaces := VertexHomSpaces( hom );
+  vertex_projection_maps := List( [ 1 .. Length( vertex_spaces ) ],
+                                  i -> ProjectionInFactorOfDirectSum( vertex_spaces, i ) );
+
+
+  ker_to_morphism := function( v )
+    local vertex_sum_elem, vertex_projections;
+    vertex_sum_elem := ImageElm( ker, v );
+    vertex_projections := List( vertex_projection_maps,
+                                m -> ImageElm( m, vertex_sum_elem ) );
+    return QuiverRepresentationHomomorphismByMorphisms
+           ( Source( hom ), Range( hom ), vertex_projections );
+  end;
+
+  basis_morphisms := List( ker_basis, ker_to_morphism );
+
   basis := rec();
   ObjectifyWithAttributes( basis,
                            NewType( FamilyOfVectorSpaceBases,
                                     IsBasis and IsVectorSpaceBasisRep ),
-                           BasisVectors, basis_vectors,
+                           BasisVectors, basis_morphisms,
                            UnderlyingLeftModule, hom );
   return basis;
 end );
@@ -133,6 +201,83 @@ function( hom1, hom2 )
          and Range( hom1 ) = Range( hom2 );
 end );
 
+InstallMethod( VertexHomSpaces, "for quiver representation hom space",
+               [ IsQuiverRepresentationHomSpace ],
+function( hom )
+  local R1, R2, Q;
+  R1 := Source( hom );
+  R2 := Range( hom );
+  Q := QuiverOfRepresentation( R1 );
+  return List( Vertices( Q ),
+               v -> Hom( VectorSpaceOfRepresentation( R1, v ),
+                         VectorSpaceOfRepresentation( R2, v ) ) );
+end );
+
+InstallMethod( ArrowHomSpaces, "for quiver representation hom space",
+               [ IsQuiverRepresentationHomSpace ],
+function( hom )
+  local R1, R2, Q;
+  R1 := Source( hom );
+  R2 := Range( hom );
+  Q := QuiverOfRepresentation( R1 );
+  return List( Arrows( Q ),
+               a -> Hom( VectorSpaceOfRepresentation( R1, Source( a ) ),
+                         VectorSpaceOfRepresentation( R2, Target( a ) ) ) );
+end );
+
+InstallMethod( SumOfVertexHomSpaces, "for quiver representation hom space",
+               [ IsQuiverRepresentationHomSpace ],
+               hom -> DirectSum( VertexHomSpaces( hom ) ) );
+
+InstallMethod( SumOfArrowHomSpaces, "for quiver representation hom space",
+               [ IsQuiverRepresentationHomSpace ],
+               hom -> DirectSum( ArrowHomSpaces( hom ) ) );
+
+InstallMethod( HomSpaceVertexToArrowMap, "for quiver representation hom space",
+               [ IsQuiverRepresentationHomSpace ],
+function( hom )
+  local R1, R2, Q, vertex_spaces, arrow_spaces, morphisms, v, 
+        morphisms_v, a, m;
+  R1 := Source( hom );
+  R2 := Range( hom );
+  Q := QuiverOfRepresentation( R1 );
+  # arrow a: v1 -> v2
+  #             a1
+  # R1       .  -> .
+  #        f v  \  v g
+  # R2       .  -> .
+  #             a2
+  #
+  # sumofvertex -> sumofarrow
+  # (f,g) -> [a1,g] - [f,a2]
+  vertex_spaces := VertexHomSpaces( hom );
+  arrow_spaces := ArrowHomSpaces( hom );
+  morphisms := [];
+  for v in Vertices( Q ) do
+    morphisms_v := [];
+    for a in Arrows( Q ) do
+      if v = Source( a ) then
+        m := - Hom( VectorSpaceOfRepresentation( R1, v ),
+                    MapForArrow( R2, a ) );
+        # f |-> PreCompose( f, MapForArrow( R2, a ) )
+      elif v = Target( a ) then
+        m := Hom( MapForArrow( R1, a ),
+                  VectorSpaceOfRepresentation( R2, v ) );
+        # g |-> PreCompose( MapForArrow( R1, a ), g )
+      else
+        m := ZeroMorphism( vertex_spaces[ VertexNumber( v ) ],
+                           arrow_spaces[ ArrowNumber( a ) ] );
+      fi;
+      Add( morphisms_v, m );
+    od;
+    Add( morphisms, morphisms_v );
+  od;
+  
+  return MorphismBetweenDirectSums( SumOfVertexHomSpaces( hom ),
+                                    morphisms,
+                                    SumOfArrowHomSpaces( hom ) );
+end );
+
 DeclareSideOperations( IsQuiverModuleHomSpace,
                        IsLeftQuiverModuleHomSpace, IsRightQuiverModuleHomSpace,
                        IsQuiverBimoduleHomSpace );
@@ -146,20 +291,24 @@ DeclareRepresentation( "IsQuiverModuleHomSpaceRep",
 InstallMethod( Hom,
                [ IsQuiverModule, IsQuiverModule ],
 function( M1, M2 )
-  local type, hom, rep_hom;
+  local rep_hom, F, cat, type, hom;
   if not IsIdenticalObj( CapCategory( M1 ), CapCategory( M2 ) ) then
     Error( "modules from different categories" );
   fi;
   rep_hom := Hom( UnderlyingRepresentation( M1 ),
                   UnderlyingRepresentation( M2 ) );
-  type := NewType( FamilyOfQuiverModuleHomSpaces,
+  F := UnderlyingField( rep_hom );
+  cat := CategoryOfVectorSpaces( F );
+  type := NewType( FamilyOfQPAVectorSpaces,
                    IsQuiverModuleHomSpace and IsQuiverModuleHomSpaceRep );
   hom := rec();
   ObjectifyWithAttributes( hom, type,
                            Source, M1,
                            Range, M2,
                            Side, Side( M1 ),
+                           UnderlyingField, F,
                            UnderlyingRepresentationHomSpace, rep_hom );
+  Add( cat, hom );
   return Intern( hom );
 end );
 

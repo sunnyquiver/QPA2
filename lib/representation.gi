@@ -861,6 +861,21 @@ function( f, e )
                   ImageElm ) );
 end );
 
+InstallMethod( \+,
+               [ IsQuiverRepresentationHomomorphism, IsQuiverRepresentationHomomorphism ],
+function( f, g )
+  if Source( f ) <> Source( g ) then
+    Error( "adding homomorphisms with different sources" );
+  elif Range( f ) <> Range( g ) then
+    Error( "adding homomorphisms with different ranges" );
+  fi;
+  return QuiverRepresentationHomomorphismByMorphisms
+         ( Source( f ), Range( f ),
+           ListN( MapsOfRepresentationHomomorphism( f ),
+                  MapsOfRepresentationHomomorphism( g ),
+                  \+ ) );
+end );
+
 InstallMethod( MapForVertex, "for quiver representation homomorphism and vertex",
                [ IsQuiverRepresentationHomomorphism, IsVertex ],
 function( f, v )

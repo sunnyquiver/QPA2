@@ -202,6 +202,9 @@ function( V )
   return Vector( V, List( [ 1 .. dim ], i -> Zero( F ) ) );
 end );
 
+InstallMethod( LeftActingDomain, [ IsQPAVectorSpace ],
+               UnderlyingField );
+
 InstallMethod( CanonicalBasis, [ IsStandardVectorSpace ],
 function( V )
   local basis, basis_vectors;
@@ -223,9 +226,14 @@ end );
 InstallMethod( Basis, [ IsQPAVectorSpace ], CanonicalBasis );
 
 InstallMethod( Coefficients,
-               [ IsStandardVectorSpaceBasis,
-                 IsStandardVector ],
+               [ IsCanonicalBasis,
+                 IsQPAVector ],
 function( B, v )
+  local V;
+  V := UnderlyingLeftModule( B );
+  if not ( v in V ) then
+    Error( "basis for wrong vector space" );
+  fi;
   return AsList( v );
 end );
 
@@ -283,9 +291,26 @@ dir -> function( V1, V2, mat )
   return T;
 end );
 
+InstallMethod( LinearTransformationByFunction, "for vector spaces and function",
+               [ IsQPAVectorSpace, IsQPAVectorSpace, IsFunction ],
+function( V1, V2, f )
+  local mat, b;
+  mat := [];
+  for b in CanonicalBasis( V1 ) do
+    Add( mat, AsList( f( b ) ) );
+  od;
+  return LinearTransformationByRightMatrix( V1, V2, mat );
+end );
+
 InstallMethod( SpaceContainingVector, "for linear transformation",
                [ IsLinearTransformation ],
                f -> Hom( Source( f ), Range( f ) ) );
+
+InstallMethod( AsList,
+               [ IsLinearTransformation ],
+function( T )
+  return Flat( RowsOfMatrix( RightMatrixOfLinearTransformation( T ) ) );
+end );
 
 InstallMethod( MatrixOfLinearTransformation, "for linear transformation",
                [ IsDirection, IsLinearTransformation ],

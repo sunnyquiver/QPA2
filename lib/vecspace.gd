@@ -155,6 +155,9 @@ DeclareOperation( "LinearTransformationByLeftMatrix",
 DeclareOperation( "LinearTransformationByRightMatrix",
                   [ IsQPAVectorSpace, IsQPAVectorSpace, IsDenseList ] );
 
+DeclareOperation( "LinearTransformationByFunction",
+                  [ IsQPAVectorSpace, IsQPAVectorSpace, IsFunction ] );
+
 #! @Description
 #!  Returns the linear transformation between standard vector spaces
 #!  represented by the matrix <A>M</A>, which must be an

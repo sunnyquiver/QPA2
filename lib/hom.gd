@@ -11,14 +11,24 @@ DeclareCategory( "IsRightQuiverModuleHomSpace", IsQuiverModuleHomSpace );
 DeclareCategory( "IsQuiverBimoduleHomSpace", IsQuiverModuleHomSpace );
 
 DeclareOperation( "Hom", [ IsQPAVectorSpace, IsQPAVectorSpace ] );
+DeclareOperation( "Hom", [ IsLinearTransformation, IsQPAVectorSpace ] );
+DeclareOperation( "Hom", [ IsQPAVectorSpace, IsLinearTransformation ] );
+
 DeclareOperation( "Hom", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 DeclareOperation( "Hom", [ IsQuiverModule, IsQuiverModule ] );
 
 DeclareAttribute( "Source", IsHomSpace );
 DeclareAttribute( "Range", IsHomSpace );
 
-DeclareAttribute( "Side", IsQuiverModuleHomSpace );
+#DeclareAttribute( "Side", IsQuiverModuleHomSpace );
 DeclareAttribute( "UnderlyingRepresentationHomSpace", IsQuiverModuleHomSpace );
+
+DeclareAttribute( "VertexHomSpaces", IsQuiverRepresentationHomSpace );
+DeclareAttribute( "ArrowHomSpaces", IsQuiverRepresentationHomSpace );
+DeclareAttribute( "SumOfVertexHomSpaces", IsQuiverRepresentationHomSpace );
+DeclareAttribute( "SumOfArrowHomSpaces", IsQuiverRepresentationHomSpace );
+DeclareAttribute( "HomSpaceVertexToArrowMap", IsQuiverRepresentationHomSpace );
+
 
 #! @Description
 #!  Given two representations  <A>R1</A> and <A>R2</A> this constructs
