@@ -42,9 +42,9 @@ LQ.a * LQ.b;
 
 #! @BeginChunk Example_Quiver
 #! @BeginExample
-LQ := Quiver( IsLeftQuiver, "Q(2)[a:1->2,b:1->2]" );
+LQ := Quiver( LEFT, "Q(2)[a:1->2,b:1->2]" );
 #! Q(2)[a:1->2,b:1->2]
-RQ := Quiver( IsRightQuiver, "Q(2)[a:1->2,b:1->2]" );
+RQ := Quiver( RIGHT, "Q(2)[a:1->2,b:1->2]" );
 #! Q(2)[a:1->2,b:1->2]
 IsLeftQuiver( LQ );
 #! true
