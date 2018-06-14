@@ -153,8 +153,7 @@ InstallMethod( TensorProductOfRepresentations,
             Add( maps, matrix );
         od;
     od;
-    maps := List( maps, m -> MatrixByRows( K, m ) );
-    tensorproduct := QuiverRepresentationByRightMatrices( B3, dimension, arrowsB3, maps );
+    tensorproduct := QuiverRepresentation( B3, dimension, arrowsB3, maps );
     
     elementarytensor := function( r1, r2 )
         local   vectors,  v;

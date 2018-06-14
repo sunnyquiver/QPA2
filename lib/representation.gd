@@ -136,97 +136,64 @@ DeclareOperation( "QuiverAlgebraActionAsLinearTransformation",
 #! @BeginGroup QuiverRepresentation
 #! @Description
 #!  Construct a quiver representation over the quiver algebra <A>A</A>.
+#!
 #!  The list <A>dimensions</A> gives the dimension of the vector space
 #!  in each vertex.
 #!  The list <A>matrices</A> gives the matrices for the linear maps
 #!  corresponding to the arrows.
-#!  <P/>
-#!  The variant <C>QuiverRepresentationNC</C> does not check that the
-#!  contents of the lists <A>dimensions</A> and <A>matrices</A> are
-#!  compatible with each other and with the algebra.
+#!
+#!  In the second form of the constructor, a list <A>arrows</A> of some
+#!  arrows from the quiver is supplied, and the list <A>matrices_for_arrows</A>
+#!  gives the matrices for these arrows, in the same order.
+#!  For all arrows that are not in the list <A>arrows</A>, the
+#!  maps in the representation will be zero maps.
+#!
+#!  In both forms, the list of matrices may contain fewer entries than
+#!  the number of arrows.  Any unbound entry in the list of matrices
+#!  gives a zero map in the representation.
 #! @Returns <Ref Filt="IsQuiverRepresentation"/>
 #! @Arguments A, dimensions, matrices
 DeclareOperation( "QuiverRepresentation", [ IsQuiverAlgebra, IsDenseList, IsList ] );
-#! @Arguments A, dimensions, matrices
-DeclareOperation( "QuiverRepresentationNC", [ IsQuiverAlgebra, IsDenseList, IsDenseList ] );
-#! @Arguments cat, dimensions, matrices
+#! @Arguments A, dimensions, arrows, matrices_for_arrows
+DeclareOperation( "QuiverRepresentation", [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsList ] );
+#! @EndGroup
+
+#! @BeginExampleSession
+#! gap> kQ := PathAlgebra( Rationals, LeftQuiver( "Q(3)[a:1->2,b:2->3]" ) );;
+#! gap> R := QuiverRepresentation( kQ, [ 1, 2, 1 ], [ [ 2, 5 ], [ 1, 0 ] ] );
+#! <1,2,1>
+#! @EndExampleSession
+
+#! @BeginGroup QuiverRepresentation-cat
+#! @Description
+#!  Construct a quiver representation in the category <A>cat</A>.
+#!
+#!  The list <A>objects</A> gives the object for each vertex.
+#!  The list <A>morphisms</A> gives the morphisms
+#!  corresponding to the arrows.
+#!
+#!  In the second form of the constructor, a list <A>arrows</A> of some
+#!  arrows from the quiver is supplied, and the list <A>morphisms_for_arrows</A>
+#!  gives the morphisms for these arrows, in the same order.
+#!  For all arrows that are not in the list <A>arrows</A>, the
+#!  morphisms in the representation will be zero morphisms.
+#!
+#!  In both forms, the list of matrices may contain fewer entries than
+#!  the number of arrows.  Any unbound entry in the list of matrices
+#!  gives a zero morphism in the representation.
+#! @Returns <Ref Filt="IsQuiverRepresentation"/>
+#! @Arguments cat, objects, morphisms
 DeclareOperation( "QuiverRepresentation", [ IsQuiverRepresentationCategory, IsDenseList, IsList ] );
-#! @Arguments cat, dimensions, matrices
-DeclareOperation( "QuiverRepresentationNC", [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ] );
-#! @Arguments A, dimensions, arrows, matrices_for_arrows
-DeclareOperation( "QuiverRepresentation", [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
-#! @Arguments A, dimensions, arrows, matrices_for_arrows
-DeclareOperation( "QuiverRepresentationNC", [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
-#! @Arguments cat, dimensions, arrows, matrices_for_arrows
+#! @Arguments cat, objects, arrows, morphisms_for_arrows
 DeclareOperation( "QuiverRepresentation", [ IsQuiverRepresentationCategory,
-                                            IsDenseList, IsDenseList, IsDenseList ] );
-#! @Arguments cat, dimensions, arrows, matrices_for_arrows
-DeclareOperation( "QuiverRepresentationNC", [ IsQuiverRepresentationCategory,
-                                              IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
+                                            IsDenseList, IsDenseList, IsList ] );
 #! @EndGroup
 
-#! @BeginGroup QuiverRepresentationByRightMatrices
 #! @Description
+#!  Non-checking variant of QuiverRepresentation.
 #! @Returns <Ref Filt="IsQuiverRepresentation"/>
-#! @Arguments A, dimensions, matrices
-DeclareOperation( "QuiverRepresentationByRightMatrices",
-                  [ IsQuiverAlgebra, IsDenseList, IsList ] );
-#! @Arguments A, dimensions, matrices
-DeclareOperation( "QuiverRepresentationByRightMatricesNC",
-                  [ IsQuiverAlgebra, IsDenseList, IsDenseList ] );
-#! @Arguments cat, dimensions, matrices
-DeclareOperation( "QuiverRepresentationByRightMatrices",
-                  [ IsQuiverRepresentationCategory, IsDenseList, IsList ] );
-#! @Arguments cat, dimensions, matrices
-DeclareOperation( "QuiverRepresentationByRightMatricesNC",
-                  [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ] );
-#! @Arguments A, dimensions, arrows, matrices_for_arrows
-DeclareOperation( "QuiverRepresentationByRightMatrices",
-                  [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
-#! @Arguments A, dimensions, arrows, matrices_for_arrows
-DeclareOperation( "QuiverRepresentationByRightMatricesNC",
-                  [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
-#! @Arguments cat, dimensions, arrows, matrices_for_arrows
-DeclareOperation( "QuiverRepresentationByRightMatrices",
-                  [ IsQuiverRepresentationCategory,
-                    IsDenseList, IsDenseList, IsDenseList ] );
-#! @Arguments cat, dimensions, arrows, matrices_for_arrows
-DeclareOperation( "QuiverRepresentationByRightMatricesNC",
-                  [ IsQuiverRepresentationCategory,
-                    IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
-#! @EndGroup
-
-#!
-DeclareOperation( "QuiverRepresentationByObjectsAndMorphisms",
-                  [ IsQuiverRepresentationCategory, IsDenseList, IsList ] );
-
-#!
-DeclareOperation( "QuiverRepresentationByObjectsAndMorphismsNC",
-                  [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ] );
-
-#!
-DeclareOperation( "QuiverRepresentationByObjectsAndMorphisms",
-                  [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ] );
-
-#!
-DeclareOperation( "QuiverRepresentationByObjectsAndMorphismsNC",
-                  [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ] );
-
-#! @BeginGroup QuiverRepresentationByArrows
-#! @Description
-#!  Construct a quiver representation by specifying matrices for certain arrows.
-#!  This works like the constructor <Ref Oper="QuiverRepresentation"/>,
-#!  except that the entries in the list <A>matrices</A> correspond to the arrows
-#!  in the list <A>arrows</A>.  All arrows of the quiver that are not present in
-#!  this list get zero maps in the representation.
-#! @Returns <Ref Filt="IsQuiverRepresentation"/>
-#! @Arguments A, dimensions, arrows, matrices
-DeclareOperation( "QuiverRepresentationByArrows",
-                  [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ] );
-#! @Arguments cat, dimensions, arrows, matrices
-DeclareOperation( "QuiverRepresentationByArrows",
-                  [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ] );
-#! @EndGroup
+#! @Arguments cat, objects, morphisms
+DeclareOperation( "QuiverRepresentationNC", [ IsQuiverRepresentationCategory, IsDenseList, IsList ] );
 
 #! @Description
 #!  Given an algebra $<A>A</A> = kQ/I$ and a representation <A>R</A> over

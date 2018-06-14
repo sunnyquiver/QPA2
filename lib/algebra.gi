@@ -1174,10 +1174,10 @@ function( A )
           Add( matrix, coeffs );
         od;
         Add( arrows_with_matrices, a );
-        Add( matrices, MatrixByRows( LeftActingDomain( A ), matrix ) );
+        Add( matrices, matrix );
       fi;
     od;
-    R := QuiverRepresentationByRightMatrices( A, dimensions, arrows_with_matrices, matrices );
+    R := QuiverRepresentation( A, dimensions, arrows_with_matrices, matrices );
     Add( proj_modules, R );
   od;
   return proj_modules;

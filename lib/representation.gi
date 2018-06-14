@@ -228,124 +228,52 @@ DeclareRepresentation( "IsQuiverRepresentationRep", IsComponentObjectRep and IsA
 InstallMethod( QuiverRepresentation, "for quiver algebra, dense list and list",
                [ IsQuiverAlgebra, IsDenseList, IsList ],
 function( A, dimensions, matrices )
-  return QuiverRepresentation( CategoryOfQuiverRepresentations( A ),
-                               dimensions, matrices );
-end );
+  local cat, Q, objects, m, morphisms, i, a, source, range;
 
-InstallMethod( QuiverRepresentation, "for representation category, dense list and lists",
-               [ IsQuiverRepresentationCategory, IsDenseList, IsList ],
-function( cat, dimensions, matrices )
-  local objects, morphisms;
-  objects := List( dimensions, VectorSpaceConstructor( cat ) );
-  morphisms := List( matrices, LinearTransformationConstructor( cat ) );
-  return QuiverRepresentationByObjectsAndMorphisms
-         ( cat, objects, morphisms );
-end );
-
-InstallMethod( QuiverRepresentationNC, "for path algebra and dense lists",
-               [ IsPathAlgebra, IsDenseList, IsDenseList ],
-function( A, dimensions, matrices )
-  return QuiverRepresentationNC( CategoryOfQuiverRepresentations( A ),
-                                 dimensions, matrices );
-end );
-
-InstallMethod( QuiverRepresentationNC, "for representation category and dense lists",
-               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ],
-function( cat, dimensions, matrices )
-  local objects, morphisms;
-  objects := List( dimensions, VectorSpaceConstructor( cat ) );
-  morphisms := List( matrices, LinearTransformationConstructor( cat ) );
-  return QuiverRepresentationByObjectsAndMorphismsNC
-         ( cat, objects, morphisms );
-end );
-
-InstallMethod( QuiverRepresentation, "for quiver algebra and three dense lists",
-               [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ],
-function( A, dimensions, arrows, matrices )
-  return QuiverRepresentation
-         ( CategoryOfQuiverRepresentations( A ), dimensions, arrows, matrices );
-end );
-
-InstallMethod( QuiverRepresentation, "for representation category and three dense lists",
-               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ],
-function( cat, dimensions, arrows, matrices )
-  local objects, morphisms;
-  objects := List( dimensions, VectorSpaceConstructor( cat ) );
-  morphisms := List( matrices, LinearTransformationConstructor( cat ) );
-  return QuiverRepresentationByObjectsAndMorphisms
-         ( cat, objects, arrows, morphisms );
-end );
-
-InstallMethod( QuiverRepresentationByRightMatrices,
-               [ IsQuiverAlgebra, IsDenseList, IsList ],
-function( A, dimensions, matrices )
-  return QuiverRepresentationByRightMatrices
-         ( CategoryOfQuiverRepresentations( A ), dimensions, matrices );
-end );
-
-InstallMethod( QuiverRepresentationByRightMatrices,
-               [ IsQuiverRepresentationCategory, IsDenseList, IsList ],
-function( cat, dimensions, matrices )
-  local A, Q, objects, morphisms, a, i, source, target;
-  A := AlgebraOfCategory( cat );
+  cat := CategoryOfQuiverRepresentations( A );
   Q := QuiverOfAlgebra( A );
+
   objects := List( dimensions, VectorSpaceConstructor( cat ) );
+
+  m := LinearTransformationConstructor( cat );
   morphisms := [];
-  for a in Arrows( Q ) do
-    i := ArrowNumber( a );
-    source := objects[ VertexNumber( Source( a ) ) ];
-    target := objects[ VertexNumber( Target( a ) ) ];
+  for i in [ 1 .. Length( matrices ) ] do
     if IsBound( matrices[ i ] ) then
-      morphisms[ i ] :=
-        LinearTransformationByRightMatrix( source, target, matrices[ i ] );
+      a := Arrow( Q, i );
+      source := objects[ VertexNumber( Source( a ) ) ];
+      range := objects[ VertexNumber( Target( a ) ) ];
+      morphisms[ i ] := m( source, range, matrices[ i ] );
     fi;
   od;
-  return QuiverRepresentationByObjectsAndMorphisms
-         ( cat, objects, morphisms );
+
+  return QuiverRepresentation( cat, objects, morphisms );
 end );
 
-InstallMethod( QuiverRepresentationByRightMatrices,
-               [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsDenseList ],
-function( A, dimensions, arrows, matrices )
-  return QuiverRepresentationByRightMatrices
-         ( CategoryOfQuiverRepresentations( A ), dimensions, arrows, matrices );
-end );
-
-InstallMethod( QuiverRepresentationByRightMatrices,
-               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ],
-function( cat, dimensions, arrows, matrices )
-  local new_matrices, i;
-  new_matrices := [];
+InstallMethod( QuiverRepresentation, "for quiver algebra, dense list, dense list and list",
+               [ IsQuiverAlgebra, IsDenseList, IsDenseList, IsList ],
+function( A, dimensions, arrows, matrices_for_arrows )
+  local matrices, i;
+  if Length( matrices_for_arrows ) > Length( arrows ) then
+    Error( "too many matrices" );
+  fi;
+  matrices := [];
   for i in [ 1 .. Length( arrows ) ] do
-    new_matrices[ ArrowNumber( arrows[ i ] ) ] := matrices[ i ];
+    if IsBound( matrices_for_arrows[ i ] ) then
+      matrices[ ArrowNumber( arrows[ i ] ) ] := matrices_for_arrows[ i ];
+    fi;
   od;
-  return QuiverRepresentationByRightMatrices
-         ( cat, dimensions, new_matrices );
+  return QuiverRepresentation( A, dimensions, matrices );
 end );
 
-InstallMethod( QuiverRepresentationByObjectsAndMorphisms,
-               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsDenseList ],
-function( cat, objects, arrows, morphisms )
-  local morphisms_full, i;
-  morphisms_full := [];
-  # TODO check Length( arrows ) = Length( morphisms ); more?
-  for i in [ 1 .. Length( arrows ) ] do
-    morphisms_full[ ArrowNumber( arrows[ i ] ) ] := morphisms[ i ];
-  od;
-  return QuiverRepresentationByObjectsAndMorphisms
-         ( cat, objects, morphisms_full );
-end );
-
-InstallMethod( QuiverRepresentationByObjectsAndMorphisms,
+InstallMethod( QuiverRepresentation,
                [ IsQuiverRepresentationCategory, IsDenseList, IsList ],
 function( cat, objects, morphisms )
   local A, R, Q, vertices, num_vertices, arrows, num_arrows, 
-        vecspace_cat, i, a, source, target, src, correct_src, rng, 
-        correct_rng;
+        vecspace_cat, i, src, correct_src, rng, correct_rng;
 
   A := AlgebraOfCategory( cat );
   if IsQuotientOfPathAlgebra( A ) then
-    R := QuiverRepresentationByObjectsAndMorphisms
+    R := QuiverRepresentation
          ( CategoryOfQuiverRepresentations( PathAlgebra( A ) ),
            objects, morphisms );
     return AsRepresentationOfQuotientAlgebra( R, A );
@@ -374,16 +302,10 @@ function( cat, objects, morphisms )
            "(", Length( morphisms ), " specified, but quiver has only ",
            num_arrows, " arrows)" );
   fi;
-  morphisms := ShallowCopy( morphisms );
   for i in [ 1 .. num_arrows ] do
     if not IsBound( morphisms[ i ] ) then
-      a := Arrow( Q, i );
-      source := objects[ VertexNumber( Source( a ) ) ];
-      target := objects[ VertexNumber( Target( a ) ) ];
-      morphisms[ i ] := ZeroMorphism( source, target );
+      continue;
     fi;
-  od;
-  for i in [ 1 .. num_arrows ] do
     if not ( IsCapCategoryMorphism( morphisms[ i ] ) and
              IsIdenticalObj( CapCategory( morphisms[ i ] ), vecspace_cat ) ) then
       Error( "Morphism ", morphisms[ i ], " for arrow ", arrows[ i ],
@@ -403,14 +325,45 @@ function( cat, objects, morphisms )
     fi;
   od;
 
-  return QuiverRepresentationByObjectsAndMorphismsNC( cat, objects, morphisms );
+  return QuiverRepresentationNC( cat, objects, morphisms );
 end );
 
-InstallMethod( QuiverRepresentationByObjectsAndMorphismsNC,
-               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList ],
+InstallMethod( QuiverRepresentation,
+               [ IsQuiverRepresentationCategory, IsDenseList, IsDenseList, IsList ],
+function( cat, objects, arrows, morphisms_for_arrows )
+  local morphisms, i;
+  morphisms := [];
+  if Length( morphisms_for_arrows ) > Length( arrows ) then
+    Error( "too many morphisms" );
+  fi;
+  for i in [ 1 .. Length( arrows ) ] do
+    if IsBound( morphisms_for_arrows[ i ] ) then
+      morphisms[ ArrowNumber( arrows[ i ] ) ] := morphisms_for_arrows[ i ];
+    fi;
+  od;
+  return QuiverRepresentation
+         ( cat, objects, morphisms );
+end );
+
+InstallMethod( QuiverRepresentationNC,
+               [ IsQuiverRepresentationCategory, IsDenseList, IsList ],
 function( cat, objects, morphisms )
-  local A, repType, R;
+  local A, Q, i, a, source, target, repType, R;
+
   A := AlgebraOfCategory( cat );
+  Q := QuiverOfAlgebra( A );
+
+  # fill in zero morphisms where no morphism is provided:
+  morphisms := ShallowCopy( morphisms );
+  for i in [ 1 .. NumberOfArrows( Q ) ] do
+    if not IsBound( morphisms[ i ] ) then
+      a := Arrow( Q, i );
+      source := objects[ VertexNumber( Source( a ) ) ];
+      target := objects[ VertexNumber( Target( a ) ) ];
+      morphisms[ i ] := ZeroMorphism( source, target );
+    fi;
+  od;
+
   repType := NewType( FamilyOfQuiverRepresentations,
                       IsQuiverRepresentation and IsQuiverRepresentationRep );
   R := rec();
@@ -419,9 +372,6 @@ function( cat, objects, morphisms )
       AlgebraOfRepresentation, A,
       VectorSpacesOfRepresentation, objects,
       MapsOfRepresentation, morphisms
-#      MatricesOfRepresentation, List( morphisms, MatrixOfLinearTransformation ),
-#      DimensionVector, List( objects, Dimension ),
-#      AsQPAVectorSpace, VectorSpaceConstructor( cat )( Sum( List( objects, Dimension ) ) )
       );
   Add( cat, R );
   return R;
@@ -491,7 +441,7 @@ function( R, A )
              "; does not respect the relation ", rel );
     fi;
   od;
-  R_ := QuiverRepresentationByObjectsAndMorphismsNC
+  R_ := QuiverRepresentationNC
         ( CategoryOfQuiverRepresentations( A ),
           VectorSpacesOfRepresentation( R ),
           MapsOfRepresentation( R ) );
@@ -507,7 +457,7 @@ function( R )
   if IsPathAlgebra( A ) then
     return R;
   else
-    return QuiverRepresentationByObjectsAndMorphismsNC
+    return QuiverRepresentationNC
            ( PathAlgebra( A ),
              VectorSpacesOfRepresentation( R ),
              MapsOfRepresentation( R ) );
@@ -941,7 +891,9 @@ function( A, vecspace_cat )
   AddIsEqualForMorphisms( cat, equal_morphisms );
 
   zero_object := function()
-    return QuiverRepresentation( cat, List( Vertices( Q ), v -> 0 ), [], [] );
+    local zero;
+    zero := ZeroObject( vecspace_cat );
+    return QuiverRepresentation( cat, List( Vertices( Q ), v -> zero ), [] );
   end;
   AddZeroObject( cat, zero_object );
 
@@ -1001,7 +953,7 @@ function( A, vecspace_cat )
                MapForArrow( Source( m ), a ),
                MapForVertex( m, Target( a ) ) );
     end;
-    ker := QuiverRepresentationByObjectsAndMorphisms
+    ker := QuiverRepresentation
            ( cat, ker_objs, List( Arrows( Q ), map_for_arrow ) );
     return QuiverRepresentationHomomorphismByMorphisms
            ( ker, Source( m ), emb_maps );
@@ -1016,7 +968,7 @@ function( A, vecspace_cat )
                MapForArrow( Range( m ), a ),
                MapForVertex( m, Target( a ) ) );
     end;
-    return QuiverRepresentationByObjectsAndMorphisms
+    return QuiverRepresentation
            ( cat,
              List( MapsOfRepresentationHomomorphism( m ),
                    CokernelObject ),
@@ -1050,7 +1002,7 @@ function( A, vecspace_cat )
   AddColiftAlongEpimorphism( cat, epi_colift );
 
   direct_sum := function( summands )
-    return QuiverRepresentationByObjectsAndMorphisms
+    return QuiverRepresentation
            ( cat,
              List( Transpose( List( summands,
                                     VectorSpacesOfRepresentation ) ),
@@ -1165,7 +1117,7 @@ function( R, gens )
     t := VertexNumber( Target( a ) );
     Add( maps, LiftAlongMonomorphism( inclusions[ t ], PreCompose( inclusions[ s ], MapForArrow( R, a ) ) ) );
   od;
-  U := QuiverRepresentationByObjectsAndMorphisms( CapCategory( R ), List( inclusions, Source ), maps );
+  U := QuiverRepresentation( CapCategory( R ), List( inclusions, Source ), maps );
   
   return QuiverRepresentationHomomorphismByMorphisms( U, R, inclusions ); 
 end );

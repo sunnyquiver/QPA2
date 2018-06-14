@@ -55,11 +55,11 @@ function( A, basis, basis_vertices, action )
     tgt_basis_indices := basis_by_vertex[ VertexNumber( Target( a ) ) ];
     if not IsEmpty( src_basis_indices ) and not IsEmpty( tgt_basis_indices ) then
       matrix_rows := List( basis{ src_basis_indices }, b -> action( b, a ){ tgt_basis_indices } );
-      matrices[ ArrowNumber( a ) ] := MatrixByRows( k, matrix_rows );
+      matrices[ ArrowNumber( a ) ] := matrix_rows;
     fi;
   od;
 
-  return [ QuiverRepresentationByRightMatrices( A, List( basis_by_vertex, Length ), matrices ),
+  return [ QuiverRepresentation( A, List( basis_by_vertex, Length ), matrices ),
            perm_to_rep, perm_from_rep ];
 end );
 

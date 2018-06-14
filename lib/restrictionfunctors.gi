@@ -39,7 +39,7 @@ InstallMethod( RestrictionFunctor, "for a homomorphism of quiver algebras",
                                 QuiverAlgebraActionAsLinearTransformation( R, arrowimages[ i ] ), projectionsbyvertex[ target ] ] ); 
             Add( linear_transformations, lintrans );
         od;
-        rep := QuiverRepresentationByObjectsAndMorphisms( D, List( inclusionsbyvertex, Source ), linear_transformations );
+        rep := QuiverRepresentation( D, List( inclusionsbyvertex, Source ), linear_transformations );
         
         return [ rep, inclusionsbyvertex, projectionsbyvertex ];
     end;
