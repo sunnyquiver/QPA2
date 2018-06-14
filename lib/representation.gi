@@ -166,7 +166,7 @@ function( R, a )
   B := Basis( V );
   m := List( B, b -> AsList( AsVector( QuiverAlgebraAction( QuiverRepresentationElement( R, b ),
                                                             a ) ) ) );
-  return LinearTransformationByRightMatrix( V, V, MatrixByRows( F, m ) );
+  return LinearTransformation( V, V, m );
 end );
 
 
@@ -667,109 +667,85 @@ InstallMethod( QuiverRepresentationHomomorphism,
                "for quiver representations and list",
                [ IsQuiverRepresentation, IsQuiverRepresentation,
                  IsList ],
-function( source, range, matrices )
-  local cat;
-  cat := CapCategory( source );
-  return QuiverRepresentationHomomorphismByMorphisms
-         ( source, range,
-           List( matrices, LinearTransformationConstructor( cat ) ) );
+function( R1, R2, maps )
+  local cat, ucat, Q, morphisms, i, V1, V2, morphism, m, a, comp1, 
+        comp2;
+
+  cat := CapCategory( R1 );
+  if not IsIdenticalObj( cat, CapCategory( R2 ) ) then
+    Error( "representations in different categories" );
+  fi;
+  ucat := VectorSpaceCategory( cat );
+
+  Q := QuiverOfRepresentation( R1 );
+  if Length( maps ) > NumberOfVertices( Q ) then
+    Error( "too many maps for representation homomorphism: ", Length( maps ), " maps, ",
+           "but only ", NumberOfVertices( Q ), " vertices in quiver" );
+  fi;
+
+  morphisms := [];
+  for i in [ 1 .. NumberOfVertices( Q ) ] do
+    V1 := VectorSpaceOfRepresentation( R1, i );
+    V2 := VectorSpaceOfRepresentation( R2, i );
+    if not IsBound( maps[ i ] ) then
+      morphism := ZeroMorphism( V1, V2 );
+    else
+      m := maps[ i ];
+      if IsCapCategoryMorphism( m ) then
+        if not IsIdenticalObj( CapCategory( m ), ucat ) then
+          Error( "morphism for vertex ", Vertex( Q, i ), " is from wrong category" );
+        elif Source( m ) <> V1 then
+          Error( "morphism for vertex ", Vertex( Q, i ), " has wrong source",
+                 " (is ", Source( m ), ", should be ", V1, ")" );
+        elif Range( m ) <> V2 then
+          Error( "morphism for vertex ", Vertex( Q, i ), " has wrong range",
+                 " (is ", Range( m ), ", should be ", V2, ")" );
+        fi;
+        morphism := m;
+      else
+        morphism := LinearTransformationConstructor( cat )( V1, V2, m );
+      fi;
+    fi;
+    Add( morphisms, morphism );
+  od;
+
+  for a in Arrows( Q ) do
+    comp1 := PreCompose( MapForArrow( R1, a ),
+                         morphisms[ VertexNumber( Target( a ) ) ] );
+    comp2 := PreCompose( morphisms[ VertexNumber( Source( a ) ) ],
+                         MapForArrow( R2, a ) );
+    if not IsEqualForMorphisms( comp1, comp2 ) then
+      Error( "maps for representation homomorphism do not commute with maps for arrow ", a );
+    fi;
+  od;
+
+  return QuiverRepresentationHomomorphismNC( R1, R2, morphisms );
 end );
 
 InstallMethod( QuiverRepresentationHomomorphismNC,
                "for quiver representations and dense list",
                [ IsQuiverRepresentation, IsQuiverRepresentation,
                  IsDenseList ],
-function( source, range, matrices )
-  local cat;
-  cat := CapCategory( source );
-  return QuiverRepresentationHomomorphismByMorphismsNC
-         ( source, range,
-           List( matrices, LinearTransformationConstructor( cat ) ) );
-end );
-
-InstallMethod( QuiverRepresentationHomomorphismByRightMatrices,
-               "for quiver representations and list",
-               [ IsQuiverRepresentation, IsQuiverRepresentation, IsList ],
-function( source, range, matrices )
-  local   vecspacesource,  vecspacerange,  lineartransformations,  i;
-
-  vecspacesource := VectorSpacesOfRepresentation( source );
-  vecspacerange := VectorSpacesOfRepresentation( range );
-  lineartransformations := [ ];
-  for i in [ 1 .. Length( matrices ) ] do
-    if IsBound( matrices[ i ] ) then
-      lineartransformations[ i ] := LinearTransformationByRightMatrix( vecspacesource[ i ], vecspacerange[ i ], matrices[ i ] ); 
-    fi;
-  od;
-  return QuiverRepresentationHomomorphismByMorphisms ( source, range, lineartransformations );
-end );
-
-InstallMethod( QuiverRepresentationHomomorphismByMorphisms,
-               "for quiver representations and dense list",
-               [ IsQuiverRepresentation, IsQuiverRepresentation,
-                 IsList ],
-function( source, range, maps )
-  local A, Q, i, src, correct_src, rng, correct_rng, arrow, comp1, comp2;
-  A := AlgebraOfRepresentation( source );
-  if A <> AlgebraOfRepresentation( range ) then
-    Error( "Source and range are representations of different algebras" );
-  fi;
-  Q := QuiverOfAlgebra( A );
-
-  if Length( maps ) > NumberOfVertices( Q ) then
-    Error( "Too many morphisms in quiver representation homomorphism constructor ",
-           "(", Length( maps ), " specified, but quiver has only ",
-           NumberOfVertices( Q ), " vertices)" );
-  fi;
-  maps := ShallowCopy( maps );
-  for i in [ 1 .. NumberOfVertices( Q ) ] do
-    if IsBound( maps[ i ] ) then
-      src := Source( maps[ i ] );
-      correct_src := VectorSpaceOfRepresentation( source, i );
-      rng := Range( maps[ i ] );
-      correct_rng := VectorSpaceOfRepresentation( range, i );
-      if src <> correct_src then
-        Error( "Map for vertex ", Vertex( Q, i ), " has wrong source",
-               " (is ", src, ", should be ", correct_src, ")" );
-      fi;
-      if rng <> correct_rng then
-        Error( "Map for vertex ", Vertex( Q, i ), " has wrong range",
-               " (is ", rng, ", should be ", correct_rng, ")" );
-      fi;
-    else
-      maps[ i ] := ZeroMorphism( VectorSpaceOfRepresentation( source, i ),
-                                 VectorSpaceOfRepresentation( range, i ) );
-    fi;
-  od;
-  for arrow in Arrows( Q ) do
-    comp1 := PreCompose( MapForArrow( source, arrow ),
-                         maps[ VertexNumber( Target( arrow ) ) ] );
-    comp2 := PreCompose( maps[ VertexNumber( Source( arrow ) ) ],
-                         MapForArrow( range, arrow ) );
-    if not IsEqualForMorphisms( comp1, comp2 ) then
-      Error( "Does not commute with maps for arrow ", arrow );
-    fi;
-  od;
-  return QuiverRepresentationHomomorphismByMorphismsNC( source, range, maps );
-end );
-
-InstallMethod( QuiverRepresentationHomomorphismByMorphismsNC,
-               "for quiver representations and dense list",
-               [ IsQuiverRepresentation, IsQuiverRepresentation,
-                 IsDenseList ],
-function( source, range, maps )
+function( R1, R2, morphisms )
   local f;
   f := rec();
   ObjectifyWithAttributes
     ( f, NewType( FamilyOfQuiverRepresentationHomomorphisms,
                   IsQuiverRepresentationHomomorphism and
                   IsQuiverRepresentationHomomorphismRep ),
-      Source, source,
-      Range, range,
-      MapsOfRepresentationHomomorphism, maps,
-      MatricesOfRepresentationHomomorphism, List( maps, MatrixOfLinearTransformation ^ Direction( AlgebraOfRepresentation( source ) ) ) );
-  Add( CapCategory( source ), f );
+      Source, R1,
+      Range, R2,
+      MapsOfRepresentationHomomorphism, morphisms );
+  Add( CapCategory( R1 ), f );
   return f;
+end );
+
+InstallMethod( MatricesOfRepresentationHomomorphism,
+               "for quiver representation",
+               [ IsQuiverRepresentationHomomorphism ],
+function( m )
+  return List( MapsOfRepresentationHomomorphism( m ),
+               MatrixOfLinearTransformation ^ Direction( AlgebraOfRepresentation( Source( m ) ) ) );
 end );
 
 InstallMethod( SpaceContainingVector,
@@ -820,7 +796,7 @@ function( f, g )
   elif Range( f ) <> Range( g ) then
     Error( "adding homomorphisms with different ranges" );
   fi;
-  return QuiverRepresentationHomomorphismByMorphisms
+  return QuiverRepresentationHomomorphism
          ( Source( f ), Range( f ),
            ListN( MapsOfRepresentationHomomorphism( f ),
                   MapsOfRepresentationHomomorphism( g ),
@@ -898,7 +874,7 @@ function( A, vecspace_cat )
   AddZeroObject( cat, zero_object );
 
   zero_morphism := function( R1, R2 )
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( R1, R2,
              ListN( VectorSpacesOfRepresentation( R1 ),
                     VectorSpacesOfRepresentation( R2 ),
@@ -909,7 +885,7 @@ function( A, vecspace_cat )
   # TODO: need IsZeroForMorphisms?
 
   identity_morphism := function( R )
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( R, R,
              List( VectorSpacesOfRepresentation( R ),
                    IdentityMorphism ) );
@@ -917,7 +893,7 @@ function( A, vecspace_cat )
   AddIdentityMorphism( cat, identity_morphism );
 
   pre_compose := function( m1, m2 )
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( Source( m1 ), Range( m2 ),
              ListN( MapsOfRepresentationHomomorphism( m1 ),
                     MapsOfRepresentationHomomorphism( m2 ),
@@ -926,7 +902,7 @@ function( A, vecspace_cat )
   AddPreCompose( cat, pre_compose );
 
   addition := function( m1, m2 )
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( Source( m1 ), Range( m1 ),
              ListN( MapsOfRepresentationHomomorphism( m1 ),
                     MapsOfRepresentationHomomorphism( m2 ),
@@ -935,7 +911,7 @@ function( A, vecspace_cat )
   AddAdditionForMorphisms( cat, addition );
 
   additive_inverse := function( m )
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( Source( m ), Range( m ),
              List( MapsOfRepresentationHomomorphism( m ),
                    AdditiveInverse ) );
@@ -955,7 +931,7 @@ function( A, vecspace_cat )
     end;
     ker := QuiverRepresentation
            ( cat, ker_objs, List( Arrows( Q ), map_for_arrow ) );
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( ker, Source( m ), emb_maps );
   end;
   AddKernelEmbedding( cat, kernel_emb );
@@ -976,7 +952,7 @@ function( A, vecspace_cat )
                    map_for_arrow ) );
   end;
   coker_proj := function( m )
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( Range( m ), coker( m ),
              List( MapsOfRepresentationHomomorphism( m ),
                    CokernelProjection ) );
@@ -984,7 +960,7 @@ function( A, vecspace_cat )
   AddCokernelProjection( cat, coker_proj );
 
   mono_lift := function( i, test )
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( Source( test ), Source( i ),
              ListN( MapsOfRepresentationHomomorphism( i ),
                     MapsOfRepresentationHomomorphism( test ),
@@ -993,7 +969,7 @@ function( A, vecspace_cat )
   AddLiftAlongMonomorphism( cat, mono_lift );
 
   epi_colift := function( e, test )
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( Range( e ), Range( test ),
              ListN( MapsOfRepresentationHomomorphism( e ),
                     MapsOfRepresentationHomomorphism( test ),
@@ -1021,7 +997,7 @@ function( A, vecspace_cat )
                i,
                VectorSpaceOfRepresentation( sum, v ) );
     end;
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( summands[ i ], sum,
              ListN( Vertices( Q ), map_for_vertex ) );
   end;
@@ -1035,7 +1011,7 @@ function( A, vecspace_cat )
                i,
                VectorSpaceOfRepresentation( sum, v ) );
     end;
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( sum, summands[ i ],
              ListN( Vertices( Q ), map_for_vertex ) );
   end;
@@ -1119,7 +1095,7 @@ function( R, gens )
   od;
   U := QuiverRepresentation( CapCategory( R ), List( inclusions, Source ), maps );
   
-  return QuiverRepresentationHomomorphismByMorphisms( U, R, inclusions ); 
+  return QuiverRepresentationHomomorphism( U, R, inclusions ); 
 end );
 
 InstallMethod( SupportOfElement, "for a represenation element",
@@ -1290,11 +1266,11 @@ function( r, R )
       for b in B[ i ] do
         Add( matrix, AsList( ElementVector( QuiverAlgebraAction( r, b ), i ) ) );
       od;
-      mats[i] := MatrixByRows( FieldOfRepresentation( R ), matrix );
+      mats[i] := matrix;
     fi;
   od;
   
-  return QuiverRepresentationHomomorphismByRightMatrices( IndecProjRepresentations( A )[ n ], R, mats );
+  return QuiverRepresentationHomomorphism( IndecProjRepresentations( A )[ n ], R, mats );
 end
 );
 
@@ -1401,8 +1377,7 @@ function( R1, R2, generators, images )
             hommatrices[ VertexNumber( v ) ] := basischangemat * matrix; 
         fi;
     od;
-    hommatrices := List( hommatrices, h -> MatrixByRows( LeftActingDomain( R1 ), h ) ); 
-    f := QuiverRepresentationHomomorphismByRightMatrices( R1, R2, hommatrices );
+    f := QuiverRepresentationHomomorphism( R1, R2, hommatrices );
     if ForAll( [ 1..Length( generators ) ], i -> ImageElm( f, generators[ i ] ) = images[ i ] ) then
         return f;
     else

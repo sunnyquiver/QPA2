@@ -155,6 +155,9 @@ DeclareOperation( "LinearTransformationByLeftMatrix",
 DeclareOperation( "LinearTransformationByRightMatrix",
                   [ IsQPAVectorSpace, IsQPAVectorSpace, IsDenseList ] );
 
+DeclareOperation( "LinearTransformation",
+                  [ IsQPAVectorSpace, IsQPAVectorSpace, IsDenseList ] );
+
 DeclareOperation( "LinearTransformationByFunction",
                   [ IsQPAVectorSpace, IsQPAVectorSpace, IsFunction ] );
 

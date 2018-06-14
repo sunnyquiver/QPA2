@@ -54,7 +54,7 @@ InstallMethod( RestrictionFunctor, "for a homomorphism of quiver algebras",
         hlintrans := AsLinearTransformation( h ); 
         morphisms := List( [ 1..Length( rep1[ 2 ] ) ], i -> PreCompose( [ inc[ i ], hlintrans, proj[ i ] ] ) ); 
                     
-        return QuiverRepresentationHomomorphismByMorphisms( rep1[ 1 ], rep2[ 1 ], morphisms );
+        return QuiverRepresentationHomomorphism( rep1[ 1 ], rep2[ 1 ], morphisms );
     end;
     
     AddObjectFunction( restriction, X -> representation( X )[ 1 ] ); 

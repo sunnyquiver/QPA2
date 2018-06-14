@@ -336,26 +336,6 @@ DeclareOperation( "QuiverRepresentationHomomorphismNC",
                   [ IsQuiverRepresentation, IsQuiverRepresentation,
                     IsDenseList ] );
 
-#! @Description
-#!  Returns the quiver representation homomorphism from <A>source</A> to
-#!  <A>range</A> given by the entered <A>matrices</A> acting on the right. 
-#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
-#! @Arguments source, range, matrices 
-DeclareOperation( "QuiverRepresentationHomomorphismByRightMatrices",
-                  [ IsQuiverRepresentation, IsQuiverRepresentation,
-                    IsList ] );
-		    
-
-#!
-DeclareOperation( "QuiverRepresentationHomomorphismByMorphisms",
-                  [ IsQuiverRepresentation, IsQuiverRepresentation,
-                    IsList ] );
-
-#!
-DeclareOperation( "QuiverRepresentationHomomorphismByMorphismsNC",
-                  [ IsQuiverRepresentation, IsQuiverRepresentation,
-                    IsDenseList ] );
-
 #!
 DeclareAttribute( "MapsOfRepresentationHomomorphism",
                   IsQuiverRepresentationHomomorphism );

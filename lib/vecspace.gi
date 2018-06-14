@@ -247,21 +247,6 @@ DeclareDirectionOperations( MatrixOfLinearTransformation,
                             RightMatrixOfLinearTransformation );
 
 InstallMethodWithDirections( LinearTransformation,
-                             [ IsQPAVectorSpace, IsQPAVectorSpace, IsDenseList ],
-dir -> function( V1, V2, list )
-  local F, dim1, dim2, mat;
-  F := UnderlyingField( V1 );
-  dim1 := Dimension( V1 );
-  dim2 := Dimension( V2 );
-  if dir = LEFT then
-    mat := MatrixByCols( F, [ dim2, dim1 ], list );
-  else
-    mat := MatrixByRows( F, [ dim1, dim2 ], list );
-  fi;
-  return LinearTransformation( dir, V1, V2, mat );
-end );
-
-InstallMethodWithDirections( LinearTransformation,
                              [ IsQPAVectorSpace, IsQPAVectorSpace, IsQPAMatrix ],
 dir -> function( V1, V2, mat )
   local cat, mats, dim1, dim2, T, type;
@@ -290,6 +275,23 @@ dir -> function( V1, V2, mat )
       );
   Add( cat, T );
   return T;
+end );
+
+InstallMethod( LinearTransformation, "for vector spaces and dense list",
+               [ IsQPAVectorSpace, IsQPAVectorSpace, IsDenseList ],
+function( V1, V2, list )
+  local F, dim1, dim2, mat;
+  F := UnderlyingField( V1 );
+  dim1 := Dimension( V1 );
+  dim2 := Dimension( V2 );
+  mat := MatrixByRows( F, [ dim1, dim2 ], list );
+  return LinearTransformation( RIGHT, V1, V2, mat );
+end );
+
+InstallMethodWithDirections( LinearTransformation,
+                             [ IsQPAVectorSpace, IsQPAVectorSpace, IsDenseList ],
+dir -> function( V1, V2, list )
+  return LinearTransformation( V1, V2, list );
 end );
 
 InstallMethod( LinearTransformationByFunction, "for vector spaces and function",

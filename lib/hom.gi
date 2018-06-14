@@ -43,7 +43,7 @@ function( hom )
     F := UnderlyingField( hom );
     lists := IdentityMat( dim, F );
     basis_vectors := List( lists,
-                           l -> LinearTransformationByRightMatrix( V1, V2, l ) );
+                           l -> LinearTransformation( V1, V2, l ) );
   fi;
   basis := rec();
   ObjectifyWithAttributes( basis,
@@ -162,7 +162,7 @@ function( hom )
     vertex_sum_elem := ImageElm( ker, v );
     vertex_projections := List( vertex_projection_maps,
                                 m -> ImageElm( m, vertex_sum_elem ) );
-    return QuiverRepresentationHomomorphismByMorphisms
+    return QuiverRepresentationHomomorphism
            ( Source( hom ), Range( hom ), vertex_projections );
   end;
 
@@ -481,7 +481,7 @@ InstallMethod( BasisOfHom,
         map[ i ] := MatrixByRows( F, mat );
       fi;
     od;
-    homs[dim_hom] := QuiverRepresentationHomomorphismByRightMatrices( R1, R2, map );
+    homs[dim_hom] := QuiverRepresentationHomomorphism( R1, R2, map );
   od;
   
   return homs;
