@@ -83,10 +83,10 @@ function( R, dim, lst )
     if dim[ 1 ] * dim[ 2 ] <> Length( lst ) then
       Error( "matrix list has wrong length" );
     fi;
-    M := List( [ 0 .. ( dim[ 1 ] - 1 ) ],
-               i -> lst{ ( i * dim[ 2 ] ) + [ 1 .. dim[ 2 ] ] } );
+    M := List( [ 0 .. ( dim[ 2 ] - 1 ) ],
+               i -> lst{ ( i * dim[ 1 ] ) + [ 1 .. dim[ 1 ] ] } );
   fi;
-  return MAKE_QPA_MATRIX( R, M, IsRowMatrixRep );
+  return MAKE_QPA_MATRIX( R, M, IsColMatrixRep );
 end );
 
 InstallMethod( MatrixByRows, "for ring and matrix",
