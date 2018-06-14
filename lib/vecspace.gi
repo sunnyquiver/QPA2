@@ -219,7 +219,8 @@ function( V )
                            NewType( FamilyOfVectorSpaceBases,
                                     IsStandardVectorSpaceBasis and IsVectorSpaceBasisRep ),
                            BasisVectors, basis_vectors,
-                           UnderlyingLeftModule, V );
+                           UnderlyingLeftModule, V,
+                           IsCanonicalBasis, true );
   return basis;
 end );
 

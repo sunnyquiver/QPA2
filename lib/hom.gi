@@ -47,10 +47,11 @@ function( hom )
   fi;
   basis := rec();
   ObjectifyWithAttributes( basis,
-                           NewType( FamilyOfQPAVectorSpaces,
+                           NewType( FamilyOfVectorSpaceBases,
                                     IsBasis and IsVectorSpaceBasisRep ),
                            BasisVectors, basis_vectors,
-                           UnderlyingLeftModule, hom );
+                           UnderlyingLeftModule, hom,
+                           IsCanonicalBasis, true );
   return basis;
 end );
   
@@ -172,7 +173,8 @@ function( hom )
                            NewType( FamilyOfVectorSpaceBases,
                                     IsBasis and IsVectorSpaceBasisRep ),
                            BasisVectors, basis_morphisms,
-                           UnderlyingLeftModule, hom );
+                           UnderlyingLeftModule, hom,
+                           IsCanonicalBasis, true );
   return basis;
 end );
 
@@ -322,7 +324,8 @@ function( hom )
                            NewType( FamilyOfVectorSpaceBases,
                                     IsBasis and IsVectorSpaceBasisRep ),
                            BasisVectors, basis_vectors,
-                           UnderlyingLeftModule, hom );
+                           UnderlyingLeftModule, hom,
+                           IsCanonicalBasis, true );
   return basis;
 end );
 

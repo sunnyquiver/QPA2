@@ -320,19 +320,22 @@ end );
 BindGlobal( "FamilyOfQuiverModuleBases",
             NewFamily( "quiver module bases" ) );
 
-DeclareRepresentation( "IsQuiverModuleBasisRep", IsComponentObjectRep,
-                       [ "module", "underlyingRepresentationBasis" ] );
+DeclareRepresentation( "IsQuiverModuleBasisRep", IsComponentObjectRep and IsAttributeStoringRep,
+                       [ ] );
 
 InstallMethod( CanonicalBasis, "for quiver module",
                [ IsQuiverModule ],
 function( M )
-  local R, rep_basis;
+  local R, rep_basis, B;
   R := UnderlyingRepresentation( M );
   rep_basis := CanonicalBasis( R );
-  return Objectify( NewType( FamilyOfQuiverModuleBases,
-                             IsBasis and IsQuiverModuleBasisRep ),
-                    rec( module := M,
-                         underlyingRepresentationBasis := rep_basis ) );
+  B := rec( module := M,
+            underlyingRepresentationBasis := rep_basis );
+  ObjectifyWithAttributes( B,
+                           NewType( FamilyOfQuiverModuleBases,
+                                    IsBasis and IsQuiverModuleBasisRep ),
+                           IsCanonicalBasis, true );
+  return B;
 end );
 
 InstallMethod( Basis, "for quiver module",

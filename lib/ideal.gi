@@ -186,7 +186,8 @@ function( I )
   B := rec();
   ObjectifyWithAttributes( B, type,
                            IdealOfBasis, I,
-                           BasisVectors, basis_vectors );
+                           BasisVectors, basis_vectors,
+                           IsCanonicalBasis, true );
   return B;
 end );
 

@@ -676,7 +676,8 @@ function( R )
                IsQuiverRepresentationBasis and IsQuiverRepresentationBasisRep ),
       BasisVectors, Flat( basis_elements_by_vertex ),
       BasisVectorsByVertex, basis_elements_by_vertex,
-      UnderlyingLeftModule, R );
+      UnderlyingLeftModule, R,
+      IsCanonicalBasis, true );
   return basis;
 end );
 

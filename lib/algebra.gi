@@ -1027,7 +1027,8 @@ function( A )
                                     IsQuiverAlgebraBasis and IsQuiverAlgebraBasisRep ),
                            BasisPaths, basis_paths,
                            BasisVectors, basis_elems,
-                           UnderlyingLeftModule, A );
+                           UnderlyingLeftModule, A,
+                           IsCanonicalBasis, true );
   return basis;
 end );
 
@@ -1052,7 +1053,8 @@ function( A )
                                     IsQuiverAlgebraBasis and IsQuiverAlgebraBasisRep ),
                            BasisPaths, basis_paths,
                            BasisVectors, basis_elems,
-                           UnderlyingLeftModule, A );
+                           UnderlyingLeftModule, A,
+                           IsCanonicalBasis, true );
   return basis;
 end );
 
