@@ -2,7 +2,7 @@ SetPackageInfo( rec(
 PackageName := "QPA",
 Subtitle := "Quivers and Path Algebras",
 Version := "2.0-dev",
-Date := "09/04/2015",
+Date := "19/06/2018",
 
 PackageWWWHome := "http://www.math.ntnu.no/~oyvinso/QPA/",
 ArchiveURL := Concatenation( ~.PackageWWWHome, "qpa-", ~.Version ),
