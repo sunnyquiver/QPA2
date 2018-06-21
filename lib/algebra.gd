@@ -331,6 +331,18 @@ DeclareAttribute( "Paths", IsQuiverAlgebraElement );
 DeclareProperty( "IsUniform", IsQuiverAlgebraElement );
 
 #! @Arguments e
+#! @Returns <C>true</C> or <C>false</C>
+#! @Description
+#!  Checks whether the element <A>e</A> is left uniform.
+DeclareProperty( "IsLeftUniform", IsQuiverAlgebraElement );
+
+#! @Arguments e
+#! @Returns <C>true</C> or <C>false</C>
+#! @Description
+#!  Checks whether the element <A>e</A> is right uniform.
+DeclareProperty( "IsRightUniform", IsQuiverAlgebraElement );
+
+#! @Arguments e
 #! @Returns <Ref Filt="IsPathAlgebraElement"/>
 #! @Description
 #!  Returns the canonical representative path algebra element

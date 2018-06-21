@@ -130,17 +130,32 @@ function( e )
   return e!.paths;
 end );
 
-InstallMethod( IsUniform, "for element of path algebra",
-               [ IsPathAlgebraElement ],
+InstallMethod( IsLeftUniform, "for element of quiver algebra",
+               [ IsQuiverAlgebraElement ],
 function( e )
-  local s, t;
+  local v;
   if IsZero( e ) then
-    return true; # TODO: is the zero element regarded as uniform?
+    return true;
   fi;
-  s := Source( LeadingPath( e ) );
-  t := Target( LeadingPath( e ) );
-  return ForAll( Paths( e ),
-                 p -> ( Source( p ) = s and Target( p ) = t ) );
+  v := LeftEnd( LeadingPath( e ) );
+  return ForAll( Paths( e ), p -> LeftEnd( p ) = v );
+end );
+
+InstallMethod( IsRightUniform, "for element of quiver algebra",
+               [ IsQuiverAlgebraElement ],
+function( e )
+  local v;
+  if IsZero( e ) then
+    return true;
+  fi;
+  v := RightEnd( LeadingPath( e ) );
+  return ForAll( Paths( e ), p -> RightEnd( p ) = v );
+end );
+
+InstallMethod( IsUniform, "for element of quiver algebra",
+               [ IsQuiverAlgebraElement ],
+function( e )
+  return IsLeftUniform( e ) and IsRightUniform( e );
 end );
 
 InstallMethod( Zero, "for element of quiver algebra",
