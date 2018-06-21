@@ -1,0 +1,355 @@
+List of all things that are documented in the manual for QPA1 (version 1.26),
+with information about whether the same functionality is implemented in QPA2.
+
+[function] -- no              means [function] is not implemented in QPA2
+[function] -- same            means [function] is implemented in QPA2, with exactly the same name
+[function] -> [replacement]   means [function] is implemented in QPA2, but under the name/syntax [replacement]
+
+
+CHAPTER 3: QUIVERS
+
+InfoQuiver                 -- no
+Quiver( N, arrows )        -> RightQuiver( "Q", N, arrows ) # different format for arrows
+Quiver( vertices, arrows ) -> RightQuiver( "Q", vertices, arrows ) # different format for arrows
+Quiver( adjacencymatrix )  -- no
+DynkinQuiver( Delta, n, orientation) --> RightDynkinQuiver( Delta, n, orientation ) # different format for orientation
+OrderedBy( quiver, ordering) -- no
+IsQuiver( obj )            -> IsQuiver( obj ) / IsRightQuiver( obj )
+IsAcyclicQuiver( quiver )  -- same
+IsUAcyclicQuiver( quiver ) -- no
+IsConnectedQuiver( quiver ) -> IsConnected( quiver )
+IsTreeQuiver( quiver )     -- no
+IsDynkinQuiver( quiver )   -- no
+Q.name                     -> Q[ vertex_label ], Q.arrow_label
+VerticesOfQuiver( quiver ) -> Vertices( quiver ) (name collision with package GRAPE, should change name)
+ArrowsOfQuiver( quiver )   -> Arrows( quiver )
+AdjacencyMatrixOfQuiver( quiver ) -- no
+GeneratorsOfQuiver( quiver ) -> PrimitivePaths( quiver )
+NumberOfVertices( quiver ) -- same
+NumberOfArrows( quiver ) -- same
+OrderingOfQuiver( quiver ) -- no
+OppositeQuiver( quiver ) -- same
+FullSubquiver( quiver, list ) -- same
+ConnectedComponentsOfQuiver( quiver ) -- ConnectedComponents( quiver )
+SeparatedQuiver( quiver ) -- no
+IsPath( obj ) -> IsPath( obj ) / IsRightPath( obj )
+IsQuiverVertex( obj ) -> IsVertex( obj ) (name collision with package GRAPE, should change name)
+IsArrow( obj ) -- same
+IsZeroPath( obj ) -- no, there are no zero paths
+SourceOfPath( path ) -> Source( path )
+TargetOfPath( path ) -> Target( path )
+LengthOfPath( path ) -> Length( path )
+WalkOfPath( path ) -> ArrowList( path )
+p * q -- same
+p = q -- same
+p < q -- same (undocumented)
+IncomingArrowsOfVertex( vertex ) -> IncomingArrows( vertex )
+OutgoingArrowsOfVertex( vertex ) -> OutgoingArrows( vertex )
+InDegreeOfVertex( vertex ) -> Indegree( vertex )
+OutDegreeOfVertex( vertex ) -> Outdegree( vertex )
+NeighborsOfVertex( vertex ) -> Neighbors( vertex )
+Poset( P, rel ) -- no
+Size( P ) -- no
+UnderlyingSet( P ) -- no
+PartialOrderOfPoset( P ) -- no
+
+
+CHAPTER 4: PATH ALGEBRAS
+
+PathAlgebra( F, Q ) -> PathAlgebra( F, Q )
+IsPathAlgebra( obj ) -> IsPathAlgebra( obj )
+AssociatedMonomialAlgebra( A ) -- no
+QuiverOfPathAlgebra( FQ ) -> QuiverOfAlgebra( FQ )
+OrderingOfAlgebra( FQ ) -> no
+FQ.name -> FQ[ vertex_label ], FQ.arrow_label
+ElementOfPathAlgebra( PA, path ) -> PathAsAlgebraElement( PA, path )
+a < b -- no
+IsLeftUniform( element ) -- no
+IsRightUniform( element ) -- no
+IsUniform( element ) -- same
+LeadingTerm( element ), Tip( element ) -> LeadingTerm( element )
+LeadingCoefficient( element ), TipCoefficient( element ) -> LeadingCoefficient( element )
+LeadingMonomial( element ), TipMonomial( element ) -> LeadingPath( element )
+MakeUniformOnRight( elems ) -- no
+MappedExpression( expr, gens1, gens2 ) -- no
+VertexPosition( element ) -- no (can use VertexNumber( LeadingPath( element ) ))
+RelationsOfAlgebra( A ) -- same
+AssignGeneratorVariables( A ) -- no
+Ideal( FQ, elems ) -- same (undocumented) or QuiverAlgebraTwoSidedIdeal( FQ, elems )
+IdealOfQuotient( A ) -- same
+PathsOfLengthTwo( Q ) -- no
+NthPowerOfArrowIdeal( FQ, n ) -- no
+AddNthPowerToRelations( FQ, rels, n ) -- no
+elt in I -- same
+IsAdmissibleIdeal( I ) -- same
+IsIdealInPathAlgebra( I ) -- no
+IsMonomialIdeal( I ) -- no
+IsQuadraticIdeal( I ) -- no
+ProductOfIdeals( I, J ) -- no
+QuadraticPerpOfPathAlgebraIdeal( rels ) -- no
+GroebnerBasisOfIdeal( I ) -> GroebnerBasis( I )
+IsAdmissibleQuotientOfPathAlgebra( A ) -- no
+IsQuotientOfPathAlgebra( object ) -- same
+IsFiniteDimensional( A ) -- same
+IsCanonicalAlgebra( A ) -- no
+IsDistributiveAlgebra( A ) -- no
+IsFiniteGlobalDimensionAlgebra( A ) -- no
+IsGentleAlgebra( A ) -- no
+IsGorensteinAlgebra( A ) -- no
+IsHereditaryAlgebra( A ) -- no
+IsKroneckerAlgebra( A ) -- no
+IsMonomialAlgebra( A ) -- no
+IsNakayamaAlgebra( A ) -- same (improved)
+IsQuiverAlgebra( A ) -- same
+IsRadicalSquareZeroAlgebra( A ) -- no
+IsSchurianAlgebra( A ) -- no
+IsSelfinjectiveAlgebra( A ) -- no
+IsSemicommutativeAlgebra( A ) -- no
+IsSemisimpleAlgebra( A ) -- no
+IsSpecialBiserialAlgebra( A ) -- no
+IsStringAlgebra( A ) -- no
+IsSymmetricAlgebra( A ) -- no
+IsTriangularReduced( A ) -- no
+IsWeaklySymmetricAlgebra( A ) -- no
+IsFiniteTypeAlgebra( A ) -- no
+CartanMatrix( A ) -- no
+Centre( A ), Center( A ) -- no
+ComplexityOfAlgebra( A, n ) -- no
+CoxeterMatrix( A ) -- no
+CoxeterPolynomial( A ) -- no
+Dimension( A ) -- same (undocumented)
+GlobalDimension( A ) -- no
+LoewyLength( A ) -- no
+NakayamaAutomorphism( A ) -- no
+OrderOfNakayamaAutomorphism( A ) -- no
+RadicalSeriesOfAlgebra( A ) -- no
+IsElementOfQuotientOfPathAlgebra( obj ) -> IsQuotientOfPathAlgebraElement( obj )
+Coefficients( B, element ) -- same (undocumented)
+IsNormalForm( element ) -- no
+a < b (documented twice in QPA1 manual) -- no
+ElementOfQuotientOfPathAlgebra( family, element, computenormal ) -> QuotientOfPathAlgebraElement( A, element )
+OriginalPathAlgebra( algebra ) -> PathAlgebra( algebra ) (TODO: should change to OriginalPathAlgebra)
+CanonicalAlgebra( field, weights[, relcoeff] ) -- no
+KroneckerAlgebra( field, n ) -- no
+NakayamaAlgebra( admiss_seq, field ) -> RightNakayamaAlgebra( field, admiss_seq )
+PosetAlgebra( F, P ) -- no
+PosetOfPosetAlgebra( A ) -- no
+TruncatedPathAlgebra( F, Q, n ) -- no
+IsSpecialBiserialQuiver( Q ) -- no
+OppositePath( p ) -- same
+OppositePathAlgebra( A ) -> OppositeAlgebra( A )
+OppositePathAlgebraElement( x ) -> OppositeAlgebraElement( x )
+QuiverProduct( Q1, Q1 ) -- same
+QuiverProductDecomposition( Q ) -> ProductQuiverFactors( Q )
+IsQuiverProductDecomposition( obj ) -- no
+IncludeInProductQuiver( L, Q ) -> PathInProductQuiver( Q, L )
+ProjectFromProductQuiver( i, p ) -> ProjectPathFromProductQuiver( i, p )
+TensorProductOfAlgebras( FQ1, FQ2 ) -- same
+TensorAlgebrasInclusion( T, n ) -> TensorAlgebraInclusions( T )[ n ]
+SimpleTensor( L, T ) -> ElementaryTensor( a, b, T )
+TensorProductDecomposition( T ) -> TensorProductFactors( T ) (undocumented)
+EnvelopingAlgebra( A ) -- same
+IsEnvelopingAlgebra( A ) -- no
+AlgebraAsModuleOverEnvelopingAlgebra( A ) -> AlgebraAsBimodule( A ) (undocumented)
+DualOfAlgebraAsModuleOverEnvelopingAlgebra( A ) -- no
+TrivialExtensionOfQuiverAlgebra( A ) -- no
+AlgebraAsQuiverAlgebra( A ) -- no
+IsBasicAlgebra( A ) -- no
+IsElementaryAlgebra( A ) -- no
+PrimitiveIdempotents( A ) -- no
+LiftingCompleteSetOfOrthogonalIdempotents( f, e ) -- no
+LiftingIdempotent( f, e ) -- no
+ReadAlgebra( file ) -- no
+SaveAlgebra( A, file, option ) -- no
+
+
+CHAPTER 5: GROEBNER BASIS
+
+QPA1 has a category IsGroebnerBasis; in QPA2 we just use plain lists
+to represent Groebner bases.  Should probably define the category
+IsGroebnerBasis as in QPA1.
+
+InfoGroebnerBasis -- no
+GroebnerBasis( I, rels ) -- no (is really a NC-type constructor)
+IsCompletelyReducedGroebnerBasis( gb ) -- no
+IsCompleteGroebnerBasis( gb ) -- no
+IsGroebnerBasis( obj ) -- no
+IsHomogeneousGroebnerBasis( gb ) -- no
+IsTipReducedGroebnerBasis( gb ) -- no
+AdmitsFinitelyManyNontips( GB ) -- no
+CompletelyReduce( GB, a ) -> Reduce( e, divisors ) # divisors is a list containing the elements of GB
+CompletelyReduceGroebnerBasis( GB ) -- no
+Enumerator( GB ) -- no
+IsPrefixOfTipInTipIdeal( GB, R ) -- no
+Iterator( GB ) -- no
+Nontips( GB ) -- no
+NontipSize( GB ) -- no
+TipReduce( GB, a ) -- no
+TipReduceGroebnerBasis( GB ) -- no
+IsRightGroebnerBasis( obj ) -- no
+RightGroebnerBasis( I ) -- no
+RightGroebnerBasisOfIdeal( I ) -- no
+
+
+CHAPTER 6: RIGHT MODULES OVER PATH ALGEBRAS
+
+RightModuleOverPathAlgebra( A, dim_vector, gens ) -> RightQuiverModule( A, dim_vector, matrices ) # different format for matrices
+RightModuleOverPathAlgebra( A, mats ) -- no
+RightModuleOverPathAlgebraNC( A, mats ) -- no
+RightAlgebraModuleToPathAlgebraMatModule( M ) -- no
+M = N -- same
+IsPathAlgebraMatModule( obj ) -> IsQuiverModule( obj ) / IsRightQuiverModule( obj )
+m ^ p -- same
+AnnihilatorOfModule( M ) -- no
+BasicVersionOfModule( M ) -- no
+BlockDecompositionOfModule( M ) -- no
+BlockSplittingIdempotents( M ) -- no
+CommonDirectSummand( M, N ) -- no
+ComplexityOfModule( M, n ) -- no
+DecomposeModule( M ) -- no
+DecomposeModuleWithMultiplicities( M ) -- no
+Dimension( M ) -- no, should be same
+DimensionVector( M ) -> VertexDimensions( M ) (should be named DimensionVector instead?)
+DirectSumOfQPAModules( L ) -> DirectSum( L ) (CAP operation, undocumented in QPA)
+DirectSumInclusions( M ) -- no (use CAP operation InjectionOfCofactorOfDirectSum)
+DirectSumProjections( M ) -- no (use CAP operation ProjectionInFactorOfDirectSum)
+IntersectionOfSubmodules( list ) -- no
+IsDirectSummand( M, N ) -- no
+IsDirectSumOfModules( M ) -- no
+IsExceptionalModule( M ) -- no
+IsIndecomposableModule( M ) -- no
+IsInAdditiveClosure( M, N ) -- no
+IsInjectiveModule( M ) -- no
+IsomorphicModules( M, N ) -- no
+IsProjectiveModule( M ) -- no
+IsRigidModule( M ) -- no
+IsSemisimpleModule( M ) -- no
+IsSimpleQPAModule( M ) -- no
+IsTauRigidModule( M ) -- no
+LoewyLength( M ) -- no
+IsZero( M ) -- same (undocumented)
+MatricesOfPathAlgebraModule( M ) -> MatricesOfRepresentation( UnderlyingRepresentation( M ) ) # gives QPA matrices
+MaximalCommonDirectSummand( M, N ) -- no
+NumberOfNonIsoDirSummands( M ) -- no
+MinimalGeneratingSetOfModule( M ) -- no
+RadicalOfModule( M ) -- no (radical is partly implemented, only on representation level)
+RadicalSeries( M ) -- no
+SocleSeries( M ) -- no
+SocleOfModule( M ) -- no
+SubRepresentation( M, gens ) -- no (use Source( SubmoduleInclusion( M, gens ) ))
+SumOfSubmodules( f, g ), SumOfSubmodules( list ) -- no
+SupportModuleElement( m ) -- no (implemented on representation level as SupportOfElement)
+TopOfModule( M ) -- no (top is partly implemented, only on representation level)
+BasisOfProjectives( A ) -- no
+ElementOfIndecProjective( A, m, s ) -- no
+IndecInjectiveModules( A ) -- no
+IndecProjectiveModules( A ) -> IndecProjRightModules( A ) (undocumented)
+SimpleModules( A ) -- no
+ZeroModule( A ) -> RightZeroModule( A )
+DualOfModule( M ) -- no
+DualOfModuleHomomorphism( f ) -- no
+DTr( M[, n ] ), DualOfTranspose( M[, n ] ) -- no
+NakayamaFunctorOfModule( M ) -- no
+NakayamaFunctorOfModuleHomomorphism( f ) -- no
+RestrictionViaAlgebraHomomorphism( f, M ) -- no (restriction implemented as functor on representation level)
+StarOfModule( M ) -- no
+StarOfModuleHomomorphism( M ) -- no
+TensorProductOfModules( M, N ) -- same
+TrD( M[, n ] ), TransposeOfDual( M[, n ] ) -- no
+TransposeOfModule( M ) -- no
+[ 6.7 Vertex projective modules and submodules thereof ] -- no
+
+
+CHAPTER 7: HOMOMORPHISMS OF RIGHT MODULES OVER PATH ALGEBRAS
+
+IsPathAlgebraModuleHomomorphism( f ) -> IsQuiverModuleHomomorphism( f )
+RightModuleHomOverAlgebra( M, N, mats ) -> QuiverModuleHomomorphism( M, N, mats ) # different format for mats
+f = g -- same (undocumented)
+f + g -- same (undocumented)
+f * g -> PreCompose( f, g ) (from CAP, undocumented in QPA)
+CoKernelOfWhat( f ) -- no
+IdentityMapping( M ) -> IdentityMorphism( M ) (from CAP, undocumented in QPA)
+ImageElm( f, elem ) -- same (undocumented)
+ImagesSet( f, elts ) -- no
+ImageOfWhat( f ) -- no
+IsInjective( f ) -> IsMonomorphism( f ) (from CAP, undocumented)
+IsIsomorphism( f ) -- same (from CAP, undocumented)
+IsLeftMinimal( f ) -- no
+IsRightMinimal( f ) -- no
+IsSplitEpimorphism( f ) -- same (from CAP, undocumented)
+IsSplitMonomorphism( f ) -- same (from CAP, undocumented)
+IsSurjective( f ) -> IsEpimorphism( f ) (from CAP, undocumented)
+IsZero( f ) -- same (from CAP, undocumented)
+KernelOfWhat( f ) -- no
+LeftInverseOfHomomorphism( f ) -- no
+MatricesOfPathAlgebraMatModuleHomomorphism( f ) -- MatricesOfModuleHomomorphism( f ) # gives QPA matrices
+PathAlgebraOfMatModuleMap( f ) -- no
+PreImagesRepresentative( f, elem ) -- same (undocumented)
+Range( f ) -- same (undocumented)
+RightInverseOfHomomorphism( f ) -- no
+Source( f ) -- same (undocumented)
+Zero( f ) -- no (applicable method installed in GAP, but it does not give what we want; should be fixed)
+ZeroMapping( M, N ) -> ZeroMorphism( M ) (from CAP, undocumented in QPA)
+HomomorphismFromImages( M, N, genImages ) -- no
+CoKernel( f ) -> CokernelObject( f ) (from CAP, undocumented in QPA)
+CoKernelProjection( f ) -> CokernelProjection( f ) (from CAP, undocumented in QPA)
+EndModuloProjOverAlgebra( M ) -- no
+EndOfModuleAsQuiverAlgebra( M ) -- no
+EndOverAlgebra( M ) -- no
+FromEndMToHomMM( f ) -- no
+FromHomMMToEndM( f ) -- no
+HomFactoringThroughProjOverAlgebra( M, N ) -- no
+HomFromProjective( m, M ) -- implemented on representation level, same name
+HomOverAlgebra( M, N ) -> Hom( M, N ) # returns vector space instead of list
+Image( f ) -> ImageObject( f ) (from CAP, undocumented in QPA)
+ImageInclusion( f ) -> ImageEmbedding( f ) (from CAP, undocumented in QPA)
+ImageProjection( f ) -> CoastrictionToImage( f ) (from CAP, undocumented in QPA)
+ImageProjectionInclusion( f ) -- no
+IsomorphismOfModules( M, N ) -- no
+Kernel( f ) -- same (from CAP, undocumented in QPA)
+KernelInclusion( f ) -> KernelEmbedding( f ) (from CAP, undocumented in QPA)
+LeftMinimalVersion( f ) -- no
+RightMinimalVersion( f ) -- no
+RadicalOfModuleInclusion( M ) -- no (radical is partly implemented, only on representation level)
+RejectOfModule( M, N ) -- no
+SocleOfModuleInclusion( M ) -- no
+SubRepresentationInclusion( M, gens ) -> SubmoduleInclusion( M, gens )
+TopOfModuleProjection( M ) -- no (top is partly implemented, only on representation level)
+TraceOfModule( M, N ) -- no
+
+
+CHAPTER 8: HOMOLOGICAL ALGEBRA
+
+[ everything from homological algebra ] -- no
+a few exceptions, from CAP:
+PushOut -> Pushout
+PullBack -> FiberProduct
+
+
+CHAPTER 9: AUSLANDER-REITEN THEORY
+
+[ everything from Auslander-Reiten theory ] -- no
+
+
+CHAPTER 10: CHAIN COMPLEXES
+
+Should be in a separate package.
+Either improve the `complex' package or use `ComplexesForCAP' by Kamal Saleh
+(Saleh's package is based on `complex', but seems to be more complete.)
+
+
+CHAPTER 11: PROJECTIVE RESOLUTIONS AND THE BOUNDED DERIVED CATEGORY
+
+[ everything from Projective resolutions and the bounded derived category ] -- no
+
+
+CHAPTER 12: Combinatorial representation theory
+
+[ everything from Combinatorial representation theory ] -- no
+
+
+CHAPTER 13: DEGENERATION ORDER FOR MODULES IN FINITE TYPE
+
+[ everything from Degeneration order for modules in finite type ] -- no
+
+
