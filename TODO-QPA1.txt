@@ -16,14 +16,14 @@ DynkinQuiver( Delta, n, orientation) --> RightDynkinQuiver( Delta, n, orientatio
 OrderedBy( quiver, ordering) -- no
 IsQuiver( obj )            -> IsQuiver( obj ) / IsRightQuiver( obj )
 IsAcyclicQuiver( quiver )  -- same
-IsUAcyclicQuiver( quiver ) -- no
+IsUAcyclicQuiver( quiver ) -- no (should be ported and named IsUnorientedAcyclicQuiver)
 IsConnectedQuiver( quiver ) -> IsConnected( quiver )
-IsTreeQuiver( quiver )     -- no
-IsDynkinQuiver( quiver )   -- no
+IsTreeQuiver( quiver )     -- no (should be ported)
+IsDynkinQuiver( quiver )   -- no (should be ported)
 Q.name                     -> Q[ vertex_label ], Q.arrow_label
 VerticesOfQuiver( quiver ) -> Vertices( quiver ) (name collision with package GRAPE, should change name)
-ArrowsOfQuiver( quiver )   -> Arrows( quiver )
-AdjacencyMatrixOfQuiver( quiver ) -- no
+ArrowsOfQuiver( quiver )   -> Arrows( quiver ) (change name to ArrowsOfQuiver)
+AdjacencyMatrixOfQuiver( quiver ) -- no (should be ported)
 GeneratorsOfQuiver( quiver ) -> PrimitivePaths( quiver )
 NumberOfVertices( quiver ) -- same
 NumberOfArrows( quiver ) -- same
@@ -31,10 +31,10 @@ OrderingOfQuiver( quiver ) -- no
 OppositeQuiver( quiver ) -- same
 FullSubquiver( quiver, list ) -- same
 ConnectedComponentsOfQuiver( quiver ) -- ConnectedComponents( quiver )
-SeparatedQuiver( quiver ) -- no
+SeparatedQuiver( quiver ) -- no (should be ported)
 IsPath( obj ) -> IsPath( obj ) / IsRightPath( obj )
 IsQuiverVertex( obj ) -> IsVertex( obj ) (name collision with package GRAPE, should change name)
-IsArrow( obj ) -- same
+IsArrow( obj ) -- same (change name to IsQuiverArrow)
 IsZeroPath( obj ) -- no, there are no zero paths
 SourceOfPath( path ) -> Source( path )
 TargetOfPath( path ) -> Target( path )
@@ -48,100 +48,100 @@ OutgoingArrowsOfVertex( vertex ) -> OutgoingArrows( vertex )
 InDegreeOfVertex( vertex ) -> Indegree( vertex )
 OutDegreeOfVertex( vertex ) -> Outdegree( vertex )
 NeighborsOfVertex( vertex ) -> Neighbors( vertex )
-Poset( P, rel ) -- no
-Size( P ) -- no
-UnderlyingSet( P ) -- no
-PartialOrderOfPoset( P ) -- no
+Poset( P, rel ) -- no (should be ported, use existing structure of posets in GAP?)
+Size( P ) -- no (the same as above)
+UnderlyingSet( P ) -- no (the same as above)
+PartialOrderOfPoset( P ) -- no (the same as above)
 
 
 CHAPTER 4: PATH ALGEBRAS
 
 PathAlgebra( F, Q ) -> PathAlgebra( F, Q )
 IsPathAlgebra( obj ) -> IsPathAlgebra( obj )
-AssociatedMonomialAlgebra( A ) -- no
+AssociatedMonomialAlgebra( A ) -- no (should be ported)
 QuiverOfPathAlgebra( FQ ) -> QuiverOfAlgebra( FQ )
 OrderingOfAlgebra( FQ ) -> no
 FQ.name -> FQ[ vertex_label ], FQ.arrow_label
 ElementOfPathAlgebra( PA, path ) -> PathAsAlgebraElement( PA, path )
-a < b -- no
-IsLeftUniform( element ) -- no
-IsRightUniform( element ) -- no
+a < b -- no (needed?)
+IsLeftUniform( element ) -- no (should be ported)
+IsRightUniform( element ) -- no (should be ported)
 IsUniform( element ) -- same
 LeadingTerm( element ), Tip( element ) -> LeadingTerm( element )
 LeadingCoefficient( element ), TipCoefficient( element ) -> LeadingCoefficient( element )
 LeadingMonomial( element ), TipMonomial( element ) -> LeadingPath( element )
-MakeUniformOnRight( elems ) -- no
-MappedExpression( expr, gens1, gens2 ) -- no
+MakeUniformOnRight( elems ) -- no (check if needed, see NthPowerOfArrowIdeal)
+MappedExpression( expr, gens1, gens2 ) -- no (not needed)
 VertexPosition( element ) -- no (can use VertexNumber( LeadingPath( element ) ))
 RelationsOfAlgebra( A ) -- same
-AssignGeneratorVariables( A ) -- no
+AssignGeneratorVariables( A ) -- no (should be ported)
 Ideal( FQ, elems ) -- same (undocumented) or QuiverAlgebraTwoSidedIdeal( FQ, elems )
 IdealOfQuotient( A ) -- same
-PathsOfLengthTwo( Q ) -- no
-NthPowerOfArrowIdeal( FQ, n ) -- no
-AddNthPowerToRelations( FQ, rels, n ) -- no
+PathsOfLengthTwo( Q ) -- no (should be ported)
+NthPowerOfArrowIdeal( FQ, n ) -- no (should be ported, should create an ideal)
+AddNthPowerToRelations( FQ, rels, n ) -- no (should be ported)
 elt in I -- same
 IsAdmissibleIdeal( I ) -- same
-IsIdealInPathAlgebra( I ) -- no
-IsMonomialIdeal( I ) -- no
-IsQuadraticIdeal( I ) -- no
-ProductOfIdeals( I, J ) -- no
-QuadraticPerpOfPathAlgebraIdeal( rels ) -- no
-GroebnerBasisOfIdeal( I ) -> GroebnerBasis( I )
-IsAdmissibleQuotientOfPathAlgebra( A ) -- no
+IsIdealInPathAlgebra( I ) -- no (check if needed)
+IsMonomialIdeal( I ) -- no (should be ported)
+IsQuadraticIdeal( I ) -- no (should be ported)
+ProductOfIdeals( I, J ) -- no (should be ported)
+QuadraticPerpOfPathAlgebraIdeal( rels ) -- no (should be ported)
+GroebnerBasisOfIdeal( I ) -> GroebnerBasis( I ) 
+IsAdmissibleQuotientOfPathAlgebra( A ) -- no (should be ported)
 IsQuotientOfPathAlgebra( object ) -- same
 IsFiniteDimensional( A ) -- same
-IsCanonicalAlgebra( A ) -- no
-IsDistributiveAlgebra( A ) -- no
-IsFiniteGlobalDimensionAlgebra( A ) -- no
-IsGentleAlgebra( A ) -- no
-IsGorensteinAlgebra( A ) -- no
-IsHereditaryAlgebra( A ) -- no
-IsKroneckerAlgebra( A ) -- no
-IsMonomialAlgebra( A ) -- no
+IsCanonicalAlgebra( A ) -- no (should be ported)
+IsDistributiveAlgebra( A ) -- no (should be ported)
+IsFiniteGlobalDimensionAlgebra( A ) -- no (should be ported)
+IsGentleAlgebra( A ) -- no (should be ported)
+IsGorensteinAlgebra( A ) -- no (should be ported)
+IsHereditaryAlgebra( A ) -- no (should be ported) 
+IsKroneckerAlgebra( A ) -- no (should be ported)
+IsMonomialAlgebra( A ) -- no (should be ported)
 IsNakayamaAlgebra( A ) -- same (improved)
-IsQuiverAlgebra( A ) -- same
-IsRadicalSquareZeroAlgebra( A ) -- no
-IsSchurianAlgebra( A ) -- no
-IsSelfinjectiveAlgebra( A ) -- no
-IsSemicommutativeAlgebra( A ) -- no
-IsSemisimpleAlgebra( A ) -- no
-IsSpecialBiserialAlgebra( A ) -- no
-IsStringAlgebra( A ) -- no
-IsSymmetricAlgebra( A ) -- no
-IsTriangularReduced( A ) -- no
-IsWeaklySymmetricAlgebra( A ) -- no
-IsFiniteTypeAlgebra( A ) -- no
-CartanMatrix( A ) -- no
-Centre( A ), Center( A ) -- no
-ComplexityOfAlgebra( A, n ) -- no
-CoxeterMatrix( A ) -- no
-CoxeterPolynomial( A ) -- no
-Dimension( A ) -- same (undocumented)
-GlobalDimension( A ) -- no
-LoewyLength( A ) -- no
-NakayamaAutomorphism( A ) -- no
-OrderOfNakayamaAutomorphism( A ) -- no
-RadicalSeriesOfAlgebra( A ) -- no
+IsQuiverAlgebra( A ) -- same 
+IsRadicalSquareZeroAlgebra( A ) -- no (should be ported)
+IsSchurianAlgebra( A ) -- no (should be ported)
+IsSelfinjectiveAlgebra( A ) -- no (should be ported)
+IsSemicommutativeAlgebra( A ) -- no (should be ported)
+IsSemisimpleAlgebra( A ) -- no (should be ported)
+IsSpecialBiserialAlgebra( A ) -- no (should be ported)
+IsStringAlgebra( A ) -- no (should be ported)
+IsSymmetricAlgebra( A ) -- no (should be ported)
+IsTriangularReduced( A ) -- no (should be ported)
+IsWeaklySymmetricAlgebra( A ) -- no (should be ported)
+IsFiniteTypeAlgebra( A ) -- no (should be ported)
+CartanMatrix( A ) -- no (should be ported)
+Centre( A ), Center( A ) -- no (should be ported)
+ComplexityOfAlgebra( A, n ) -- no (should be ported)
+CoxeterMatrix( A ) -- no (should be ported)
+CoxeterPolynomial( A ) -- no (should be ported)
+Dimension( A ) -- same (undocumented) 
+GlobalDimension( A ) -- no (should be ported)
+LoewyLength( A ) -- no (should be ported)
+NakayamaAutomorphism( A ) -- no (should be ported)
+OrderOfNakayamaAutomorphism( A ) -- no (should be ported)
+RadicalSeriesOfAlgebra( A ) -- no (should be ported)
 IsElementOfQuotientOfPathAlgebra( obj ) -> IsQuotientOfPathAlgebraElement( obj )
 Coefficients( B, element ) -- same (undocumented)
-IsNormalForm( element ) -- no
-a < b (documented twice in QPA1 manual) -- no
+IsNormalForm( element ) -- no (needed?)
+a < b (documented twice in QPA1 manual) -- no (needed?)
 ElementOfQuotientOfPathAlgebra( family, element, computenormal ) -> QuotientOfPathAlgebraElement( A, element )
 OriginalPathAlgebra( algebra ) -> PathAlgebra( algebra ) (TODO: should change to OriginalPathAlgebra)
-CanonicalAlgebra( field, weights[, relcoeff] ) -- no
-KroneckerAlgebra( field, n ) -- no
+CanonicalAlgebra( field, weights[, relcoeff] ) -- no (should be ported)
+KroneckerAlgebra( field, n ) -- no (should be ported)
 NakayamaAlgebra( admiss_seq, field ) -> RightNakayamaAlgebra( field, admiss_seq )
-PosetAlgebra( F, P ) -- no
-PosetOfPosetAlgebra( A ) -- no
-TruncatedPathAlgebra( F, Q, n ) -- no
-IsSpecialBiserialQuiver( Q ) -- no
+PosetAlgebra( F, P ) -- no (should be ported)
+PosetOfPosetAlgebra( A ) -- no (should be ported)
+TruncatedPathAlgebra( F, Q, n ) -- no (should be ported)
+IsSpecialBiserialQuiver( Q ) -- no (should be ported)
 OppositePath( p ) -- same
 OppositePathAlgebra( A ) -> OppositeAlgebra( A )
 OppositePathAlgebraElement( x ) -> OppositeAlgebraElement( x )
 QuiverProduct( Q1, Q1 ) -- same
 QuiverProductDecomposition( Q ) -> ProductQuiverFactors( Q )
-IsQuiverProductDecomposition( obj ) -- no
+IsQuiverProductDecomposition( obj ) -- no (not needed)
 IncludeInProductQuiver( L, Q ) -> PathInProductQuiver( Q, L )
 ProjectFromProductQuiver( i, p ) -> ProjectPathFromProductQuiver( i, p )
 TensorProductOfAlgebras( FQ1, FQ2 ) -- same
@@ -149,18 +149,18 @@ TensorAlgebrasInclusion( T, n ) -> TensorAlgebraInclusions( T )[ n ]
 SimpleTensor( L, T ) -> ElementaryTensor( a, b, T )
 TensorProductDecomposition( T ) -> TensorProductFactors( T ) (undocumented)
 EnvelopingAlgebra( A ) -- same
-IsEnvelopingAlgebra( A ) -- no
+IsEnvelopingAlgebra( A ) -- no (needed?)
 AlgebraAsModuleOverEnvelopingAlgebra( A ) -> AlgebraAsBimodule( A ) (undocumented)
-DualOfAlgebraAsModuleOverEnvelopingAlgebra( A ) -- no
-TrivialExtensionOfQuiverAlgebra( A ) -- no
-AlgebraAsQuiverAlgebra( A ) -- no
-IsBasicAlgebra( A ) -- no
-IsElementaryAlgebra( A ) -- no
-PrimitiveIdempotents( A ) -- no
-LiftingCompleteSetOfOrthogonalIdempotents( f, e ) -- no
-LiftingIdempotent( f, e ) -- no
-ReadAlgebra( file ) -- no
-SaveAlgebra( A, file, option ) -- no
+DualOfAlgebraAsModuleOverEnvelopingAlgebra( A ) -- no (should be ported)
+TrivialExtensionOfQuiverAlgebra( A ) -- no (should be ported)
+AlgebraAsQuiverAlgebra( A ) -- no (should be ported)
+IsBasicAlgebra( A ) -- no (should be ported)
+IsElementaryAlgebra( A ) -- no (should be ported)
+PrimitiveIdempotents( A ) -- no (should be ported)
+LiftingCompleteSetOfOrthogonalIdempotents( f, e ) -- no (should be ported)
+LiftingIdempotent( f, e ) -- no (should be ported)
+ReadAlgebra( file ) -- no (should be ported)
+SaveAlgebra( A, file, option ) -- no (should be ported)
 
 
 CHAPTER 5: GROEBNER BASIS
@@ -194,70 +194,70 @@ RightGroebnerBasisOfIdeal( I ) -- no
 CHAPTER 6: RIGHT MODULES OVER PATH ALGEBRAS
 
 RightModuleOverPathAlgebra( A, dim_vector, gens ) -> RightQuiverModule( A, dim_vector, matrices ) # different format for matrices
-RightModuleOverPathAlgebra( A, mats ) -- no
-RightModuleOverPathAlgebraNC( A, mats ) -- no
-RightAlgebraModuleToPathAlgebraMatModule( M ) -- no
+RightModuleOverPathAlgebra( A, mats ) -- no (not needed)
+RightModuleOverPathAlgebraNC( A, mats ) -- no (not needed)
+RightAlgebraModuleToPathAlgebraMatModule( M ) -- no  (should be ported, change name)
 M = N -- same
 IsPathAlgebraMatModule( obj ) -> IsQuiverModule( obj ) / IsRightQuiverModule( obj )
 m ^ p -- same
-AnnihilatorOfModule( M ) -- no
-BasicVersionOfModule( M ) -- no
-BlockDecompositionOfModule( M ) -- no
-BlockSplittingIdempotents( M ) -- no
-CommonDirectSummand( M, N ) -- no
-ComplexityOfModule( M, n ) -- no
-DecomposeModule( M ) -- no
-DecomposeModuleWithMultiplicities( M ) -- no
+AnnihilatorOfModule( M ) -- no (should be ported)
+BasicVersionOfModule( M ) -- no (should be ported)
+BlockDecompositionOfModule( M ) -- no (should be ported)
+BlockSplittingIdempotents( M ) -- no (should be ported)
+CommonDirectSummand( M, N ) -- no (should be ported)
+ComplexityOfModule( M, n ) -- no (should be ported)
+DecomposeModule( M ) -- no (should be ported)
+DecomposeModuleWithMultiplicities( M ) -- no (should be ported)
 Dimension( M ) -- no, should be same
-DimensionVector( M ) -> VertexDimensions( M ) (should be named DimensionVector instead?)
+DimensionVector( M ) -> VertexDimensions( M ) (should be named DimensionVector instead)
 DirectSumOfQPAModules( L ) -> DirectSum( L ) (CAP operation, undocumented in QPA)
 DirectSumInclusions( M ) -- no (use CAP operation InjectionOfCofactorOfDirectSum)
 DirectSumProjections( M ) -- no (use CAP operation ProjectionInFactorOfDirectSum)
-IntersectionOfSubmodules( list ) -- no
-IsDirectSummand( M, N ) -- no
-IsDirectSumOfModules( M ) -- no
-IsExceptionalModule( M ) -- no
-IsIndecomposableModule( M ) -- no
-IsInAdditiveClosure( M, N ) -- no
-IsInjectiveModule( M ) -- no
-IsomorphicModules( M, N ) -- no
-IsProjectiveModule( M ) -- no
-IsRigidModule( M ) -- no
-IsSemisimpleModule( M ) -- no
-IsSimpleQPAModule( M ) -- no
-IsTauRigidModule( M ) -- no
-LoewyLength( M ) -- no
+IntersectionOfSubmodules( list ) -- no (should be ported)
+IsDirectSummand( M, N ) -- no (should be ported)
+IsDirectSumOfModules( M ) -- no (should be ported)
+IsExceptionalModule( M ) -- no (should be ported)
+IsIndecomposableModule( M ) -- no (should be ported)
+IsInAdditiveClosure( M, N ) -- no (should be ported)
+IsInjectiveModule( M ) -- no (should be ported)
+IsomorphicModules( M, N ) -- no (should be ported)
+IsProjectiveModule( M ) -- no (should be ported)
+IsRigidModule( M ) -- no (should be ported)
+IsSemisimpleModule( M ) -- no (should be ported)
+IsSimpleQPAModule( M ) -- no (should be ported)
+IsTauRigidModule( M ) -- no (should be ported)
+LoewyLength( M ) -- no (should be ported)
 IsZero( M ) -- same (undocumented)
 MatricesOfPathAlgebraModule( M ) -> MatricesOfRepresentation( UnderlyingRepresentation( M ) ) # gives QPA matrices
-MaximalCommonDirectSummand( M, N ) -- no
-NumberOfNonIsoDirSummands( M ) -- no
-MinimalGeneratingSetOfModule( M ) -- no
+MaximalCommonDirectSummand( M, N ) -- no (should be ported)
+NumberOfNonIsoDirSummands( M ) -- no (should be ported)
+MinimalGeneratingSetOfModule( M ) -- no (should be ported)
 RadicalOfModule( M ) -- no (radical is partly implemented, only on representation level)
-RadicalSeries( M ) -- no
-SocleSeries( M ) -- no
-SocleOfModule( M ) -- no
-SubRepresentation( M, gens ) -- no (use Source( SubmoduleInclusion( M, gens ) ))
-SumOfSubmodules( f, g ), SumOfSubmodules( list ) -- no
+RadicalSeries( M ) -- no (should be ported)
+SocleSeries( M ) -- no (should be ported)
+SocleOfModule( M ) -- no (should be ported)
+SubRepresentation( M, gens ) -- no (use Source( SubmoduleInclusion( M,gens ) )) 
+SumOfSubmodules( f, g ), SumOfSubmodules( list ) -- no (should be ported)
 SupportModuleElement( m ) -- no (implemented on representation level as SupportOfElement)
 TopOfModule( M ) -- no (top is partly implemented, only on representation level)
-BasisOfProjectives( A ) -- no
-ElementOfIndecProjective( A, m, s ) -- no
-IndecInjectiveModules( A ) -- no
+BasisOfProjectives( A ) -- no (implemented more generally in QPA2, should be ported?)
+ElementOfIndecProjective( A, m, s ) -- no (implemented more generally in QPA2)
+IndecInjectiveModules( A ) -- no (should be ported)
 IndecProjectiveModules( A ) -> IndecProjRightModules( A ) (undocumented)
-SimpleModules( A ) -- no
+SimpleModules( A ) -- no (should be ported)
 ZeroModule( A ) -> RightZeroModule( A )
-DualOfModule( M ) -- no
-DualOfModuleHomomorphism( f ) -- no
-DTr( M[, n ] ), DualOfTranspose( M[, n ] ) -- no
-NakayamaFunctorOfModule( M ) -- no
-NakayamaFunctorOfModuleHomomorphism( f ) -- no
+DualOfModule( M ) -- no (should be ported, as functor)
+DualOfModuleHomomorphism( f ) -- no (should be ported, as functor)
+DTr( M[, n ] ), DualOfTranspose( M[, n ] ) -- no (should be ported)
+NakayamaFunctorOfModule( M ) -- no (should be ported, as functor)
+NakayamaFunctorOfModuleHomomorphism( f ) -- no (should be ported, as functor)
 RestrictionViaAlgebraHomomorphism( f, M ) -- no (restriction implemented as functor on representation level)
-StarOfModule( M ) -- no
-StarOfModuleHomomorphism( M ) -- no
-TensorProductOfModules( M, N ) -- same
+StarOfModule( M ) -- no (should be ported, as functor)
+StarOfModuleHomomorphism( M ) -- no (should be ported, as functor)
+TensorProductOfModules( M, N ) -- same 
 TrD( M[, n ] ), TransposeOfDual( M[, n ] ) -- no
-TransposeOfModule( M ) -- no
-[ 6.7 Vertex projective modules and submodules thereof ] -- no
+TransposeOfModule( M ) -- no (should be ported)
+[ 6.7 Vertex projective modules and submodules thereof ] -- no (should be ported)
 
 
 CHAPTER 7: HOMOMORPHISMS OF RIGHT MODULES OVER PATH ALGEBRAS
@@ -267,55 +267,55 @@ RightModuleHomOverAlgebra( M, N, mats ) -> QuiverModuleHomomorphism( M, N, mats 
 f = g -- same (undocumented)
 f + g -- same (undocumented)
 f * g -> PreCompose( f, g ) (from CAP, undocumented in QPA)
-CoKernelOfWhat( f ) -- no
+CoKernelOfWhat( f ) -- no (not needed?)
 IdentityMapping( M ) -> IdentityMorphism( M ) (from CAP, undocumented in QPA)
 ImageElm( f, elem ) -- same (undocumented)
-ImagesSet( f, elts ) -- no
-ImageOfWhat( f ) -- no
+ImagesSet( f, elts ) -- no (not needed?)
+ImageOfWhat( f ) -- no (not needed?)
 IsInjective( f ) -> IsMonomorphism( f ) (from CAP, undocumented)
 IsIsomorphism( f ) -- same (from CAP, undocumented)
-IsLeftMinimal( f ) -- no
-IsRightMinimal( f ) -- no
+IsLeftMinimal( f ) -- no (should be ported)
+IsRightMinimal( f ) -- no (should be ported)
 IsSplitEpimorphism( f ) -- same (from CAP, undocumented)
 IsSplitMonomorphism( f ) -- same (from CAP, undocumented)
 IsSurjective( f ) -> IsEpimorphism( f ) (from CAP, undocumented)
 IsZero( f ) -- same (from CAP, undocumented)
-KernelOfWhat( f ) -- no
-LeftInverseOfHomomorphism( f ) -- no
+KernelOfWhat( f ) -- no (not needed?)
+LeftInverseOfHomomorphism( f ) -- no (should be ported)
 MatricesOfPathAlgebraMatModuleHomomorphism( f ) -- MatricesOfModuleHomomorphism( f ) # gives QPA matrices
-PathAlgebraOfMatModuleMap( f ) -- no
+PathAlgebraOfMatModuleMap( f ) -- no (not needed)
 PreImagesRepresentative( f, elem ) -- same (undocumented)
 Range( f ) -- same (undocumented)
-RightInverseOfHomomorphism( f ) -- no
+RightInverseOfHomomorphism( f ) -- no (should be ported)
 Source( f ) -- same (undocumented)
 Zero( f ) -- no (applicable method installed in GAP, but it does not give what we want; should be fixed)
 ZeroMapping( M, N ) -> ZeroMorphism( M ) (from CAP, undocumented in QPA)
-HomomorphismFromImages( M, N, genImages ) -- no
+HomomorphismFromImages( M, N, genImages ) -- no (should be ported)
 CoKernel( f ) -> CokernelObject( f ) (from CAP, undocumented in QPA)
 CoKernelProjection( f ) -> CokernelProjection( f ) (from CAP, undocumented in QPA)
-EndModuloProjOverAlgebra( M ) -- no
-EndOfModuleAsQuiverAlgebra( M ) -- no
-EndOverAlgebra( M ) -- no
-FromEndMToHomMM( f ) -- no
-FromHomMMToEndM( f ) -- no
-HomFactoringThroughProjOverAlgebra( M, N ) -- no
+EndModuloProjOverAlgebra( M ) -- no (should be ported)
+EndOfModuleAsQuiverAlgebra( M ) -- no (should be ported)
+EndOverAlgebra( M ) -- no (should be ported)
+FromEndMToHomMM( f ) -- no (should be ported?)
+FromHomMMToEndM( f ) -- no (should be ported?)
+HomFactoringThroughProjOverAlgebra( M, N ) -- no (should be ported)
 HomFromProjective( m, M ) -- implemented on representation level, same name
 HomOverAlgebra( M, N ) -> Hom( M, N ) # returns vector space instead of list
 Image( f ) -> ImageObject( f ) (from CAP, undocumented in QPA)
 ImageInclusion( f ) -> ImageEmbedding( f ) (from CAP, undocumented in QPA)
 ImageProjection( f ) -> CoastrictionToImage( f ) (from CAP, undocumented in QPA)
-ImageProjectionInclusion( f ) -- no
-IsomorphismOfModules( M, N ) -- no
+ImageProjectionInclusion( f ) -- no (not needed)
+IsomorphismOfModules( M, N ) -- no (should be ported)
 Kernel( f ) -- same (from CAP, undocumented in QPA)
 KernelInclusion( f ) -> KernelEmbedding( f ) (from CAP, undocumented in QPA)
-LeftMinimalVersion( f ) -- no
-RightMinimalVersion( f ) -- no
+LeftMinimalVersion( f ) -- no (should be ported)
+RightMinimalVersion( f ) -- no (should be ported)
 RadicalOfModuleInclusion( M ) -- no (radical is partly implemented, only on representation level)
-RejectOfModule( M, N ) -- no
-SocleOfModuleInclusion( M ) -- no
+RejectOfModule( M, N ) -- no (should be ported)
+SocleOfModuleInclusion( M ) -- no (should be ported, as functor)
 SubRepresentationInclusion( M, gens ) -> SubmoduleInclusion( M, gens )
 TopOfModuleProjection( M ) -- no (top is partly implemented, only on representation level)
-TraceOfModule( M, N ) -- no
+TraceOfModule( M, N ) -- no (should be ported)
 
 
 CHAPTER 8: HOMOLOGICAL ALGEBRA
@@ -323,7 +323,7 @@ CHAPTER 8: HOMOLOGICAL ALGEBRA
 [ everything from homological algebra ] -- no
 a few exceptions, from CAP:
 PushOut -> Pushout
-PullBack -> FiberProduct
+PullBack -> FiberProduct (make synonym with Pullback)
 
 
 CHAPTER 9: AUSLANDER-REITEN THEORY
