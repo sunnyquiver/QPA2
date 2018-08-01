@@ -219,6 +219,14 @@ function( e, c )
   fi;
 end );
 
+InstallMethod( \*, [ IsMultiplicativeElement, IsQuiverRepresentationHomomorphism ],
+  function( c, m )
+  local Q;
+  Q := QuiverOfRepresentation( Source( m ) );
+  return QuiverRepresentationHomomorphismNC
+  ( Source( m ), Range( m ), c*List( Vertices( Q ), v -> MapForVertex( m, v ) ) );
+end );
+
 # TODO module structure
 
 
