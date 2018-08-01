@@ -570,6 +570,11 @@ function( m1, m2 )
   elif dim2[ 2 ] = 0 then
     return m1;
   fi;
+  
+  if dim1[ 1 ] = 0 then 
+    return MakeZeroMatrix( F, 0, dim1[ 2 ] + dim2[ 2 ] );
+  fi;
+
   rows := ListN( RowsOfMatrix( m1 ), RowsOfMatrix( m2 ), Concatenation );
   return MatrixByRows( F, rows );
 end );
@@ -595,6 +600,9 @@ function( m1, m2 )
     return m2;
   elif dim2[ 1 ] = 0 then
     return m1;
+  fi;
+  if dim1[ 2 ] = 0 then 
+    return MakeZeroMatrix( F, dim1[ 1 ] + dim2[ 1 ], 0 );
   fi;
   rows := Concatenation( RowsOfMatrix( m1 ), RowsOfMatrix( m2 ) );
   return MatrixByRows( F, rows );
