@@ -333,6 +333,14 @@ function( M )
   fi;
 end );
 
+InstallMethod( \*, [ IsMultiplicativeElement, IsQPAMatrix ],
+function( a, M )
+  if not a in BaseDomain( M ) then
+    TryNextMethod( );
+  fi;
+  return MatrixByRows( BaseDomain( M ), DimensionsMat( M ), a*RowsOfMatrix( M ) );
+end );
+
 InstallMethod( \*, "for standard vector and QPA matrix",
                [ IsStandardVector, IsQPAMatrix ],
 function( v, M )
