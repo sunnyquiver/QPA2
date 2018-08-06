@@ -668,3 +668,10 @@ function( f, v )
   fi;
 end
 );
+
+##
+InstallMethod( InverseOp,
+    [ IsLinearTransformation ],
+function( m )
+  return LiftAlongMonomorphism( m, IdentityMorphism( Range( m ) ) );
+end );

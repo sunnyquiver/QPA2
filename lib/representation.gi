@@ -1400,3 +1400,15 @@ function( R1, R2, generators, images )
     fi;
 end
   );
+
+##
+InstallMethod( InverseOp,
+    [ IsQuiverRepresentationHomomorphism ],
+function( m )
+  local maps;
+  if not IsIsomorphism( m ) then
+    Error( "The quiver representation homomorphism is not isomorphism" );
+  fi;
+  maps := List( MapsOfRepresentationHomomorphism( m ), Inverse );
+  return QuiverRepresentationHomomorphism( Range( m ), Source( m ), maps );
+end );
