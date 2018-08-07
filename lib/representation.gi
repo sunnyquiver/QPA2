@@ -1025,6 +1025,11 @@ function( A, vecspace_cat )
   end;
   AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, direct_sum_proj );
   
+  # The object/morphism constructors check whether the input is well-defined or not.
+  # So if it has been created then it is well-defined
+  AddIsWellDefinedForObjects( cat, ReturnTrue );
+  AddIsWellDefinedForMorphisms( cat, ReturnTrue );
+
   to_be_finalized := ValueOption( "FinalizeCategory" );
    
   if to_be_finalized = false then
