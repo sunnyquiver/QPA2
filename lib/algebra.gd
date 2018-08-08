@@ -543,7 +543,7 @@ DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra 
 #! @Description
 #!  Returns <C>true</C> if the algebra <A>T</A> is a tensor product of
 #!  algebras; <C>false</C> otherwise.
-DeclareAttribute( "IsTensorProductOfAlgebras", IsQuiverAlgebra );
+DeclareProperty( "IsTensorProductOfAlgebras", IsQuiverAlgebra );
 
 DeclareAttribute( "TensorProductFactors", IsQuiverAlgebra );
 
