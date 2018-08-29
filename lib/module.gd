@@ -9,13 +9,13 @@ DeclareCategory( "IsQuiverModuleElement", IsAlgebraModuleElement and IsObjectWit
 #! @Description
 #!  Category for modules over quiver algebras.
 DeclareCategory( "IsQuiverModule",
-                 IsVectorSpace and IsAlgebraModule and IsCapCategoryObject
+                 IsVectorSpace and IsAlgebraModule and IsFieldCategoryObject
                  and IsObjectWithSide
                  and CategoryCollections( IsQuiverModuleElement ) );
 
 #! @Description
 #!  Category for module categories.
-DeclareCategory( "IsQuiverModuleCategory", IsCapCategory );
+DeclareCategory( "IsQuiverModuleCategory", IsFieldCategory );
 
 #! @Description
 #!  Category for left module categories.

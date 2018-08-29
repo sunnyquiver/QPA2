@@ -4,7 +4,7 @@
 
 #! @Description
 #!  Category for (CAP) categories of vector spaces.
-DeclareCategory( "IsVectorSpaceCategory", IsCapCategory );
+DeclareCategory( "IsVectorSpaceCategory", IsFieldCategory );
 
 #! @Description
 #!  Category for vectors.  Subcategory of the builtin GAP category <C>IsVector</C>.
@@ -18,7 +18,7 @@ DeclareCategory( "IsEmptyVector", IsStandardVector );
 #!  Category for vector spaces.
 #!  Subcategory of the builtin GAP category <C>IsVector</C>,
 #!  and of the category <C>IsCapCategoryObject</C>.
-DeclareCategory( "IsQPAVectorSpace", IsVectorSpace and IsCapCategoryObject );
+DeclareCategory( "IsQPAVectorSpace", IsVectorSpace and IsFieldCategoryObject );
 
 DeclareCategory( "IsStandardVectorSpace", IsQPAVectorSpace );
 
@@ -29,7 +29,7 @@ DeclareCategory( "IsZeroVectorSpace", IsStandardVectorSpace );
 #! @Description
 #!  Category for linear transformations.
 DeclareCategory( "IsLinearTransformation",
-                 IsCapCategoryMorphism
+                 IsFieldCategoryMorphism
                  and IsMapping
                  and IsQPAVector );
 
@@ -43,9 +43,7 @@ DeclareAttribute( "CategoryOfVectorSpaces", IsField );
 
 DeclareOperation( "MakeQPAVector", [ IsString, IsField, IsDenseList ] );
 
-DeclareAttribute( "UnderlyingField", IsQPAVectorSpace );
 DeclareAttribute( "UnderlyingField", IsQPAVector );
-DeclareAttribute( "UnderlyingField", IsVectorSpaceCategory );
 
 
 #! @Arguments k, L

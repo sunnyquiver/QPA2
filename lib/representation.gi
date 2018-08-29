@@ -1043,6 +1043,10 @@ function( A, vecspace_cat )
 end );
 
 
+InstallMethod( UnderlyingField, "for quiver representation category",
+               [ IsQuiverRepresentationCategory ],
+               cat -> UnderlyingField( VectorSpaceCategory( cat ) ) );
+
 
 InstallMethod( Transpose, "for dense list",
                [ IsDenseList ],

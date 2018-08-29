@@ -447,6 +447,10 @@ function( A, B )
   return BimoduleCategory( [ A, B ] );
 end );
 
+InstallMethod( UnderlyingField, "for module category",
+               [ IsQuiverModuleCategory ],
+               cat -> UnderlyingField( UnderlyingRepresentationCategory( cat ) ) );
+
 InstallMethod( UnderlyingRepresentationFunctor, "for a module category",
         [ IsQuiverModuleCategory ], 
         function( C )

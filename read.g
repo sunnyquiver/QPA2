@@ -1,5 +1,6 @@
 ReadPackage( "QPA", "lib/side.gi" );
 ReadPackage( "QPA", "lib/matrix.gi" );
+ReadPackage( "QPA", "lib/field-cat.gi" );
 ReadPackage( "QPA", "lib/vecspace.gi" );
 ReadPackage( "QPA", "lib/quiver.gi" );
 ReadPackage( "QPA", "lib/dynkin.gi" );
@@ -10,7 +11,8 @@ ReadPackage( "QPA", "lib/module.gi" );
 ReadPackage( "QPA", "lib/modulehom.gi" );
 ReadPackage( "QPA", "lib/algebra-module.gi" );
 ReadPackage( "QPA", "lib/ideal.gi" );
-ReadPackage( "QPA", "lib/hom.gi" );
+ReadPackage( "QPA", "lib/hom-space.gi" );
+ReadPackage( "QPA", "lib/hom-morphism.gi" );
 ReadPackage( "QPA", "lib/tensor.gi" );
 ReadPackage( "QPA", "lib/restrictionfunctors.gi" );
 ReadPackage( "QPA", "lib/hash.gi" );

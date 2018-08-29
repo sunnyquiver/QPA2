@@ -144,7 +144,6 @@ function( F )
   cat := CategoryOfVectorSpaces( F );
   ObjectifyWithAttributes( space, type,
                            LeftActingDomain, F,
-                           UnderlyingField, F,
                            Dimension, 0 );
   Add( cat, space );
   return space;
@@ -181,7 +180,6 @@ function( F, dim )
   space := rec( );
   cat := CategoryOfVectorSpaces( F );
   ObjectifyWithAttributes( space, type,
-                           UnderlyingField, F,
                            LeftActingDomain, F,
                            Dimension, dim );
   Add( cat, space );
@@ -225,6 +223,10 @@ function( V )
 end );
 
 InstallMethod( Basis, [ IsQPAVectorSpace ], CanonicalBasis );
+
+InstallMethod( Dimension, "for qpa vector space",
+               [ IsQPAVectorSpace ],
+               V -> Length( CanonicalBasis( V ) ) );
 
 InstallMethod( Coefficients,
                [ IsCanonicalBasis,
@@ -270,8 +272,7 @@ dir -> function( V1, V2, mat )
       Source, V1,
       Range, V2,
       LeftMatrixOfLinearTransformation, mats[ Int( LEFT ) ],
-      RightMatrixOfLinearTransformation, mats[ Int( RIGHT ) ],
-      UnderlyingField, UnderlyingField( cat )
+      RightMatrixOfLinearTransformation, mats[ Int( RIGHT ) ]
       );
   Add( cat, T );
   return T;

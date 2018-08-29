@@ -6,7 +6,7 @@
 #!  Category for module homomorphisms.
 DeclareCategory( "IsQuiverModuleHomomorphism",
                  IsMapping and IsSPGeneralMapping and IsVectorSpaceHomomorphism and
-                 IsCapCategoryMorphism );
+                 IsFieldCategoryMorphism );
 
 #! @Description
 #!  Category for left module homomorphisms.

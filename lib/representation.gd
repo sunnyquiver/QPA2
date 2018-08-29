@@ -10,14 +10,14 @@ DeclareCategory( "IsQuiverRepresentationElement", IsVector );
 #!  Category for quiver representations.
 DeclareCategory( "IsQuiverRepresentation",
                  IsVectorSpace and
-                 IsCapCategoryObject and
+                 IsFieldCategoryObject and
                  CategoryCollections( IsQuiverRepresentationElement ) );
 
 
 #! @Section Categories of representations
 
 #!
-DeclareCategory( "IsQuiverRepresentationCategory", IsCapCategory );
+DeclareCategory( "IsQuiverRepresentationCategory", IsFieldCategory );
 
 #!
 DeclareAttribute( "AlgebraOfCategory", IsQuiverRepresentationCategory );
@@ -324,7 +324,7 @@ DeclareOperation( "MapForAlgebraElement", [ IsQuiverRepresentation, IsQuiverAlge
 #!
 DeclareCategory( "IsQuiverRepresentationHomomorphism",
                  IsMapping and IsSPGeneralMapping and IsVectorSpaceHomomorphism
-                 and IsCapCategoryMorphism and IsQPAVector );
+                 and IsFieldCategoryMorphism and IsQPAVector );
 
 #!
 DeclareOperation( "QuiverRepresentationHomomorphism",
