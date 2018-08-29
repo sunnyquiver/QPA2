@@ -219,6 +219,14 @@ function( e, c )
   fi;
 end );
 
+InstallMethod( \*, [ IsMultiplicativeElement, IsQuiverRepresentationHomomorphism ],
+  function( c, m )
+  local Q;
+  Q := QuiverOfRepresentation( Source( m ) );
+  return QuiverRepresentationHomomorphismNC
+  ( Source( m ), Range( m ), c*List( Vertices( Q ), v -> MapForVertex( m, v ) ) );
+end );
+
 # TODO module structure
 
 
@@ -837,7 +845,7 @@ function( A, vecspace_cat )
         identity_morphism, pre_compose, addition, additive_inverse,
         kernel, kernel_emb, coker, coker_proj,
         mono_lift, epi_colift,
-        direct_sum, direct_sum_inj, direct_sum_proj;
+        direct_sum, direct_sum_inj, direct_sum_proj, to_be_finalized;
 
   Q := QuiverOfAlgebra( A );
 
@@ -1017,9 +1025,21 @@ function( A, vecspace_cat )
   end;
   AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, direct_sum_proj );
   
-  Finalize( cat );
+  # The object/morphism constructors check whether the input is well-defined or not.
+  # So if it has been created then it is well-defined
+  AddIsWellDefinedForObjects( cat, ReturnTrue );
+  AddIsWellDefinedForMorphisms( cat, ReturnTrue );
 
+  to_be_finalized := ValueOption( "FinalizeCategory" );
+   
+  if to_be_finalized = false then
+     return cat;
+  else
+     Finalize( cat );
+  fi;
+  
   return cat;
+    
 end );
 
 
@@ -1385,3 +1405,15 @@ function( R1, R2, generators, images )
     fi;
 end
   );
+
+##
+InstallMethod( InverseOp,
+    [ IsQuiverRepresentationHomomorphism ],
+function( m )
+  local maps;
+  if not IsIsomorphism( m ) then
+    Error( "The quiver representation homomorphism is not isomorphism" );
+  fi;
+  maps := List( MapsOfRepresentationHomomorphism( m ), Inverse );
+  return QuiverRepresentationHomomorphism( Range( m ), Source( m ), maps );
+end );
