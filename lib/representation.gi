@@ -1032,10 +1032,8 @@ function( A, vecspace_cat )
 
   to_be_finalized := ValueOption( "FinalizeCategory" );
    
-  if to_be_finalized = false then
-     return cat;
-  else
-     Finalize( cat );
+  if to_be_finalized then
+    Finalize( cat );
   fi;
   
   return cat;
