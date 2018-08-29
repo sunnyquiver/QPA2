@@ -676,3 +676,14 @@ InstallMethod( InverseOp,
 function( m )
   return LiftAlongMonomorphism( m, IdentityMorphism( Range( m ) ) );
 end );
+
+##
+InstallMethod( Display, [ IsLinearTransformation ],
+  function( m )
+  local dim, mat;
+  mat := RightMatrixOfLinearTransformation( m );
+  dim := Concatenation( String( DimensionsMat( mat )[ 1 ] ), "x", String( DimensionsMat( mat )[ 2 ] ) );
+  Print( "Linear transformation given (in row-convention) by the ", dim, " matrix \n" );
+  Display( RowsOfMatrix( mat ) );
+end );
+
