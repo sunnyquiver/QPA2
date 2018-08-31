@@ -555,6 +555,13 @@ DeclareAttribute( "TensorProductFactors", IsQuiverAlgebra );
 
 DeclareAttribute( "TensorProductFactorsLeftRight", IsQuiverAlgebra );
 
+#! @Description
+#!  Given an iterated tensor product of algebras, returns the isomorphism to the
+#!  corresponding flat tensor product.
+#! @Arguments T
+#! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
+DeclareAttribute( "IsomorphismToFlatTensorProduct", IsTensorProductOfAlgebras );
+
 #! @Arguments a, b, T
 #! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
 #! @Description
