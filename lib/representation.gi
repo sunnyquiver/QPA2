@@ -1419,3 +1419,48 @@ function( m )
   maps := List( MapsOfRepresentationHomomorphism( m ), Inverse );
   return QuiverRepresentationHomomorphism( Range( m ), Source( m ), maps );
 end );
+
+##
+InstallMethod( Display,
+               [ IsQuiverRepresentation ],
+    function( R )
+    local q, v_nr, a_nr, i, V;
+    
+    q := QuiverOfRepresentation( R );
+    v_nr := NumberOfVertices( q );
+    a_nr := NumberOfArrows( q );
+    
+    Print( "A representation over the algebra ", String( AlgebraOfRepresentation( R ) ), " given by the data:\n\n"  );
+    for i in [ 1 .. v_nr ] do 
+    Print( TextAttr.underscore, TextAttr.2, "For vertex (", String( Vertex( q, i ) ), "):", TextAttr.reset, "\n" );
+    V := VectorSpaceOfRepresentation( R, i );
+    Print( String( V ), " of dimension ", Dimension( V ) );
+    Print("\n\n" );
+    od;
+    
+    for i in [ 1 .. a_nr ] do 
+    Print( TextAttr.underscore, TextAttr.2, "For arrow (", String( Arrow( q, i ) ), "):", TextAttr.reset, "\n" );
+    Display( MapForArrow( R, i ) );
+    Print("\n" );
+    od;
+    
+end );
+
+##
+InstallMethod( Display,
+               [ IsQuiverRepresentationHomomorphism ],
+    function( m )
+    local q, v_nr, map, i;
+    
+    q := QuiverOfRepresentation( Source( m ) );
+    v_nr := NumberOfVertices( q );
+    
+    Print( "A representation homomorphism over the algebra ", String( AlgebraOfRepresentation( Source( m ) ) ), " given by the data:\n\n"  );
+    for i in [ 1 .. v_nr ] do 
+    Print( TextAttr.underscore, TextAttr.2, "For vertex (", String( Vertex( q, i ) ), "):", TextAttr.reset,"\n" );
+    map := MapForVertex( m, i );
+    Display( map );
+    Print("\n\n" );
+    od;
+    
+end );
