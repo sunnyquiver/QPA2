@@ -538,6 +538,12 @@ DeclareOperation( "\^", [ IsDenseList, IsSide ] );
 #!  Returns the tensor product of the quiver algebras <A>A</A> and <A>B</A>.
 DeclareOperation( "TensorProductOfAlgebras", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
 
+#! @Arguments As
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+#! @Description
+#!  Returns the tensor product of the quiver algebras in the list <A>As</A>.
+DeclareOperation( "TensorProductOfAlgebras", [ IsDenseList ] );
+
 #! @Arguments T, A, B
 #! @Returns <C>true</C> or <C>false</C>
 #! @Description

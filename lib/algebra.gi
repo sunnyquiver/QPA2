@@ -967,6 +967,60 @@ function( A, B )
   return T;
 end );
 
+InstallMethod( TensorProductOfAlgebras, "for list of quiver algebras",
+               [ IsDenseList ],
+function( As )
+  local k, Qs, Q, kQ, n, commutativity_relations, i, j, path_lists, 
+        path_lists_prod, p, comp1, comp2, included_relations, rels, rel,
+        vertices1, vertices2, vs1, vs2, new_rel, relations, T;
+
+  # TODO: check that algebras are compatible (same field, same direction)
+  #       and that list is nonempty
+  k := LeftActingDomain( As[ 1 ] );
+  Qs := List( As, QuiverOfAlgebra );
+  Q := QuiverProduct( Qs );
+  kQ := PathAlgebra( k, Q );
+  n := Length( As );
+
+  commutativity_relations := [];
+  for i in [ 1 .. ( n - 1 ) ] do
+    for j in [ ( i + 1 ) .. n ] do
+      path_lists := List( Qs, Vertices );
+      path_lists[ i ] := Arrows( Qs[ i ] );
+      path_lists[ j ] := Arrows( Qs[ j ] );
+      path_lists_prod := Cartesian( path_lists );
+      for p in path_lists_prod do
+        comp1 := PathAsAlgebraElement( kQ, PathInProductQuiver( Q, p, () ) );
+        comp2 := PathAsAlgebraElement( kQ, PathInProductQuiver( Q, p, (i,j) ) );
+        Add( commutativity_relations, comp1 - comp2 );
+      od;
+    od;
+  od;
+             
+  included_relations := [];
+  for i in [ 1 .. n ] do
+    rels := RelationsOfAlgebra( As[ i ] );
+    vertices1 := Cartesian( List( [ 1 .. ( i - 1 ) ], j -> Vertices( Qs[ j ] ) ) );
+    vertices2 := Cartesian( List( [ ( i + 1 ) .. n ], j -> Vertices( Qs[ j ] ) ) );
+    for rel in rels do
+      for vs1 in vertices1 do
+        for vs2 in vertices2 do
+          new_rel :=
+            TranslateAlgebraElement( rel, kQ,
+                                     p -> PathInProductQuiver( Q, Concatenation( vs1, [ p ], vs2 ) ) );
+          Add( included_relations, new_rel );
+        od;
+      od;
+    od;
+  od;
+
+  relations := Concatenation( commutativity_relations, included_relations );
+  T := kQ / relations;
+  SetTensorProductFactors( T, As );
+  SetIsTensorProductOfAlgebras( T, true );
+  return T;
+end );
+
 # InstallMethod( IsTensorProductOfAlgebras,
 #                [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverAlgebra ],
 # function( T, A, B )
