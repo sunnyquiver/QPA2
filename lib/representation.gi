@@ -1031,6 +1031,9 @@ function( A, vecspace_cat )
   AddIsWellDefinedForMorphisms( cat, ReturnTrue );
 
   to_be_finalized := ValueOption( "FinalizeCategory" );
+  if to_be_finalized <> false then
+    to_be_finalized := true;
+  fi;
    
   if to_be_finalized then
     Finalize( cat );
