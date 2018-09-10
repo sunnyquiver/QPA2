@@ -385,6 +385,7 @@ side -> function( rep_cat )
     fi;
     SetAlgebraOfCategory( cat, A );
   fi;
+  SetSide( cat, side );
   SetUnderlyingRepresentationCategory( cat, rep_cat );
   SetIsAbelianCategory( cat, true );
 

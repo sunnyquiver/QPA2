@@ -15,7 +15,7 @@ DeclareCategory( "IsQuiverModule",
 
 #! @Description
 #!  Category for module categories.
-DeclareCategory( "IsQuiverModuleCategory", IsFieldCategory );
+DeclareCategory( "IsQuiverModuleCategory", IsFieldCategory and IsObjectWithSide );
 
 #! @Description
 #!  Category for left module categories.
