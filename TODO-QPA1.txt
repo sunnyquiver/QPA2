@@ -64,8 +64,8 @@ OrderingOfAlgebra( FQ ) -> no
 FQ.name -> FQ[ vertex_label ], FQ.arrow_label
 ElementOfPathAlgebra( PA, path ) -> PathAsAlgebraElement( PA, path )
 a < b -- no (needed?)
-IsLeftUniform( element ) -- no (should be ported)
-IsRightUniform( element ) -- no (should be ported)
+IsLeftUniform( element ) -- same
+IsRightUniform( element ) -- same
 IsUniform( element ) -- same
 LeadingTerm( element ), Tip( element ) -> LeadingTerm( element )
 LeadingCoefficient( element ), TipCoefficient( element ) -> LeadingCoefficient( element )
@@ -117,7 +117,7 @@ Centre( A ), Center( A ) -- no (should be ported)
 ComplexityOfAlgebra( A, n ) -- no (should be ported)
 CoxeterMatrix( A ) -- no (should be ported)
 CoxeterPolynomial( A ) -- no (should be ported)
-Dimension( A ) -- same (undocumented) 
+  Dimension( A ) -- same (undocumented) 
 GlobalDimension( A ) -- no (should be ported)
 LoewyLength( A ) -- no (should be ported)
 NakayamaAutomorphism( A ) -- no (should be ported)
