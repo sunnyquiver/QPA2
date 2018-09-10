@@ -319,7 +319,9 @@ end );
 InstallMethod( MatrixOfLinearTransformation, "for linear transformation",
                [ IsDirection, IsLinearTransformation ],
 function( dir, T )
-  return ( MatrixOfLinearTransformation ^ dir )( T );
+  local f;
+  f := MatrixOfLinearTransformation ^ dir;
+  return f( T );
 end );
 
 InstallMethod( String, [ IsLinearTransformation ],
@@ -545,6 +547,7 @@ function( F )
   
   Finalize( cat );
   DeactivateCachingOfCategory( cat );
+  CapCategorySwitchLogicOff( cat ); # TODO test this
 
   return cat;
 end );
