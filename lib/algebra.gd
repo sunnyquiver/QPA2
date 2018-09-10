@@ -582,7 +582,7 @@ DeclareAttribute( "TensorAlgebraInclusions", IsTensorProductOfAlgebras );
 #! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
 #! @Description 
 #!  Returns the algebra isomorphism from <M>k\otimes_k B \to B</M>,
-#!  given the tensor product <Arg>T</Arg> equal to <M>k\otiems_k B</M>
+#!  given the tensor product <Arg>T</Arg> equal to <M>k\otimes_k B</M>
 #!  as input, for a field <M>k</M>.  
 DeclareOperation( "TensorAlgebraLeftIdentification", [ IsTensorProductOfAlgebras ] );  
 
@@ -590,7 +590,7 @@ DeclareOperation( "TensorAlgebraLeftIdentification", [ IsTensorProductOfAlgebras
 #! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
 #! @Description 
 #!  Returns the algebra isomorphism from <M>A\otimes_k k \to A</M>,
-#!  given the tensor product <Arg>T</Arg> equal to <M>A\otiems_k k</M>
+#!  given the tensor product <Arg>T</Arg> equal to <M>A\otimes_k k</M>
 #!  as input, for a field <M>k</M>.  
 DeclareOperation( "TensorAlgebraRightIdentification", [ IsTensorProductOfAlgebras ] );  
 
