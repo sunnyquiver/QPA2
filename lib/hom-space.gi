@@ -23,7 +23,9 @@ function( X, Y )
   elif IsRightQuiverModuleCategory( cat ) then
     hom_space_type := IsRightQuiverModuleHomSpace;
   elif IsQuiverBimoduleCategory( cat ) then
-    hom_space_type := IsQuiverBimoduleHomSpace;
+      hom_space_type := IsQuiverBimoduleHomSpace;
+  elif IsStableCategoryModuloProjectives( cat ) then
+      hom_space_type := IsStableHomSpaceModuloProjectives; 
   else
     hom_space_type := IsHomSpace; # should not happen
   fi;

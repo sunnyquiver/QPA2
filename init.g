@@ -18,3 +18,4 @@ ReadPackage( "QPA", "lib/restrictionfunctors.gd" );
 ReadPackage( "QPA", "lib/hash.gd" );
 ReadPackage( "QPA", "lib/intern.gd" );
 ReadPackage( "QPA", "lib/dual.gd" );
+ReadPackage( "QPA", "lib/stablecategory.gd" );
