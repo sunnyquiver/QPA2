@@ -23,7 +23,7 @@ DeclareOperation( "Hom", [ IsFieldCategoryObject, IsFieldCategoryObject ] );
 DeclareAttribute( "Source", IsHomSpace );
 
 #! @Description
-#!  Returns the source of all morphisms in a given hom space.
+#!  Returns the range of all morphisms in a given hom space.
 #!  That is, if the argument <A>hom</A> is <M>\operatorname{Hom}(X,Y)</M>,
 #!  then the result is the object <M>Y</M>.
 #! @Returns IsFieldCategoryObject
