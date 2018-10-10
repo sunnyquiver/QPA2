@@ -1,5 +1,8 @@
 DeclareDirectionOperations( IsQuiverAlgebra, IsLeftQuiverAlgebra, IsRightQuiverAlgebra );
 
+BindGlobal( "FamilyOfQuiverAlgebraElements", NewFamily( "quiver algebra elements" ) );
+BindGlobal( "FamilyOfQuiverAlgebras", CollectionsFamily( FamilyOfQuiverAlgebraElements ) );
+
 DeclareRepresentation( "IsPathAlgebraElementRep", IsComponentObjectRep,
                        [ "algebra", "paths", "coefficients" ] );
 
@@ -41,7 +44,7 @@ InstallMethod( QuiverAlgebraElementNC,
                "for path algebra and homogeneous lists",
                [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ],
 function( algebra, coefficients, paths )
-  return Objectify( NewType( ElementsFamily( FamilyObj( algebra ) ),
+  return Objectify( NewType( FamilyOfQuiverAlgebraElements,
                              IsPathAlgebraElement and IsPathAlgebraElementRep ),
                     rec( algebra := algebra,
                          paths := paths,
@@ -499,16 +502,10 @@ DeclareRepresentation( "IsPathAlgebraRep", IsComponentObjectRep and IsAttributeS
 InstallMethod( PathAlgebra, "for field and quiver",
                [ IsField, IsQuiver ],
 function( k, Q )
-  local elementFam, algebraFam, algebraType, A;
-  # TODO: algebra should have its own elements family,
-  # but this should rely only on ( k, Q ).
-  # If we make a new algebra with same arguments, we
-  # should get the same family.
-  elementFam := ElementsFamily( FamilyObj( Q ) );
-  algebraFam := CollectionsFamily( elementFam );
-  algebraType := NewType( algebraFam,
-                          IsPathAlgebra and IsQuiverAlgebra^Direction( Q ) and IsPathAlgebraRep );
-  A := Objectify( algebraType,
+  local type, A;
+  type := NewType( FamilyOfQuiverAlgebras,
+                   IsPathAlgebra and IsQuiverAlgebra ^ Direction( Q ) and IsPathAlgebraRep );
+  A := Objectify( type,
                   rec( field := k,
                        quiver := Q ) );
   return Intern( A );
@@ -640,7 +637,7 @@ InstallMethod( QuotientOfPathAlgebra, "for path algebra and path ideal",
                [ IsPathAlgebra, IsPathAlgebraIdeal ],
 function( kQ, I )
   local A;
-  A := Objectify( NewType( FamilyObj( kQ ),
+  A := Objectify( NewType( FamilyOfQuiverAlgebras,
                            IsQuotientOfPathAlgebra and IsQuiverAlgebra^Direction( kQ )
                            and IsQuotientOfPathAlgebraRep ),
                   rec( pathAlgebra := kQ,
@@ -722,7 +719,7 @@ function( algebra, pathAlgebraElement )
   local representative;
   representative := Reduce( pathAlgebraElement,
                             GroebnerBasis( IdealOfQuotient( algebra ) ) );
-  return Objectify( NewType( ElementsFamily( FamilyObj( algebra ) ),
+  return Objectify( NewType( FamilyOfQuiverAlgebraElements,
                              IsQuotientOfPathAlgebraElement and IsQuotientOfPathAlgebraElementRep ),
                     rec( algebra := algebra,
                          representative := representative ) );
