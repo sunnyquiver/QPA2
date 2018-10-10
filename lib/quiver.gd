@@ -835,6 +835,30 @@ DeclareOperation( "QuiverProduct", [ IsQuiver, IsQuiver ] );
 DeclareOperation( "QuiverProduct", [ IsDenseList ] );
 
 #! @Description
+#!  Return the product of the arrow <A>a</A> in a quiver Q1
+#!  and the vertex <A>v</A> in a quiver Q2 as an arrow in the quiver
+#!  product of Q1 and Q2
+#! @Returns IsArrow
+#! @Arguments a, v
+DeclareOperation( "ProductOfArrowAndVertex", [ IsArrow, IsVertex ] );
+
+#! @Description
+#!  Return the product of the vertex <A>v</A> in a quiver Q1
+#!  and the arrow <A>a</A> in a quiver Q2 as an arrow in the quiver
+#!  product of Q1 and Q2
+#! @Returns IsArrow
+#! @Arguments v, a
+DeclareOperation( "ProductOfVertexAndArrow", [ IsVertex, IsArrow ] );
+
+#! @Description
+#!  Return the product of the vertex <A>v1</A> in a quiver Q1
+#!  and the arrow <A>v2</A> in a quiver Q2 as a vertex in the quiver
+#!  product of Q1 and Q2
+#! @Returns IsVertex
+#! @Arguments v1, v2
+DeclareOperation( "ProductOfVertices", [ IsVertex, IsVertex ] );
+
+#! @Description
 #!  Checks whether <A>Q</A> is a product quiver.
 #! @Returns IsBool
 #! @Arguments Q

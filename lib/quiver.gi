@@ -1565,6 +1565,43 @@ function( L )
   return prod;
 end );
 
+InstallMethod( ProductOfVertices,
+               [ IsVertex, IsVertex ],
+function (vertex_1, vertex_2)
+  local quiver_of_vertex_1, quiver_of_vertex_2, vertex_1_number, vertex_2_number, quiver_product;
+  quiver_of_vertex_1 := QuiverOfPath( vertex_1 );
+  quiver_of_vertex_2 := QuiverOfPath( vertex_2 );
+  vertex_1_number := Position( Vertices( quiver_of_vertex_1 ), vertex_1 );
+  vertex_2_number := Position( Vertices( quiver_of_vertex_2 ), vertex_2 );
+  quiver_product := QuiverProduct(quiver_of_vertex_1, quiver_of_vertex_2 );
+  return Vertices(quiver_product)[ ProductQuiverVertexNumber( [ quiver_of_vertex_1, quiver_of_vertex_2 ], [ vertex_1_number, vertex_2_number] ) ];
+end );
+
+
+InstallMethod( ProductOfVertexAndArrow,
+               [ IsVertex, IsArrow ],
+function ( v, a )
+  local quiver_of_vertex, quiver_of_arrow, vertex_number, arrow_number, quiver_product;
+  quiver_of_vertex := QuiverOfPath(v);
+  quiver_of_arrow := QuiverOfPath(a);
+  vertex_number := Position( Vertices(quiver_of_vertex), v);
+  arrow_number := Position( Arrows(quiver_of_arrow), a);
+  quiver_product := QuiverProduct(quiver_of_vertex, quiver_of_arrow);
+  return Arrows(quiver_product)[ ProductQuiverArrowNumber( [ quiver_of_vertex, quiver_of_arrow ], 2, [ vertex_number, arrow_number] ) ];
+end );
+
+InstallMethod( ProductOfArrowAndVertex,
+               [IsArrow, IsVertex],
+function ( a, v )
+  local quiver_of_arrow, quiver_of_vertex, arrow_number, vertex_number, quiver_product;
+  quiver_of_arrow := QuiverOfPath(a);
+  quiver_of_vertex := QuiverOfPath(v);
+  arrow_number := Position( Arrows(quiver_of_arrow), a);
+  vertex_number := Position( Vertices(quiver_of_vertex), v);
+  quiver_product := QuiverProduct(quiver_of_arrow, quiver_of_vertex);
+  return Arrows(quiver_product)[ ProductQuiverArrowNumber( [quiver_of_arrow, quiver_of_vertex], 1, [arrow_number, vertex_number] ) ];
+end );
+
 InstallMethod( IsProductQuiver,
                [ IsQuiver ],
 function( Q )
