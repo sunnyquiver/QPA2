@@ -5,15 +5,6 @@
 #! @Description
 #!  Category for (CAP) categories of vector spaces.
 DeclareCategory( "IsVectorSpaceCategory", IsFieldCategory );
-
-#! @Description
-#!  Category for vectors.  Subcategory of the builtin GAP category <C>IsVector</C>.
-DeclareCategory( "IsQPAVector", IsVector );
-
-DeclareCategory( "IsStandardVector", IsQPAVector );
-
-DeclareCategory( "IsEmptyVector", IsStandardVector );
-
 #! @Description
 #!  Category for vector spaces.
 #!  Subcategory of the builtin GAP category <C>IsVector</C>,

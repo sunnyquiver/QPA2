@@ -78,6 +78,7 @@ function( C )
   cat := CreateCapCategory( Concatenation( "stable quiver representations over ", String( A ) ) );
   SetFilterObj( cat, IsStableCategoryModuloProjectives );
   SetAlgebraOfCategory( cat, A );
+  SetUnderlyingField( cat, UnderlyingField( C ) );
 #  SetVectorSpaceCategory( cat, vecspace_cat );
   
   
@@ -90,7 +91,7 @@ function( C )
       local p;
       p := StableHomProjection( Hom( Source( m1 ), Range( m2 ) ) );
       
-      return ImageElm( p, m1 ) = ImageElm( p, m2 );
+      return ImageElm( p, OriginalMorphism( m1 ) ) = ImageElm( p, OriginalMorphism( m2 ) );
   end;
   AddIsEqualForMorphisms( cat, equal_morphisms );
 
@@ -172,3 +173,21 @@ function( C )
   return cat;
     
 end );
+
+InstallMethod( String, 
+        "for an object in a stable category modulo projectives ",
+               [ IsStableCategoryModuloProjectivesObject ],
+function( M )
+    return Concatenation( "(", String( OriginalObject( M ) ), ")/Proj" ); 
+end
+  );
+
+InstallMethod( String, 
+        "for a morphism in a stable category modulo projectives ",
+               [ IsStableCategoryModuloProjectivesMorphism ],
+function( f )
+    return Concatenation( "(", String( Source( f ) ), ")",
+                   "->", 
+                   String( Range( f ) ), ")" ); 
+end
+  );

@@ -15,7 +15,7 @@ DeclareCategory( "IsFieldCategoryObject", IsCapCategoryObject );
 
 #! @Description
 #!  GAP category for morphisms in a  <M>k</M>-category.
-DeclareCategory( "IsFieldCategoryMorphism", IsCapCategoryMorphism );
+DeclareCategory( "IsFieldCategoryMorphism", IsCapCategoryMorphism and IsQPAVector );
 
 #! @BeginGroup UnderlyingField
 #! @Description

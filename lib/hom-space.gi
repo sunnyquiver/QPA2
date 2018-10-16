@@ -1,5 +1,7 @@
 BindGlobal( "FamilyHomSpaces",
-            NewFamily( "hom spaces" ) );
+        NewFamily( "hom spaces" ) );
+BindGlobal( "FamilyOfQuiverRepresentationHomSpaces",
+        CollectionsFamily( FamilyOfQuiverRepresentationHomomorphisms ) );
 DeclareRepresentation( "IsHomSpaceRep",
                        IsComponentObjectRep and IsAttributeStoringRep,
                        [] );
@@ -7,36 +9,42 @@ DeclareRepresentation( "IsHomSpaceRep",
 InstallMethod( Hom,
                [ IsFieldCategoryObject, IsFieldCategoryObject ],
 function( X, Y )
-  local cat, F, vcat, hom_space_type, type, hom;
+    local   cat,  F,  vcat,  fam,  hom_space_type,  type,  hom;
   cat := CapCategory( X );
   if not IsIdenticalObj( cat, CapCategory( Y ) ) then
     Error( "objects from different categories" );
   fi;
   F := UnderlyingField( cat );
   vcat := CategoryOfVectorSpaces( F );
+  fam := FamilyHomSpaces;
   if IsVectorSpaceCategory( cat ) then
-    hom_space_type := IsVectorSpaceHomSpace;
+      hom_space_type := IsVectorSpaceHomSpace;
+      fam := CollectionsFamily( FamilyOfLinearTransformations );
   elif IsQuiverRepresentationCategory( cat ) then
-    hom_space_type := IsQuiverRepresentationHomSpace;
+      hom_space_type := IsQuiverRepresentationHomSpace;
+      fam := CollectionsFamily( FamilyOfQuiverRepresentationHomomorphisms );
   elif IsLeftQuiverModuleCategory( cat ) then
-    hom_space_type := IsLeftQuiverModuleHomSpace;
+      hom_space_type := IsLeftQuiverModuleHomSpace;
+      fam := CollectionsFamily( FamilyOfQuiverModuleHomomorphisms );
   elif IsRightQuiverModuleCategory( cat ) then
-    hom_space_type := IsRightQuiverModuleHomSpace;
+      hom_space_type := IsRightQuiverModuleHomSpace;
+      fam := CollectionsFamily( FamilyOfQuiverModuleHomomorphisms );
   elif IsQuiverBimoduleCategory( cat ) then
       hom_space_type := IsQuiverBimoduleHomSpace;
+      fam := CollectionsFamily( FamilyOfQuiverModuleHomomorphisms );
   elif IsStableCategoryModuloProjectives( cat ) then
-      hom_space_type := IsStableHomSpaceModuloProjectives; 
+      hom_space_type := IsStableHomSpaceModuloProjectives;
+      fam := CollectionsFamily( FamilyOfStableMorphisms );
   else
     hom_space_type := IsHomSpace; # should not happen
   fi;
-  type := NewType( FamilyOfQPAVectorSpaces,
-                   hom_space_type and IsHomSpaceRep );
+  type := NewType( fam, hom_space_type and IsHomSpaceRep );
   hom := rec();
   ObjectifyWithAttributes( hom, type,
                            CategoryOfHomSpace, cat,
                            Source, X,
                            Range, Y );
-  Add( cat, hom );
+  Add( vcat, hom );
   return Intern( hom );
 end );
 
