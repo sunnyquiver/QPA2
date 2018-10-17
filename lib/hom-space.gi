@@ -147,6 +147,20 @@ function( hom )
   return basis;
 end );
 
+InstallMethod( AsList, [ IsQuiverRepresentationHomomorphism ],
+function( f )
+  local hom, ker, maps, vertex_spaces, n, maps_in_sum;
+  hom := SpaceContainingVector( f );
+  ker := KernelEmbedding( HomSpaceVertexToArrowMap( hom ) );
+  maps := MapsOfRepresentationHomomorphism( f );
+  vertex_spaces := VertexHomSpaces( hom );
+  n := Length( vertex_spaces );
+  maps_in_sum := List( [ 1 .. n ],
+                       i -> ImageElm( InjectionOfCofactorOfDirectSum( vertex_spaces, i ),
+                                      maps[ i ] ) );
+  return AsList( PreImagesRepresentative( ker, Sum( maps_in_sum ) ) );
+end );
+
 InstallMethod( VertexHomSpaces, "for quiver representation hom space",
                [ IsQuiverRepresentationHomSpace ],
 function( hom )
