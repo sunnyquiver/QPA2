@@ -13,7 +13,7 @@ BindGlobal( "FamilyOfQPAMatrices",
 
 BindGlobal( "MAKE_QPA_MATRIX",
 function( R, M, type )
-  local dim, dim_, matrix;
+  local dim_, matrix, dim, is_identity_mat;
   dim_ := DimensionsMat( M );
   if type = IsRowMatrixRep then
     matrix := rec( rows := M );
@@ -24,7 +24,23 @@ function( R, M, type )
   else
     Error( "wrong type" );
   fi;
-  if IsIdentityMat( M ) then
+  is_identity_mat := function( mat )
+    local n, i, j;
+    n := DimensionsMat( mat )[ 1 ];
+    if DimensionsMat( mat )[ 2 ] <> n then
+      return false;
+    fi;
+    for i in [ 1 .. n ] do
+      for j in [ 1 .. n ] do
+        if i = j and not IsOne( mat[ i ][ j ] ) then
+          return false;
+        elif i <> j and not IsZero( mat[ i ][ j ] ) then
+          return false;
+        fi;
+      od;
+    od;
+  end;
+  if is_identity_mat( M ) then
     return IdentityMatrix( R, Length( M ) );
   elif M = NullMat( dim_[ 1 ], dim_[ 2 ], R ) then
     return MakeZeroMatrix( R, dim[ 1 ], dim[ 2 ] );
