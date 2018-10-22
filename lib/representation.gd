@@ -483,3 +483,26 @@ DeclareAttribute( "BasisVectorsByVertex", IsQuiverRepresentationBasis );
 #! @Returns IsQuiverRepresentationHomomorphism 
 #! @Arguments R1, R2, generator, images
 DeclareOperation( "QuiverRepresentationHomomorphismByImages", [ IsQuiverRepresentation, IsQuiverRepresentation, IsHomogeneousList, IsHomogeneousList ] );
+
+
+#! @Section Layered representations
+
+#! @Description
+#!  Turn a flat representation into a layered representation.
+#!
+#!  The argument <A>R</A> is a representation over a tensor algebra
+#!  <M>A \otimes B</M>, and the argument <A>s</A> is either <C>1</C> or <C>2</C>.
+#!
+#!  If <A>s</A> is <C>1</C>, then the result is a representation over <M>A</M>
+#!  consisting of <M>B</M>-representations.
+#!  If <A>s</A> is <C>2</C>, then the result is a representation over <M>B</M>
+#!  consisting of <M>A</M>-representations.
+#! @Returns IsQuiverRepresentation
+#! @Arguments s, R
+DeclareOperation( "AsLayeredRepresentation", [ IsPosInt, IsQuiverRepresentation ] );
+
+#! @Description
+#!  Turn a layered representation into a flat representation.
+#! @Returns IsQuiverRepresentation
+#! @Arguments s, R
+DeclareOperation( "AsFlatRepresentation", [ IsPosInt, IsQuiverRepresentation ] );

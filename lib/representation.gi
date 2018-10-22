@@ -1467,3 +1467,109 @@ InstallMethod( Display,
     od;
     
 end );
+
+
+InstallMethod( AsLayeredRepresentation,
+               [ IsPosInt, IsQuiverRepresentation ],
+function( s, R )
+  local T, algebras, t, A, B, paths, Qa, Qb, Qt, catA, reps, w, objs, 
+        maps, rep, morphisms, b, source, range, morphism, cat;
+  T := AlgebraOfRepresentation( R );
+  if not IsTensorProductOfAlgebras( T ) then
+    Error( "representation is not over tensor algebra" );
+  fi;
+  algebras := TensorProductFactors( T );
+  if Length( algebras ) <> 2 then
+    Error( "representation over tensor product of ", Length( algebras ), " algebras; ",
+           "should be 2" );
+  fi;
+  if not s in [ 1, 2 ] then
+    Error( "tensor factor number must be either 1 or 2, not ", s );
+  fi;
+  t := 3 - s;
+  A := algebras[ s ];
+  B := algebras[ t ];
+  paths := function( path_a, path_b )
+    local l;
+    l := [];
+    l[ s ] := path_a;
+    l[ t ] := path_b;
+    return l;
+  end;
+  # construct a representation over B,
+  # consisting of A-representations
+  Qa := QuiverOfAlgebra( A );
+  Qb := QuiverOfAlgebra( B );
+  Qt := QuiverOfAlgebra( T );
+  catA := CategoryOfQuiverRepresentations( A );
+  reps := [];
+  for w in Vertices( Qb ) do
+    objs := List( Vertices( Qa ),
+                  v -> VectorSpaceOfRepresentation( R, PathInProductQuiver( Qt, paths( v, w ) ) ) );
+    maps := List( Arrows( Qa ),
+                  a -> MapForArrow( R, PathInProductQuiver( Qt, paths( a, w ) ) ) );
+    rep := QuiverRepresentation( catA, objs, maps );
+    Add( reps, rep );
+  od;
+  morphisms := [];
+  for b in Arrows( Qb ) do
+    maps := List( Vertices( Qa ),
+                  v -> MapForArrow( R, PathInProductQuiver( Qt, paths( v, b ) ) ) );
+    source := reps[ VertexNumber( Source( b ) ) ];
+    range := reps[ VertexNumber( Target( b ) ) ];
+    morphism := QuiverRepresentationHomomorphism( source, range, maps );
+    Add( morphisms, morphism );
+  od;
+  cat := CategoryOfQuiverRepresentationsOverVectorSpaceCategory( B, catA );
+  return QuiverRepresentation( cat, reps, morphisms );
+end );
+
+
+InstallMethod( AsFlatRepresentation, "for quiver representation",
+               [ IsPosInt, IsQuiverRepresentation ],
+function( s, R )
+  local t, cat, ucat, A, B, T, Qa, Qb, Qt, objs, v, factors, va, vb, 
+        obj_v, morphisms, a, aa, ab, morphism_a;
+  if not s in [ 1, 2 ] then
+    Error( "tensor factor number must be either 1 or 2, not ", s );
+  fi;
+  t := 3 - s;
+  cat := CapCategory( R );
+  ucat := VectorSpaceCategory( cat );
+  if not IsQuiverRepresentationCategory( ucat ) then
+    return R;
+  fi;
+  A := AlgebraOfCategory( ucat );
+  B := AlgebraOfCategory( cat );
+  if s = 1 then
+    T := TensorProductOfAlgebras( A, B );
+  else
+    T := TensorProductOfAlgebras( B, A );
+  fi;
+  Qa := QuiverOfAlgebra( A );
+  Qb := QuiverOfAlgebra( B );
+  Qt := QuiverOfAlgebra( T );
+  objs := [];
+  for v in Vertices( Qt ) do
+    factors := ProductPathFactors( v );
+    va := factors[ s ];
+    vb := factors[ t ];
+    obj_v := VectorSpaceOfRepresentation( VectorSpaceOfRepresentation( R, vb ),
+                                          va );
+    Add( objs, obj_v );
+  od;
+  morphisms := [];
+  for a in Arrows( Qt ) do
+    factors := ProductPathFactors( a );
+    aa := factors[ s ];
+    ab := factors[ t ];
+    if IsArrow( aa ) then
+      morphism_a := MapForArrow( VectorSpaceOfRepresentation( R, ab ), aa );
+    else
+      morphism_a := MapForVertex( MapForArrow( R, ab ), aa );
+    fi;
+    Add( morphisms, morphism_a );
+  od;
+  return QuiverRepresentation( CategoryOfQuiverRepresentations( T ),
+                               objs, morphisms );
+end );
