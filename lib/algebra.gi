@@ -1245,10 +1245,18 @@ end );
 InstallMethod( IndecProjRepresentations, "for quiver algebra",
                [ IsQuiverAlgebra ],
 function( A )
-    local   basis_list,  proj_modules,  i,  basis,  dimensions,  
-            arrows,  arrows_with_matrices,  matrices,  a,  source,  
-            target,  dim_source,  dim_target,  b_source,  b_target,  
-            matrix,  b,  b_a_path,  b_a,  coeffs,  R;
+  local basis_list, proj_modules, i, basis, dimensions, arrows, 
+        arrows_with_matrices, matrices, a, source, target, dim_source, 
+        dim_target, b_source, b_target, matrix, b, b_a_path, b_a, 
+        coeffs, R;
+
+  if not IsFiniteDimensional( A ) then
+    Error( "infinite-dimensional algebra" );
+  fi;
+  if not IsAdmissibleQuiverAlgebra( A ) then
+    TryNextMethod();
+  fi;
+
   basis_list := BasisOfProjectives( A );
   proj_modules := [];
   for i in [ 1 .. NumberOfVertices( QuiverOfAlgebra( A ) ) ] do
