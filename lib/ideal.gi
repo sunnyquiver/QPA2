@@ -168,6 +168,12 @@ function( I )
   return ForAll( paths, p -> IsZero( PathAsAlgebraElement( A, p ) ) );
 end );
 
+InstallMethod( IsZeroIdeal, "for quiver algebra ideal",
+               [ IsQuiverAlgebraIdeal ],
+function( I )
+  return ForAll( Generators( I ), IsZero );
+end );
+
 BindGlobal( "FamilyOfQuiverAlgebraIdealBases",
             NewFamily( "quiver ideal bases" ) );
 

@@ -157,6 +157,11 @@ DeclareAttribute( "PathAlgebra", IsQuiverAlgebra );
 #! @Arguments A
 #DeclareProperty( "IsFiniteDimensional", IsQuiverAlgebra );
 
+#! @Description
+#!  Check whether <A>A</A> is a quotient of a path algebra by an admissible ideal.
+#! @Arguments A
+DeclareProperty( "IsAdmissibleQuiverAlgebra", IsQuiverAlgebra );
+
 #!
 DeclareCategory( "IsQuiverAlgebraBasis", IsBasis );
 

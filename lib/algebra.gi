@@ -637,6 +637,9 @@ InstallMethod( QuotientOfPathAlgebra, "for path algebra and path ideal",
                [ IsPathAlgebra, IsPathAlgebraIdeal ],
 function( kQ, I )
   local A;
+  if IsZeroIdeal( I ) then
+    return kQ;
+  fi;
   A := Objectify( NewType( FamilyOfQuiverAlgebras,
                            IsQuotientOfPathAlgebra and IsQuiverAlgebra^Direction( kQ )
                            and IsQuotientOfPathAlgebraRep ),
@@ -1510,6 +1513,11 @@ function( A )
 
   return true;
 end );
+
+
+InstallMethod( IsAdmissibleQuiverAlgebra, "for quiver algebra",
+               [ IsQuiverAlgebra ],
+               A -> IsAdmissibleIdeal( IdealOfQuotient( A ) ) );
 
 
 InstallMethod( NaturalHomomorphismByIdeal, [ IsPathAlgebra, IsQuiverAlgebraTwoSidedIdeal ],

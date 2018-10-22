@@ -68,6 +68,12 @@ DeclareAttribute( "Generators", IsQuiverAlgebraIdeal );
 #! @Arguments I
 DeclareProperty( "IsAdmissibleIdeal", IsPathAlgebraIdeal );
 
+#! @Description
+#!  Check if <A>I</A> is the zero ideal.
+#! @Returns IsBool
+#! @Arguments I
+DeclareProperty( "IsZeroIdeal", IsQuiverAlgebraIdeal );
+
 
 #! @Section Ideals as modules
 
