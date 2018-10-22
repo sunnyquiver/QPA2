@@ -1754,6 +1754,9 @@ function( PQ, paths, permutation )
            " factors, but ", Length( paths ), " paths were given" );
   fi;
   for n in [ 1 .. num_factors ] do
+    if not IsPath( paths[ n ] ) then
+      Error( "Path ", n, " is not a path" );
+    fi;
     if ProductQuiverFactor( PQ, n ) <> QuiverOfPath( paths[ n ] ) then
       Error( "Path ", n, " is not in factor ", n, " of the product quiver" );
     fi;
