@@ -39,6 +39,7 @@ function( R, M, type )
         fi;
       od;
     od;
+    return true;
   end;
   if is_identity_mat( M ) then
     return IdentityMatrix( R, Length( M ) );
