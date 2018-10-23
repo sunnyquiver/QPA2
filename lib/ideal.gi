@@ -130,7 +130,12 @@ function( I )
   local gens, kQ, Q, A, is_reducible, path_length, paths, next_paths, p, a;
 
   gens := GeneratorsOfIdeal( I );
-  
+ 
+  # if I has no generators, then it is admissible ideal.
+  if gens = [ ] then
+    return true;
+  fi;
+
   # check I \subseteq J^2:
   if not ForAll( gens, g -> ForAll( Paths( g ), IsCompositePath ) ) then
     return false;
