@@ -129,6 +129,11 @@ InstallMethod( IsAdmissibleIdeal, [ IsPathAlgebraIdeal ],
 function( I )
   local gens, kQ, Q, A, is_reducible, path_length, paths, next_paths, p, a;
 
+  kQ := AlgebraOfIdeal( I );
+  if IsZeroIdeal( I ) then
+    return IsFiniteDimensional( kQ );
+  fi;
+
   gens := GeneratorsOfIdeal( I );
   
   # check I \subseteq J^2:
@@ -137,7 +142,6 @@ function( I )
   fi;
 
   # check J^t \subseteq I:
-  kQ := LeftActingRingOfIdeal( I );
   Q := QuiverOfAlgebra( kQ );
   A := kQ / I;
 
