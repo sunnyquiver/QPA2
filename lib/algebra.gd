@@ -354,10 +354,24 @@ DeclareProperty( "IsRightUniform", IsQuiverAlgebraElement );
 #!  of the element <A>e</A> of a quotient of a path algebra.
 DeclareAttribute( "Representative", IsQuotientOfPathAlgebraElement );
 
+#! @Description
+#!  Coefficients of some specific paths.
 #!
+#!  Given a list <A>paths</A> of paths and an algebra element <A>e</A>,
+#!  this operation returns the coefficients of those paths in the
+#!  expression of <A>e</A> as a linear combination of paths.
+#! @Arguments paths, e
+#! @Returns list of field elements
+#! @Label
 DeclareOperation( "CoefficientsOfPaths", [ IsList, IsQuiverAlgebraElement ] );
 
+#! @Description
+#!  Coefficients of some specific paths, given in increasing order.
 #!
+#!  This operation does the same as <Ref Oper="CoefficientsOfPaths"/>,
+#!  but assumes that the paths are given in increasing order.
+#! @Arguments paths, e
+#! @Returns list of field elements
 DeclareOperation( "CoefficientsOfPathsSorted", [ IsList, IsQuiverAlgebraElement ] );
 
 
