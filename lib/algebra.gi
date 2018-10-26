@@ -752,10 +752,16 @@ function( A, coefficients, paths )
   return QuotientOfPathAlgebraElement( A, representative );
 end );
 
+InstallMethod( String, "for element of quotient of path algebra",
+               [ IsQuotientOfPathAlgebraElement ],
+function( e )
+  return Concatenation( "{ ", String(Representative( e )), " }" );
+end );
+
 InstallMethod( PrintObj, "for element of quotient of path algebra",
                [ IsQuotientOfPathAlgebraElement ],
 function( e )
-  Print( "{ ", Representative( e ), " }" );
+  Print( String( e ) );
 end );
 
 InstallMethod( AlgebraOfElement, "for element of quotient of path algebra",
