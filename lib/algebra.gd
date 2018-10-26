@@ -162,11 +162,41 @@ DeclareAttribute( "PathAlgebra", IsQuiverAlgebra );
 #! @Arguments A
 DeclareProperty( "IsAdmissibleQuiverAlgebra", IsQuiverAlgebra );
 
-#!
+
+#! @Section Basis
+
+#! @Description
+#!  GAP category for bases of quiver algebras.
+#! @Label
 DeclareCategory( "IsQuiverAlgebraBasis", IsBasis );
 
-#!
+#! @Description
+#!  A basis for the quiver algebra <A>A</A>.
+#! @Arguments A
+#! @Returns <Ref Filt="IsQuiverAlgebraBasis"/>
+#DeclareAttribute( "CanonicalBasis", IsQuiverAlgebra );
+
+#! @Description
+#!  The elements of a quiver algebra basis <A>B</A>.
+#! @Arguments B
+#! @Returns list of algebra elements
+#DeclareAttribute( "BasisVectors", IsQuiverAlgebraBasis );
+
+#! @Description
+#!  The elements of a quiver algebra basis <A>B</A>, given as paths in the quiver.
+#! @Arguments B
+#! @Returns list of paths
 DeclareAttribute( "BasisPaths", IsQuiverAlgebraBasis );
+
+#! @Description
+#!  Returns a list of paths forming a basis for the set of uniform elements
+#!  in the quiver algebra <A>A</A> with
+#!  <A>v1</A> as source and <A>v2</A> as target.
+#! @Arguments A, v1, v2
+DeclareOperation( "BasisPathsBetweenVertices", [ IsQuiverAlgebra, IsVertex, IsVertex ] );
+
+
+# TODO move following things to somewhere else
 
 #! @Arguments A
 #! @Description

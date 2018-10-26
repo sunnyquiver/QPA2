@@ -1166,6 +1166,12 @@ end );
 InstallMethod( Basis, "for quiver algebra",
                [ IsQuiverAlgebra ], CanonicalBasis );
 
+InstallMethod( BasisPathsBetweenVertices, [ IsQuiverAlgebra, IsVertex, IsVertex ],
+function( A, v1, v2 )
+  return Filtered( BasisPaths( CanonicalBasis( A ) ),
+                   p -> Source( p ) = v1 and Target( p ) = v2 )
+end );
+
 InstallMethod( Dimension, "for quiver algebra", 
         [ IsQuiverAlgebra ], A -> Length( Basis( A ) ) ); 
 
