@@ -285,22 +285,8 @@ DeclareOperation( "AlgebraElementFromString", [ IsQuiverAlgebra, IsString ] );
 #! @Returns <Ref Filt="IsQuiverAlgebra"/>
 #! @Description
 #!  Returns the quiver algebra the element <A>e</A> belongs to.
+#! @Label
 DeclareAttribute( "AlgebraOfElement", IsQuiverAlgebraElement );
-
-#! @Arguments e
-#! @Returns list of field elements
-#! @Description
-#!  Returns a list of coefficients for the algebra element <A>e</A>.
-#!  <P/>
-#!  Every element of a quiver algebra can be written as a linear combination
-#!  $\sum_{i=1}^n c_i p_i$ of paths.
-#!  The attribute <Ref Attr="Paths" Label="for IsQuiverAlgebraElement"/> gives the list
-#!  $p_1, \ldots, p_n$ of paths for the element <A>e</A>,
-#!  and this attribute returns the corresponding list
-#!  $c_1, \ldots, c_n$ of coefficients.
-DeclareOperation( "Coefficients", [ IsQuiverAlgebraElement ] );
-
-DeclareAttribute( "CoefficientsAttr", IsQuiverAlgebraElement );
 
 #! @Arguments e
 #! @Returns list of <Ref Filt="IsPath"/>
@@ -312,8 +298,8 @@ DeclareAttribute( "CoefficientsAttr", IsQuiverAlgebraElement );
 #!  This operation produces the list
 #!  $p_1, \ldots, p_n$ of paths for the element <A>e</A>.
 #!  The corresponding coefficients
-#!  $c_1, \ldots, c_n$ can be obtained by the attribute
-#!  <Ref Oper="Coefficients" Label="for IsQuiverAlgebraElement"/>.
+#!  $c_1, \ldots, c_n$ can be obtained by the operation
+#!  <Ref Oper="Coefficients"/>.
 #!  <P/>
 #!  The paths are ordered in decreasing order,
 #!  by the path ordering of the quiver.
@@ -325,7 +311,91 @@ DeclareAttribute( "CoefficientsAttr", IsQuiverAlgebraElement );
 #!  In this case, the chosen combination is that of
 #!  <C>Representative( <A>e</A> )</C>
 #!  (see <Ref Attr="Representative" Label="for IsQuotientOfPathAlgebraElement"/>).
+#! @Label
 DeclareAttribute( "Paths", IsQuiverAlgebraElement );
+
+#! @Arguments e
+#! @Returns list of field elements
+#! @Description
+#!  Returns a list of coefficients for the algebra element <A>e</A>.
+#!  <P/>
+#!  Every element of a quiver algebra can be written as a linear combination
+#!  $\sum_{i=1}^n c_i p_i$ of paths.
+#!  The attribute <Ref Attr="Paths"/> gives the list
+#!  $p_1, \ldots, p_n$ of paths for the element <A>e</A>,
+#!  and this operation returns the corresponding list
+#!  $c_1, \ldots, c_n$ of coefficients.
+#! @Label
+DeclareOperation( "Coefficients", [ IsQuiverAlgebraElement ] );
+
+# Would like to have Coefficients as attribute,
+# but it is declared as operation elsewhere.
+# Therefore use extra attribute CoefficientsAttr to be able
+# to store the coefficients.
+DeclareAttribute( "CoefficientsAttr", IsQuiverAlgebraElement );
+
+#! @Description
+#!  Coefficients of some specific paths.
+#!
+#!  Given a list <A>paths</A> of paths and an algebra element <A>e</A>,
+#!  this operation returns the coefficients of those paths in the
+#!  expression of <A>e</A> as a linear combination of paths.
+#! @Arguments paths, e
+#! @Returns list of field elements
+#! @Label
+DeclareOperation( "CoefficientsOfPaths", [ IsList, IsQuiverAlgebraElement ] );
+
+#! @Description
+#!  Coefficients of some specific paths, given in increasing order.
+#!
+#!  This operation does the same as <Ref Oper="CoefficientsOfPaths"/>,
+#!  but assumes that the paths are given in increasing order.
+#! @Arguments paths, e
+#! @Returns list of field elements
+#! @Label
+DeclareOperation( "CoefficientsOfPathsSorted", [ IsList, IsQuiverAlgebraElement ] );
+
+#! @Subsection Example
+
+#! Here is an example demonstrating use of the above functions:
+
+#! @BeginExampleSession
+#! gap> Q := LeftQuiver( "Q(3)[a:1->2,b:2->3,c:2->3]" );
+#! Q(3)[a:1->2,b:2->3,c:2->3]
+#! gap> kQ := PathAlgebra( Rationals, Q );
+#! Rationals * Q
+#! gap> e := 7 * kQ[2] + 5 * kQ.ca + 9 * kQ.ba;
+#! 5*(c*a) + 9*(b*a) + 7*(2)
+#! gap> AlgebraOfElement( e ) = kQ;
+#! true
+#! gap> Paths( e );
+#! [ (c*a), (b*a), (2) ]
+#! gap> Coefficients( e );
+#! [ 5, 9, 7 ]
+#! gap> CoefficientsOfPaths( [ Q[1], Q[2], Q[3], Q.ba ], e );
+#! [ 0, 7, 0, 9 ]
+#! gap> A := kQ / [ kQ.ba - kQ.ca ];
+#! (Rationals * Q) / [ -1*(c*a) + 1*(b*a) ]
+#! gap> f := 7 * A[2] + 5 * A.ba + 9 * A.ca;
+#! { 14*(b*a) + 7*(2) }
+#! gap> AlgebraOfElement( f ) = A;
+#! true
+#! gap> CoefficientsOfPaths( [ Q.ca, Q.ba ], f );
+#! [ 0, 14 ]
+#! @EndExampleSession
+
+#! For a quotient of a path algebra, the functions
+#! <Ref Oper="Paths"/>,
+#! <Ref Oper="Coefficients"/>,
+#! <Ref Oper="CoefficientsOfPaths"/> and
+#! <Ref Oper="CoefficientsOfPathsSorted"/>
+#! all act on the canonical representative of the given element.
+#! Thus, even though we used the path
+#! <M>ca</M> in the expression for the element <C>f</C>,
+#! the coefficient of that path was zero since it disappeared
+#! in the canonical representative.
+
+#! @EndSubsection
 
 #! @Arguments e
 #! @Returns <C>true</C> or <C>false</C>
@@ -353,26 +423,6 @@ DeclareProperty( "IsRightUniform", IsQuiverAlgebraElement );
 #!  Returns the canonical representative path algebra element
 #!  of the element <A>e</A> of a quotient of a path algebra.
 DeclareAttribute( "Representative", IsQuotientOfPathAlgebraElement );
-
-#! @Description
-#!  Coefficients of some specific paths.
-#!
-#!  Given a list <A>paths</A> of paths and an algebra element <A>e</A>,
-#!  this operation returns the coefficients of those paths in the
-#!  expression of <A>e</A> as a linear combination of paths.
-#! @Arguments paths, e
-#! @Returns list of field elements
-#! @Label
-DeclareOperation( "CoefficientsOfPaths", [ IsList, IsQuiverAlgebraElement ] );
-
-#! @Description
-#!  Coefficients of some specific paths, given in increasing order.
-#!
-#!  This operation does the same as <Ref Oper="CoefficientsOfPaths"/>,
-#!  but assumes that the paths are given in increasing order.
-#! @Arguments paths, e
-#! @Returns list of field elements
-DeclareOperation( "CoefficientsOfPathsSorted", [ IsList, IsQuiverAlgebraElement ] );
 
 
 #! @Section Acting on elements
