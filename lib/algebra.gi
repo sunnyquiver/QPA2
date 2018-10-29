@@ -1169,7 +1169,7 @@ InstallMethod( Basis, "for quiver algebra",
 InstallMethod( BasisPathsBetweenVertices, [ IsQuiverAlgebra, IsVertex, IsVertex ],
 function( A, v1, v2 )
   return Filtered( BasisPaths( CanonicalBasis( A ) ),
-                   p -> Source( p ) = v1 and Target( p ) = v2 )
+                   p -> Source( p ) = v1 and Target( p ) = v2 );
 end );
 
 InstallMethod( Dimension, "for quiver algebra", 
