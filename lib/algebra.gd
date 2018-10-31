@@ -463,6 +463,19 @@ DeclareAttribute( "Representative", IsQuotientOfPathAlgebraElement );
 #!  Multiply algebra elements <A>a1</A> and <A>a2</A>.
 # DeclareOperation( "\*", [ IsQuiverAlgebraElement, IsQuiverAlgebraElement ] );
 
+#! @Description
+#!  Compose the algebra elements <A>e1</A> and <A>e2</A>.
+#!
+#!  This is the same as multiplication of elements, except that the paths
+#!  are combined in source-to-target order as by <Ref Func="ComposePaths"/>.
+#!  This means that for an algebra over a right quiver,
+#!  <C>ComposeElements( e1, e2 )</C> is the same as <C>e1 * e2</C>,
+#!  while for an algebra over a left quiver,
+#!  <C>ComposeElements( e1, e2 )</C> is the same as <C>e2 * e1</C>.
+#! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
+#! @Arguments e1, e2
+DeclareOperation( "ComposeElements", [ IsQuiverAlgebraElement, IsQuiverAlgebraElement ] );
+
 #! @Arguments a, p
 #! @Returns <Ref Filt="IsQuiverAlgebraElement"/>
 #! @Description
