@@ -980,6 +980,10 @@ DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList ] );
 #! @Arguments Q, paths, permutation
 DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList, IsPerm ] );
 
+DeclareOperation( "ProductQuiverInclusion", [ IsProductQuiver, IsPosInt, IsPosInt ] );
+
+DeclareAttribute( "ProductQuiverInclusions", IsProductQuiver );
+
 #! @Description
 #!  Gives the vertex number of a certain vertex in a product quiver.
 #!  The argument <A>quivers</A> is a list of quivers,

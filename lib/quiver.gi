@@ -1845,6 +1845,38 @@ function( PQ, paths )
   return PathInProductQuiver( PQ, paths, () );
 end );
 
+InstallMethod( ProductQuiverInclusion, "for product quiver and positive integers",
+               [ IsProductQuiver, IsPosInt, IsPosInt ],
+function( PQ, i, j )
+  return ProductQuiverInclusions( PQ )[ i ][ j ];
+end );
+
+InstallMethod( ProductQuiverInclusions, "for product quiver",
+               [ IsProductQuiver ],
+function( PQ )
+  local Qs, pt, incs, i, Q, incs_Q, other_quivers, vertices_other, vs, m;
+  Qs := ProductQuiverFactors( PQ );
+  pt := Quiver( Direction( PQ ), "point(1)" );
+  incs := [];
+  for i in [ 1 .. Length( Qs ) ] do
+    Q := Qs[ i ];
+    incs_Q := [];
+    other_quivers := ShallowCopy( Qs );
+    other_quivers[ i ] := pt;
+    vertices_other := Cartesian( List( other_quivers, Vertices ) );
+    for vs in vertices_other do
+      m := QuiverHomomorphism( Q, PQ,
+                               List( Vertices( Q ),
+                                     v -> PathInProductQuiver( PQ, Replace( vs, i, v ) ) ),
+                               List( Arrows( Q ),
+                                     a -> PathInProductQuiver( PQ, Replace( vs, i, a ) ) ) );
+      Add( incs_Q, m );
+    od;
+    Add( incs, incs_Q );
+  od;
+  return incs;
+end );
+
 # InstallMethod( AsLeftQuiver, "for left quiver", [ IsLeftQuiver ], IdFunc );
 # InstallMethod( AsLeftQuiver, "for right quiver", [ IsRightQuiver ], OppositeQuiver );
 # InstallMethod( AsRightQuiver, "for left quiver", [ IsLeftQuiver ], OppositeQuiver );
