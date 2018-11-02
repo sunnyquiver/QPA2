@@ -1,3 +1,4 @@
+ReadPackage( "QPA", "lib/assume.gd" );
 ReadPackage( "QPA", "lib/side.gd" );
 ReadPackage( "QPA", "lib/matrix.gd" );
 ReadPackage( "QPA", "lib/vector.gd" );
