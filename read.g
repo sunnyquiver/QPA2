@@ -1,4 +1,5 @@
 ReadPackage( "QPA", "lib/assume.gi" );
+ReadPackage( "QPA", "lib/replace.gi" );
 ReadPackage( "QPA", "lib/side.gi" );
 ReadPackage( "QPA", "lib/matrix.gi" );
 ReadPackage( "QPA", "lib/field-cat.gi" );

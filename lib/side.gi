@@ -73,23 +73,17 @@ end );
 InstallMethod( InstallMethodWithSides, [ IsOperation, IsDenseList, IsFunction ],
 function( op, filters, f )
   local side;
-  InstallMethod( op, Concatenation( [ IsSide ], Replace( filters, "algebra", IsQuiverAlgebra ) ),
+  InstallMethod( op, Concatenation( [ IsSide ], ReplaceObj( filters, "algebra", IsQuiverAlgebra ) ),
   function( arg )
     local side;
     side := arg[ 1 ];
     return CallFuncList( op^side, arg{ [ 2 .. Length( arg ) ] } );
   end );
   for side in [ LEFT, RIGHT ] do
-    InstallMethod( op^side, Replace( filters, "algebra", IsQuiverAlgebra ), f( side ) );
+    InstallMethod( op^side, ReplaceObj( filters, "algebra", IsQuiverAlgebra ), f( side ) );
   od;
-  InstallMethod( op^LEFT_RIGHT, Replace( filters, "algebra", IsDenseList ),
+  InstallMethod( op^LEFT_RIGHT, ReplaceObj( filters, "algebra", IsDenseList ),
                  f( LEFT_RIGHT ) );
-  # InstallMethod( op^LEFT_RIGHT, Flat( Replace( filters, IsQuiverAlgebra, [ IsQuiverAlgebra, IsQuiverAlgebra ] ) ),
+  # InstallMethod( op^LEFT_RIGHT, Flat( ReplaceObj( filters, IsQuiverAlgebra, [ IsQuiverAlgebra, IsQuiverAlgebra ] ) ),
   #                f( LEFT_RIGHT ) );
-end );
-
-InstallMethod( Replace, [ IsList, IsObject, IsObject ],
-function( list, value, replacement )
-  return List( list,
-               function( x ) if x = value then return replacement; else return x; fi; end );
 end );
