@@ -794,6 +794,72 @@ DeclareOperation( "PathOverlaps", [ IsPath, IsPath ] );
 #! @InsertChunk Example_PathOverlaps
 
 
+#! @Section Quiver homomorphisms
+
+#! @Description
+#!  GAP category for quiver homomorphisms.
+#! @Label
+DeclareCategory( "IsQuiverHomomorphism",
+                 IsMapping and IsSPGeneralMapping );
+
+#! @Description
+#!  Create a quiver homomorphism.
+#!
+#!  The result is a homomorphism from the quiver <A>Q1</A>
+#!  to the quiver <A>Q2</A>
+#!  where the lists <A>vertex_images</A> and <A>arrow_images</A>
+#!  determine what each vertex and arrow is sent to.
+#!  The homomorphism sends vertex number <C>i</C> in <A>Q1</A>
+#!  to <C>vertex_images[ i ]</C>
+#!  and arrow number <C>j</C> in <A>Q1</A>
+#!  to <C>arrow_images[ j ]</C>.
+#! @Arguments Q1, Q2, vertex_images, arrow_images
+#! @Returns <Ref Filt="IsQuiverHomomorphism"/>
+#! @Label
+DeclareOperation( "QuiverHomomorphism",
+                  [ IsQuiver, IsQuiver, IsDenseList, IsDenseList ] );
+
+#! @Description
+#!  Create a quiver homomorphism.
+#!
+#!  This operation is like <Ref Oper="QuiverHomomorphism"/>
+#!  except that no checking of the arguments is performed.
+#! @Arguments Q1, Q2, vertex_images, arrow_images
+#! @Returns <Ref Filt="IsQuiverHomomorphism"/>
+DeclareOperation( "QuiverHomomorphismNC",
+                  [ IsQuiver, IsQuiver, IsDenseList, IsDenseList ] );
+
+#! @Description
+#!  The images of all vertices, for a quiver homomorphism <A>m</A>.
+#! @Arguments m
+#! @Returns list of vertices
+DeclareAttribute( "VertexImages", IsQuiverHomomorphism );
+
+#! @Description
+#!  The images of all arrows, for a quiver homomorphism <A>m</A>.
+#! @Arguments m
+#! @Returns list of arrows
+DeclareAttribute( "ArrowImages", IsQuiverHomomorphism );
+
+#! @Description
+#!  The source of a quiver homomorphism.
+#! @Arguments m
+#! @Returns <Ref Filt="IsQuiver"/>
+#DeclareAttribute( "Source", IsQuiverHomomorphism );
+
+#! @Description
+#!  The range of a quiver homomorphism.
+#! @Arguments m
+#! @Returns <Ref Filt="IsQuiver"/>
+#DeclareAttribute( "Range", IsQuiverHomomorphism );
+
+#! @Description
+#!  Apply the quiver homomorphism <A>m</A> to the path <A>p</A>.
+#! @Arguments m, p
+#! @Returns <Ref Filt="IsPath"/>
+#DeclareGlobalFunction( "Image" );
+
+
 #! @Section Quiver constructions
 
 #! @Arguments Q, label
@@ -913,6 +979,10 @@ DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList ] );
 #!  in which order the given paths should appear in the resulting path.
 #! @Arguments Q, paths, permutation
 DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList, IsPerm ] );
+
+DeclareOperation( "ProductQuiverInclusion", [ IsProductQuiver, IsPosInt, IsPosInt ] );
+
+DeclareAttribute( "ProductQuiverInclusions", IsProductQuiver );
 
 #! @Description
 #!  Gives the vertex number of a certain vertex in a product quiver.

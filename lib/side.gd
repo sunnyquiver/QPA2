@@ -17,8 +17,6 @@ DeclareOperation( "DeclareSideOperations", [ IsOperation, IsOperation, IsOperati
 DeclareOperation( "InstallMethodWithDirections", [ IsOperation, IsDenseList, IsFunction ] );
 DeclareOperation( "InstallMethodWithSides", [ IsOperation, IsDenseList, IsFunction ] );
 
-DeclareOperation( "Replace", [ IsList, IsObject, IsObject ] );
-
 DeclareCategory( "IsObjectWithDirection", IsObject );
 DeclareCategory( "IsObjectWithSide", IsObject );
 DeclareOperation( "\^", [ IsObjectWithDirection, IsDirection ] );

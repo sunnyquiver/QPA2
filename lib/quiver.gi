@@ -1362,6 +1362,67 @@ function( p, Q )
 end );
 
 
+BindGlobal( "FamilyOfQuiverHomomorphisms", NewFamily( "quiver homomorphisms" ) );
+
+SetFamilySource( FamilyOfQuiverHomomorphisms,
+                 FamilyOfPaths );
+
+InstallMethod( QuiverHomomorphism, "for two quivers and two dense lists",
+               [ IsQuiver, IsQuiver, IsDenseList, IsDenseList ],
+function( Q1, Q2, vertex_images, arrow_images )
+  local i;
+  if Length( vertex_images ) <> NumberOfVertices( Q1 ) then
+    Error( "wrong number of vertex images" );
+  fi;
+  if Length( arrow_images ) <> NumberOfArrows( Q1 ) then
+    Error( "wrong number of arrow images" );
+  fi;
+  AssumeAll( vertex_images, IsVertex, "not a vertex" );
+  AssumeAll( vertex_images, v -> v in Q2, "vertex not in range quiver" );
+  AssumeAll( arrow_images, IsArrow, "not an arrow" );
+  AssumeAll( arrow_images, a -> a in Q2, "arrow not in range quiver" );
+  for i in [ 1 .. NumberOfArrows( Q1 ) ] do
+    if Source( arrow_images[ i ] ) <> vertex_images[ VertexNumber( Source( Arrow( Q1, i ) ) ) ] then
+      Error( "wrong source for arrow image ", i );
+    fi;
+    if Target( arrow_images[ i ] ) <> vertex_images[ VertexNumber( Target( Arrow( Q1, i ) ) ) ] then
+      Error( "wrong target for arrow image ", i );
+    fi;
+  od;
+  return QuiverHomomorphismNC( Q1, Q2, vertex_images, arrow_images );
+end );
+
+InstallMethod( QuiverHomomorphismNC, "for two quivers and two dense lists",
+               [ IsQuiver, IsQuiver, IsDenseList, IsDenseList ],
+function( Q1, Q2, vertex_images, arrow_images )
+  local m;
+  m := rec();
+  ObjectifyWithAttributes
+    ( m, NewType( FamilyOfQuiverHomomorphisms,
+                  IsQuiverHomomorphism
+                  and IsComponentObjectRep and IsAttributeStoringRep ),
+      Source, Q1,
+      Range, Q2,
+      VertexImages, vertex_images,
+      ArrowImages, arrow_images );
+  return m;
+end );
+
+InstallMethod( ImageElm, "for quiver homomorphism and path",
+               [ IsQuiverHomomorphism, IsPath ],
+function( m, p )
+  if not p in Source( m ) then
+    Error( "path is not in source of homomorphism" );
+  fi;
+  if IsVertex( p ) then
+    return VertexImages( m )[ VertexNumber( p ) ];
+  else
+    return PathFromArrowListNC( List( ArrowList( p ),
+                                      a -> ArrowImages( m )[ ArrowNumber( a ) ] ) );
+  fi;
+end );
+
+
 InstallMethod( RenameQuiver, "for a quiver and an object", [ IsObject, IsQuiver ],
 function( label, Q )
   return Quiver( Direction( Q ), label,
@@ -1782,6 +1843,38 @@ InstallMethod( PathInProductQuiver,
                [ IsProductQuiver, IsDenseList ],
 function( PQ, paths )
   return PathInProductQuiver( PQ, paths, () );
+end );
+
+InstallMethod( ProductQuiverInclusion, "for product quiver and positive integers",
+               [ IsProductQuiver, IsPosInt, IsPosInt ],
+function( PQ, i, j )
+  return ProductQuiverInclusions( PQ )[ i ][ j ];
+end );
+
+InstallMethod( ProductQuiverInclusions, "for product quiver",
+               [ IsProductQuiver ],
+function( PQ )
+  local Qs, pt, incs, i, Q, incs_Q, other_quivers, vertices_other, vs, m;
+  Qs := ProductQuiverFactors( PQ );
+  pt := Quiver( Direction( PQ ), "point(1)" );
+  incs := [];
+  for i in [ 1 .. Length( Qs ) ] do
+    Q := Qs[ i ];
+    incs_Q := [];
+    other_quivers := ShallowCopy( Qs );
+    other_quivers[ i ] := pt;
+    vertices_other := Cartesian( List( other_quivers, Vertices ) );
+    for vs in vertices_other do
+      m := QuiverHomomorphism( Q, PQ,
+                               List( Vertices( Q ),
+                                     v -> PathInProductQuiver( PQ, Replace( vs, i, v ) ) ),
+                               List( Arrows( Q ),
+                                     a -> PathInProductQuiver( PQ, Replace( vs, i, a ) ) ) );
+      Add( incs_Q, m );
+    od;
+    Add( incs, incs_Q );
+  od;
+  return incs;
 end );
 
 # InstallMethod( AsLeftQuiver, "for left quiver", [ IsLeftQuiver ], IdFunc );

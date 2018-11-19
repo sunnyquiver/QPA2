@@ -274,6 +274,21 @@ function( e, c )
   fi;
 end );
 
+InstallMethod( ComposeElements, "for elements of quiver algebra",
+               [ IsQuiverAlgebraElement, IsQuiverAlgebraElement ],
+function( e1, e2 )
+  local A;
+  A := AlgebraOfElement( e1 );
+  if AlgebraOfElement( e2 ) <> A then
+    Error( "elements from different algebras" );
+  fi;
+  if IsLeftQuiverAlgebra( A ) then
+    return e2 * e1;
+  else
+    return e1 * e2;
+  fi;
+end );
+
 InstallMethod( PathAction, "for element of quiver algebra and path",
                [ IsQuiverAlgebraElement, IsPath ],
 function( a, p )

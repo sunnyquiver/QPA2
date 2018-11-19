@@ -216,7 +216,12 @@ function( hom )
   for v in Vertices( Q ) do
     morphisms_v := [];
     for a in Arrows( Q ) do
-      if v = Source( a ) then
+      if v = Source( a ) and v = Target( a ) then
+        m := Hom( MapForArrow( R1, a ),
+                  VectorSpaceOfRepresentation( R2, v ) )
+             - Hom( VectorSpaceOfRepresentation( R1, v ),
+                    MapForArrow( R2, a ) );
+      elif v = Source( a ) then
         m := - Hom( VectorSpaceOfRepresentation( R1, v ),
                     MapForArrow( R2, a ) );
         # f |-> PreCompose( f, MapForArrow( R2, a ) )
