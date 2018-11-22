@@ -209,7 +209,7 @@ function( V )
   if Dimension( V ) = 0 then
     basis_vectors := [];
   else
-    basis_vectors := List( IdentityMat( Dimension( V ) ),
+    basis_vectors := List( IdentityMat( Dimension( V ), UnderlyingField( V ) ),
                            v -> StandardVector( UnderlyingField( V ), v ) );
   fi;
   basis := rec();
