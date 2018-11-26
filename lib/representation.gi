@@ -1573,3 +1573,101 @@ function( s, R )
   return QuiverRepresentation( CategoryOfQuiverRepresentations( T ),
                                objs, morphisms );
 end );
+
+#######################################################################
+##
+#O  FromEndRToHomRR( <R>, <mat> )
+##
+##  This function gives a translation from an element in 
+##  EndomorphismAlgebra( <R> ) to an endomorphism of the representation  R. 
+##
+InstallMethod ( FromEndRToHomRR, 
+"for a representation and an element in EndomorphismAlgebra", true,
+[ IsQuiverRepresentation, IsMatrix ], 0,
+function( R, mat )
+  local K, dim_vect, maps, i, r;
+
+  K := LeftActingDomain( R ); 
+  dim_vect := DimensionVector( R );
+  
+  maps := [ ];
+  r := 1;
+  for i in [ 1..Length( dim_vect ) ] do
+    if dim_vect[ i ] <> 0 then 
+      maps[ i ] := mat{ [ r..r + dim_vect[ i ] - 1 ] }{ [ r..r + dim_vect[ i ] - 1 ] };
+      r := r + dim_vect[ i ];
+    fi;
+  od;
+  
+  return QuiverRepresentationHomomorphism( R, R, maps );
+end
+  );
+
+#######################################################################
+##
+#A  EndomorphismAlgebra( <R> )
+##
+##  This function computes endomorphism ring of the module  <R>  and
+##  representing it as an general GAP algebra. The algorithm it uses is
+##  based purely on linear algebra.
+##
+InstallMethod( EndomorphismAlgebra,
+"for a representations of a quiver",
+[ IsQuiverRepresentation ], 0,
+function( R )
+    local   EndR,  A,  F,  dim_R,  alglist,  i,  B,  maps,  totaldim,  
+            r,  gen,  j,  tempmat;
+
+  EndR := BasisVectors( Basis( Hom( R, R ) ) );
+  A := AlgebraOfRepresentation( R ); 
+  F := LeftActingDomain( A );
+  dim_R := DimensionVector( R );
+  alglist := [ ];
+  for i in [ 1..Length( dim_R ) ] do 
+    if dim_R[ i ] <> 0 then 
+      Add( alglist, MatrixAlgebra( F, dim_R[ i ] ) );
+    fi;
+  od;
+  B := DirectSumOfAlgebras( alglist ); 
+  
+  maps := [];
+  totaldim := Sum( dim_R );
+  for i in [ 1..Length( EndR ) ] do
+    maps[ i ] := NullMat( totaldim, totaldim, F );
+    r := 1;
+    gen := MapsOfRepresentationHomomorphism( EndR[ i ] );
+    for j in [ 1..Length( dim_R ) ] do
+      if dim_R[ j ] <> 0 then
+        tempmat := ColsOfMatrix( LeftMatrixOfLinearTransformation( gen[ j ] ) );
+        maps[ i ]{ [ r..r + dim_R[ j ] - 1 ] }{ [ r..r + dim_R[ j ] - 1 ] } := tempmat;
+      fi;
+      r := r + dim_R[ j ];
+    od; 
+  od;
+
+  return SubalgebraWithOne( B, maps, "basis" ); 
+end
+  );
+
+#######################################################################
+##
+#O  DecomposeRepresentation( <R> )
+##
+##  Given a representation  <R>  this function computes a list of 
+##  representations  L  such that  <R>  is isomorphic to the direct 
+##  sum of the representations on the list  L. 
+##
+InstallMethod( DecomposeRepresentation, 
+"for a quiver representation", true,
+[ IsQuiverRepresentation ], 0, 
+function( R )
+
+  local endo, idemmaps;
+
+  endo := EndomorphismAlgebra( R );
+  idemmaps := CompleteSetOfPrimitiveIdempotents( endo );
+  idemmaps := List( idemmaps, x -> FromEndRToHomRR( R, x ) );
+    
+  return List( idemmaps, x -> ImageObject( x ) );
+end
+  );

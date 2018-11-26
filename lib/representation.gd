@@ -506,3 +506,30 @@ DeclareOperation( "AsLayeredRepresentation", [ IsPosInt, IsQuiverRepresentation 
 #! @Returns IsQuiverRepresentation
 #! @Arguments s, R
 DeclareOperation( "AsFlatRepresentation", [ IsPosInt, IsQuiverRepresentation ] );
+
+#! @Section Operations on representations
+
+#! @Description
+#! This function computes endomorphism ring of the module  <A>R</A>  and
+#! representing it as an general GAP algebra. The algorithm it uses is
+#! based purely on linear algebra.
+#! @Arguments R
+#! @Returns an algebra
+DeclareOperation( "EndomorphismAlgebra", [ IsQuiverRepresentation ] );
+
+#! @Description
+#! This function gives a translation from an element in 
+#! EndomorphismAlgebra( <A>R</A> ) to an endomorphism of the representation  <A>R</A>. 
+#! @Arguments R
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+DeclareOperation( "FromEndRToHomRR", [ IsQuiverRepresentation, IsMatrix ] );
+
+#! @Description
+#! Given a representation  <A>R</A>  this function computes a list of 
+#! representations  <M>L</M>  such that  <A>R</A>  is isomorphic to the direct 
+#! sum of the representations on the list <M>L</M>. 
+#! @Arguments R
+#! @Returns a list of representations
+DeclareOperation( "DecomposeRepresentation", [ IsQuiverRepresentation ] );
+
+#

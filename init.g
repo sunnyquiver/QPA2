@@ -22,3 +22,4 @@ ReadPackage( "QPA", "lib/hash.gd" );
 ReadPackage( "QPA", "lib/intern.gd" );
 ReadPackage( "QPA", "lib/dual.gd" );
 ReadPackage( "QPA", "lib/stablecategory.gd" );
+ReadPackage( "QPA", "lib/idempotent.gd" );

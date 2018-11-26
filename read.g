@@ -21,3 +21,4 @@ ReadPackage( "QPA", "lib/restrictionfunctors.gi" );
 ReadPackage( "QPA", "lib/hash.gi" );
 ReadPackage( "QPA", "lib/intern.gi" );
 ReadPackage( "QPA", "lib/dual.gi" );
+ReadPackage( "QPA", "lib/idempotent.gi" );

@@ -1564,3 +1564,16 @@ function( kQ, I )
   images := List( PrimitivePaths( Q ), p -> PathAsAlgebraElement( A, p ) );
   return QuiverAlgebraHomomorphism( kQ, A, images );
 end );
+
+InstallMethod( RadicalOfAlgebra, 
+"for an quiver algebra", [ IsQuiverAlgebra ], 0,
+function( A );
+  
+  if not IsAdmissibleQuiverAlgebra( A ) then 
+    TryNextMethod( ); 
+  fi;
+  
+  return Ideal( A, Arrows( A ) );
+end
+  );
+  
