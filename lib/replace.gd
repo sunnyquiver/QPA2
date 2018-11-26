@@ -25,3 +25,5 @@ DeclareOperation( "Replace", [ IsDenseList, IsDenseList, IsDenseList ] );
 #! @Arguments list, value, replacement
 #! @Returns list
 DeclareOperation( "ReplaceObj", [ IsList, IsObject, IsObject ] );
+
+#
