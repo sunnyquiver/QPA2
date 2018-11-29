@@ -244,23 +244,20 @@ InstallMethod( LiftIdempotent,
 "for a morphism of algebras and one idempotent in the range",
 [ IsAlgebraGeneralMapping, IsRingElement ], 0,
 function( f, v )
-  local g, x, y, nilindex, series, t, k;
+  local I, L, g, x, y, nilindex, series, t, k;
 
   if not IsFiniteDimensional( Source( f ) ) then 
     Error( "The source of the algebra homomorphism must be finite dimensional.\n" );
   fi; 
-  #
-  # TODO: Check if the kernel of <f> is nilpotent.
-  #
-  # I := Kernel( f );
-  # repeat
-  #   L := I;
-  #   I := ProductSpace( I, I );
-  # until
-  #   Dimension( I ) = Dimension( L );
-  # if Dimension( I ) <> 0 then
-  #    Error( "Kernel of the entered algebra homomorphisms is not nilpotent.\n" );
-  # fi;
+  I := Kernel( f );
+  repeat
+    L := I;
+    I := ProductSpace( I, I );
+  until
+    Dimension( I ) = Dimension( L );
+  if Dimension( I ) <> 0 then
+     Error( "Kernel of the entered algebra homomorphisms is not nilpotent.\n" );
+  fi;
   #
   if not ( v in Range(f) ) or not v^2 = v then
     Error( "the entered element is not in the range of the map or not an idempotent.\n" );
