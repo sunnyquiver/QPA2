@@ -398,6 +398,8 @@ InstallMethod( Dimension, "for quiver representation",
                [ IsQuiverRepresentation ],
                R -> Sum( DimensionVector( R ) ) );
 
+InstallTrueMethod( IsFiniteDimensional, IsQuiverRepresentation );
+
 InstallMethod( AsQPAVectorSpace,
                [ IsQuiverRepresentation ],
                R -> VectorSpaceConstructor( CapCategory( R ) )( Sum( DimensionVector( R ) ) ) );
