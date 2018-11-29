@@ -394,6 +394,10 @@ InstallMethod( DimensionVector,
                [ IsQuiverRepresentation ],
                R -> List( VectorSpacesOfRepresentation( R ), Dimension ) );
 
+InstallMethod( Dimension, "for quiver representation",
+               [ IsQuiverRepresentation ],
+               R -> Sum( DimensionVector( R ) ) );
+
 InstallMethod( AsQPAVectorSpace,
                [ IsQuiverRepresentation ],
                R -> VectorSpaceConstructor( CapCategory( R ) )( Sum( DimensionVector( R ) ) ) );
