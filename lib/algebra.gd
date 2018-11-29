@@ -28,8 +28,12 @@ DeclareCategory( "IsQuiverAlgebraIdeal",
                  and IsObjectWithSide );
 
 #! @Description
+#!  Category for two-sided ideals in quiver algebras.
+DeclareCategory( "IsQuiverAlgebraTwoSidedIdeal", IsQuiverAlgebraIdeal );
+
+#! @Description
 #!  Category for (two-sided) ideals in path algebras.
-DeclareCategory( "IsPathAlgebraIdeal", IsQuiverAlgebraIdeal );
+DeclareCategory( "IsPathAlgebraIdeal", IsQuiverAlgebraTwoSidedIdeal );
 
 #! @Description
 #!  Category for elements of path algebras.
@@ -77,14 +81,21 @@ DeclareOperation( "PathAlgebra", [ IsField, IsQuiver ] );
 #! @Arguments kQ, I
 DeclareOperation( "QuotientOfPathAlgebra", [ IsPathAlgebra, IsPathAlgebraIdeal ] );
 #! @Arguments kQ, relations
-DeclareOperation( "QuotientOfPathAlgebra", [ IsPathAlgebra, IsHomogeneousList ] );
-#! @Arguments kQ, I
-DeclareOperation( "\/", [ IsPathAlgebra, IsPathAlgebraIdeal ] );
-#! @Arguments kQ, relations
-DeclareOperation( "\/", [ IsPathAlgebra, IsHomogeneousList ] );
+DeclareOperation( "QuotientOfPathAlgebra", [ IsPathAlgebra, IsDenseList ] );
+#! @EndGroup
+
+#! @BeginGroup QuotientOfQuiverAlgebra
+#! @Description
+#!  Factor out an ideal of a quiver algebra.
+#! @Returns <Ref Filt="IsQuiverAlgebra"/
+#! @Arguments A, I
+DeclareOperation( "\/", [ IsQuiverAlgebra, IsQuiverAlgebraTwoSidedIdeal ] );
+#! @Arguments A, relations
+DeclareOperation( "\/", [ IsQuiverAlgebra, IsDenseList ] );
 #! @EndGroup
 
 #! @InsertChunk Example_QuotientOfPathAlgebra
+
 
 #! @Arguments K
 #! @Returns <Ref Filt="IsQuiverAlgebra"/>
