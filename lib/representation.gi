@@ -861,6 +861,7 @@ function( A, vecspace_cat )
   SetVectorSpaceCategory( cat, vecspace_cat );
 
   SetIsAbelianCategory( cat, true );
+  SetIsAbelianCategoryWithEnoughProjectives( cat, true );
 
   equal_objects := function( R1, R2 )
     return AlgebraOfRepresentation( R1 ) = AlgebraOfRepresentation( R2 ) and
@@ -1031,6 +1032,8 @@ function( A, vecspace_cat )
   end;
   AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, direct_sum_proj );
   
+  AddEpimorphismFromSomeProjectiveObject( cat, ProjectiveCover );
+
   # The object/morphism constructors check whether the input is well-defined or not.
   # So if it has been created then it is well-defined
   AddIsWellDefinedForObjects( cat, ReturnTrue );
