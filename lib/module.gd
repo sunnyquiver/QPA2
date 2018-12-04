@@ -179,7 +179,7 @@ DeclareOperation( "AlgebraForBimodules", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
 #!  <C>LEFT</C>, <C>RIGHT</C> or <C>LEFT_RIGHT</C>,
 #!  for creating a left module, right module or bimodule, respectively.
 #! @Returns <Ref Filt="IsQuiverModule"/>
-#! @Arguments R, side
+#! @Arguments side, R
 DeclareOperation( "AsModule", [ IsSide, IsQuiverRepresentation ] );
 
 #! @Description
