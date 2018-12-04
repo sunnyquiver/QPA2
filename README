@@ -21,7 +21,7 @@ distributed with CAP, but ComplexesForCAP may depend on newer versions
 than those that are distributed with GAP.  In that case, you need to
 get these packages from the source at
 
-    https://github.com/sebasguts/CAP_project
+    https://github.com/homalg-project/CAP_project
 
 The documentation for QPA2 is written as AutoDoc comments inside the
 source code files.  To build the documentation, run `gap makedoc.g` in
