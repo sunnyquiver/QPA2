@@ -8,9 +8,6 @@ DeclareCategory( "IsQuiverAlgebraLeftIdeal", IsQuiverAlgebraIdeal );
 #!
 DeclareCategory( "IsQuiverAlgebraRightIdeal", IsQuiverAlgebraIdeal );
 
-#!
-DeclareCategory( "IsQuiverAlgebraTwoSidedIdeal", IsQuiverAlgebraIdeal );
-
 #! @Section Constructing ideals
 
 #! @Description

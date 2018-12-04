@@ -11,9 +11,17 @@ version 1 has been implemented in version 2.
 
 To use QPA2, you need the following non-standard packages:
 
- * AutoDoc, available at https://github.com/gap-packages/AutoDoc
- * CAP, available at https://github.com/sebasguts/CAP_project
- * ToolsForHomalg, available at http://homalg-project.github.io/homalg_project/ToolsForHomalg/
+ * ComplexesForCAP, available at https://github.com/kamalsaleh/ComplexesForCAP
+ * InfiniteLists (dependency of ComplexesForCAP),
+   available at https://github.com/oysteins/InfiniteLists
+
+Additionally, the package ComplexesForCAP depends on the package CAP
+and other packages from the CAP project.  These packages are
+distributed with CAP, but ComplexesForCAP may depend on newer versions
+than those that are distributed with GAP.  In that case, you need to
+get these packages from the source at
+
+    https://github.com/sebasguts/CAP_project
 
 The documentation for QPA2 is written as AutoDoc comments inside the
 source code files.  To build the documentation, run `gap makedoc.g` in

@@ -13,6 +13,17 @@ true
 gap> ComposeElements( e2, e1 ) = e1 * e2;
 true
 
+# test quotients of algebras
+gap> Q := RightQuiver( "Q(3)[a:1->2,b:1->2,c:2->2,d:2->3,e:3->1]" );;
+gap> kQ := PathAlgebra( Rationals, Q );;
+gap> rels1 := [ kQ.de, kQ.cc, kQ.acd - kQ.bd, kQ.ea ];;
+gap> rels2 := [ kQ.de, kQ.cc, kQ.acd - kQ.bd, kQ.ea, kQ.bc ];;
+gap> A1 := kQ / rels1;;
+gap> A2 := kQ / rels2;;
+gap> B := A1 / [ A1.bc ];;
+gap> B = A2;
+true
+
 gap> Q := LeftQuiver( "Q(3)[a:1->1,b:1->2,c:2->3,d:2->3]" );;
 gap> kQ := PathAlgebra( Rationals, Q );;
 gap> A := kQ / [ kQ.aaa ];;

@@ -641,7 +641,7 @@ DeclareRepresentation( "IsQuotientOfPathAlgebraRep", IsComponentObjectRep and Is
                        [ "pathAlgebra", "relations", "ideal" ] );
 
 InstallMethod( QuotientOfPathAlgebra, "for path algebra and homogeneous list",
-               [ IsPathAlgebra, IsHomogeneousList ],
+               [ IsPathAlgebra, IsDenseList ],
 function( A, relations )
   local I;
   I := QuiverAlgebraTwoSidedIdeal( A, relations );
@@ -689,8 +689,25 @@ InstallMethod( \/, "for path algebra and path ideal",
                QuotientOfPathAlgebra );
 
 InstallMethod( \/, "for path algebra and path ideal",
-               [ IsPathAlgebra, IsHomogeneousList ],
+               [ IsPathAlgebra, IsDenseList ],
                QuotientOfPathAlgebra );
+
+InstallMethod( \/, "for quotient of path algebra and quiver algebra ideal",
+               [ IsQuotientOfPathAlgebra, IsQuiverAlgebraTwoSidedIdeal ],
+function( A, I )
+  return A / Generators( I );
+end );
+
+InstallMethod( \/, "for quotient of path algebra and dense list",
+               [ IsQuotientOfPathAlgebra, IsDenseList ],
+function( A, relations )
+  if not ForAll( relations, r -> r in A ) then
+    Error( "relations must be elements of the algebra" );
+  fi;
+  return QuotientOfPathAlgebra( PathAlgebra( A ),
+                                Concatenation( RelationsOfAlgebra( A ),
+                                               List( relations, Representative ) ) );
+end );
 
 InstallMethod( QuiverOfAlgebra, "for quotient of path algebra",
                [ IsQuotientOfPathAlgebra ],
@@ -1565,6 +1582,15 @@ function( kQ, I )
   return QuiverAlgebraHomomorphism( kQ, A, images );
 end );
 
+InstallMethod( NaturalHomomorphismByIdeal,
+               "for quiver algebra and quiver algebra ideal",
+               [ IsQuiverAlgebra, IsQuiverAlgebraTwoSidedIdeal ],
+function( A, I )
+  local A_I;
+  A_I := A / I;
+  return QuiverAlgebraHomomorphism( A, A_I, PrimitivePaths( A_I ) );
+end );
+
 InstallMethod( RadicalOfAlgebra, 
 "for an quiver algebra", [ IsQuiverAlgebra ], 0,
 function( A );
@@ -1576,4 +1602,3 @@ function( A );
   return Ideal( A, Arrows( A ) );
 end
   );
-  
