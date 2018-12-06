@@ -10,7 +10,7 @@ InstallMethod( DualFunctor, "for a category of vector spaces",
         local   mat;
         
         mat := TransposedMat( LeftMatrixOfLinearTransformation( h ) ); 
-        return LinearTransformationByLeftMatrix( V2, V1, mat );
+        return LinearTransformationByLeftMatrix( V1, V2, mat );
     end;
     
     AddObjectFunction( dual, X -> X ); 
@@ -37,7 +37,7 @@ InstallMethod( DualFunctor, "for a category of quiver representations",
         local   mats;
         
         mats := List( MapsOfRepresentationHomomorphism( h ), f -> ApplyFunctor( vecdual, f ) ); 
-        return QuiverRepresentationHomomorphism( R2, R1, mats );
+        return QuiverRepresentationHomomorphism( R1, R2, mats );
     end;
     
     object := function( R )
