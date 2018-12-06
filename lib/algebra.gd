@@ -207,32 +207,6 @@ DeclareAttribute( "BasisPaths", IsQuiverAlgebraBasis );
 DeclareOperation( "BasisPathsBetweenVertices", [ IsQuiverAlgebra, IsVertex, IsVertex ] );
 
 
-# TODO move following things to somewhere else
-
-#! @Arguments A
-#! @Description
-#!  The basis elements of the algebra <A>A</A> ordered by the
-#!  indecomposable projective module they belong to.
-#!  The result is a list of lists, such that the first list contains
-#!  the basis of the indecomposable projective in the first vertex,
-#!  and so on.
-DeclareAttribute( "BasisOfProjectives", IsQuiverAlgebra );
-
-#!
-DeclareAttribute( "IndecProjRepresentations", IsQuiverAlgebra );
-
-#!
-DeclareOperation( "IndecProjModules", [ IsSide, IsQuiverAlgebra ] );
-
-#!
-DeclareAttribute( "IndecProjLeftModules", IsQuiverAlgebra );
-
-#!
-DeclareAttribute( "IndecProjRightModules", IsQuiverAlgebra );
-
-#!
-DeclareOperation( "IndecProjBimodules", [ IsDenseList ] );
-
 #! @Section Accessing algebra elements
 
 #! @BeginGroup QuiverAlgebraElement
