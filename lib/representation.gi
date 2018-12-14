@@ -791,6 +791,9 @@ function( m1, m2 )
          and IsEqualForMorphisms( m1, m2 );
 end );
 
+InstallMethod( IsZero, [ IsQuiverRepresentationHomomorphism ],
+               IsZeroForMorphisms );
+
 InstallMethod( ImageElm,
                [ IsQuiverRepresentationHomomorphism,
                  IsQuiverRepresentationElement ],
