@@ -200,7 +200,7 @@ RightAlgebraModuleToPathAlgebraMatModule( M ) -- no  (should be ported, change n
 M = N -- same
 IsPathAlgebraMatModule( obj ) -> IsQuiverModule( obj ) / IsRightQuiverModule( obj )
 m ^ p -- same
-AnnihilatorOfModule( M ) -- no (should be ported)
+AnnihilatorOfModule( M ) -- same, and in addition [AnnihilatorOfRepresentation( R )]
 BasicVersionOfModule( M ) -- no (should be ported)
 BlockDecompositionOfModule( M ) -- no (should be ported)
 BlockSplittingIdempotents( M ) -- no (should be ported)

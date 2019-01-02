@@ -510,6 +510,22 @@ DeclareOperation( "AsFlatRepresentation", [ IsPosInt, IsQuiverRepresentation ] )
 #! @Section Operations on representations
 
 #! @Description
+#!  Returns the annihilator of a quiver representation in the algebra over which 
+#!  the representation <A>R</A> is defined.
+#! @Returns <Ref Filt="IsIdeal"/>
+#! @Arguments R
+DeclareAttribute( "AnnihilatorOfRepresentation", IsQuiverRepresentation );
+
+#! @Description
+#!  Returns true if the dimension of the vector space in vertex  i 
+#!  in the representation  <A>R1</A> is less or equal to the 
+#!  corresponding dimension for the representation <A>R2</A> for 
+#!  all vertices.  Otherwise it returns false.
+#! @Returns true or false
+#! @Arguments R1, R2
+DeclareOperation( "DimensionVectorPartialOrder", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
+
+#! @Description
 #! This function computes endomorphism ring of the module  <A>R</A>  and
 #! representing it as an general GAP algebra. The algorithm it uses is
 #! based purely on linear algebra.
@@ -523,6 +539,13 @@ DeclareOperation( "EndomorphismAlgebra", [ IsQuiverRepresentation ] );
 #! @Arguments R
 #! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
 DeclareOperation( "FromEndRToHomRR", [ IsQuiverRepresentation, IsMatrix ] );
+
+#! @Description
+#!  Returns the intersection of a finite set of quiver representations which are 
+#!  subrepresentations of one given quiver representation. 
+#! @Returns <Ref Filt="IsQuiverRepresentation"/>
+#! @Arguments list
+DeclareOperation( "IntersectionOfRepresentations", [ IsDenseList ] );
 
 #! @Description
 #! Given a representation  <A>R</A>  this function computes a list of 

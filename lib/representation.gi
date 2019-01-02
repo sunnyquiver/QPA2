@@ -1663,6 +1663,120 @@ end
 
 #######################################################################
 ##
+#A  AnnihilatorOfRepresentation( <R> )
+##
+##  Given a representation  R  over a (quotient of a) path algebra  A, this 
+##  function computes the annihilator of  R  as an ideal in  A. 
+##
+InstallMethod ( AnnihilatorOfRepresentation, 
+"for a QuiverRepresentation",
+[ IsQuiverRepresentation ],
+function( R )
+
+  local A, BR, BA, matrix, a, temp, r, solutions, annihilator;
+
+  A := AlgebraOfRepresentation( R );
+  if not IsFiniteDimensional( A ) then
+    Error( "The representation is not over a finite dimensional algebra.\n" );
+  fi;
+  #   
+  #  If the representation  R  is zero, return the whole algebra.
+  #
+  if Dimension( R ) = 0 then 
+    return Ideal( A, GeneratorsOfAlgebra( A ) );
+  fi;
+  BR := BasisVectors( Basis( R ) );
+  #
+  #  Setting things up right according to the input.
+  #
+  BA := BasisVectors( Basis( A ) );
+  #
+  #  Computing the linear system to solve in order to find the annihilator
+  #  of the representation R.
+  #
+  matrix := [ ];
+  for a in BA do
+    temp := [ ];
+    for r in BR do
+      Add(temp, AsList( AsVector( QuiverAlgebraAction( r, a ) ) ) );
+    od;
+    Add( matrix, temp );
+  od;
+  
+  matrix := List( matrix, x -> Flat( x ) );
+  #
+  #  Finding the solutions of the linear system, and creating the solutions
+  #  as elements of the algebra  A.
+  #
+  solutions := NullspaceMat( matrix );
+  annihilator := List( solutions, x -> LinearCombination( BA, x ) );
+  
+  return Ideal( A, annihilator );
+end
+);
+
+#######################################################################
+##
+#O  IntersectionOfRepresentations( <args> )
+##
+##                                 f_i             
+##  Given subrepresentations  R_i -----> X  for i = 1,...,n of a repre-
+##  sentation  X  by  n  monomorphism  f_i, this function computes 
+##  the intersection of the images of all the  f_i.
+##  
+InstallMethod ( IntersectionOfRepresentations, 
+"for a list of IsQuiverRepresentationHomomorphisms",
+[ IsDenseList ], 
+function( list )
+
+  local A, f, U, gprime;
+#
+#   Checking the input
+#
+    if IsEmpty( list ) then 
+        Error( "<list> must be non-empty" ); 
+    fi;
+    if not ForAll( list, IsQuiverRepresentationHomomorphism ) then 
+      Error( "all entries in <list> must be homomorphisms of representations over some quiver algebra.\n" );
+    fi;
+    A := AlgebraOfRepresentation( Source( list[ 1 ] ) );
+    for f in list do
+        if AlgebraOfRepresentation( Source( f ) ) <> A then
+            Error( "all entries in <list> must be homomorphisms of representations over the same algebra.\n" );
+        fi;
+    od;
+    if not ForAll( list, IsMonomorphism ) then 
+        Error( "not all the arguments are monomorphisms.\n" );
+    fi;
+    U := Range( list[ 1 ] );
+    if not ForAll( list, x -> Range( x ) = U ) then 
+        Error( "must have submodules of the same representation.\n" );
+    fi;
+#
+#   Doing the computations.
+#
+    gprime := ProjectionInFactorOfFiberProduct( list, 1 );
+
+    return PreCompose( gprime, list[ 1 ] );
+end
+);
+
+InstallMethod( DimensionVectorPartialOrder, 
+"for two QuiverRepresentation",
+[ IsQuiverRepresentation, IsQuiverRepresentation ],
+function( R1, R2) 
+
+  local L1, L2;
+  
+  L1 := DimensionVector( R1 );
+  L2 := DimensionVector( R2 );
+  
+  return ForAll( L2 - L1, x -> ( x >= 0 ) );
+end
+  );
+
+#######################################################################
+##
 #O  DecomposeRepresentation( <R> )
 ##
 ##  Given a representation  <R>  this function computes a list of 
