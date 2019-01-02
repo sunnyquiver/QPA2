@@ -3,12 +3,6 @@
 #! @Section Idempotents
 
 #! @Description
-#! The function returns true if  <A>A</A>  is a finite dimensional semisimple 
-#! algebra and searches for another method otherwise.
-#! @Arguments A
-DeclareProperty( "IsSemisimpleAlgebra", IsAlgebra );
-
-#! @Description
 #! This function takes as an argument a finite dimensional simple 
 #!  algebra  <A>A</A>  over a finite field and returns a list of two elements  
 #!  <M>[a, b]</M>  in  <A>A</A>  such that  <M>a*b = 0</M>  in <A>A</A>, if  <A>A</A> is not 
