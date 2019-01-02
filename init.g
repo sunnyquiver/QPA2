@@ -25,3 +25,4 @@ ReadPackage( "QPA", "lib/intern.gd" );
 ReadPackage( "QPA", "lib/dual.gd" );
 ReadPackage( "QPA", "lib/stablecategory.gd" );
 ReadPackage( "QPA", "lib/idempotent.gd" );
+ReadPackage( "QPA", "lib/decomposition.gd" );
