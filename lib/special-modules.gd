@@ -1,6 +1,6 @@
 #! @Chapter Special modules
 
-#! #! @Section Injective, projective and simple modules. 
+#! @Section Injective, projective and simple modules. 
 
 #! Here we give how to construct injective, projective and simple 
 #! modules over an admissible quiver algebra. 

@@ -87,7 +87,7 @@ DeclareOperation( "QuotientOfPathAlgebra", [ IsPathAlgebra, IsDenseList ] );
 #! @BeginGroup QuotientOfQuiverAlgebra
 #! @Description
 #!  Factor out an ideal of a quiver algebra.
-#! @Returns <Ref Filt="IsQuiverAlgebra"/
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
 #! @Arguments A, I
 DeclareOperation( "\/", [ IsQuiverAlgebra, IsQuiverAlgebraTwoSidedIdeal ] );
 #! @Arguments A, relations
