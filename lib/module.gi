@@ -483,3 +483,42 @@ side -> function( C )
     
     return F;
 end );
+
+InstallMethod ( AnnihilatorOfModule, 
+"for a QuiverModule",
+[ IsQuiverModule ],
+function( M )
+  local R; 
+  
+  R := UnderlyingRepresentation( M );
+  
+  return AnnihilatorOfRepresentation( R );
+end
+  );
+
+#######################################################################
+##
+#O  IntersectionOfModules( <args> )
+##
+##                         f_i             
+##  Given submodules  R_i -----> X  for i = 1,...,n of a module  X by 
+##  n  monomorphism  f_i, this function computes the intersection of 
+##  the images of all the  f_i.
+##  
+InstallMethod ( IntersectionOfModules, 
+"for a list of IsQuiverModuleHomomorphisms",
+[ IsDenseList ], 
+function( list )
+
+  local   side,  temp;
+    
+  if Length( list ) = 0 then
+      return fail;
+  fi;  
+  side := Side( list[ 1 ] );
+  temp := List( list, UnderlyingRepresentation );
+  temp := IntersectionOfRepresentations( temp );
+  
+  return AsModule( side, temp );
+end
+  );

@@ -477,5 +477,20 @@ DeclareAttribute( "AsRightModuleFunctor", IsQuiverRepresentationCategory );
 #!
 DeclareAttribute( "AsBimoduleFunctor", IsQuiverRepresentationCategory );
 
+#! @Section Operations on modules
 
+#! @Description
+#!  Returns the annihilator of a quiver module in the algebra over which 
+#!  the module <A>M</A> is defined.
+#! @Returns <Ref Filt="IsIdeal"/>
+#! @Arguments M
+DeclareAttribute( "AnnihilatorOfModule", IsQuiverModule );
 
+#! @Description
+#!  Returns the intersection of a finite set of quiver modules which are 
+#!  submodules of one given quiver module. 
+#! @Returns <Ref Filt="IsQuiverModule"/>
+#! @Arguments list
+DeclareOperation( "IntersectionOfModules", [ IsDenseList ] );
+
+#
