@@ -94,6 +94,16 @@ function( c, m )
                                c * UnderlyingRepresentationHomomorphism( m ) );
 end );
 
+InstallMethod( InverseOp, "for quiver module homomorphism",
+               [ IsQuiverModuleHomomorphism ],
+function( m )
+  if not IsIsomorphism( m ) then
+    Error( "not an isomorphism" );
+  fi;
+  return AsModuleHomomorphism( Side( m ),
+                               Inverse( UnderlyingRepresentationHomomorphism( m ) ) );
+end );
+
 InstallMethod( ImageElm,
                [ IsQuiverModuleHomomorphism, IsQuiverModuleElement ],
 function( f, m )
