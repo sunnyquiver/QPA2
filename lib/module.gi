@@ -388,6 +388,7 @@ side -> function( rep_cat )
   SetSide( cat, side );
   SetUnderlyingRepresentationCategory( cat, rep_cat );
   SetIsAbelianCategory( cat, true );
+  SetIsAbelianCategoryWithEnoughProjectives( cat, true );
 
   AddIsEqualForObjects( cat,
   function( M1, M2 )
@@ -432,6 +433,8 @@ side -> function( rep_cat )
     return _m( ProjectionInFactorOfDirectSumWithGivenDirectSum
                ( List( summands, _R ), i, _R( sum ) ) );
   end );
+
+  AddEpimorphismFromSomeProjectiveObject( cat, ProjectiveCover );
 
   Finalize( cat );
 
@@ -522,3 +525,10 @@ function( list )
   return AsModule( side, temp );
 end
   );
+
+InstallMethod( ProjectiveCover, "for a quiver module",
+               [ IsQuiverModule ],
+function( M )
+  return AsModuleHomomorphism( Side( M ),
+                               ProjectiveCover( UnderlyingRepresentation( M ) ) );
+end );

@@ -493,4 +493,11 @@ DeclareAttribute( "AnnihilatorOfModule", IsQuiverModule );
 #! @Arguments list
 DeclareOperation( "IntersectionOfModules", [ IsDenseList ] );
 
+
+#! @Description
+#! Returns the projective cover of the quiver module <A>M</A>. 
+#! @Returns IsQuiverModuleHomomorphism
+#! @Arguments M
+DeclareAttribute( "ProjectiveCover", IsQuiverModule );
+
 #
