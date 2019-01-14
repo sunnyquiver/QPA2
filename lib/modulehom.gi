@@ -32,6 +32,7 @@ side -> function( rf )
   ObjectifyWithAttributes( f, NewType( FamilyOfQuiverModuleHomomorphisms,
                                        hom_type and IsQuiverModuleHomomorphismRep ),
                            UnderlyingRepresentationHomomorphism, rf,
+                           Side, side,
                            MatricesOfModuleHomomorphism, matrices,
                            Source, M1,
                            Range, M2 );
@@ -48,6 +49,49 @@ function( M1, M2, matrices )
   R2 := UnderlyingRepresentation( M2 );
   rf := QuiverRepresentationHomomorphism( R1, R2, matrices );
   return AsModuleHomomorphism( Side( M1 ), rf );
+end );
+
+InstallMethod( String,
+               "for quiver module homomorphism",
+               [ IsQuiverModuleHomomorphism ],
+function( f )
+  return Concatenation( "(", String( Source( f ) ), ")",
+                        "->",
+                        "(", String( Range( f ) ), ")" );
+end );
+
+InstallMethod( ViewObj,
+               "for quiver module homomorphism",
+               [ IsQuiverModuleHomomorphism ],
+function( f )
+  Print( "<", String( f ), ">" );
+end );
+
+InstallMethod( IsZero, [ IsQuiverModuleHomomorphism ],
+               IsZeroForMorphisms );
+
+InstallMethod( \=, "for quiver module homomorphisms",
+               [ IsQuiverModuleHomomorphism, IsQuiverModuleHomomorphism ],
+function( f1, f2 )
+  return IsIdenticalObj( CapCategory( f1 ), CapCategory( f2 ) )
+         and UnderlyingRepresentationHomomorphism( f1 ) = UnderlyingRepresentationHomomorphism( f2 );
+end );
+
+InstallMethod( \+,
+               [ IsQuiverModuleHomomorphism, IsQuiverModuleHomomorphism ],
+function( f, g )
+  if not IsIdenticalObj( CapCategory( f ), CapCategory( g ) ) then
+    Error( "homomorphisms from different categories" );
+  fi;
+  return AsModuleHomomorphism( Side( f ),
+                               UnderlyingRepresentationHomomorphism( f ) +
+                               UnderlyingRepresentationHomomorphism( g ) );
+end );
+
+InstallMethod( \*, [ IsMultiplicativeElement, IsQuiverModuleHomomorphism ],
+function( c, m )
+  return AsModuleHomomorphism( Side( m ),
+                               c * UnderlyingRepresentationHomomorphism( m ) );
 end );
 
 InstallMethod( ImageElm,
