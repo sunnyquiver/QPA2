@@ -276,3 +276,6 @@ function( hom )
                            IsCanonicalBasis, true );
   return basis;
 end );
+
+InstallMethod( AsList, [ IsQuiverModuleHomomorphism ],
+               m -> AsList( UnderlyingRepresentationHomomorphism( m ) ) );
