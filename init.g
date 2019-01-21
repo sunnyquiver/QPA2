@@ -28,3 +28,4 @@ ReadPackage( "QPA", "lib/idempotent.gd" );
 ReadPackage( "QPA", "lib/decomposition.gd" );
 ReadPackage( "QPA", "lib/homologicalalgebra.gd" );
 ReadPackage( "QPA", "lib/complexity.gd" );
+ReadPackage( "QPA", "lib/ext.gd" );

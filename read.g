@@ -27,3 +27,4 @@ ReadPackage( "QPA", "lib/idempotent.gi" );
 ReadPackage( "QPA", "lib/decomposition.gi" );
 ReadPackage( "QPA", "lib/homologicalalgebra.gi" );
 ReadPackage( "QPA", "lib/complexity.gi" );
+ReadPackage( "QPA", "lib/ext.gi" );
