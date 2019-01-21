@@ -114,10 +114,10 @@ function( M )
   return FieldOfRepresentation( UnderlyingRepresentation( M ) );
 end );
 
-InstallMethod( VertexDimensions,
+InstallMethod( DimensionVector,
                [ IsQuiverModule ],
 function( M )
-  return VertexDimensions( UnderlyingRepresentation( M ) );
+  return DimensionVector( UnderlyingRepresentation( M ) );
 end );
 
 InstallMethod( VertexDimension,

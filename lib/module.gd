@@ -244,7 +244,7 @@ DeclareAttribute( "FieldOfModule", IsQuiverModule );
 #!  as a list.  The entries in the list correspond to the vertices of the quiver.
 #! @Returns <Ref BookName="Reference" Filt="IsDenseList"/>
 #! @Arguments M
-DeclareAttribute( "VertexDimensions", IsQuiverModule );
+DeclareAttribute( "DimensionVector", IsQuiverModule );
 
 #! @Description
 #!  Returns the dimension of the vector space in the module <A>M</A>
