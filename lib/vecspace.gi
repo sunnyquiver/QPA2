@@ -656,6 +656,28 @@ function( f )
                                             MatrixByRows( UnderlyingField( f ), proj_mat ) );
 end );
 
+InstallMethod( RightInverse, [ IsLinearTransformation ],
+function( f )
+  local dim_range, f_mat, mat, ort, basis_change, proj_mat;
+
+  if not IsEpimorphism( f ) then
+    Error( "Non-surjective linear transformations do not have right inverses.\n" );
+  fi;
+  dim_range := Dimension( Range( f ) );
+  if dim_range = 0 then
+    return ZeroMorphism( Range( f ), Source( f ) );
+  fi;
+
+  f_mat := RightMatrixOfLinearTransformation( f );
+  mat := TransposedMat( RowsOfMatrix( f_mat ) );
+  ort := BaseOrthogonalSpaceMat( mat );
+  basis_change := Inverse( Concatenation( mat, ort ) );
+  proj_mat := TransposedMat( List( basis_change, row -> row{ [ 1 .. dim_range ] } ) );
+  
+  return LinearTransformationByRightMatrix( Range( f ), Source( f ),
+                                            MatrixByRows( UnderlyingField( f ), proj_mat ) );
+end );
+
 InstallMethod( PreImagesRepresentative, "for a linear transformation and a vector",
                [ IsLinearTransformation, IsQPAVector ],
 function( f, v )

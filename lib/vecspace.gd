@@ -189,5 +189,17 @@ DeclareOperation( "SubspaceInclusion", [ IsQPAVectorSpace, IsHomogeneousList ] )
 #!  of enteries in the vector <A>v</A>. 
 DeclareOperation( "SolutionMat", [ IsQPAMatrix, IsStandardVector ] );
 
+#! @Description
+#!  Returns the left inverse of an injective linear transformation <A>f</A>. If the entered
+#!  linear transformation is not injective, an error message is issued. 
+#! @Returns <Ref Filt="IsLinearTransformation"/>.
+#! @Arguments f
 DeclareAttribute( "LeftInverse", IsLinearTransformation );
+
+#! @Description
+#!  Returns the right inverse of a surjective linear transformation <A>f</A>. If the entered
+#!  linear transformation is not surjective, an error message is issued. 
+#! @Returns <Ref Filt="IsLinearTransformation"/>.
+#! @Arguments f
+DeclareAttribute( "RightInverse", IsLinearTransformation );
 
