@@ -1617,6 +1617,43 @@ end
 
 #######################################################################
 ##
+#O  FromHomRRToEndR( <f> )
+##
+##  This function gives a translation from endomorphisms of a 
+##  representation  M  to the corresponding enodomorphism represented 
+##  in the algebra EndomorphismAlgebra( M ). 
+##
+InstallMethod ( FromHomRRToEndR, 
+"for an endomorphism to an element of EndomorphismAlgebra",
+[ IsQuiverRepresentationHomomorphism ],
+function( f )
+    local K, dim_vect, matrices, end_f, r, j, matrix;
+
+    K := FieldOfRepresentation( Source( f ) );
+    dim_vect := DimensionVector( Source( f ) );
+    matrices := MatricesOfRepresentationHomomorphism( f );
+    end_f := NullMat( Dimension( Source( f ) ), Dimension( Source( f ) ), K );
+    r := 1; 
+    for j in [ 1..Length( dim_vect ) ] do 
+        if dim_vect[ j ] <> 0 then
+            if IsZero( matrices[ j ] ) then
+                matrix := NullMat( dim_vect[ j ], dim_vect[ j ], K );
+            elif IsIdentityMatrix( matrices[ j ] ) then
+                matrix := IdentityMat( dim_vect[ j ], K ); 
+            else
+                matrix :=  matrices[ j ]!.rows;
+            fi;
+            end_f{ [ r..r + dim_vect[ j ] - 1 ] }{ [ r..r + dim_vect[ j ] - 1 ] } := matrix;
+            r := r + dim_vect[ j ];
+        fi;
+    od; 
+
+    return end_f;
+end
+);
+
+#######################################################################
+##
 #A  EndomorphismAlgebra( <R> )
 ##
 ##  This function computes endomorphism ring of the module  <R>  and

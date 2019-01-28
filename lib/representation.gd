@@ -541,6 +541,13 @@ DeclareOperation( "EndomorphismAlgebra", [ IsQuiverRepresentation ] );
 DeclareOperation( "FromEndRToHomRR", [ IsQuiverRepresentation, IsMatrix ] );
 
 #! @Description
+#! This function gives a translation from an element in <C>Hom(R,R)</C>
+#! to <C>EndomorphismAlgebra( <A>R</A> )</C> of the representation  <A>R</A>. 
+#! @Arguments R
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+DeclareOperation( "FromHomRRToEndR", [ IsQuiverRepresentationHomomorphism ] );
+
+#! @Description
 #!  Returns the intersection of a finite set of quiver representations which are 
 #!  subrepresentations of one given quiver representation. 
 #! @Returns <Ref Filt="IsQuiverRepresentation"/>
