@@ -22,3 +22,18 @@ DeclareOperation( "DualFunctor", [ IsQuiverRepresentationCategory ] );
 #! @Arguments C
 DeclareOperation( "DualFunctor", [ IsQuiverModuleCategory ] );
 
+
+#! @Chapter Operations on objects and morphisms
+
+#! @Section Dual
+
+#! @BeginGroup
+#!  This function computes the dual <M>D(M)</M> of the module <A>M</A>, that is, 
+##  it computes <M>\Hom_k(M, k)</M>. If <A>M</A> is a module over <M>A</M>, then <M>D(M)</M> is a
+##  module over the opposite algebra of <M>A</M>.
+#! @Arguments M
+DeclareAttribute( "DualOfModule", IsQuiverModule ); 
+#! @Arguments R
+DeclareAttribute( "DualOfRepresentation", IsQuiverRepresentation ); 
+#! @EndGroup
+

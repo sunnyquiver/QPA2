@@ -21,7 +21,6 @@ InstallMethod( DualFunctor, "for a category of vector spaces",
 end 
   ); 
 
-
 InstallMethod( DualFunctor, "for a category of quiver representations",
         [ IsQuiverRepresentationCategory ],
         function( C )
@@ -72,5 +71,48 @@ InstallMethod( DualFunctor, "for a category of quiver modules",
     
     return PreCompose( [ F, repdual, G ] );
 end 
-  ); 
+  );
 
+#######################################################################
+##
+#A  DualOfModule( <M> )
+##
+##  This function computes the dual DM of the module <M>, that is, 
+##  it computes Hom_k(M, k). If <M> is a module over A, then DM is a
+##  module over the opposite algebra of A.
+##
+InstallMethod ( DualOfModule,
+"for a IsQuiverModule",
+[ IsQuiverModule ], 0,
+function( M )
+    
+    local C, D;
+    
+    C := CapCategory( M );
+    D := DualFunctor( C );
+    
+    return ApplyFunctor( D, M );
+end
+  );
+
+#######################################################################
+##
+#A  DualOfRepresentation( <R> )
+##
+##  This function computes the dual DR of the representation <R>, that 
+##  is, it computes Hom_k(R, k). If <M> is a module over A, then DR is
+##  a module over the opposite algebra of A.
+##
+InstallMethod ( DualOfRepresentation,
+"for a IsQuiverRepresentation",
+[ IsQuiverRepresentation ], 0,
+function( R )
+    
+    local C, D;
+    
+    C := CapCategory( R );
+    D := DualFunctor( C );
+    
+    return ApplyFunctor( D, R );
+end
+  );
