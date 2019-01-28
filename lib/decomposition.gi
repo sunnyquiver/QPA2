@@ -173,6 +173,29 @@ end
 
 #######################################################################
 ##
+#O  DecomposeRepresentation( <R> )
+##
+##  Given a representation  <R>  this function computes a list of 
+##  representations  L  such that  <R>  is isomorphic to the direct 
+##  sum of the representations on the list  L. 
+##
+InstallMethod( DecomposeRepresentation, 
+"for a quiver representation", true,
+[ IsQuiverRepresentation ], 0, 
+function( R )
+
+  local endo, idemmaps;
+
+  endo := EndomorphismAlgebra( R );
+  idemmaps := CompleteSetOfPrimitiveIdempotents( endo );
+  idemmaps := List( idemmaps, x -> FromEndRToHomRR( R, x ) );
+    
+  return List( idemmaps, x -> ImageObject( x ) );
+end
+  );
+
+#######################################################################
+##
 #O  DecomposeRepresentationWithMultiplicities( <M> )
 ##
 ##  Given a QuvierRepresentation this function decomposes the represen- 
@@ -232,6 +255,22 @@ function( R )
   od;
   
   return [ basic_summands, multiplicities ];
+end
+  );
+
+InstallMethod ( DecomposeModule, 
+"for a IsQuiverModule",
+[ IsQuiverModule ],
+function( M )
+
+  local side, R, decomp;
+  
+  side := Side( M );
+  R := UnderlyingRepresentation( M );
+  decomp := DecomposeRepresentation( R );
+  decomp := List( decomp, r -> AsModule( side, r ) );
+  
+  return decomp;
 end
   );
 

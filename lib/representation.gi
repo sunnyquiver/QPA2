@@ -1774,26 +1774,3 @@ function( R1, R2)
   return ForAll( L2 - L1, x -> ( x >= 0 ) );
 end
   );
-
-#######################################################################
-##
-#O  DecomposeRepresentation( <R> )
-##
-##  Given a representation  <R>  this function computes a list of 
-##  representations  L  such that  <R>  is isomorphic to the direct 
-##  sum of the representations on the list  L. 
-##
-InstallMethod( DecomposeRepresentation, 
-"for a quiver representation", true,
-[ IsQuiverRepresentation ], 0, 
-function( R )
-
-  local endo, idemmaps;
-
-  endo := EndomorphismAlgebra( R );
-  idemmaps := CompleteSetOfPrimitiveIdempotents( endo );
-  idemmaps := List( idemmaps, x -> FromEndRToHomRR( R, x ) );
-    
-  return List( idemmaps, x -> ImageObject( x ) );
-end
-  );
