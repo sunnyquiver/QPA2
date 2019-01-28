@@ -1,0 +1,183 @@
+Functions that have changed names
+============================================================
+
+AnnihilatorOfModule( M ) -> AnnihilatorOfModule( M ) and AnnihilatorOfRepresentation( R )
+
+BlockDecompositionOfModule( M ) -> BlockDecompositionOfModule( M ) and BlockDecompositionOfRepresentation( R )
+
+CoKernel( f ) -> CokernelObject( f ) (from CAP, undocumented in QPA)
+CoKernelProjection( f ) -> CokernelProjection( f ) (from CAP, undocumented in QPA)
+ComplexityOfModule( M, n ) ->  ComplexityOfModule( M, n )  and ComplexityOfRepresentation( R, n )
+ConnectedComponentsOfQuiver( quiver ) -- ConnectedComponents( quiver )
+
+DecomposeModule( M ) -> DecomposeModule( M )  and DecomposeRepresentation( R )
+DecomposeModuleWithMultiplicities( M ) -> DecomposeModuleWithMultiplicities( M )  and  DecomposeRepresentationWithMultiplicities( R ) 
+DirectSumOfQPAModules( L ) -> DirectSum( L ) (CAP operation, undocumented in QPA)
+DirectSumInclusions( M ) -- use CAP operation InjectionOfCofactorOfDirectSum
+DirectSumProjections( M ) -- use CAP operation ProjectionInFactorOfDirectSum
+DualOfModule( M ) -> DualOfModule( M ), DualOfRepresentation( R )
+DynkinQuiver( Delta, n, orientation) --> DynkinQuiver( args ), LeftDynkinQuiver( Delta, n, orientation ),
+	      	     		     	 	       	       			 RightDynkinQuiver( Delta, n, orientation )
+
+ElementOfPathAlgebra( PA, path ) -> PathAsAlgebraElement( PA, path )
+ElementOfQuotientOfPathAlgebra( family, element, computenormal ) -> QuotientOfPathAlgebraElement( A, element )
+EndOverAlgebra( M ) -> EndomorphismAlgebra( M )
+
+f * g -> PreCompose( f, g ) (from CAP, undocumented in QPA)
+FromEndMToHomMM( f ) -> FromEndRToHomRR( f )
+FromHomMMToEndM( f ) -> FromHomRRToEndR( f )
+
+GroebnerBasis( I, rels ) -> GroebnerBasis( I )
+
+HomOverAlgebra( M, N ) -> Hom( M, N ) # returns vector space instead of list
+
+IdentityMapping( M ) -> IdentityMorphism( M ) (from CAP, undocumented in QPA)
+Image( f ) -> ImageObject( f ) (from CAP, undocumented in QPA)
+ImageInclusion( f ) -> ImageEmbedding( f ) (from CAP, undocumented in QPA)
+ImageProjection( f ) -> CoastrictionToImage( f ) (from CAP, undocumented in QPA)
+IncomingArrowsOfVertex( vertex ) -> IncomingArrows( vertex )
+IndecInjectiveModules( A ) -> IndecInjRepresentations( A ) and IndecInjModule( side, A), IndecInjLeftModules( A ),
+		       	      			       	 IndecInjRightModules( A ), IndecInjBimodules( A )
+IndecProjectiveModules( A ) -> IndecProjRepresentations( A ) and IndecProjModule( side, A), IndecProjLeftModules( A ),
+			       				 IndecProjRightModules( A ), IndecProjBimodules( A )
+InDegreeOfVertex( vertex ) -> Indegree( vertex )
+IntersectionOfSubmodules( list ) -- IntersectionOfModules( L ) and IntersectionOfRepresentations( L )
+IsConnectedQuiver( quiver ) -> IsConnected( quiver )
+IsExceptionalModule( M ) -> IsExceptionalModule( M ), IsExceptionalRepresentation( R )
+IsIndecomposableModule( M ) -> IsIndecomposableModule( M )  and IsIndecomposableRepresentation( R ) 
+IsInjective( f ) -> IsMonomorphism( f ) (from CAP, undocumented)
+IsomorphicModules( M, N ) -> IsomorphicModules( M, N ), IsomorphicRepresentations( R1, R2 )
+IsPath( obj ) -> IsPath( obj ), IsLeftPath( obj), IsRightPath( obj )
+IsPathAlgebraMatModule( obj ) -> IsQuiverModule( obj ) / IsRightQuiverModule( obj )
+IsPathAlgebraModuleHomomorphism( f ) -> IsQuiverModuleHomomorphism( f )
+IsQuiver( obj )            -> IsQuiver( obj ), IsLeftQuiver, IsRightQuiver( obj )
+IsRigidModule( M ) -> IsRigidObject( M )
+IsSimpleQPAModule( M ) -> IsSimpleRepresentation( R ) and IsSimpleQuiverModule( M )
+IsSurjective( f ) -> IsEpimorphism( f ) (from CAP, undocumented)
+
+KernelInclusion( f ) -> KernelEmbedding( f ) (from CAP, undocumented in QPA)
+
+LeadingMonomial( element ), TipMonomial( element ) -> LeadingPath( element )
+LengthOfPath( path ) -> Length( path )
+LiftingIdempotent( f, e ) -> LiftIdempotent( f, e )
+
+MatricesOfPathAlgebraModule( M ) -> MatricesOfRepresentation( UnderlyingRepresentation( M ) ) # gives QPA matrices
+MatricesOfPathAlgebraMatModuleHomomorphism( f ) -- MatricesOfModuleHomomorphism( f ) # gives QPA matrices,
+					      	   				       	     MatricesOfRepresentationHomomorphism( f )
+MinimalGeneratingSetOfModule( R ) -> MinimalGeneratingSet( R ) for representations
+
+NakayamaAlgebra( admiss_seq, field ) -> NakayamaAlgebra( args), LeftNakayamaAlgebra( args ),
+		 	     	     			 			     RightNakayamaAlgebra( field, admiss_seq )
+NeighborsOfVertex( vertex ) -> Neighbors( vertex )
+
+OppositePathAlgebra( A ) -> OppositeAlgebra( A )
+OppositePathAlgebraElement( x ) -> OppositeAlgebraElement( x )
+OutDegreeOfVertex( vertex ) -> Outdegree( vertex )
+OutgoingArrowsOfVertex( vertex ) -> OutgoingArrows( vertex )
+
+PrimitiveIdempotents( A ) -> CompleteSetOfPrimitiveIdempotents( A )
+ProjectFromProductQuiver( i, p ) -> ProjectPathFromProductQuiver( i, p )
+
+Quiver( N, arrows )        -> Quiver( args ), LeftQuiver( args ), RightQuiver( args )
+Quiver( vertices, arrows ) -> RightQuiver( "Q", vertices, arrows ) # different format for arrows
+QuiverOfPathAlgebra( FQ ) -> QuiverOfAlgebra( FQ )
+QuiverProductDecomposition( Q ) -> ProductQuiverFactors( Q )
+
+RadicalOfModule( M ) -> RadicalOfModule( M ), RadicalOfRepresentation( R )
+RadicalOfModuleInclusion( R ) -> RadicalInclusion( R ) for representations
+RightModuleHomOverAlgebra( M, N, mats ) -> QuiverModuleHomomorphism( M, N, mats ) # different format for mats
+RightModuleOverPathAlgebra( A, dim_vector, gens ) -> RightQuiverModule( A, dim_vector, matrices ) # different format for matrices
+RightModuleOverPathAlgebra( A, mats ) -- no (use RightQuiverModule)
+RightModuleOverPathAlgebraNC( A, mats ) -- no (use RightQuiverModule)
+RightModuleOverPathAlgebra -> QuiverRepresentation, QuiverRepresentationNC
+
+SimpleModules( A ) ->  SimpleRepresentations( A) and SimpleModule( side, A), SimpleLeftModules( A ),
+	       	       			      	     		   SimpleRightModules( A ), SimpleBimodules( A 
+SimpleTensor( L, T ) -> ElementaryTensor( a, b, T )
+SubRepresentationInclusion( M, gens ) -> SubrepresentationInclusion( R, gens )
+SupportModuleElement( m ) -> SupportOfElement( m ) for representations
+
+TensorAlgebrasInclusion( T, n ) -> TensorAlgebraInclusions( T )[ n ]
+Tip( element ) -> LeadingTerm( element )
+TipCoefficient( element ) -> LeadingCoefficient( element )
+TopOfModule( M ) -> TopOfModule( M ), TopOfRepresentation( R )
+TopOfModuleProjection( R ) -> TopProjection( R ) for representations
+
+VertexPosition( element ) -- can use VertexNumber( LeadingPath( element ) )
+
+WalkOfPath( path ) -> ArrowList( path )
+
+ZeroMapping( M, N ) -> ZeroMorphism( M ) (from CAP, undocumented in QPA)
+ZeroModule( A ) -> RightZeroModule( A ), ZeroRepresentation( A )
+
+Functions that are the same
+============================================================
+
+BasisOfProjectives( A )
+BlockSplittingIdempotents( M ) -- for modules and representations
+
+CommonDirectSummand( M, N ) 
+ComplexityOfAlgebra( A, n )
+
+Dimension( M )
+DimensionVector( R )
+
+EnvelopingAlgebra( A )
+
+f = g -- (undocumented)
+f + g -- (undocumented)
+FullSubquiver( quiver, list )
+
+IsAcyclicQuiver( quiver ) 
+IsAdmissibleIdeal( I )
+IsDirectSummand( M, N )
+IsFiniteDimensional( A )
+IsIsomorphism( f ) -- (from CAP, undocumented)
+IsLeftUniform( element )
+IsLeftMinimal( f )
+IsNakayamaAlgebra( A )
+IsOmegaPeriodic( M )
+IsPathAlgebra( obj )
+IsQuiverAlgebra( A )
+IsQuotientOfPathAlgebra( object )
+IsRightMinimal( f )
+IsRightUniform( element )
+IsSplitEpimorphism( f ) -- (from CAP, undocumented)
+IsSplitMonomorphism( f ) -- (from CAP, undocumented)
+IsUniform( element )
+IsZero( f ) -- (from CAP, undocumented)
+
+Kernel( f ) -- (from CAP, undocumented in QPA)
+
+LeadingTerm( element )
+LeadingCoefficient( element )
+LiftingCompleteSetOfOrthogonalIdempotents( f, e )
+
+M = N 
+m ^ p -- same (action of an element from a path algebra on a module)
+MaximalCommonDirectSummand( M, N )
+
+NthSyzygy( M, n )
+NumberOfArrows( quiver )
+NumberOfVertices( quiver )
+
+OppositePath( p )
+OppositeQuiver( quiver )
+
+p * q -- same for paths
+p = q -- same for paths
+p < q -- same for paths (undocumented)
+PathAlgebra( F, Q )
+PreImagesRepresentative( f, elem ) --  (undocumented)
+ProjectiveCover( M )
+
+QuiverProduct( Q1, Q1 )
+
+RadicalSeries( M )
+Range( f ) --  (undocumented)
+RelationsOfAlgebra( A )
+
+Source( f ) --  (undocumented)
+
+TensorProductOfAlgebras( FQ1, FQ2 )
+TensorProductOfModules( M, N )
