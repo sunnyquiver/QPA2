@@ -91,3 +91,134 @@ InstallMethod ( IsLeftMinimal,
     fi;
 end
 );
+
+InstallMethod ( MoreRightMinimalVersion, 
+"for a IsQuiverRepresentationHomomorphism",
+[ IsQuiverRepresentationHomomorphism ],
+function( f ) 
+
+    local   B,  g,  A,  BHomBA,  BHomAA,  n,  ba,  aa,  gg,  hh;
+
+    B := Source( f );
+    g := KernelEmbedding( f );
+    A := Source( g );
+    BHomBA := BasisVectors( Basis( Hom( B, A ) ) );
+    if Length( BHomBA ) = 0 then 
+        return f;
+    fi;
+
+    BHomAA  := BasisVectors( Basis( Hom( A, A ) ) );
+    n := Maximum( Concatenation( DimensionVector( A ), DimensionVector( B ) ) );
+    for ba in BHomBA do 
+        for aa in BHomAA do
+            gg := PreCompose( PreCompose( g, ba ), aa)^n;
+            if gg <> ZeroMorphism( A, A ) then
+                hh := PreCompose( [ ba, aa , g ] )^n;
+                
+                return [ PreCompose( KernelEmbedding( hh ), f ), PreCompose( ImageEmbedding( hh ), f ) ];
+            fi;
+        od;
+    od;
+    
+    return f;
+end
+  );
+
+InstallMethod ( MoreLeftMinimalVersion, 
+"for a IsQuiverRepresentationHomomorphism",
+[ IsQuiverRepresentationHomomorphism ],
+function( f ) 
+
+    local   B,  g,  C,  BHomCB,  BHomCC,  n,  cc,  cb,  gg,  hh,  t;
+
+    B := Range( f );
+    g := CokernelProjection( f );
+    C := Range( g );
+    BHomCB := BasisVectors( Basis( Hom( C, B ) ) );
+    if Length( BHomCB ) = 0 then 
+        return f;
+    fi;
+    
+    BHomCC := BasisVectors( Basis( Hom( C, C ) ) );
+    n := Maximum( Concatenation( DimensionVector( B ), DimensionVector( C ) ) );
+    for cc in BHomCC do 
+        for cb in BHomCB do
+            gg := PreCompose( [ cc, cb, g ] )^n;
+            if gg <> ZeroMorphism( C, C ) then
+                hh := PreCompose( [ g, cc, cb ] )^n;
+                t := RightInverseOfHomomorphism( KernelEmbedding( hh ) );
+                
+                return [ PreCompose( f, t ), PreCompose( f, CoastrictionToImage( hh ) ) ];
+            fi;
+        od;
+    od;
+    
+    return f;
+end
+);
+
+#######################################################################
+##
+#A  RightMinimalVersion( <f> )
+##
+##  This function returns a right minimal version  f'  of the 
+##  homomorphism  <f>  in addition to a list of representations  B such that 
+##  Source(f') direct sum the representations on the list  B  is isomorphic to
+##  Source(f).
+##
+InstallMethod ( RightMinimalVersion, 
+"for a IsQuiverRepresentationHomomorphism",
+[ IsQuiverRepresentationHomomorphism ],
+function( f )
+
+    local   Bprime,  g,  L;
+
+    Bprime := [ ];
+    g := f;
+    repeat
+        L := MoreRightMinimalVersion( g );
+        if L <> g then 
+            g := L[ 1 ];
+            Add( Bprime, Source( L[ 2 ] ) );
+        fi;
+    until 
+        L = g;
+    
+    SetIsRightMinimal( g, true );
+
+    return [ g, Bprime ];
+end
+);
+
+#######################################################################
+##
+#A  LeftMinimalVersion( <f> )
+##
+##  This function returns a left minimal version  f'  of the 
+##  homomorphism  <f>  in addition to a list of representations  B such that 
+##  Range(f') direct sum the representations on the list  B  is isomorphic to
+##  Range(f).
+##
+InstallMethod ( LeftMinimalVersion, 
+"for a IsQuiverRepresentationHomomorphism",
+[ IsQuiverRepresentationHomomorphism ],
+function( f )
+
+    local   Bprime,  g,  L;
+
+    Bprime := [ ];
+    g := f;
+    repeat
+        L := MoreLeftMinimalVersion( g );
+        if L <> g then 
+            g := L[ 1 ];
+            Add( Bprime, Range( L[ 2 ] ) );
+        fi;
+    until 
+        L = g;
+
+    SetIsLeftMinimal( g, true );
+
+    return [ g, Bprime ];
+end
+  );

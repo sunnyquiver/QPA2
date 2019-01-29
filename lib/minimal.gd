@@ -15,3 +15,23 @@ DeclareProperty( "IsLeftMinimal", IsQuiverRepresentationHomomorphism );
 #! @Returns <C>true</C> or <C>false</C>
 #! @Arguments f
 DeclareProperty( "IsRightMinimal", IsQuiverRepresentationHomomorphism );
+
+#! 
+DeclareOperation( "MoreRightMinimalVersion", [ IsQuiverRepresentationHomomorphism ]);
+
+#!
+DeclareOperation( "MoreLeftMinimalVersion", [ IsQuiverRepresentationHomomorphism ]);
+
+#! @Description
+#!  This function computes the minimal right <M>\add R</M>-approximation of the
+##  representation  <C>C = Range(f)</C>.  
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments f
+DeclareAttribute( "RightMinimalVersion", IsQuiverRepresentationHomomorphism );
+
+#! @Description
+#!  This function computes the minimal left <M>\add R</M>-approximation of the
+##  representation  <C>C = Source(f)</C>.  
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments f
+DeclareAttribute( "LeftMinimalVersion", IsQuiverRepresentationHomomorphism );
