@@ -21,6 +21,7 @@ DeclareOperation( "BlockDecompositionOfRepresentation", [ IsQuiverRepresentation
 #! @EndGroup
 
 #! @BeginGroup
+#! @Description
 #!   Returns a set <M>\{ e_1,\ldots,e_t\}</M> of idempotents in the endomorphism of <A>M</A> 
 #!   such that <M>M \simeq \Im e_1 \oplus \cdots \oplus \Im e_t</M>, where each <M>\Im e_i</M> 
 #!   is isomorphic to <M>X^{n_i}_i</M> for some representation <M>X_i</M> and positive integer
@@ -44,6 +45,19 @@ DeclareOperation( "CommonDirectSummand", [ IsQuiverModule, IsQuiverModule ] );
 #! @Arguments R1, R2
 DeclareOperation( "CommonDirectSummand", [ IsQuiverRepresentation, IsQuiverRepresentation ] ); 
 #! @EndGroup
+
+#! @BeginGroup
+#! @Description
+#!   Given a module  <A>M</A>  this function computes a list of 
+#!   modules  <M>L</M>  such that  <A>M</A>  is isomorphic to the direct 
+#!   sum of the modules on the list <M>L</M>. 
+#! @Returns a list of modules
+#! @Arguments M
+DeclareOperation( "DecomposeModule", [ IsQuiverModule ] );
+#! @Arguments R
+DeclareOperation( "DecomposeRepresentation", [ IsQuiverRepresentation ] );
+#! @EndGroup
+
 
 #! @BeginGroup
 #! @Description

@@ -554,12 +554,4 @@ DeclareOperation( "FromHomRRToEndR", [ IsQuiverRepresentationHomomorphism ] );
 #! @Arguments list
 DeclareOperation( "IntersectionOfRepresentations", [ IsDenseList ] );
 
-#! @Description
-#! Given a representation  <A>R</A>  this function computes a list of 
-#! representations  <M>L</M>  such that  <A>R</A>  is isomorphic to the direct 
-#! sum of the representations on the list <M>L</M>. 
-#! @Arguments R
-#! @Returns a list of representations
-DeclareOperation( "DecomposeRepresentation", [ IsQuiverRepresentation ] );
-
 #

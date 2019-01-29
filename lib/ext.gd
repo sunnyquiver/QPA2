@@ -11,12 +11,12 @@ DeclareCategory( "IsExtSpace", IsQPAVectorSpace );
 #!  <A>R1</A> and <A>R2</A>, the function computes a (minimal) projective 
 #!  resolution 
 #!  ..... --> P_2 -- d_2 --> P_1 -- d_1 --> P_0 -- d_0 --> R1 --> 0
-#!  of the object  <A>R1<A>, this function returns the vector space of 
+#!  of the object  <A>R1</A>, this function returns the vector space of 
 #!  extensions of degree <A>n</A>, which starts in <A>R2</A> and ends in 
 #!  <A>R1</A>. The vector space of extensions are endoved with with several 
 #!  attributes,  <C>EndTerm</C>, <C>StartTerm</C>, <C>ExtDegree</C>, 
 #!  <C>AsCycleMap</C> and <C>ExtensionFromCycle</C>.
-#!  
+#! @Returns <Ref Filt="IsExtSpace"/>
 DeclareOperation( "Ext", [ IsInt, IsFieldCategoryObject, IsFieldCategoryObject ] );
 
 #! @Description
