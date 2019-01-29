@@ -135,3 +135,46 @@ function( M, gens )
   return AsModuleHomomorphism( Side( M ), r_inc );
 end );
 
+#######################################################################
+##
+#A  RightInverseOfHomomorphism( <f> )
+##
+##  This function returns false if the homomorphism  <f>  is not a  
+##  splittable monomorphism, otherwise it returns a splitting of the
+##  split monomorphism  <f>. 
+##
+InstallMethod ( RightInverseOfHomomorphism, 
+"for a IsQuiverRepresentationHomomorphism",
+[ IsQuiverRepresentationHomomorphism ],
+function( f )
+
+    local   B,  C,  CB,  mat,  id_B,  split_f;
+
+    B := Source( f );
+    C := Range( f );
+    if IsMonomorphism( f ) then 
+        CB := BasisVectors( Basis( Hom( C, B ) ) );
+        if Length( CB ) = 0 then 
+            return false;
+        fi;
+        
+        mat := [ ];
+        mat := List( CB, x -> PreCompose( f, x ) );
+        mat := List( mat, m -> Flat( FromHomRRToEndR( m ) ) ); 
+        id_B := Flat( FromHomRRToEndR( IdentityMorphism( B ) ) ); 
+        split_f := SolutionMat( mat, id_B );
+        if split_f <> fail then 
+            split_f := LinearCombination( CB, split_f );
+            SetIsSplitEpimorphism( split_f, true );
+            SetIsSplitMonomorphism( f, true );
+            SetLeftInverseOfHomomorphism( split_f, f ); 
+            return split_f;
+        else
+            SetIsSplitMonomorphism( f, false );
+            return false;
+        fi;
+    fi;
+    
+    return false;
+end
+  );

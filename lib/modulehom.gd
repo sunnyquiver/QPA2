@@ -82,6 +82,16 @@ DeclareAttribute( "UnderlyingRepresentationHomomorphism",
 DeclareAttribute( "MatricesOfModuleHomomorphism",
                   IsQuiverModuleHomomorphism );
 
+#! @Description
+#!  This function returns false if the homomorphism  <A>f</A>  is not a  
+#!  splittable monomorphism, otherwise it returns a splitting of the
+#!  split monomorphism  <A>f</A>.
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/> or <C>false</C>
+#! @Arguments f
+DeclareAttribute( "RightInverseOfHomomorphism", IsQuiverRepresentationHomomorphism );
+
+#!
+DeclareAttribute( "LeftInverseOfHomomorphism", IsQuiverRepresentationHomomorphism );
 
 #! @Section Submodules
 
