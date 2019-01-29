@@ -10,11 +10,25 @@
 DeclareOperation( "LeftApproximationByAddR", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 
 #! @Description
+#!  This function computes a minimal left <M>\add R</M>-approximation of the  
+#!  representation <A>C</A>. 
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments R, C
+DeclareOperation( "MinimalLeftApproximationByAddR", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
+
+#! @Description
 #!  This function computes a right <M>\add R</M>-approximation of the  
 #!  representation <A>C</A>, and the approximation is not necessarily minimal.
 #! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
 #! @Arguments C, R
 DeclareOperation( "RightApproximationByAddR", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
+
+#! @Description
+#!  This function computes a minimal right <M>\add R</M>-approximation of the  
+#!  representation <A>C</A>. 
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments C, R
+DeclareOperation( "MinimalRightApproximationByAddR", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 
 #! @Section Classes of algebras
 

@@ -233,3 +233,43 @@ function( C, R )
     return DirectSumCodiagonalDifference( gens );
 end
   );
+
+#######################################################################
+##
+#O  MinimalRightApproximationByAddR( <R>, <C> )
+##
+##  This function computes the minimal right add<R>-approximation of the
+##  representation  <C>.  
+##
+InstallMethod ( MinimalRightApproximationByAddR, 
+"for two IsQuiverRepresentation",
+[ IsQuiverRepresentation, IsQuiverRepresentation ],
+function( R, C )
+
+    local   f;
+   
+    f := RightApproximationByAddR( R, C );
+   
+   return RightMinimalVersion( f )[ 1 ];
+end
+);
+
+#######################################################################
+##
+#O   MinimalLeftApproximationByAddR( <C>, <R> )
+##
+##  This function computes the minimal left add<R>-approximation of the
+##  representation  <C>.  
+##
+InstallMethod ( MinimalLeftApproximationByAddR, 
+"for two IsQuiverRepresentation",
+[ IsQuiverRepresentation, IsQuiverRepresentation ],
+function( C, R )
+
+    local   f;
+   
+    f := LeftApproximationByAddR( C, R );
+   
+    return LeftMinimalVersion( f )[ 1 ];
+end
+  );

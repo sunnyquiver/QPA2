@@ -66,6 +66,9 @@ MatricesOfPathAlgebraModule( M ) -> MatricesOfRepresentation( UnderlyingRepresen
 MatricesOfPathAlgebraMatModuleHomomorphism( f ) -- MatricesOfModuleHomomorphism( f ) # gives QPA matrices,
 					      	   				       	     MatricesOfRepresentationHomomorphism( f )
 MinimalGeneratingSetOfModule( R ) -> MinimalGeneratingSet( R ) for representations
+MinimalRightApproximation( M, C ) -> MinimalRightApproximationByAddR( R, C )
+MinimalLeftApproximation( C, M ) -> MinimalLeftApproximationByAddR( C, R )
+
 
 NakayamaAlgebra( admiss_seq, field ) -> NakayamaAlgebra( args), LeftNakayamaAlgebra( args ),
 		 	     	     			 			     RightNakayamaAlgebra( field, admiss_seq )
@@ -154,6 +157,7 @@ Kernel( f ) -- (from CAP, undocumented in QPA)
 
 LeadingTerm( element )
 LeadingCoefficient( element )
+LeftMinimalVersion( f ) 
 LiftingCompleteSetOfOrthogonalIdempotents( f, e )
 
 M = N 
@@ -179,6 +183,8 @@ QuiverProduct( Q1, Q1 )
 RadicalSeries( M )
 Range( f ) --  (undocumented)
 RelationsOfAlgebra( A )
+RightInverseOfHomomorphism( f )
+RightMinimalVersion( f )
 
 Source( f ) --  (undocumented)
 
