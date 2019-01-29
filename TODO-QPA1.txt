@@ -136,7 +136,6 @@ CHAPTER 6: RIGHT MODULES OVER PATH ALGEBRAS
 RightAlgebraModuleToPathAlgebraMatModule( M ) -- no  (should be ported, change name)
 BasicVersionOfModule( M ) -- no (should be ported)
 IsDirectSumOfModules( M ) -- no (should be ported)
-IsInAdditiveClosure( M, N ) -- no (should be ported)
 IsInjectiveModule( M ) -- no (should be ported)
 IsProjectiveModule( M ) -- no (should be ported)
 IsSemisimpleModule( M ) -- no (should be ported)

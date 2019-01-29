@@ -58,6 +58,7 @@ IsSurjective( f ) -> IsEpimorphism( f ) (from CAP, undocumented)
 KernelInclusion( f ) -> KernelEmbedding( f ) (from CAP, undocumented in QPA)
 
 LeadingMonomial( element ), TipMonomial( element ) -> LeadingPath( element )
+LeftApproximationByAddM( M, C) -> LeftApproximationByAddR( R, C )
 LengthOfPath( path ) -> Length( path )
 LiftingIdempotent( f, e ) -> LiftIdempotent( f, e )
 
@@ -85,6 +86,7 @@ QuiverProductDecomposition( Q ) -> ProductQuiverFactors( Q )
 
 RadicalOfModule( M ) -> RadicalOfModule( M ), RadicalOfRepresentation( R )
 RadicalOfModuleInclusion( R ) -> RadicalInclusion( R ) for representations
+RightApproximationByAddR( C, M) -> RightApproximationByAddR( C, R )
 RightModuleHomOverAlgebra( M, N, mats ) -> QuiverModuleHomomorphism( M, N, mats ) # different format for mats
 RightModuleOverPathAlgebra( A, dim_vector, gens ) -> RightQuiverModule( A, dim_vector, matrices ) # different format for matrices
 RightModuleOverPathAlgebra( A, mats ) -- no (use RightQuiverModule)
@@ -132,6 +134,7 @@ IsAcyclicQuiver( quiver )
 IsAdmissibleIdeal( I )
 IsDirectSummand( M, N )
 IsFiniteDimensional( A )
+IsInAdditiveClosure( M, N ) 
 IsIsomorphism( f ) -- (from CAP, undocumented)
 IsLeftUniform( element )
 IsLeftMinimal( f )
