@@ -28,12 +28,20 @@ DeclareOperation( "DualFunctor", [ IsQuiverModuleCategory ] );
 #! @Section Dual
 
 #! @BeginGroup
+#! @Description
 #!  This function computes the dual <M>D(M)</M> of the module <A>M</A>, that is, 
-##  it computes <M>\Hom_k(M, k)</M>. If <A>M</A> is a module over <M>A</M>, then <M>D(M)</M> is a
-##  module over the opposite algebra of <M>A</M>.
+#!  it computes <M>\Hom_k(M, k)</M>. If <A>M</A> is a module over <M>A</M>, then <M>D(M)</M> is a
+#!  module over the opposite algebra of <M>A</M>.
+#! @Returns <Ref Filt="IsQuiverModule"/> or <Ref Filt="IsQuiverRepresentation"/> 
 #! @Arguments M
 DeclareAttribute( "DualOfModule", IsQuiverModule ); 
 #! @Arguments R
 DeclareAttribute( "DualOfRepresentation", IsQuiverRepresentation ); 
 #! @EndGroup
 
+#! @Description
+#!  This function computes the dual <M>D(f)</M> of the a homomorphism  <A>f</A>, that is, 
+#!  it computes <M>\Hom_k(f, k)</M>. 
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/> 
+#! @Arguments f
+DeclareAttribute( "DualOfRepresentationHomomorphism", IsQuiverRepresentationHomomorphism );

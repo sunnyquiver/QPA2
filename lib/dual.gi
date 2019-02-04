@@ -116,3 +116,25 @@ function( R )
     return ApplyFunctor( D, R );
 end
   );
+
+#######################################################################
+##
+#A  DualOfRepresentationHomomorphism( <f> )
+##
+##  This function computes the dual of a homomorphism from the module  
+##  <M>  to the module  <N>.
+##
+InstallMethod ( DualOfRepresentationHomomorphism,
+"for a map between two representations of a quiver",
+[ IsQuiverRepresentationHomomorphism ],
+function( f )
+
+    local   C,  D;
+    
+    C := CapCategory( f );
+    D := DualFunctor( C );
+    
+    return ApplyFunctor( D, f );
+end
+  );
+
