@@ -1,5 +1,35 @@
 #! @Chapter Homological algebra
 
+#! @Section Projective resolutions
+
+#! @Description
+#! Returns the projective cover of the quiver representation  <A>R</A>. 
+#! @Returns IsQuiverRepresentationHomomorphism
+#! @Arguments R
+DeclareAttribute( "ProjectiveCover", IsQuiverRepresentation );
+
+#! @Description
+#! Returns the minimal projective resolution of the quiver representation  <A>R</A>
+#! as a cochain complex with the homology in degree zero being isomorphic to <A>R</A>. 
+#! @Returns IsCochainComplex
+#! @Arguments R
+# DeclareAttribute( "ProjectiveResolution", IsQuiverRepresentation );
+
+#! @Section Injective resolutions
+
+#! @Description
+#! Returns the minimal injective envelope of the quiver representation  <A>R</A>
+#! @Returns IsQuiverRepresentationHomomorphism
+#! @Arguments R
+DeclareAttribute( "InjectiveEnvelope", IsQuiverRepresentation );
+
+#! @Description
+#! Returns the minimal injective resolution of the quiver representation  <A>R</A>
+#! as a cochain complex with the homology in degree zero being isomorphic to <A>R</A>. 
+#! @Returns IsCochainComplex
+#! @Arguments R
+# DeclareAttribute( "InjectiveResolution", IsQuiverRepresentation );
+
 #! @Section Approximations
 
 #! @Description

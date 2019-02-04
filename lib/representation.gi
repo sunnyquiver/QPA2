@@ -865,6 +865,7 @@ function( A, vecspace_cat )
 
   SetIsAbelianCategory( cat, true );
   SetIsAbelianCategoryWithEnoughProjectives( cat, true );
+  SetIsAbelianCategoryWithEnoughInjectives( cat, true );
 
   equal_objects := function( R1, R2 )
     return AlgebraOfRepresentation( R1 ) = AlgebraOfRepresentation( R2 ) and
@@ -1036,6 +1037,7 @@ function( A, vecspace_cat )
   AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, direct_sum_proj );
   
   AddEpimorphismFromSomeProjectiveObject( cat, ProjectiveCover );
+  AddMonomorphismIntoSomeInjectiveObject( cat, InjectiveEnvelope );
 
   # The object/morphism constructors check whether the input is well-defined or not.
   # So if it has been created then it is well-defined
@@ -1318,21 +1320,6 @@ function( R )
 
   f := TopProjection( R );
   return List( BasisVectors( Basis( Range( f ) ) ), x -> PreImagesRepresentative( f, x ) );
-end
-);
-
-InstallMethod( ProjectiveCover, "for a quiver representation",
-               [ IsQuiverRepresentation ],
-function( R )
-  local   mingen,  maps,  PR,  projections;
-
-  if Sum( DimensionVector( R ) ) = 0 then
-    return ZeroMorphism( ZeroObject( CapCategory( R ) ), R);
-  else
-    mingen := MinimalGeneratingSet( R );
-    maps := List( mingen, x -> HomFromProjective( x, R ) );
-    return UniversalMorphismFromDirectSum( maps );
-  fi;
 end
 );
 
@@ -1635,17 +1622,11 @@ function( f )
     end_f := NullMat( Dimension( Source( f ) ), Dimension( Source( f ) ), K );
     r := 1; 
     for j in [ 1..Length( dim_vect ) ] do 
-        if dim_vect[ j ] <> 0 then
-            if IsZero( matrices[ j ] ) then
-                matrix := NullMat( dim_vect[ j ], dim_vect[ j ], K );
-            elif IsIdentityMatrix( matrices[ j ] ) then
-                matrix := IdentityMat( dim_vect[ j ], K ); 
-            else
-                matrix :=  matrices[ j ]!.rows;
-            fi;
-            end_f{ [ r..r + dim_vect[ j ] - 1 ] }{ [ r..r + dim_vect[ j ] - 1 ] } := matrix;
-            r := r + dim_vect[ j ];
-        fi;
+      if dim_vect[ j ] <> 0 then
+          matrix := RowsOfMatrix( matrices[ j ] );
+        end_f{ [ r..r + dim_vect[ j ] - 1 ] }{ [ r..r + dim_vect[ j ] - 1 ] } := matrix;
+        r := r + dim_vect[ j ];
+      fi;
     od; 
 
     return end_f;

@@ -456,12 +456,6 @@ DeclareOperation( "HomFromProjective", [ IsQuiverRepresentationElement, IsQuiver
 DeclareAttribute( "MinimalGeneratingSet", IsQuiverRepresentation );
 
 #! @Description
-#! Returns the projective cover of the quiver representation  <A>R</A>. 
-#! @Returns IsQuiverRepresentationHomomorphism
-#! @Arguments R
-DeclareAttribute( "ProjectiveCover", IsQuiverRepresentation );
-
-#! @Description
 #! Category for bases of quiver representations.
 DeclareCategory( "IsQuiverRepresentationBasis", IsBasis );
 

@@ -23,6 +23,37 @@ InstallTrueMethod( IsFiniteGlobalDimensionAlgebra, IsPathAlgebra );
 InstallTrueMethod( IsExceptionalRepresentation, IsIndecomposableRepresentation and IsRigidObject );
 InstallTrueMethod( IsExceptionalModule, IsIndecomposableModule and IsRigidObject );
 
+InstallMethod( ProjectiveCover, "for a quiver representation",
+               [ IsQuiverRepresentation ],
+function( R )
+  local   mingen,  maps,  PR,  projections;
+
+  if Sum( DimensionVector( R ) ) = 0 then
+    return ZeroMorphism( ZeroObject( CapCategory( R ) ), R);
+  else
+    mingen := MinimalGeneratingSet( R );
+    maps := List( mingen, x -> HomFromProjective( x, R ) );
+    return UniversalMorphismFromDirectSum( maps );
+  fi;
+end
+);
+
+#######################################################################
+##
+#A  InjectiveEnvelope( <M> )
+##
+##  This function finds the injective envelope I(M) of the module  <M>  
+##  in that it returns the map from M ---> I(M). 
+##
+InstallMethod ( InjectiveEnvelope, 
+"for a IsQuiverRepresentation",
+[ IsQuiverRepresentation ],
+function( R );
+
+    return DualOfRepresentationHomomorphism( ProjectiveCover( DualOfRepresentation( R ) ) );
+end
+  );
+
 #######################################################################
 ##
 #O  IsOmegaPeriodic( <R>, <n> )
