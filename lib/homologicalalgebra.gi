@@ -214,7 +214,7 @@ function( R, C )
    B := BasisVectors( Basis( Range( f ) ) );
    gens := List( B, x -> PreImagesRepresentative( f, x ) ); 
    
-   return DirectSumDiagonalDifference( gens );
+   return UniversalMorphismFromDirectSum( gens );
 end
 );
 
@@ -253,7 +253,7 @@ function( C, R )
     BHomCR := BasisVectors( Basis( HomCR ) );
     for i in [ 1..Length( BHomCR ) ] do
         for j in [ 1..Length( radEndR ) ] do
-            Add( radHomCR, PreCompose( BHomCR[ i ] ), radEndR[ j ] );
+            Add( radHomCR, PreCompose( BHomCR[ i ], radEndR[ j ] ) );
         od;
     od;
     g := SubspaceInclusion( HomCR, radHomCR );
@@ -261,7 +261,7 @@ function( C, R )
     B := BasisVectors( Basis( Range( f ) ) );    
     gens := List( B, x -> PreImagesRepresentative( f, x ) ); 
     
-    return DirectSumCodiagonalDifference( gens );
+    return UniversalMorphismIntoDirectSum( gens );
 end
   );
 

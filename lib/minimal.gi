@@ -97,7 +97,9 @@ InstallMethod ( MoreRightMinimalVersion,
 [ IsQuiverRepresentationHomomorphism ],
 function( f ) 
 
-    local   B,  g,  A,  BHomBA,  BHomAA,  n,  ba,  aa,  gg,  hh;
+
+    local   B,  g,  A,  BHomBA,  BHomAA,  n,  ba,  aa,  hh,  nmaps,  
+            i,  gg;
 
     B := Source( f );
     g := KernelEmbedding( f );
@@ -111,9 +113,20 @@ function( f )
     n := Maximum( Concatenation( DimensionVector( A ), DimensionVector( B ) ) );
     for ba in BHomBA do 
         for aa in BHomAA do
-            gg := PreCompose( PreCompose( g, ba ), aa)^n;
+#            gg := PreCompose( [ g, ba , aa ] )^n;
+	    gg := PreCompose( [ g, ba , aa ] );
+	    nmaps := [ ];
+	    for i in [ 1..n ] do
+	    	Add( nmaps, gg );
+	    od;
+	    gg := PreCompose( nmaps ); 
             if gg <> ZeroMorphism( A, A ) then
-                hh := PreCompose( [ ba, aa , g ] )^n;
+                hh := PreCompose( [ ba, aa , g ] );
+                nmaps := [ ];
+                for i in [ 1..n ] do
+	    	    Add( nmaps, hh );
+                od; 
+                hh := PreCompose( nmaps );
                 
                 return [ PreCompose( KernelEmbedding( hh ), f ), PreCompose( ImageEmbedding( hh ), f ) ];
             fi;
@@ -129,7 +142,8 @@ InstallMethod ( MoreLeftMinimalVersion,
 [ IsQuiverRepresentationHomomorphism ],
 function( f ) 
 
-    local   B,  g,  C,  BHomCB,  BHomCC,  n,  cc,  cb,  gg,  hh,  t;
+    local   B,  g,  C,  BHomCB,  BHomCC,  n,  cc,  cb,  gg,  nmaps,  
+            i,  hh,  t;
 
     B := Range( f );
     g := CokernelProjection( f );
@@ -143,9 +157,21 @@ function( f )
     n := Maximum( Concatenation( DimensionVector( B ), DimensionVector( C ) ) );
     for cc in BHomCC do 
         for cb in BHomCB do
-            gg := PreCompose( [ cc, cb, g ] )^n;
+#            gg := PreCompose( [ cc, cb, g ] )^n;
+            gg := PreCompose( [ cc, cb, g ] );
+            nmaps := [ ];
+	    for i in [ 1..n ] do
+                Add( nmaps, gg );
+            od;
+	    gg := PreCompose( nmaps );             
             if gg <> ZeroMorphism( C, C ) then
-                hh := PreCompose( [ g, cc, cb ] )^n;
+#                hh := PreCompose( [ g, cc, cb ] )^n;
+                hh := PreCompose( [ g, cc, cb ] );
+                nmaps := [ ];
+                for i in [ 1..n ] do
+	    	    Add( nmaps, hh );
+                od; 
+                hh := PreCompose( nmaps );
                 t := RightInverseOfHomomorphism( KernelEmbedding( hh ) );
                 
                 return [ PreCompose( f, t ), PreCompose( f, CoastrictionToImage( hh ) ) ];
