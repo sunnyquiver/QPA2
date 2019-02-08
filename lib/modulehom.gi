@@ -90,6 +90,9 @@ end );
 
 InstallMethod( \*, [ IsMultiplicativeElement, IsQuiverModuleHomomorphism ],
 function( c, m )
+  if not c in UnderlyingField( m ) then
+    TryNextMethod();
+  fi;
   return AsModuleHomomorphism( Side( m ),
                                c * UnderlyingRepresentationHomomorphism( m ) );
 end );

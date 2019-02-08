@@ -223,8 +223,12 @@ InstallMethod( \*, [ IsMultiplicativeElement, IsQuiverRepresentationHomomorphism
   function( c, m )
   local Q;
   Q := QuiverOfRepresentation( Source( m ) );
-  return QuiverRepresentationHomomorphismNC
-  ( Source( m ), Range( m ), c*List( Vertices( Q ), v -> MapForVertex( m, v ) ) );
+  if c in UnderlyingField( m ) then
+    return QuiverRepresentationHomomorphismNC
+           ( Source( m ), Range( m ), c*List( Vertices( Q ), v -> MapForVertex( m, v ) ) );
+  else
+    TryNextMethod();
+  fi;
 end );
 
 # TODO module structure
