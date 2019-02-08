@@ -203,3 +203,4 @@ DeclareAttribute( "LeftInverse", IsLinearTransformation );
 #! @Arguments f
 DeclareAttribute( "RightInverse", IsLinearTransformation );
 
+#

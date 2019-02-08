@@ -103,3 +103,5 @@ DeclareAttribute( "AsVectorSpaceFunctor", IsQuiverRepresentationCategory );
 #! @Returns IsCapFunctor 
 #! @Arguments C
 DeclareAttribute( "AsVectorSpaceFunctor", IsQuiverModuleCategory ); 
+
+#

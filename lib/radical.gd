@@ -22,3 +22,4 @@ DeclareOperation( "RadicalSeries",  [ IsQuiverModule ] );
 DeclareOperation( "RadicalSeries",  [ IsQuiverRepresentation ] );
 #! @EndGroup
 
+#

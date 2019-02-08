@@ -31,5 +31,6 @@ ReadPackage( "QPA", "lib/complexity.gd" );
 ReadPackage( "QPA", "lib/ext.gd" );
 ReadPackage( "QPA", "lib/top.gd" );
 ReadPackage( "QPA", "lib/radical.gd" );
+ReadPackage( "QPA", "lib/socle.gd" );
 ReadPackage( "QPA", "lib/minimal.gd" );
 ReadPackage( "QPA", "lib/propmodrep.gd" );

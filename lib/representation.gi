@@ -1796,3 +1796,164 @@ function( R1, R2)
   return ForAll( L2 - L1, x -> ( x >= 0 ) );
 end
   );
+
+#######################################################################
+##
+#O  IsomorphismOfRepresentations( <M>, <N> )
+##
+##  Given two modules  <M>  and  <N>  over a (quotient of a) path algebra
+##  this function return an isomorphism from  <M>  to  <N>  is the two
+##  modules are isomorphic, and false otherwise.
+##
+InstallMethod ( IsomorphismOfRepresentations, 
+"for two IsQuiverRepresentation",
+[ IsQuiverRepresentation, IsQuiverRepresentation ], 
+function( R, S )
+
+    local   K,  dim_R,  mats,  i,  splittingmaps,  maps,  fn,  fsplit,  
+            gn,  gsplit,  f_alpha,  f_beta,  g_alpha,  g_beta,  q,  B,  
+            genImages,  delta,  recursiveIOM;
+    # 
+    # If  R  and  S are not representations over the same algebra, 
+    # return an error message.
+    #
+    if AlgebraOfRepresentation( R ) <> AlgebraOfRepresentation( S ) then 
+        return false;
+    fi;
+    #
+    # If the dimension vectors of  R  and  S  are different, they
+    # are not isomorphic, so return  false.
+    #
+    if DimensionVector( R ) <> DimensionVector( S ) then
+        return false;
+    fi;
+    #
+    # If both  R  and  S  are the zero module, return the zero map.
+    #
+    if Dimension( R ) = 0 and Dimension( S ) = 0 then
+        return ZeroMorphism( R, S );
+    fi;
+    #
+    # If  R  and  S  are the same representations (i.e. with the 
+    # same vector spaces and defining matrices, then return the 
+    # "identity homomorphism". 
+    #
+    if R = S then 
+        K := FieldOfRepresentation( R );
+        dim_R := DimensionVector( R );
+        mats := [];
+        for i in [ 1..Length( dim_R ) ] do
+            if dim_R[ i ] = 0 then
+                Add( mats, NullMat( 1, 1, K ) );
+            else
+                Add( mats, IdentityMat( dim_R[ i ], K ) );
+            fi;
+        od;
+        
+        return QuiverRepresentation( R, S, mats );
+    fi;
+    #
+    # Finds a homomorphism from  R  to  S  and corresponding homomorphism
+    # from  S  to  R  identifying a common non-zero direct summand of  R  
+    # and  S, if such exists. Otherwise it returns false. 
+    #
+    splittingmaps := function( R, S) 
+        local   HomRS,  HomSR,  rs,  sr,  m,  n,  l,  zero,  j,  i,  
+                temp,  comp,  f,  fsr,  srf;
+            
+        HomRS := BasisVectors( Basis( Hom( R, S ) ) );
+        HomSR := BasisVectors( Basis( Hom( S, R ) ) );
+        rs := Length( HomRS );
+        sr := Length( HomSR );
+      
+        if rs = 0 or sr = 0 then 
+            return false;
+        fi;
+      
+        m := Maximum( DimensionVector( R ) );
+        n := Maximum( DimensionVector( S ) );
+        if n = m then
+            l := n;
+        else
+            l := Minimum( [ n, m ] ) + 1;
+        fi;
+      
+        zero := ZeroMorphism( R, R );
+      
+        for j in [ 1..sr ] do
+            for i in [ 1..rs ] do
+                if l > 1 then  # because hom^0*hom => error!
+                    temp := PreCompose( HomRS[ i ], HomSR[ j ] );
+                    comp := [];
+                    for i in [ 1..l-1] do
+                        Add( comp, temp );
+                    od;
+                    f := PreCompose( PreCompose( comp ), HomRS[ i ] );
+                else 
+                    f := HomRS[ i ];
+                fi;
+                
+                fsr := PreCompose( f, HomSR[ j ] );
+              
+                if fsr <> zero then
+                    srf := PreCompose( HomSR[ j ], f ); 
+                    return [ fsr, srf, HomRS[ i ] ];
+                fi;
+            od;
+        od;
+
+        return false;
+    end; 
+    
+    maps := splittingmaps( R, S );
+    #
+    # No common non-zero direct summand,  R  and  S  are not isomorphic,
+    # return false.
+    #
+    if maps = false then
+        return false;
+    fi;
+    #
+    # R  and  S  has a common non-zero direct summand, find the splitting of
+    # the inclusion of this common direct summand in  R  and in  S.
+    #
+    fn := ImageEmbedding( maps[ 1 ] );
+    fsplit := RightInverseOfHomomorphism( fn );
+    gn := ImageEmbedding( maps[ 2 ] );
+    gsplit := RightInverseOfHomomorphism( gn );    
+    #
+    # Find the idempotents corresponding to these direct summands.
+    #
+    f_alpha := CoastrictionToImage( PreCompose( fsplit, fn ) );
+    f_beta := KernelEmbedding( PreCompose( fsplit, fn ) );    
+    g_alpha := ImageEmbedding( PreCompose( gsplit, gn ) );
+    g_beta := KernelEmbedding( PreCompose( gsplit, gn ) );
+    #
+    # If this direct summand is all of  R  and  S, return the appropriate
+    # isomorphism.
+    #
+    if Dimension( Source( f_beta ) ) = 0 and Dimension( Source( g_beta ) ) = 0 then
+       return PreCompose( maps[ 1 ], maps[ 3 ] ); 
+    fi;
+    #
+    # If this direct summand is not all of  R  and  S, recursively construct
+    # a possible isomorphism between the complements of this common direct 
+    # summand in  R  and in  S.
+    #
+    q := PreCompose( [ f_alpha, maps[ 1 ], maps[ 3 ] ] );
+    
+    B := BasisVectors( Basis( Source( q ) ) );
+    genImages := List( B, x -> PreImagesRepresentative( g_alpha, ImageElm( q, x ) ) );
+    
+    delta := QuiverRepresentationHomomorphismByImages( Source( f_alpha ), Source( g_alpha ), genImages );
+    recursiveIOM := IsomorphismOfRepresentations( Source( f_beta ), Source( g_beta ) );
+   
+    if recursiveIOM <> false then
+        return PreCompose( [ RightInverseOfHomomorphism( f_alpha ), delta, g_alpha ] ) + 
+               PreCompose( [ RightInverseOfHomomorphism( f_beta ), recursiveIOM, g_beta ] );        
+    else 
+        return false;
+    fi;
+end
+  ); # IsomorphismOfModules
+

@@ -30,5 +30,6 @@ ReadPackage( "QPA", "lib/complexity.gi" );
 ReadPackage( "QPA", "lib/ext.gi" );
 ReadPackage( "QPA", "lib/top.gi" );
 ReadPackage( "QPA", "lib/radical.gi" );
+ReadPackage( "QPA", "lib/socle.gi" );
 ReadPackage( "QPA", "lib/minimal.gi" );
 ReadPackage( "QPA", "lib/propmodrep.gi" );

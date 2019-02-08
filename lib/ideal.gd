@@ -123,3 +123,4 @@ DeclareAttribute( "IdealOfBasis", IsQuiverAlgebraIdealBasis );
 #!  A Groebner basis for the ideal <A>I</A>.
 DeclareAttribute( "GroebnerBasis", IsPathAlgebraIdeal );
 
+#

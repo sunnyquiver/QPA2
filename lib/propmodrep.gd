@@ -21,3 +21,5 @@ DeclareOperation( "IsomorphicModules", [ IsQuiverModule, IsQuiverModule ] );
 #! @Arguments R1, R2
 DeclareOperation( "IsomorphicRepresentations", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 #! @EndGroup
+
+#

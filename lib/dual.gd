@@ -45,3 +45,5 @@ DeclareAttribute( "DualOfRepresentation", IsQuiverRepresentation );
 #! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/> 
 #! @Arguments f
 DeclareAttribute( "DualOfRepresentationHomomorphism", IsQuiverRepresentationHomomorphism );
+
+#

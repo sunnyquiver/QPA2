@@ -2134,4 +2134,30 @@ function( Q )
                       FullSubquiver( Q, Vertices( Q ){ Positions( component_numbers, i ) } ) ) );
 end );
 
+#######################################################################
+##
+#A  AdjacencyMatrixOfQuiver( Q )
+##
+##  Returns the adjacency matrix of the quiver  Q.
+##  
+InstallMethod ( AdjacencyMatrixOfQuiver, 
+"for a quiver",
+[ IsQuiver ], 
+function( Q )
+    
+    local   arrows,  n,  mat,  a,  startpos,  endpos;
+    
+    arrows := Arrows( Q );
+    n := Length( Vertices( Q ) );
+    mat := NullMat( n, n );
+    for a in arrows do
+        startpos := VertexNumber( Source( a ) );
+        endpos := VertexNumber( Target( a ) );
+        mat[ startpos ][ endpos ] := mat[ startpos ][ endpos ] + 1;
+    od;
+    
+    return mat;
+end
+  );
+
 
