@@ -84,3 +84,4 @@ DeclareAttribute( "OriginalMorphism", IsStableCategoryModuloProjectivesMorphism 
 #! @Arguments C
 DeclareAttribute( "StableCategoryModuloProjectives", IsQuiverRepresentationCategory );
 
+#

@@ -40,3 +40,4 @@ DeclareProperty( "IsNakayamaAlgebra", IsQuiverAlgebra );
 #! @Arguments A
 DeclareAttribute( "AdmissibleSequence", IsQuiverAlgebra );
 
+#

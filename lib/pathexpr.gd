@@ -5,3 +5,5 @@ DeclareAttribute( "Coefficients", [ IsPathExpr ] );
 
 DeclareAttribute( "Paths", IsPathExpr );
 DeclareGlobalFunction( "PathExpr" );
+
+#

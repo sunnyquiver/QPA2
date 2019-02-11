@@ -9,3 +9,7 @@ InstallMethod( UnderlyingField,
 InstallMethod( SpaceContainingVector,
                [ IsFieldCategoryMorphism ],
                m -> Hom( Source( m ), Range( m ) ) );
+
+InstallMethod( \*, "for field category morphisms",
+               [ IsFieldCategoryMorphism, IsFieldCategoryMorphism ],
+               PreCompose );

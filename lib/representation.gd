@@ -548,4 +548,12 @@ DeclareOperation( "FromHomRRToEndR", [ IsQuiverRepresentationHomomorphism ] );
 #! @Arguments list
 DeclareOperation( "IntersectionOfRepresentations", [ IsDenseList ] );
 
+#! @Description
+#!  Given two representations  <A>M</A>  and  <A>N</A>  over a (quotient of a) path algebra
+#!  this function return an isomorphism from  <A>M</A>  to  <A>N</A>  if the two
+#!  representations are isomorphic, and false otherwise.
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/> or <C>false</C>
+#! @Arguments M, N
+DeclareOperation( "IsomorphismOfRepresentations", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
+
 #

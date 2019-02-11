@@ -113,3 +113,4 @@ DeclareOperation( "MaximalCommonDirectSummand", [ IsQuiverModule, IsQuiverModule
 DeclareOperation( "MaximalCommonDirectSummand", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 #! @EndGroup
 
+#

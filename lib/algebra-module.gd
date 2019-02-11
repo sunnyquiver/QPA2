@@ -30,3 +30,5 @@ DeclareAttribute( "AsRightModuleElement", IsQuiverAlgebraElement );
 DeclareAttribute( "AsBimoduleElement", IsQuiverAlgebraElement );
 
 DeclareAttribute( "AsAlgebraElement", IsQuiverModuleElement );
+
+#

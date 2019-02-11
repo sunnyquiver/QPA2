@@ -104,3 +104,4 @@ DeclareAttribute( "LeftInverseOfHomomorphism", IsQuiverRepresentationHomomorphis
 DeclareOperation( "SubmoduleInclusion",
                   [ IsQuiverModule, IsHomogeneousList ] );
 
+#

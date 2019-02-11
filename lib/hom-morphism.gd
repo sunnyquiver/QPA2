@@ -23,3 +23,4 @@ DeclareOperation( "Hom", [ IsFieldCategoryObject, IsFieldCategoryMorphism ] );
 #!
 DeclareOperation( "Hom", [ IsFieldCategoryMorphism, IsFieldCategoryMorphism ] );
 
+#

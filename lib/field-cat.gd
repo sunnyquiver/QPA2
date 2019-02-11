@@ -29,3 +29,4 @@ DeclareAttribute( "UnderlyingField", IsFieldCategoryObject );
 DeclareAttribute( "UnderlyingField", IsFieldCategoryMorphism );
 #! @EndGroup
 
+#

@@ -89,3 +89,4 @@ DeclareOperation( "ColsOfMatrix", [ IsQPAMatrix ] );
 #! @Returns IsQPAMatrix
 DeclareAttribute( "NullspaceMat", IsQPAMatrix );
 
+#

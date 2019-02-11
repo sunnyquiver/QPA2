@@ -16,3 +16,5 @@ DeclareGlobalFunction( "QPA" );
 #DeclareGlobalFunction( "PathAlgebra" );
 
 DeclareOperation( "DivideByList", [ IsQPAElement, IsList ] );
+
+#

@@ -74,4 +74,4 @@ DeclareOperation( "SimpleBimodules", [ IsDenseList ] );
 #! algebra, and then tests if the module <A>M</A> is simple.
 DeclareProperty( "IsSimpleQuiverModule", IsQuiverModule );
 
-#!
+#

@@ -1086,3 +1086,13 @@ DeclareProperty( "IsConnected", IsQuiver );
 #! @Description
 #!  Returns a list of the connected components of the quiver <A>Q</A>.
 DeclareAttribute( "ConnectedComponents", IsQuiver );
+
+#! @Section Quiver invariants
+
+#! @Description
+#!  Returns the adjacency matrix of the quiver <A>Q</A>.
+#! @Returns <C>IsMatrix</C>
+#! @Arguments Q
+DeclareAttribute( "AdjacencyMatrixOfQuiver", IsQuiver );
+
+#

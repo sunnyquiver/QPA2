@@ -361,7 +361,7 @@ end );
 InstallMethod( \*, [ IsMultiplicativeElement, IsLinearTransformation ],
 function( a, T )
   if not a in UnderlyingField( T ) then
-    Error( "scalar not from appropriate field" );
+    TryNextMethod();
   fi;
   return LinearTransformationByRightMatrix
          ( Source( T ),

@@ -5,3 +5,5 @@ DeclareCategory( "IsQPAVector", IsVector );
 DeclareCategory( "IsStandardVector", IsQPAVector );
 
 DeclareCategory( "IsEmptyVector", IsStandardVector );
+
+#

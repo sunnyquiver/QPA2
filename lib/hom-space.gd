@@ -114,3 +114,5 @@ DeclareCategory( "IsQuiverBimoduleHomSpace", IsQuiverModuleHomSpace );
 
 #!
 DeclareAttribute( "UnderlyingRepresentationHomSpace", IsQuiverModuleHomSpace );
+
+#
