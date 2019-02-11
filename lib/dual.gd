@@ -22,7 +22,6 @@ DeclareOperation( "DualFunctor", [ IsQuiverRepresentationCategory ] );
 #! @Arguments C
 DeclareOperation( "DualFunctor", [ IsQuiverModuleCategory ] );
 
-
 #! @Chapter Operations on objects and morphisms
 
 #! @Section Dual
@@ -45,3 +44,5 @@ DeclareAttribute( "DualOfRepresentation", IsQuiverRepresentation );
 #! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/> 
 #! @Arguments f
 DeclareAttribute( "DualOfRepresentationHomomorphism", IsQuiverRepresentationHomomorphism );
+
+#

@@ -137,4 +137,3 @@ function( f )
     return ApplyFunctor( D, f );
 end
   );
-

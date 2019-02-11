@@ -1,12 +1,14 @@
 Functions that have changed names
 ============================================================
 
+AlgebraAsModuleOverEnvelopingAlgebra( A ) -> AlgebraAsBimodule( A ) (undocumented)
 AnnihilatorOfModule( M ) -> AnnihilatorOfModule( M ) and AnnihilatorOfRepresentation( R )
 
 BlockDecompositionOfModule( M ) -> BlockDecompositionOfModule( M ) and BlockDecompositionOfRepresentation( R )
 
 CoKernel( f ) -> CokernelObject( f ) (from CAP, undocumented in QPA)
 CoKernelProjection( f ) -> CokernelProjection( f ) (from CAP, undocumented in QPA)
+CompletelyReduce( GB, a ) -> Reduce( e, divisors ) # divisors is a list containing the elements of GB
 ComplexityOfModule( M, n ) ->  ComplexityOfModule( M, n )  and ComplexityOfRepresentation( R, n )
 ConnectedComponentsOfQuiver( quiver ) -- ConnectedComponents( quiver )
 
@@ -27,6 +29,7 @@ f * g -> PreCompose( f, g ) (from CAP, undocumented in QPA)
 FromEndMToHomMM( f ) -> FromEndRToHomRR( f )
 FromHomMMToEndM( f ) -> FromHomRRToEndR( f )
 
+GeneratorsOfQuiver( quiver ) -> PrimitivePaths( quiver )
 GroebnerBasis( I, rels ) -> GroebnerBasis( I )
 
 HomOverAlgebra( M, N ) -> Hom( M, N ) # returns vector space instead of list
@@ -35,6 +38,8 @@ IdentityMapping( M ) -> IdentityMorphism( M ) (from CAP, undocumented in QPA)
 Image( f ) -> ImageObject( f ) (from CAP, undocumented in QPA)
 ImageInclusion( f ) -> ImageEmbedding( f ) (from CAP, undocumented in QPA)
 ImageProjection( f ) -> CoastrictionToImage( f ) (from CAP, undocumented in QPA)
+IncludeInProductQuiver( L, Q ) -> PathInProductQuiver( Q, L )
+
 IncomingArrowsOfVertex( vertex ) -> IncomingArrows( vertex )
 IndecInjectiveModules( A ) -> IndecInjRepresentations( A ) and IndecInjModule( side, A), IndecInjLeftModules( A ),
 		       	      			       	 IndecInjRightModules( A ), IndecInjBimodules( A )
@@ -99,10 +104,13 @@ RightModuleOverPathAlgebra -> QuiverRepresentation, QuiverRepresentationNC
 SimpleModules( A ) ->  SimpleRepresentations( A) and SimpleModule( side, A), SimpleLeftModules( A ),
 	       	       			      	     		   SimpleRightModules( A ), SimpleBimodules( A 
 SimpleTensor( L, T ) -> ElementaryTensor( a, b, T )
+SourceOfPath( path ) -> Source( path )
 SubRepresentationInclusion( M, gens ) -> SubrepresentationInclusion( R, gens )
 SupportModuleElement( m ) -> SupportOfElement( m ) for representations
 
+TargetOfPath( path ) -> Target( path )
 TensorAlgebrasInclusion( T, n ) -> TensorAlgebraInclusions( T )[ n ]
+TensorProductDecomposition( T ) -> TensorProductFactors( T ) (undocumented)
 Tip( element ) -> LeadingTerm( element )
 TipCoefficient( element ) -> LeadingCoefficient( element )
 TopOfModule( M ) -> TopOfModule( M ), TopOfRepresentation( R )
@@ -117,6 +125,8 @@ ZeroModule( A ) -> RightZeroModule( A ), ZeroRepresentation( A )
 
 Functions that are the same
 ============================================================
+
+AdjacencyMatrixOfQuiver( quiver ) 
 
 BasisOfProjectives( A )
 BlockSplittingIdempotents( M ) -- for modules and representations
@@ -137,6 +147,7 @@ IsAcyclicQuiver( quiver )
 IsAdmissibleIdeal( I )
 IsDirectSummand( M, N )
 IsFiniteDimensional( A )
+IsFiniteGlobalDimensionAlgebra( A )
 IsInAdditiveClosure( M, N ) 
 IsIsomorphism( f ) -- (from CAP, undocumented)
 IsLeftUniform( element )

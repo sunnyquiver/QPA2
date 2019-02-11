@@ -16,15 +16,11 @@ IsTreeQuiver( quiver )     -- no (should be ported)
 IsDynkinQuiver( quiver )   -- no (should be ported)
 Q.name                     -> Q[ vertex_label ], Q.arrow_label
 VerticesOfQuiver( quiver ) -> Vertices( quiver ) (name collision with package GRAPE, should change name)ArrowsOfQuiver( quiver )   -> Arrows( quiver ) (change name to ArrowsOfQuiver)
-AdjacencyMatrixOfQuiver( quiver ) -- no (should be ported)
-GeneratorsOfQuiver( quiver ) -> PrimitivePaths( quiver )
 OrderingOfQuiver( quiver ) -- no
 SeparatedQuiver( quiver ) -- no (should be ported)
 IsQuiverVertex( obj ) -> IsVertex( obj ) (name collision with package GRAPE, should change name)
 IsArrow( obj ) -- same (change name to IsQuiverArrow)
 IsZeroPath( obj ) -- no, there are no zero paths
-SourceOfPath( path ) -> Source( path )
-TargetOfPath( path ) -> Target( path )
 Poset( P, rel ) -- no (should be ported, use existing structure of posets in GAP?)
 Size( P ) -- no (the same as above)
 UnderlyingSet( P ) -- no (the same as above)
@@ -54,7 +50,6 @@ GroebnerBasisOfIdeal( I ) -> GroebnerBasis( I )
 IsAdmissibleQuotientOfPathAlgebra( A ) -- no (should be ported)
 IsCanonicalAlgebra( A ) -- no (should be ported)
 IsDistributiveAlgebra( A ) -- no (should be ported)
-IsFiniteGlobalDimensionAlgebra( A ) -- no (should be ported)
 IsGentleAlgebra( A ) -- no (should be ported)
 IsGorensteinAlgebra( A ) -- no (should be ported)
 IsHereditaryAlgebra( A ) -- no (should be ported) 
@@ -93,10 +88,7 @@ PosetOfPosetAlgebra( A ) -- no (should be ported)
 TruncatedPathAlgebra( F, Q, n ) -- no (should be ported)
 IsSpecialBiserialQuiver( Q ) -- no (should be ported)
 IsQuiverProductDecomposition( obj ) -- no (not needed)
-IncludeInProductQuiver( L, Q ) -> PathInProductQuiver( Q, L )
-TensorProductDecomposition( T ) -> TensorProductFactors( T ) (undocumented)
 IsEnvelopingAlgebra( A ) -- no (needed?)
-AlgebraAsModuleOverEnvelopingAlgebra( A ) -> AlgebraAsBimodule( A ) (undocumented)
 DualOfAlgebraAsModuleOverEnvelopingAlgebra( A ) -- no (should be ported)
 TrivialExtensionOfQuiverAlgebra( A ) -- no (should be ported)
 AlgebraAsQuiverAlgebra( A ) -- no (should be ported)
@@ -118,7 +110,6 @@ IsGroebnerBasis( obj ) -- no
 IsHomogeneousGroebnerBasis( gb ) -- no
 IsTipReducedGroebnerBasis( gb ) -- no
 AdmitsFinitelyManyNontips( GB ) -- no
-CompletelyReduce( GB, a ) -> Reduce( e, divisors ) # divisors is a list containing the elements of GB
 CompletelyReduceGroebnerBasis( GB ) -- no
 Enumerator( GB ) -- no
 IsPrefixOfTipInTipIdeal( GB, R ) -- no
