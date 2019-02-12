@@ -12,7 +12,7 @@ function( R )
 
     local   f,  g;
 
-    f := RadicalInclusion( DualOfRepresentation( R ) );
+    f := TopProjection( DualOfRepresentation( R ) );
     g := DualOfRepresentationHomomorphism( f );
 #        SetSocleOfRepresentation( R, Source( g ) );
     
