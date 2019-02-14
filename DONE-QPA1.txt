@@ -7,6 +7,7 @@ AllComplementsOfAlmostCompleteTiltingModule( <M>, <X> ) -> AllComplementsOfAlmos
 AllComplementsOfAlmostCompleteCoiltingModule( <M>, <X> ) -> AllComplementsOfAlmostCompleteCotiltingRepresentation( <R>, <X> )
 AnnihilatorOfModule( M ) -> AnnihilatorOfModule( M ) and AnnihilatorOfRepresentation( R )
 
+BasicVersionOfModule( M ) -> BasicVersionOfRepresentation( R )
 BlockDecompositionOfModule( M ) -> BlockDecompositionOfModule( M ) and BlockDecompositionOfRepresentation( R )
 
 CoKernel( f ) -> CokernelObject( f ) (from CAP, undocumented in QPA)
@@ -30,6 +31,7 @@ DynkinQuiver( Delta, n, orientation) --> DynkinQuiver( args ), LeftDynkinQuiver(
 ElementOfPathAlgebra( PA, path ) -> PathAsAlgebraElement( PA, path )
 ElementOfQuotientOfPathAlgebra( family, element, computenormal ) -> QuotientOfPathAlgebraElement( A, element )
 EndOverAlgebra( M ) -> EndomorphismAlgebra( M )
+EndModuloProjOverAlgebra( M ) -> StableEndomorphismAlgebraModuleProj( R )
 
 f * g -> PreCompose( f, g ) (from CAP, undocumented in QPA)
 FromEndMToHomMM( f ) -> FromEndRToHomRR( f )
@@ -40,7 +42,9 @@ GroebnerBasis( I, rels ) -> GroebnerBasis( I )
 
 HaveFiniteResolutionInAddM( <N>, <M>, <n> ) -> FiniteResolutionInAddR( N, M, n )
 HaveFiniteCoresolutionInAddM( <N>, <M>, <n> ) -> FiniteCoresolutionInAddR( N, M, n )
+HomFactoringThroughProjOverAlgebra( M, N ) -> HomFactoringThroughProj( M, N )
 HomOverAlgebra( M, N ) -> Hom( M, N ) # returns vector space instead of list
+
 
 IdentityMapping( M ) -> IdentityMorphism( M ) (from CAP, undocumented in QPA)
 Image( f ) -> ImageObject( f ) (from CAP, undocumented in QPA)
@@ -67,10 +71,11 @@ IsPathAlgebraMatModule( obj ) -> IsQuiverModule( obj ) / IsRightQuiverModule( ob
 IsPathAlgebraModuleHomomorphism( f ) -> IsQuiverModuleHomomorphism( f )
 IsQuiver( obj )            -> IsQuiver( obj ), IsLeftQuiver, IsRightQuiver( obj )
 IsRigidModule( M ) -> IsRigidObject( M )
+IsSemisimpleModule( M ) -> IsSemisimpleRepresentation( R )
 IsSimpleQPAModule( M ) -> IsSimpleRepresentation( R ) and IsSimpleQuiverModule( M )
 IsSurjective( f ) -> IsEpimorphism( f ) (from CAP, undocumented)
 IsTiltingModule( M ) -> IsTiltingObject( R )
-
+IsUAcyclicQuiver( quiver ) -> IsUnorientedAcyclicQuiver( quiver )
 
 KernelInclusion( f ) -> KernelEmbedding( f ) (from CAP, undocumented in QPA)
 
@@ -80,9 +85,9 @@ LeftFacMApproximation( <C>, <M> ) -> LeftApproximationByFacR( C, R )
 LeftMutationOfCotiltingModuleComplement( <M>, <N> ) -> LeftMutationOfCotiltingRepresentationComplement
 LeftMutationOfTiltingModuleComplement( <M>, <N> ) -> LeftMutationOfTiltingRepresentationComplement
 LeftSubMApproximation( <C>, <M> ) -> LeftApproximationBySubR( C, M )
-
 LengthOfPath( path ) -> Length( path )
 LiftingIdempotent( f, e ) -> LiftIdempotent( f, e )
+
 
 MatricesOfPathAlgebraModule( M ) -> MatricesOfRepresentation( UnderlyingRepresentation( M ) ) # gives QPA matrices
 MatricesOfPathAlgebraMatModuleHomomorphism( f ) -- MatricesOfModuleHomomorphism( f ) # gives QPA matrices,
@@ -100,6 +105,7 @@ NeighborsOfVertex( vertex ) -> Neighbors( vertex )
 N_RigidModule( <M>, <n> ) -> IsN_RigidObject( R, n )
 NumberOfComplementsOfAlmostCompleteTiltingModule( <R> ) ->  NumberOfComplementsOfAlmostCompleteTiltingRepresentation( R )
 NumberOfComplementsOfAlmostCompleteCotiltingModule( <R> ) ->  NumberOfComplementsOfAlmostCompleteCotiltingRepresentation( R )
+NumberOfNonIsoDirSummands( M ) -> NumberOfNonIsoDirectSummands( R )
 
 OppositePathAlgebra( A ) -> OppositeAlgebra( A )
 OppositePathAlgebraElement( x ) -> OppositeAlgebraElement( x )
@@ -117,6 +123,7 @@ QuiverProductDecomposition( Q ) -> ProductQuiverFactors( Q )
 
 RadicalOfModule( M ) -> RadicalOfModule( M ), RadicalOfRepresentation( R )
 RadicalOfModuleInclusion( R ) -> RadicalInclusion( R ) for representations
+RejectOfModule( M, N ) -> RejectOfRepresentation( R, N )
 RightApproximationByAddR( C, M) -> RightApproximationByAddR( C, R )
 RightModuleHomOverAlgebra( M, N, mats ) -> QuiverModuleHomomorphism( M, N, mats ) # different format for mats
 RightModuleOverPathAlgebra( A, dim_vector, gens ) -> RightQuiverModule( A, dim_vector, matrices ) # different format for matrices
@@ -134,6 +141,7 @@ SourceOfPath( path ) -> Source( path )
 SocleOfModule( M ) -> SocleOfRepresentation( R )
 SocleOfModuleInclusion( M ) -> SocleOfRepresentationInclusion( R )
 SubRepresentationInclusion( M, gens ) -> SubrepresentationInclusion( R, gens )
+SumOfSubmodules( f, g ) -> SumOfSubobjects( list )
 SupportModuleElement( m ) -> SupportOfElement( m ) for representations
 
 TargetOfPath( path ) -> Target( path )
@@ -144,6 +152,7 @@ Tip( element ) -> LeadingTerm( element )
 TipCoefficient( element ) -> LeadingCoefficient( element )
 TopOfModule( M ) -> TopOfModule( M ), TopOfRepresentation( R )
 TopOfModuleProjection( R ) -> TopProjection( R ) for representations
+TraceOfModule( M, N ) -> TraceOfRepresentation( R, N )
 
 VertexPosition( element ) -- can use VertexNumber( LeadingPath( element ) )
 
@@ -160,8 +169,12 @@ AdjacencyMatrixOfQuiver( quiver )
 BasisOfProjectives( A )
 BlockSplittingIdempotents( M ) -- for modules and representations
 
+CanonicalAlgebra( field, weights[, relcoeff] )
+CartanMatrix( A ) 
 CommonDirectSummand( M, N ) 
 ComplexityOfAlgebra( A, n )
+CoxeterMatrix( A ) 
+CoxeterPolynomial( A ) 
 
 Dimension( M )
 DimensionVector( R )
@@ -184,12 +197,18 @@ InjDimension( M )
 InjectiveEnvelope( M )
 IsAcyclicQuiver( quiver ) 
 IsAdmissibleIdeal( I )
+IsBasicAlgebra( A )
+IsCanonicalAlgebra( A ) 
 IsDirectSummand( M, N )
+IsDistributiveAlgebra( A )
+IsDynkinQuiver( quiver )  
+IsElementaryAlgebra( A )
 IsFiniteDimensional( A )
 IsFiniteGlobalDimensionAlgebra( A )
 IsInAdditiveClosure( M, N ) 
 IsIsomorphism( f ) -- (from CAP, undocumented)
 IsHereditaryAlgebra( A )
+IsKroneckerAlgebra( A )
 IsLeftUniform( element )
 IsLeftMinimal( f )
 IsNakayamaAlgebra( A )
@@ -201,19 +220,24 @@ IsQuotientOfPathAlgebra( object )
 IsRightMinimal( f )
 IsRightUniform( element )
 IsSelfinjectiveAlgebra( A ) 
+IsSemisimpleAlgebra( A ) 
 IsSplitEpimorphism( f ) -- (from CAP, undocumented)
 IsSplitMonomorphism( f ) -- (from CAP, undocumented)
+IsTreeQuiver( quiver ) 
 IsUniform( element )
 IsZero( f ) -- (from CAP, undocumented)
 IyamaGenerator( M )
 
 Kernel( f ) -- (from CAP, undocumented in QPA)
-
+KroneckerAlgebra( field, n ) 
 LeadingTerm( element )
 LeadingCoefficient( element )
 LeftApproximationByAddTHat( T, M )
+LeftInverseOfHomomorphism( f )
 LeftMinimalVersion( f ) 
 LiftingCompleteSetOfOrthogonalIdempotents( f, e )
+LoewyLength( A )
+LoewyLength( M )
 
 M = N 
 m ^ p -- same (action of an element from a path algebra on a module)
@@ -238,12 +262,15 @@ ProjDimension( M )
 QuiverProduct( Q1, Q1 )
 
 RadicalSeries( M )
+RadicalSeriesOfAlgebra( A )
 Range( f ) --  (undocumented)
 RelationsOfAlgebra( A )
 RightApproximationByPerpT( T, M )
 RightInverseOfHomomorphism( f )
 RightMinimalVersion( f )
 
+SeparatedQuiver( quiver )
+SocleSeries( M )
 Source( f ) --  (undocumented)
 
 TensorProductOfAlgebras( FQ1, FQ2 )
