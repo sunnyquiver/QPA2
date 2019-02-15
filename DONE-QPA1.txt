@@ -1,7 +1,6 @@
 Functions that have changed names
 ============================================================
 
-
 AlgebraAsModuleOverEnvelopingAlgebra( A ) -> AlgebraAsBimodule( A ) (undocumented)
 AllComplementsOfAlmostCompleteTiltingModule( <M>, <X> ) -> AllComplementsOfAlmostCompleteTiltingRepresentation( <R>, <X> )
 AllComplementsOfAlmostCompleteCoiltingModule( <M>, <X> ) -> AllComplementsOfAlmostCompleteCotiltingRepresentation( <R>, <X> )
@@ -39,6 +38,7 @@ FromHomMMToEndM( f ) -> FromHomRRToEndR( f )
 
 GeneratorsOfQuiver( quiver ) -> PrimitivePaths( quiver )
 GroebnerBasis( I, rels ) -> GroebnerBasis( I )
+GroebnerBasisOfIdeal( I ) -> GroebnerBasis( I )
 
 HaveFiniteResolutionInAddM( <N>, <M>, <n> ) -> FiniteResolutionInAddR( N, M, n )
 HaveFiniteCoresolutionInAddM( <N>, <M>, <n> ) -> FiniteCoresolutionInAddR( N, M, n )
@@ -51,7 +51,6 @@ Image( f ) -> ImageObject( f ) (from CAP, undocumented in QPA)
 ImageInclusion( f ) -> ImageEmbedding( f ) (from CAP, undocumented in QPA)
 ImageProjection( f ) -> CoastrictionToImage( f ) (from CAP, undocumented in QPA)
 IncludeInProductQuiver( L, Q ) -> PathInProductQuiver( Q, L )
-
 IncomingArrowsOfVertex( vertex ) -> IncomingArrows( vertex )
 IndecInjectiveModules( A ) -> IndecInjRepresentations( A ) and IndecInjModule( side, A), IndecInjLeftModules( A ),
 		       	      			       	 IndecInjRightModules( A ), IndecInjBimodules( A )
@@ -60,8 +59,10 @@ IndecProjectiveModules( A ) -> IndecProjRepresentations( A ) and IndecProjModule
 InDegreeOfVertex( vertex ) -> Indegree( vertex )
 InjDimensionOfModule( <M>, <n> ) -> InjDimensionOfObject( M, n )
 IntersectionOfSubmodules( list ) -- IntersectionOfModules( L ) and IntersectionOfRepresentations( L )
+IsAdmissibleQuotientOfPathAlgebra( A ) -> IsAdmissibleQuiverAlgebra( A )
 IsConnectedQuiver( quiver ) -> IsConnected( quiver )
 IsCotiltingModule( M ) -> IsCotiltingObject( R )
+IsElementOfQuotientOfPathAlgebra( obj ) -> IsQuotientOfPathAlgebraElement( obj )
 IsExceptionalModule( M ) -> IsExceptionalModule( M ), IsExceptionalRepresentation( R )
 IsIndecomposableModule( M ) -> IsIndecomposableModule( M )  and IsIndecomposableRepresentation( R ) 
 IsInjective( f ) -> IsMonomorphism( f ) (from CAP, undocumented)
@@ -140,6 +141,7 @@ SimpleTensor( L, T ) -> ElementaryTensor( a, b, T )
 SourceOfPath( path ) -> Source( path )
 SocleOfModule( M ) -> SocleOfRepresentation( R )
 SocleOfModuleInclusion( M ) -> SocleOfRepresentationInclusion( R )
+SourceOfPath( path ) -> Source( path )
 SubRepresentationInclusion( M, gens ) -> SubrepresentationInclusion( R, gens )
 SumOfSubmodules( f, g ) -> SumOfSubobjects( list )
 SupportModuleElement( m ) -> SupportOfElement( m ) for representations
