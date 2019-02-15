@@ -12,7 +12,8 @@ Quiver( adjacencymatrix )  -- no
 InfoQuiver                 -- no
 OrderedBy( quiver, ordering) -- no
 Q.name                     -> Q[ vertex_label ], Q.arrow_label
-VerticesOfQuiver( quiver ) -> Vertices( quiver ) (name collision with package GRAPE, should change name)ArrowsOfQuiver( quiver )   -> Arrows( quiver ) (change name to ArrowsOfQuiver)
+VerticesOfQuiver( quiver ) -> Vertices( quiver ) (name collision with package GRAPE, should change name)
+ArrowsOfQuiver( quiver )   -> Arrows( quiver ) (change name to ArrowsOfQuiver)
 OrderingOfQuiver( quiver ) -- no
 IsQuiverVertex( obj ) -> IsVertex( obj ) (name collision with package GRAPE, should change name)
 IsArrow( obj ) -- same (change name to IsQuiverArrow)
@@ -59,11 +60,6 @@ Centre( A ), Center( A ) -- no (should be ported)
 Dimension( A ) -- same (undocumented) 
 NakayamaAutomorphism( A ) -- no (should be ported)
 OrderOfNakayamaAutomorphism( A ) -- no (should be ported)
-<<<<<<< Updated upstream
-IsElementOfQuotientOfPathAlgebra( obj ) -> IsQuotientOfPathAlgebraElement( obj )
-=======
-RadicalSeriesOfAlgebra( A ) -- no (should be ported)
->>>>>>> Stashed changes
 Coefficients( B, element ) -- same (undocumented)
 IsNormalForm( element ) -- no (needed?)
 a < b (documented twice in QPA1 manual) -- no (needed?)
