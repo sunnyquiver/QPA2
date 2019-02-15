@@ -1781,3 +1781,31 @@ function( A )
     fi;
 end
   ); # CoxeterPolynomial
+
+#######################################################################
+##
+#O  LoewyLength ( <A> )
+##
+##  This function returns the Loewy length of the algebra  A, for a 
+##  finite dimensional (quotient of a) path algebra (by an admissible
+##  ideal).
+##
+InstallOtherMethod( LoewyLength, 
+"for (a quotient of) a path algebra",
+[ IsQuiverAlgebra ],
+function( A ) 
+
+    local fam, N;
+    
+    if not IsFiniteDimensional( A ) then
+        Error( "the entered algebra is not finite dimensional,\n" );
+    fi;
+    if not IsAdmissibleQuiverAlgebra( A ) then 
+        TryNextMethod();
+    fi;
+    N := IndecProjRepresentations( A );
+    N := List( N, x -> LoewyLength( x ) );
+    
+    return Maximum( N );
+end
+  ); 

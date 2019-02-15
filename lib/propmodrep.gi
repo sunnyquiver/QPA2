@@ -105,3 +105,32 @@ function( M, N )
     fi;
 end
   );
+
+#######################################################################
+##
+#O  LoewyLength ( <R> )
+##
+##  This function returns the Loewy length of the representation  M, 
+##  for a representation over a (quotient of a) path algebra.
+##
+InstallMethod( LoewyLength, 
+"for a IsQuiverRepresentation",
+[ IsQuiverRepresentation ],
+function( R ) 
+
+   local N, i;
+
+   N := R;
+   i := 0;
+   if Dimension( R ) = 0 then 
+      return 0;
+   fi;
+   repeat 
+       N := RadicalOfRepresentation( N );
+       i := i + 1;
+   until
+     Dimension( N ) = 0;
+   
+   return i;
+end
+);

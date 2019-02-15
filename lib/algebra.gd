@@ -173,6 +173,11 @@ DeclareAttribute( "PathAlgebra", IsQuiverAlgebra );
 #! @Arguments A
 DeclareProperty( "IsAdmissibleQuiverAlgebra", IsQuiverAlgebra );
 
+#! @Description
+#!  Returns the Loewy length of the algebra <A>A</A>.
+#! @Arguments A
+#! @Returns <C>IS_INT</C>
+#DeclareAttribute( "LoewyLength", IsQuiverAlgebra );
 
 #! @Section Basis
 

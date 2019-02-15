@@ -22,4 +22,11 @@ DeclareOperation( "IsomorphicModules", [ IsQuiverModule, IsQuiverModule ] );
 DeclareOperation( "IsomorphicRepresentations", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 #! @EndGroup
 
+#! @Description
+#! This function returns the Loewy length of the representation  M, 
+#! for a representation over a (quotient of a) path algebra.
+#! @Returns <C>IS_INT</C>
+#! @Arguments R
+DeclareAttribute( "LoewyLength", IsQuiverRepresentation  ); 
+
 #
