@@ -1494,3 +1494,88 @@ function( R )
     return S;
 end
   );
+
+#######################################################################
+##
+#O  RejectOfRepresentation( <N>, <R> )
+##
+##  This function computes the reject of the module  <R>  in  <N> by doing 
+##  the following: computes a basis for Hom(N,R) and then computes 
+##  the intersections of all the kernels of the elements in this basis. 
+##
+InstallMethod( RejectOfRepresentation,
+"for two IsQuiverRepresentation",
+[ IsQuiverRepresentation, IsQuiverRepresentation ],
+function( N, R )
+
+    local  homNR;
+    #
+    # Checking if the representations  <R>  and  <N>  are over the same algebra.
+    #
+    if AlgebraOfRepresentation(R) <> AlgebraOfRepresentation(N) then
+        Error("the entered representations are not over the same algebra,\n");
+    fi;
+    #
+    # If  Hom( N, R )  is zero, then the reject is the identity homomorphism N ---> N.
+    #
+    homNR := Hom( N, R );
+    if Dimension( homNR ) = 0 then 
+        return IdentityMorphism( N );
+    fi;
+    #
+    # Using the basis we found for  Hom( N, R )  above, and taking the intersection of 
+    # all the kernels of these homomorphisms in the basis.  This is the reject of  
+    # <R>  in  <N>.
+    #
+    homNR := BasisVectors( Basis( homNR ) );
+    if Length( homNR ) = 1 then
+       return KernelEmbedding( homNR[ 1 ] );
+    fi;
+    if Length( homNR ) > 1 then
+	return IntersectionOfRepresentations( List( homNR, f -> KernelEmbedding( f ) ) );
+    fi;
+end
+  );
+
+#######################################################################
+##
+#O  TraceOfRepresentation( <R>, <N> )
+##
+##  This function computes trace of the module  <R>  in  <N> by doing 
+##  the following: computes a basis for Hom_A(R,N) and then computes 
+##  the sum of all the images of the elements in this basis. This is 
+##  also a minimal right Fac(R)-approximation. 
+##
+InstallMethod( TraceOfRepresentation,
+"for two IsQuiverRepresentation",
+[ IsQuiverRepresentation, IsQuiverRepresentation],
+function( R, N )
+    
+    local homRN, B, trace;
+    #
+    # Checking if the representations  <R>  and  <N>  are over the same algebra.
+    #
+    if AlgebraOfRepresentation( R ) <> AlgebraOfRepresentation( N ) then
+        Error( "the entered modules are not modules over the same algebra,\n" );
+    fi;
+    #
+    # If  <R>  or  <N>  are zero, then the trace is the zero module.
+    #
+    if R = ZeroRepresentation( AlgebraOfRepresentation( R ) ) or 
+       N = ZeroRepresentation( AlgebraOfRepresentation( N ) ) then
+        return ZeroMorphism( ZeroRepresentation( AlgebraOfRepresentation( N ) ), N );
+    fi;
+    #
+    # Finding a basis for  Hom(R,N), and taking the sum of all the images of these
+    # homomorphisms from  <R>  to  <N>.  This is the trace of  <R>  in  <N>. 
+    #
+    homRN := BasisVectors( Basis( Hom( R,N ) ) );
+    if Length( homRN ) = 0 then
+        return ZeroMorphism( ZeroRepresentation( AlgebraOfRepresentation( N ) ), N );
+    fi;
+    B := BasisVectors( Basis( R ) );
+    trace := Flat(List(B, b -> List( homRN, f -> ImageElm( f, b ) ) ) ) ;
+    
+    return SubrepresentationInclusion( N, trace );
+end
+  );
