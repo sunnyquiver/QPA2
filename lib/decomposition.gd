@@ -6,6 +6,17 @@
 #! only are given for modules.  The description of the operations for 
 #! representations is similar.
 
+#! @Description
+#!  This function returns a basic version of the entered representation
+#!  <A>R</A>, that is, if <M>R \simeq R_1^{n_1} \oplus \cdots \oplus R_t^{n_t}</M>
+#!  where  <M>R_i</M>  is indecomposable, then  <M>R_1\oplus \cdots \oplus R_t</M>
+#!  is returned. At present, this function only work at for finiite 
+#!  dimensional (quotients of a) path algebra over a finite field. If
+#!  <A>R</A>  is zero, then  <A>R</A> is returned.
+#! @Returns <Ref Filt="IsQuiverRepresentation"/>
+#! @Arguments R
+DeclareOperation( "BasicVersionOfRepresentation", [ IsQuiverRepresentation ] ); 
+
 #! @BeginGroup
 #! @Description
 #!  Returns a set of modules <M>\{ M_1,\ldots, M_t\}</M> such that 
@@ -112,5 +123,14 @@ DeclareOperation( "MaximalCommonDirectSummand", [ IsQuiverModule, IsQuiverModule
 #! @Arguments R1, R2
 DeclareOperation( "MaximalCommonDirectSummand", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 #! @EndGroup
+
+#! @Description
+#! This function computes the number of non-isomorphic indecomposable 
+#!  direct summands of the representation  <A>R</A>, and in addition returns
+#!  the dimensions of the simple blocks of the semisimple ring  
+#!  <C>End(R)/rad End(R)</C>.
+#! @Returns <C>IS_INT</C>
+#! @Arguments R
+DeclareOperation( "NumberOfNonIsoDirectSummands", [ IsQuiverRepresentation ] ); 
 
 #
