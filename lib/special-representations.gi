@@ -135,3 +135,22 @@ function( A )
   return List( proj_op, p -> ApplyFunctor( dual, p ) );
 end
   );
+
+#######################################################################
+##
+#P  IsSemisimpleRepresentation( <R> )
+##
+##  Checks whether <R> is semisimple.
+##
+InstallMethod( IsSemisimpleRepresentation, 
+"for a representation over a quotient of a path algebra",
+[ IsQuiverRepresentation ],
+function( R ); 
+
+   if Dimension ( RadicalOfRepresentation( R ) ) = 0 then 
+      return true;
+   else
+      return false;
+   fi;
+end
+  ); 
