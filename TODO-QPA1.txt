@@ -11,8 +11,9 @@ CHAPTER 3: QUIVERS
 Quiver( adjacencymatrix )  -- no
 InfoQuiver                 -- no
 OrderedBy( quiver, ordering) -- no
-Q.name                     -> Q[ vertex_label ], Q.arrow_label
-VerticesOfQuiver( quiver ) -> Vertices( quiver ) (name collision with package GRAPE, should change name)ArrowsOfQuiver( quiver )   -> Arrows( quiver ) (change name to ArrowsOfQuiver)
+Q.name -> Q[ vertex_label ], Q.arrow_label
+VerticesOfQuiver( quiver ) -> Vertices( quiver ) (name collision with package GRAPE, should change name)
+ArrowsOfQuiver( quiver )   -> Arrows( quiver ) (change name to ArrowsOfQuiver)
 OrderingOfQuiver( quiver ) -- no
 IsQuiverVertex( obj ) -> IsVertex( obj ) (name collision with package GRAPE, should change name)
 IsArrow( obj ) -- same (change name to IsQuiverArrow)
@@ -24,7 +25,6 @@ PartialOrderOfPoset( P ) -- no (the same as above)
 
 CHAPTER 4: PATH ALGEBRAS
 
-AssociatedMonomialAlgebra( A ) -- no (should be ported)
 OrderingOfAlgebra( FQ ) -> no
 FQ.name -> FQ[ vertex_label ], FQ.arrow_label
 a < b -- no (needed?)
@@ -33,25 +33,13 @@ MappedExpression( expr, gens1, gens2 ) -- no (not needed)
 AssignGeneratorVariables( A ) -- no (should be ported)
 Ideal( FQ, elems ) -- same (undocumented) or QuiverAlgebraTwoSidedIdeal( FQ, elems )
 IdealOfQuotient( A ) -- same
-PathsOfLengthTwo( Q ) -- no (should be ported)
-NthPowerOfArrowIdeal( FQ, n ) -- no (should be ported, should create an ideal)
-AddNthPowerToRelations( FQ, rels, n ) -- no (should be ported)
 elt in I -- same
 IsIdealInPathAlgebra( I ) -- no (check if needed)
-IsMonomialIdeal( I ) -- no (should be ported)
-IsQuadraticIdeal( I ) -- no (should be ported)
 ProductOfIdeals( I, J ) -- no (should be ported)
 QuadraticPerpOfPathAlgebraIdeal( rels ) -- no (should be ported)
 GroebnerBasisOfIdeal( I ) -> GroebnerBasis( I ) 
 IsAdmissibleQuotientOfPathAlgebra( A ) -- no (should be ported)
-IsGentleAlgebra( A ) -- no (should be ported)
 IsGorensteinAlgebra( A ) -- no (should be ported)
-IsMonomialAlgebra( A ) -- no (should be ported)
-IsRadicalSquareZeroAlgebra( A ) -- no (should be ported)
-IsSchurianAlgebra( A ) -- no (should be ported)
-IsSemicommutativeAlgebra( A ) -- no (should be ported)
-IsSpecialBiserialAlgebra( A ) -- no (should be ported)
-IsStringAlgebra( A ) -- no (should be ported)
 IsSymmetricAlgebra( A ) -- no (should be ported)
 IsTriangularReduced( A ) -- no (should be ported)
 IsWeaklySymmetricAlgebra( A ) -- no (should be ported)
