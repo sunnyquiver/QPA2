@@ -712,3 +712,46 @@ InstallMethod( Display, [ IsLinearTransformation ],
   Display( RowsOfMatrix( mat ) );
 end );
 
+
+InstallHandlingByNiceBasis( "IsSubspaceOfQPAVectorSpace",
+  rec( detect :=
+       function( F, gens, V, z )
+         if z <> false then
+           return IsQPAVector( z );
+         else
+           return IsQPAVector( gens[ 1 ] );
+         fi;
+       end,
+       NiceFreeLeftModuleInfo := function( V )
+         local gens, whole_space, inc;
+         gens := GeneratorsOfLeftModule( V );
+         whole_space := SpaceContainingVector( Zero( V ) );
+         inc := SubspaceInclusion( whole_space, gens );
+         return rec( whole_space := whole_space,
+                     inc := inc );
+       end,
+       NiceVector := function( V, v )
+         local info, inc, pre;
+         info := NiceFreeLeftModuleInfo( V );
+         inc := info.inc;
+         pre := PreImagesRepresentative( inc, v );
+         # if pre = fail then
+         #   return fail;
+         # fi;
+         return pre;
+       end,
+       UglyVector := function( V, r )
+         local info, inc;
+         info := NiceFreeLeftModuleInfo( V );
+         inc := info.inc;
+         return ImageElm( inc, r );
+       end ) );
+
+
+InstallMethod( NiceFreeLeftModule, [ IsSubspaceOfQPAVectorSpace ],
+function( V )
+  local info;
+  info := NiceFreeLeftModuleInfo( V );
+  return Source( info.inc );
+end );
+

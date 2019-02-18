@@ -203,4 +203,7 @@ DeclareAttribute( "LeftInverse", IsLinearTransformation );
 #! @Arguments f
 DeclareAttribute( "RightInverse", IsLinearTransformation );
 
+DeclareHandlingByNiceBasis( "IsSubspaceOfQPAVectorSpace",
+                            "for subspaces of QPA vector spaces" );
+
 #
