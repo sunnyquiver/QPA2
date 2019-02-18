@@ -15,4 +15,13 @@ DeclareOperation( "SocleOfRepresentationInclusion", [ IsQuiverRepresentation ]);
 #! @Arguments R
 DeclareOperation( "SocleOfRepresentation", [ IsQuiverRepresentation ]);
 
+#! @Description
+#!  This function returns the socle series of the representation  <A>R</A>, 
+#!  for a representation over a (quotient of a) path algebra. It 
+#!  returns a list of dimension vectors of the modules: 
+#!  <M>[..., soc(R/soc^3 R), soc(R/soc^2 R), soc(R/soc R), soc R]</M>.
+#! @Returns a list of dimension vectors
+#! @Arguments R
+DeclareOperation( "SocleSeries", [ IsQuiverRepresentation ] ); 
+
 #

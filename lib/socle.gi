@@ -34,3 +34,36 @@ function( R )
     return Source (SocleOfRepresentationInclusion( R ) );
 end
 );
+
+#######################################################################
+##
+#O  SocleSeries ( <R> )
+##
+##  This function returns the socle series of the representation  R, 
+##  for a representation over a (quotient of a) path algebra. It 
+##  returns a list of dimension vectors of the modules: 
+##  [..., soc(R/soc^3 R), soc(R/soc^2 R), soc(R/soc R), soc R].
+##
+InstallMethod( SocleSeries, 
+"for a IsQuiverRepresentation",
+[ IsQuiverRepresentation ],
+function( R ) 
+
+   local N, series, i;
+
+   if Dimension( R ) = 0 then 
+      return DimensionVector( R );
+   fi;
+   series := [];
+   i := 0;
+   N := DualOfRepresentation( R );
+   repeat     
+       Add( series, DimensionVector( TopOfRepresentation( N ) ) );
+       N := RadicalOfRepresentation( N );
+       i := i + 1;
+   until
+     Dimension( N ) = 0;
+   
+   return Reversed( series );
+end
+  );

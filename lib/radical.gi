@@ -96,3 +96,39 @@ function( M )
    fi;
 end
   );
+
+#######################################################################
+##
+#A  RadicalSeriesOfAlgebra( <A> ) 
+##  
+##  This function returns the radical series of the algebra  <A> in a 
+##  list, where the first element is the algebra  <A> itself, then 
+##  radical of <A>, radical square of <A>, and so on.
+##
+InstallMethod( RadicalSeriesOfAlgebra,
+"for an algebra",
+[ IsAlgebra ],
+function ( A )
+    
+    local   radical,    # radical of the algebra <A> 
+            S,          # radical series of the algebra <A>, result
+            D,          # power of the radical
+            Brad, BD, a, b, c, gens;
+    
+    if not IsFiniteDimensional( A ) then
+      Error( "Entered algebra is not finite dimensional.\n" );
+    fi;
+    radical := RadicalOfAlgebra( A );
+    # Compute the series by repeated calling of `ProductSpace'.
+    S := [ A ];
+    D := radical;
+    while Dimension( D ) <> 0  do
+        Add( S, D );
+        D := ProductSpace( D, radical );
+    od;
+    Add( S, D ); 
+    
+    # Return the series when it becomes zero.
+    return S;
+end 
+);

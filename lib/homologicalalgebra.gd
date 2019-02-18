@@ -139,6 +139,22 @@ DeclareOperation( "LeftApproximationByAddTHat", [ IsQuiverRepresentation, IsQuiv
 #! @Arguments C, R 
 DeclareOperation( "RightApproximationByPerpT", [ IsQuiverRepresentation, IsQuiverRepresentation ]);
 
+#! @Description
+#!  This function computes the reject of the module  <A>R</A>  in  <A>N</A> by doing 
+#!  the following: computes a basis for <C>Hom(N,R)</C> and then computes 
+#!  the intersections of all the kernels of the elements in this basis.
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments N, R
+DeclareOperation( "RejectOfRepresentation", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
+
+#! @Description
+#!  This function computes trace of the module  <A>R</A>  in  <A>N</A> by doing 
+#!  the following: computes a basis for <C>Hom(R,N)</C> and then computes 
+#!  the sum of all the images of the elements in this basis. This is 
+#!  also a minimal right <C>Fac(R)</C>-approximation.
+#! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/>
+#! @Arguments R, N
+DeclareOperation( "TraceOfRepresentation", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 
 #! @Section Classes of algebras
 

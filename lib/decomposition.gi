@@ -528,3 +528,57 @@ function( M1, M2 )
 end
   );
 
+#######################################################################
+##
+#O  BasicVersionOfRepresentation( <R> )
+##
+##  This function returns a basic version of the entered representation
+##  <R>, that is, if <R> \simeq R_1^{n_1} \oplus \cdots \oplus R_t^{n_t}
+##  where  R_i  is indecomposable, then  R_1\oplus \cdots \oplus R_t
+##  is returned. At present, this function only work at for finiite 
+##  dimensional (quotients of a) path algebra over a finite field. If
+##  <R>  is zero, then  <R> is returned.
+##  
+InstallMethod( BasicVersionOfRepresentation, 
+"for a IsQuiverRepresentaiton",
+[ IsQuiverRepresentation ],
+function( R ) 
+
+    local L;
+    
+    if Dimension( R ) = 0 then
+        return R;
+    else
+        L := DecomposeRepresentationWithMultiplicities( R );
+        return DirectSum( L[ 1 ] );
+    fi;
+end
+  );
+
+#######################################################################
+##
+#O  NumberOfNonIsoDirectSummands( <R> )
+##
+##  This function computes the number of non-isomorphic indecomposable 
+##  direct summands of the representation  <R>, and in addition returns
+##  the dimensions of the simple blocks of the semisimple ring  
+##  End(R)/rad End(R). 
+##
+InstallMethod( NumberOfNonIsoDirectSummands,
+"for a IsQuiverRepresentation",
+[ IsQuiverRepresentation ],
+function( R )
+ 
+    local   EndR,  K,  J,  gens,  I,  A,  top;
+
+    EndR := EndomorphismAlgebra( R );
+    K := LeftActingDomain( R );
+    J := RadicalOfAlgebra( EndR );
+    gens := GeneratorsOfAlgebra( J );
+    I := Ideal( EndR, gens ); 
+    A := EndR/I;
+    top := CentralIdempotentsOfAlgebra( A );
+    
+    return [ Length( top ), List( DirectSumDecomposition( EndR/I ), Dimension ) ];
+end
+  );

@@ -22,7 +22,10 @@ side -> function( A, gens )
   ObjectifyWithAttributes( I, type,
                            Side, side,
                            AlgebraOfIdeal, A,
-                           Generators, gens );
+                           Generators, gens,
+                           LeftActingDomain, LeftActingDomain( A ) );
+  SetParent( I, A );
+  
   return I;
 end );
 
@@ -208,3 +211,51 @@ InstallMethod( Basis, "for quiver algebra ideal",
 InstallMethod( UnderlyingLeftModule, "for quiver algebra ideal basis",
                [ IsQuiverAlgebraIdealBasis ],
                IdealOfBasis );
+
+InstallMethod( ProductSpace,
+"for ideals in IsQuiverAlgebra",
+[ IsQuiverAlgebraIdeal, IsQuiverAlgebraIdeal ],
+function ( I, J )
+  
+  local A, sideI, sideJ, side, gens, BI, BJ, a, b, c;
+  
+  A := AlgebraOfIdeal( I );
+  if A <> AlgebraOfIdeal( J ) then
+    Error( "The entered ideals are not in the same algebra.\n" );
+  fi;
+  if not IsFiniteDimensional( A ) then
+    Error( "The entered algebra is not finite dimensional.\n" );
+  fi;
+  sideI := Side( I );
+  sideJ := Side( J );
+  if sideI = RIGHT and sideJ = LEFT then
+    Error( "Invalid combination for ideals.\n" );
+  fi;
+  if sideI = sideJ then
+    side := sideI;
+  elif sideI = RIGHT then
+    side := sideI;
+  elif sideJ = LEFT then
+    side := sideJ;
+  else
+    side := LEFT_RIGHT;
+  fi;
+  gens := [ ];
+  BI := BasisVectors( Basis( I ) );
+  BJ := BasisVectors( Basis( J ) );
+  for a in BI do
+    for b in BJ do
+      c := a * b;
+      if not IsZero( c ) then 
+        Add( gens, c );
+      fi;
+    od;
+  od;
+  gens := Unique( gens );
+  
+  return QuiverAlgebraIdeal( side, A, gens );
+end
+  );
+  
+
+

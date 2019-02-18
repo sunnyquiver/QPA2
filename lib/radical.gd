@@ -22,4 +22,13 @@ DeclareOperation( "RadicalSeries",  [ IsQuiverModule ] );
 DeclareOperation( "RadicalSeries",  [ IsQuiverRepresentation ] );
 #! @EndGroup
 
+#! @Description
+#!  This function returns the radical series of the algebra  <A>A</A> in a 
+#!  list, where the first element is the algebra  <A>A</A> itself, then 
+#!  radical of <A>A</A>, radical square of <A>A</A>, and so on.
+#! @Returns a list of <Ref Filt="IsQuiverAlgebraIdeal"/>
+#! @Arguments A
+DeclareAttribute( "RadicalSeriesOfAlgebra", IsAlgebra );
+
+
 #

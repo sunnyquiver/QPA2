@@ -1531,3 +1531,281 @@ function( A );
   return Ideal( A, Arrows( A ) );
 end
   );
+
+#######################################################################
+##
+#P  IsDistributiveAlgebra( <A> ) 
+##  
+##  This function returns true if the algebra  <A>  is finite 
+##  dimensional and distributive. Otherwise it returns false.
+##
+InstallMethod ( IsDistributiveAlgebra, 
+"for an QuotientOfPathAlgebra",
+[ IsQuiverAlgebra ],
+function( A )
+
+    local   pids,  f,  AA,  idems,  localrings,  radicalseries,  
+            uniserialtest,  radlocalrings,  i,  j,  module,  
+            testspace,  flag,  radtestspace;
+    
+    if not IsFiniteDimensional( A ) then 
+        Error( "the entered algebra is not finite dimensional,\n" );
+    fi;
+    if not IsAdmissibleQuiverAlgebra( A ) then
+        TryNextMethod( );
+    fi;
+    #  Finding a complete set of primitive idempotents in  A.
+    pids := List( Vertices( QuiverOfAlgebra( A ) ), v -> v * One( A ) );
+    f := IsomorphismMatrixAlgebra( A );
+    AA := Range( f );
+    idems := List( pids, x -> ImageElm( f, x ) );
+    #  
+    #  For each primitive idempotent e, compute eAe and check if 
+    #  eAe is a uniserial algebra for all e.
+    localrings := List(idems, i -> Subalgebra( AA, i * BasisVectors( Basis( AA ) ) * i ) );  
+    # 
+    #  Check if all algebras in  localrings  are unisersial.
+    #
+    radicalseries := List( localrings, R -> RadicalSeriesOfAlgebra( R ) );
+    uniserialtest := Flat( List( radicalseries, series -> 
+                             List( [ 1..Length( series ) - 1 ], i -> Dimension( series[ i ] ) - Dimension( series[ i + 1 ] ) ) ) );
+    if not ForAll( uniserialtest, x -> x = 1) then 
+       return false;
+    fi;
+    #  Check if the eAAe-module eAAf is uniserial or 
+    #  the fAAf-module eAAf is uniserial for all pair
+    #  of primitive idempotents e and f. 
+    radlocalrings := List( localrings, R -> Subalgebra( R, Basis( RadicalOfAlgebra( R ) ) ) );
+    for i in [ 1..Length( idems ) ] do
+        for j in [ 1..Length( idems ) ] do 
+            if i <> j then 
+                module := LeftAlgebraModule( localrings[ i ],\* ,Subspace( AA, idems[ i ] * BasisVectors( Basis( AA ) ) * idems[ j ] ) );
+                # compute the radical series of this module over localrings[i] and 
+                # check if all layers are one dimensional.
+                testspace := BasisVectors( Basis( module ) ); 
+                flag := true;
+                while Length( testspace ) <> 0 and flag do
+                    if Dimension( radlocalrings[ i ] ) = 0 then
+                        radtestspace := [];
+                    else
+                        radtestspace := Filtered( Flat( List( testspace, t -> 
+                                                List( BasisVectors( Basis( radlocalrings[ i ] ) ), b -> b^t) ) ), x -> x <> Zero( x ) );
+                    fi;
+                    if Length( radtestspace ) = 0 then
+                        if Length( testspace ) <> 1 then 
+                            flag := false;
+                        else
+                            testspace := radtestspace;
+                        fi;
+                    else
+                        radtestspace := Subspace( module, radtestspace ); 
+                        if Length( testspace ) - Dimension( radtestspace ) <> 1 then
+                            flag := false;
+                        else
+                            testspace := BasisVectors( Basis( radtestspace ) );
+                        fi;
+                    fi;
+                od;
+                if not flag then 
+                    module := RightAlgebraModule( localrings[ j ],\* , Subspace( AA, idems[ i ] * BasisVectors( Basis( AA ) ) * idems[ j ] ) );
+                    # compute the radical series of this module over localrings[j] and
+                    # check if all layers are one dimensional.
+                    testspace := BasisVectors( Basis( module ) ); 
+                    while Length( testspace ) <> 0 do
+                        if Dimension( radlocalrings[ j ] ) = 0 then
+                            radtestspace := [];
+                        else
+                            radtestspace := Filtered( Flat( List( testspace, t -> 
+                                                    List( BasisVectors( Basis( radlocalrings[ j ] ) ), b -> t^b) ) ), x -> x <> Zero( x ) );
+                        fi;
+                        if Length( radtestspace ) = 0 then
+                            if Length( testspace ) <> 1 then 
+                                return false;
+                            else
+                                testspace := radtestspace;
+                            fi;
+                        else
+                            radtestspace := Subspace( module, radtestspace ); 
+                            if Length( testspace ) - Dimension( radtestspace ) <> 1 then
+                                return false;
+                            else
+                                testspace := BasisVectors( Basis( radtestspace ) );
+                            fi;
+                        fi;
+                    od;
+                fi;
+            fi;
+        od;
+    od;
+    
+    return true;
+end 
+); 
+
+#######################################################################
+##
+#P  IsBasicAlgebra( <A> )
+##
+##  This function returns true if the entered algebra  <A>  is a (finite
+##  dimensional) basic algebra and false otherwise. This method applies 
+##  to algebras over finite fields. 
+##
+InstallMethod( IsBasicAlgebra,
+"for an algebra",
+[ IsAlgebra ],
+function( A )
+
+    local   K,  AA,  J,  L;
+    #
+    # Only finite dimensional algebras are regarded as basic.
+    # 
+    if not IsFiniteDimensional( A ) then
+        Error( "the entered algebra is not finite dimensional,\n" );
+    fi;
+    K := LeftActingDomain( A );
+    #
+    # Here we only can deal with algebras over finite fields.
+    # First we find a decomposition of the algebra modulo the
+    # radical, and then we find all the primitive idempotents 
+    # in each block. If each block only contains one primitive
+    # idempotent, then the algebra is basic. 
+    #
+    if IsFinite( K ) then 
+        AA := Range( IsomorphismMatrixAlgebra( A ) );
+        J := RadicalOfAlgebra( AA );
+        L := DirectSumDecomposition( AA/J ); 
+        L := List( L, IsCommutative );
+        return ForAll( L, l -> l = true );
+    else
+        TryNextMethod( );
+    fi;
+end
+);
+
+#######################################################################
+##
+#P  IsElementaryAlgebra( <A> )
+##
+##  This function returns true if the entered algebra  <A>  is a (finite
+##  dimensional) elementary algebra and false otherwise. This method 
+##  applies to algebras over finite fields. 
+##
+InstallMethod( IsElementaryAlgebra,
+"for an algebra",
+[ IsAlgebra ],
+function( A )
+
+    local   K,  AA,  J,  D,  L;
+    
+    K := LeftActingDomain( A );
+    #
+    # Here we only can deal with algebras over finite fields.
+    # First we find a decomposition of the algebra modulo the
+    # radical, and then we find all the primitive idempotents 
+    # in each block. If each block only contains one primitive
+    # idempotent, then the algebra is basic. 
+    #
+    AA := Range( IsomorphismMatrixAlgebra( A ) );
+    if IsFinite( K ) and IsBasicAlgebra( AA ) then
+        J := RadicalOfAlgebra( AA );
+        D := DirectSumDecomposition( AA / J );
+                # Since  A  is basic, we know that  D  only consists
+                # of simple blocks of division algebras. Hence  A  is 
+                # elementary if all the blocks have the same dimension 
+                # over  K, as then they are all the same finite field.
+                #
+        L := List( D, Dimension ); 
+        if ForAll(L, x -> x = L[ 1 ] ) then
+            return true;
+        else
+            return false;
+        fi;
+    else
+        TryNextMethod( );
+    fi;
+end
+  );
+
+InstallOtherMethod( CartanMatrix, 
+"for a finite dimensional IsQuiverAlgebra",
+[ IsQuiverAlgebra ],
+function( A ) 
+
+    local   P,  C,  i;
+   
+    if not IsFiniteDimensional( A ) then 
+	Error( "Algebra is not finite dimensional.\n" );
+    fi;
+    P := IndecProjRepresentations( A );
+    C := [];
+    for i in [ 1..Length( P ) ] do
+        Add( C, DimensionVector( P[ i ] ) );
+    od;
+
+    return C;
+end
+  ); # CartanMatrix
+
+InstallMethod( CoxeterMatrix, 
+"for a finite dimensional IsQuiverAlgebra",
+[ IsQuiverAlgebra ],
+function( A ) 
+
+    local P, C, i;
+
+    C := CartanMatrix( A );
+    if C = fail then
+	Error( "Unable to determine the Cartan matrix.\n" );
+    fi;
+    if DeterminantMat( C ) <> 0 then 
+        return ( -1 ) * C^( -1 ) * TransposedMat( C );
+    else
+        Error( "The Cartan matrix is not invertible.\n" );
+	return fail;
+    fi;
+end
+  ); # CoxeterMatrix
+
+InstallMethod( CoxeterPolynomial, 
+"for a finite dimensional IsQuiverAlgebra",
+[ IsQuiverAlgebra ],
+function( A ) 
+
+    local P, C, i;
+
+    C := CoxeterMatrix( A );
+    if C <> fail then 
+        return CharacteristicPolynomial( C );
+    else
+        return fail;
+    fi;
+end
+  ); # CoxeterPolynomial
+
+#######################################################################
+##
+#O  LoewyLength ( <A> )
+##
+##  This function returns the Loewy length of the algebra  A, for a 
+##  finite dimensional (quotient of a) path algebra (by an admissible
+##  ideal).
+##
+InstallOtherMethod( LoewyLength, 
+"for (a quotient of) a path algebra",
+[ IsQuiverAlgebra ],
+function( A ) 
+
+    local fam, N;
+    
+    if not IsFiniteDimensional( A ) then
+        Error( "the entered algebra is not finite dimensional,\n" );
+    fi;
+    if not IsAdmissibleQuiverAlgebra( A ) then 
+        TryNextMethod();
+    fi;
+    N := IndecProjRepresentations( A );
+    N := List( N, x -> LoewyLength( x ) );
+    
+    return Maximum( N );
+end
+  ); 

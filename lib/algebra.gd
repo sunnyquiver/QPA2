@@ -173,6 +173,11 @@ DeclareAttribute( "PathAlgebra", IsQuiverAlgebra );
 #! @Arguments A
 DeclareProperty( "IsAdmissibleQuiverAlgebra", IsQuiverAlgebra );
 
+#! @Description
+#!  Returns the Loewy length of the algebra <A>A</A>.
+#! @Arguments A
+#! @Returns <C>IS_INT</C>
+#DeclareAttribute( "LoewyLength", IsQuiverAlgebra );
 
 #! @Section Basis
 
@@ -744,5 +749,54 @@ DeclareAttribute( "ArrowImages", IsQuiverAlgebraHomomorphism );
 #! @Returns IsQuiverAlgebraHomomorphism
 #! @Arguments A, I
 # DeclareOperation( "NaturalHomomorphismByIdeal", [ IsQuiverAlgebra, IsQuiverAlgebraIdeal ] )
+
+#! @Section Properties of algebras
+
+#! @Description
+#!  Returns the Cartan matrix of the finite dimensional algebra <A>A</A>.
+#! @Returns <C>IsMatrix</C>
+#! @Arguments A
+# DeclareAttribute( "CartanMatrix", IsQuiverAlgebra );
+
+#! @Description
+#!  Returns the Coxeter matrix of the finite dimensional algebra <A>A</A>.
+#! @Returns <C>IsMatrix</C>
+#! @Arguments A
+DeclareAttribute( "CoxeterMatrix", IsQuiverAlgebra ); 
+
+#! @Description
+#!  Returns the Coxeter polynomial of the finite dimensional algebra <A>A</A>. 
+#! @Returns <C>IsPolynomial</C>
+#! @Arguments A
+DeclareAttribute( "CoxeterPolynomial",  IsQuiverAlgebra  ); 
+
+#! @Description
+#!  This function returns true if the algebra  <A>A</A>  is finite 
+#!  dimensional and distributive. Otherwise it returns false.
+#! @Returns <C>true</C> or <C>false</C>
+#! @Arguments A
+DeclareProperty( "IsDistributiveAlgebra", IsQuiverAlgebra );
+
+#! @Description
+#!  This function returns true if the entered algebra  <A>A</A>  is a (finite
+#!  dimensional) basic algebra and false otherwise. This method applies 
+#!  to algebras over finite fields.
+#! @Returns <C>true</C> or <C>false</C>
+#! @Arguments A
+DeclareProperty( "IsBasicAlgebra", IsAlgebra );
+
+#! @Description
+#!  This function returns true if the entered algebra  <A>A</A>  is a (finite
+#!  dimensional) elementary algebra and false otherwise. This method 
+#!  applies to algebras over finite fields. 
+#! @Returns <C>true</C> or <C>false</C>
+#! @Arguments A
+DeclareProperty( "IsElementaryAlgebra", IsAlgebra );
+
+#!
+InstallTrueMethod( IsBasicAlgebra, IsElementaryAlgebra );
+
+
+
 
 #

@@ -71,6 +71,12 @@ DeclareProperty( "IsAdmissibleIdeal", IsPathAlgebraIdeal );
 #! @Arguments I
 DeclareProperty( "IsZeroIdeal", IsQuiverAlgebraIdeal );
 
+#! @Description
+#!  Returns the field over which the algebra the ideal is contained in is defined.
+#! @Returns <C>IsField</C>
+#! @Arguments I
+DeclareAttribute( "LeftActingDomain", IsQuiverAlgebraTwoSidedIdeal );
+
 
 #! @Section Ideals as modules
 
@@ -122,5 +128,16 @@ DeclareAttribute( "IdealOfBasis", IsQuiverAlgebraIdealBasis );
 #! @Description
 #!  A Groebner basis for the ideal <A>I</A>.
 DeclareAttribute( "GroebnerBasis", IsPathAlgebraIdeal );
+
+#! @Section Operations on ideals
+
+
+#! @Description
+#!  Given two ideals <A>I</A> and <A>J</A> this function returns the product
+#!  ideal <M>IJ</M>, which gets a structure of an ideal according to the input. 
+#! @Returns <Ref Filt="IsQuiverAlgebraIdeal"/>
+#! @Arguments I, J
+#! DeclareOpertation( "ProductSpace", [ IsQuiverAlgebraIdeal, IsQuiverAlgebraIdeal ] );
+
 
 #
