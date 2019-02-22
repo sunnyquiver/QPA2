@@ -258,7 +258,7 @@ DeclareOperation( "VertexDimension", [ IsQuiverModule, IsPosInt ] );
 #!  at the vertex <A>v</A>.
 #! @Returns <Ref BookName="Reference" Filt="IsVector"/>
 #! @Arguments M, v
-DeclareOperation( "VertexDimension", [ IsQuiverModule, IsVertex ] );
+DeclareOperation( "VertexDimension", [ IsQuiverModule, IsQuiverVertex ] );
 
 #! @Section Constructing elements
 
@@ -349,7 +349,7 @@ DeclareOperation( "\[\]", [ IsQuiverModuleElement, IsPosInt ] );
 #!  Returns the vector of the element <A>e</A> at the vertex <A>v</A>.
 #! @Returns <Ref BookName="Reference" Filt="IsVector"/>
 #! @Arguments e, v
-DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsVertex ] );
+DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsQuiverVertex ] );
 
 #! @Section Acting on elements
 

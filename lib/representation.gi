@@ -56,7 +56,7 @@ function( R, vertices, vectors )
     Error( "Too many vectors (", num_vectors, " vectors for ", Length( vertices ), " vertices)" );
   fi;
   for i in [ 1 .. num_vectors ] do
-    if not IsVertex( vertices[ i ] ) then
+    if not IsQuiverVertex( vertices[ i ] ) then
       Error( "Not a vertex: ", vertices[ i ] );
     fi;
     if not vertices[ i ] in QuiverOfRepresentation( R ) then
@@ -128,7 +128,7 @@ function( e, i )
 end );
 
 InstallMethod( ElementVector, "for quiver representation element and vertex",
-               [ IsQuiverRepresentationElement, IsVertex ],
+               [ IsQuiverRepresentationElement, IsQuiverVertex ],
 function( e, v )
   return ElementVectors( e )[ VertexNumber( v ) ];
 end );
@@ -544,7 +544,7 @@ function( R, i )
 end );
 
 InstallMethod( VectorSpaceOfRepresentation, "for quiver representation and vertex",
-               [ IsQuiverRepresentation, IsVertex ],
+               [ IsQuiverRepresentation, IsQuiverVertex ],
 function( R, v )
   return VectorSpacesOfRepresentation( R )[ VertexNumber( v ) ];
 end );
@@ -556,7 +556,7 @@ function( R, i )
 end );
 
 InstallMethod( VertexDimension, "for quiver representation and vertex",
-               [ IsQuiverRepresentation, IsVertex ],
+               [ IsQuiverRepresentation, IsQuiverVertex ],
 function( R, v )
   return VertexDimension( R, VertexNumber( v ) );
 end );
@@ -574,7 +574,7 @@ function( R, a )
 end );
 
 InstallMethod( MapForPath, "for quiver representation and vertex",
-               [ IsQuiverRepresentation, IsVertex ],
+               [ IsQuiverRepresentation, IsQuiverVertex ],
 function( R, v )
   return IdentityMorphism( VectorSpaceOfRepresentation( R, v ) );
 end );
@@ -825,7 +825,7 @@ function( f, g )
 end );
 
 InstallMethod( MapForVertex, "for quiver representation homomorphism and vertex",
-               [ IsQuiverRepresentationHomomorphism, IsVertex ],
+               [ IsQuiverRepresentationHomomorphism, IsQuiverVertex ],
 function( f, v )
   return MapsOfRepresentationHomomorphism( f )[ VertexNumber( v ) ];
 end );

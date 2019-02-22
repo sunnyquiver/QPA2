@@ -7,7 +7,7 @@ function( A, basis, basis_vertices, action )
   if Length( basis ) <> Length( basis_vertices ) then
     Error( "list of vertices for basis does not have same length as list of basis elements" );
   fi;
-  if not ForAll( basis_vertices, v -> IsVertex( v ) and v in Q ) then
+  if not ForAll( basis_vertices, v -> IsQuiverVertex( v ) and v in Q ) then
     Error( "list of basis vertices contains at least one element which is not a vertex in the quiver" );
   fi;
   for i in [ 1 .. Length( basis ) ] do

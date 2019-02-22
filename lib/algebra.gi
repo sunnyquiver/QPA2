@@ -1198,7 +1198,7 @@ end );
 InstallMethod( Basis, "for quiver algebra",
                [ IsQuiverAlgebra ], CanonicalBasis );
 
-InstallMethod( BasisPathsBetweenVertices, [ IsQuiverAlgebra, IsVertex, IsVertex ],
+InstallMethod( BasisPathsBetweenVertices, [ IsQuiverAlgebra, IsQuiverVertex, IsQuiverVertex ],
 function( A, v1, v2 )
   return Filtered( BasisPaths( CanonicalBasis( A ) ),
                    p -> Source( p ) = v1 and Target( p ) = v2 );
@@ -1380,7 +1380,7 @@ InstallMethod( ImageElm, "for a homomorphism of quiver algebras",
     paths := Paths( x ); 
     imageofpaths := [];
     for p in paths do
-        if IsVertex( p ) then
+        if IsQuiverVertex( p ) then
             Add( imageofpaths, VertexImages( f )[ VertexNumber( p ) ] );
         else
             temp := One( Range( f ) );

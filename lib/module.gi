@@ -127,7 +127,7 @@ function( M, i )
 end );
 
 InstallMethod( VertexDimension,
-               [ IsQuiverModule, IsVertex ],
+               [ IsQuiverModule, IsQuiverVertex ],
 function( M, v )
   return VertexDimension( UnderlyingRepresentation( M ), v );
 end );
@@ -200,7 +200,7 @@ end );
 InstallMethod( \[\], [ IsQuiverModuleElement, IsPosInt ], ElementVector );
 
 InstallMethod( ElementVector,
-               [ IsQuiverModuleElement, IsVertex ],
+               [ IsQuiverModuleElement, IsQuiverVertex ],
 function( e, v )
   return ElementVector( UnderlyingRepresentationElement( e ), v );
 end );

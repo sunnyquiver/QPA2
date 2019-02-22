@@ -209,7 +209,7 @@ DeclareAttribute( "BasisPaths", IsQuiverAlgebraBasis );
 #!  in the quiver algebra <A>A</A> with
 #!  <A>v1</A> as source and <A>v2</A> as target.
 #! @Arguments A, v1, v2
-DeclareOperation( "BasisPathsBetweenVertices", [ IsQuiverAlgebra, IsVertex, IsVertex ] );
+DeclareOperation( "BasisPathsBetweenVertices", [ IsQuiverAlgebra, IsQuiverVertex, IsQuiverVertex ] );
 
 
 #! @Section Accessing algebra elements
@@ -261,6 +261,7 @@ DeclareOperation( "PathAsAlgebraElement", [ IsQuiverAlgebra, IsPath ] );
 
 #!
 DeclareAttribute( "Vertices", IsQuiverAlgebra );
+
 
 #!
 DeclareAttribute( "Arrows", IsQuiverAlgebra );

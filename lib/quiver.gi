@@ -3,7 +3,7 @@
 BindGlobal( "FamilyOfPaths", NewFamily( "paths" ) );
 BindGlobal( "FamilyOfQuivers", CollectionsFamily( FamilyOfPaths ) );
 
-DeclareRepresentation( "IsVertexRep", IsComponentObjectRep and IsAttributeStoringRep,
+DeclareRepresentation( "IsQuiverVertexRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "quiver", "number" ] );
 DeclareRepresentation( "IsArrowRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "quiver", "label", "number", "source", "target" ] );
@@ -404,7 +404,7 @@ dir -> function( label, vertex_labels, arrow_labels,
                   rec( label := label ) );
   SetDirection( Q, dir );
 
-  vertex_type := NewType( FamilyOfPaths, IsVertex and IsVertexRep and path_cat );
+  vertex_type := NewType( FamilyOfPaths, IsQuiverVertex and IsQuiverVertexRep and path_cat );
   make_vertex := function( num, label )
     return Objectify( vertex_type,
                       rec( quiver := Q,
@@ -458,7 +458,7 @@ end );
 
 InstallMethod( QuiverOfPath,
                "for vertex",
-	       [ IsVertex and IsVertexRep ],
+	       [ IsQuiverVertex and IsQuiverVertexRep ],
 function( a ) return a!.quiver; end );
 InstallMethod( QuiverOfPath,
                "for arrow",
@@ -473,7 +473,7 @@ InstallMethod( Direction, "for path", [ IsPath ], p -> Direction( QuiverOfPath( 
 
 InstallMethod( Source,
                "for vertex",
-	       [ IsVertex and IsVertexRep ],
+	       [ IsQuiverVertex and IsQuiverVertexRep ],
 function( v ) return v; end );
 InstallMethod( Source,
                "for arrow",
@@ -488,7 +488,7 @@ end );
 
 InstallMethod( Target,
                "for vertex",
-	       [ IsVertex and IsVertexRep ],
+	       [ IsQuiverVertex and IsQuiverVertexRep ],
 function( v ) return v; end );
 InstallMethod( Target,
                "for arrow",
@@ -506,7 +506,7 @@ InstallMethod( RightEnd, "for left path", [ IsLeftPath ], Source );
 InstallMethod( LeftEnd, "for right path", [ IsRightPath ], Source );
 InstallMethod( RightEnd, "for right path", [ IsRightPath ], Target );
 
-InstallMethod( Neighbors, "for vertex", [ IsVertex ],
+InstallMethod( Neighbors, "for vertex", [ IsQuiverVertex ],
 function( v )
   local Q, n, vertices, is_neighbor, a, i, neighbors;
   Q := QuiverOfPath( v );
@@ -530,7 +530,7 @@ end );
 
 InstallMethod( Length,
                "for vertex",
-	       [ IsVertex and IsVertexRep ],
+	       [ IsQuiverVertex and IsQuiverVertexRep ],
 function( v ) return 0; end );
 InstallMethod( Length,
                "for arrow",
@@ -545,7 +545,7 @@ end );
 
 InstallMethod( ArrowList,
                "for vertex",
-	       [ IsVertex and IsVertexRep ],
+	       [ IsQuiverVertex and IsQuiverVertexRep ],
 function( v ) return []; end );
 InstallMethod( ArrowList,
                "for arrow",
@@ -567,7 +567,7 @@ InstallMethod( ArrowListLR, "for right path", [ IsRightPath ], ArrowList );
 
 InstallMethod( AsList,
                "for vertex",
-	       [ IsVertex and IsVertexRep ],
+	       [ IsQuiverVertex and IsQuiverVertexRep ],
 function( v ) return [ v ]; end );
 InstallMethod( AsList,
                "for arrow",
@@ -589,7 +589,7 @@ InstallMethod( AsListLR, "for right path", [ IsRightPath ], AsList );
 
 InstallMethod( Label,
                "for vertex",
-	       [ IsVertex and IsVertexRep ],
+	       [ IsQuiverVertex and IsQuiverVertexRep ],
 function( v )
   return v!.label;
 end );
@@ -641,7 +641,7 @@ end );
 
 InstallMethod( VertexNumber,
                "for vertex",
-	       [ IsVertex and IsVertexRep ],
+	       [ IsQuiverVertex and IsQuiverVertexRep ],
 function( v )
   return v!.number;
 end );
@@ -669,7 +669,7 @@ end );
 
 InstallMethod( ComposePaths2,
                "for vertex and path",
-	       [ IsVertex, IsPath ],
+	       [ IsQuiverVertex, IsPath ],
 function( v, p )
   if Composable( v, p ) then
     return p;
@@ -680,7 +680,7 @@ end );
 
 InstallMethod( ComposePaths2,
                "for path and vertex",
-	       [ IsPath, IsVertex ],
+	       [ IsPath, IsQuiverVertex ],
 function( p, v )
   if Composable( p, v ) then
     return p;
@@ -835,7 +835,7 @@ function( list )
 end );
 
 InstallMethod( Subpath, "for vertex and integers",
-               [ IsVertex, IsInt, IsInt ],
+               [ IsQuiverVertex, IsInt, IsInt ],
 function( v, from, to )
   if from = 0 and to = 0 then
     return v;
@@ -900,7 +900,7 @@ function( p1, p2 )
     return true;
   elif Length( p1 ) > Length( p2 ) then
     return false;
-  elif IsVertex( p1 ) then
+  elif IsQuiverVertex( p1 ) then
     return VertexNumber( p1 ) < VertexNumber( p2 );
   elif IsArrow( p1 ) then
     return ArrowNumber( p1 ) < ArrowNumber( p2 );
@@ -920,7 +920,7 @@ end );
 
 InstallMethod( SubpathIndex, "for two vertices",
                IsIdenticalObj,
-               [ IsVertex, IsVertex ],
+               [ IsQuiverVertex, IsQuiverVertex ],
 function( v1, v2 )
   if v1 = v2 then
     return 0;
@@ -931,12 +931,12 @@ end );
 
 InstallMethod( SubpathIndex, "for vertex and nontrivial path",
                IsIdenticalObj,
-               [ IsVertex, IsNontrivialPath ],
+               [ IsQuiverVertex, IsNontrivialPath ],
                ReturnFail );
 
 InstallMethod( SubpathIndex, "for nontrivial path and vertex",
                IsIdenticalObj,
-               [ IsNontrivialPath, IsVertex ],
+               [ IsNontrivialPath, IsQuiverVertex ],
 function( p, v )
   local a, i, list;
   if Source( p ) = v then
@@ -1026,13 +1026,13 @@ InstallMethod( \/, "for right paths",
                ExtractSubpath );
 
 InstallMethod( PathOverlaps, "for vertex and path",
-               [ IsVertex, IsPath ],
+               [ IsQuiverVertex, IsPath ],
 function( v, p )
   return [];
 end );
 
 InstallMethod( PathOverlaps, "for path and vertex",
-               [ IsPath, IsVertex ],
+               [ IsPath, IsQuiverVertex ],
 function( p, v )
   return [];
 end );
@@ -1227,7 +1227,7 @@ end );
 
 InstallMethod( PrintObj,
                "for vertex",
-	       [ IsVertex ],
+	       [ IsQuiverVertex ],
 function( v )
   Print( "<vertex ", Label( v ), " in ", LabelAsString( QuiverOfPath( v ) ), ">" );
 end );
@@ -1295,7 +1295,7 @@ function( Q )
 end );
 
 # InstallMethod( \=, "for vertices",
-#  	       [ IsVertex and IsVertexRep, IsVertex and IsVertexRep ],
+#  	       [ IsQuiverVertex and IsQuiverVertexRep, IsQuiverVertex and IsQuiverVertexRep ],
 # function( v1, v2 )
 #   return QuiverOfPath( v1 ) = QuiverOfPath( v2 )
 #          and VertexNumber( v1 ) = VertexNumber( v2 );
@@ -1310,7 +1310,7 @@ end );
 # end );
 
 InstallMethod( \=, "for vertices",
-               [ IsVertex and IsVertexRep, IsVertex and IsVertexRep ],
+               [ IsQuiverVertex and IsQuiverVertexRep, IsQuiverVertex and IsQuiverVertexRep ],
                IsIdenticalObj );
 
 InstallMethod( \=, "for arrows",
@@ -1319,11 +1319,11 @@ InstallMethod( \=, "for arrows",
 
 InstallMethod( \=,
                "for vertex and nontrivial path",
- 	       [ IsVertex, IsNontrivialPath ],
+ 	       [ IsQuiverVertex, IsNontrivialPath ],
 	       ReturnFalse );
 InstallMethod( \=,
                "for nontrivial path and vertex",
- 	       [ IsNontrivialPath, IsVertex ],
+ 	       [ IsNontrivialPath, IsQuiverVertex ],
 	       ReturnFalse );
 InstallMethod( \=,
                "for arrow and composite path",
@@ -1377,7 +1377,7 @@ function( Q1, Q2, vertex_images, arrow_images )
   if Length( arrow_images ) <> NumberOfArrows( Q1 ) then
     Error( "wrong number of arrow images" );
   fi;
-  AssumeAll( vertex_images, IsVertex, "not a vertex" );
+  AssumeAll( vertex_images, IsQuiverVertex, "not a vertex" );
   AssumeAll( vertex_images, v -> v in Q2, "vertex not in range quiver" );
   AssumeAll( arrow_images, IsArrow, "not an arrow" );
   AssumeAll( arrow_images, a -> a in Q2, "arrow not in range quiver" );
@@ -1414,7 +1414,7 @@ function( m, p )
   if not p in Source( m ) then
     Error( "path is not in source of homomorphism" );
   fi;
-  if IsVertex( p ) then
+  if IsQuiverVertex( p ) then
     return VertexImages( m )[ VertexNumber( p ) ];
   else
     return PathFromArrowListNC( List( ArrowList( p ),
@@ -1465,7 +1465,7 @@ function( s, suffix )
 end );
 
 InstallMethod( OppositePath,
-               [ IsVertex ],
+               [ IsQuiverVertex ],
 function( v )
   return Vertex( OppositeQuiver( QuiverOfPath( v ) ), VertexNumber( v ) );
 end );
@@ -1783,14 +1783,14 @@ function( PQ, n, vertices, p )
       continue;
     elif not IsBound( vertices[ i ] ) then
       Error( "Vertex ", i, " missing" );
-    elif not IsVertex( vertices[ i ] ) then
+    elif not IsQuiverVertex( vertices[ i ] ) then
       Error( "Element ", i, " in vertex list is not a vertex" );
     elif factors[ i ] <> QuiverOfPath( vertices[ i ] ) then
       Error( "Vertex ", i, " is not in factor ", i, " of the product quiver" );
     fi;
   od;
   paths := List( vertices, VertexNumber );
-  if IsVertex( p ) then
+  if IsQuiverVertex( p ) then
     paths[ n ] := VertexNumber( p );
     return Vertex( PQ, ProductQuiverVertexNumber( factors, paths ) );
   else # IsArrow( p )
