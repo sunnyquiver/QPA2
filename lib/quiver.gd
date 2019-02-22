@@ -362,7 +362,8 @@ DeclareProperty( "IsAcyclicQuiver", IsQuiver );
 #!  <C>Vertex( <A>Q</A>, i )</C>.
 #! @Arguments Q
 #! @Returns list of <Ref Filt="IsQuiverVertex"/>
-DeclareAttribute( "Vertices", IsQuiver );
+DeclareOperation( "Vertices", [ IsQuiver ] );
+DeclareAttribute( "VerticesAttr", IsQuiver );
 
 #! @Description
 #!  Returns the arrows of the quiver <A>Q</A> as a list.
@@ -1085,7 +1086,8 @@ DeclareProperty( "IsConnected", IsQuiver );
 #! @Returns list of quivers
 #! @Description
 #!  Returns a list of the connected components of the quiver <A>Q</A>.
-DeclareAttribute( "ConnectedComponents", IsQuiver );
+DeclareOperation( "ConnectedComponents", [ IsQuiver ] );
+DeclareAttribute( "ConnectedComponentsAttr", IsQuiver );
 
 #! @Section Quiver invariants
 

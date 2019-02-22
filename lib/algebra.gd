@@ -260,7 +260,8 @@ DeclareOperation( "PathAsAlgebraElement", [ IsQuiverAlgebra, IsPath ] );
 #! @InsertChunk Example_PathAsAlgebraElement
 
 #!
-DeclareAttribute( "Vertices", IsQuiverAlgebra );
+DeclareOperation( "Vertices", [ IsQuiverAlgebra ] );
+DeclareAttribute( "VerticesAttr", IsQuiverAlgebra );
 
 
 #!

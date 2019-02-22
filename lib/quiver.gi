@@ -1095,12 +1095,17 @@ function( Q )
   return Length( vertices ) = 0;
 end );
 
-InstallMethod( Vertices,
+InstallMethod( VerticesAttr,
                "for quiver",
 	       [ IsQuiver and IsQuiverRep ],
 function( Q )
   return Q!.vertices;
 end );
+
+InstallMethod( Vertices,
+               "for quiver",
+	       [ IsQuiver and IsQuiverRep ],
+VerticesAttr );
 
 InstallMethod( Arrows,
                "for quiver",
@@ -2088,7 +2093,7 @@ function( Q )
   return ForAll( visited, IdFunc );
 end );
 
-InstallMethod( ConnectedComponents, "for quiver", [ IsQuiver ],
+InstallMethod( ConnectedComponentsAttr, "for quiver", [ IsQuiver ],
 function( Q )
   local component_numbers, mark_component, num_components, v, component_name;
 
@@ -2133,6 +2138,9 @@ function( Q )
                     ( component_name( i ),
                       FullSubquiver( Q, Vertices( Q ){ Positions( component_numbers, i ) } ) ) );
 end );
+
+InstallMethod( ConnectedComponentsAttr, "for quiver", [ IsQuiver ],
+ConnectedComponents );
 
 #######################################################################
 ##

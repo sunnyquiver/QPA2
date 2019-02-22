@@ -60,11 +60,14 @@ function( A, p )
   return QuiverAlgebraElementNC( A, [ One( LeftActingDomain( A ) ) ], [ p ] );
 end );
 
-InstallMethod( Vertices, [ IsQuiverAlgebra ],
+InstallMethod( VerticesAttr, [ IsQuiverAlgebra ],
 function( A )
   return List( Vertices( QuiverOfAlgebra( A ) ),
                e -> PathAsAlgebraElement( A, e ) );
 end );
+
+InstallMethod( Vertices, [ IsQuiverAlgebra ],
+VerticesAttr );
 
 InstallMethod( Arrows, [ IsQuiverAlgebra ],
 function( A )
