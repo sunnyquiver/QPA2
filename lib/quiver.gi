@@ -2160,4 +2160,355 @@ function( Q )
 end
   );
 
+InstallMethod( SeparatedQuiver, 
+"for a quiver",
+[ IsQuiver ],
+function( Q )
+
+    local   vertices,  oldarrows,  label,  arrows,  sources,  targets,  
+            a;
+    #
+    # Calling the vertices in the separated quiver for <label> and <label>', when
+    # <label> is the name of a vertex in the old quiver. For an arrow  a : v ---> w 
+    # in the quiver, we call the corresponding arrow  v ---> w'  also  a  in the 
+    # separated quiver. 
+    #
+    vertices := List( Vertices( Q ), v -> String( v ) ); 
+    Append( vertices, List( vertices, v -> Concatenation( v, "'" ) ) ); 
+    oldarrows := Arrows( Q );
+    label := Label( Q );
+    arrows := List( oldarrows, a -> String( a ) );
+    sources := List( oldarrows, a -> String( Source( a ) ) );
+    sources := List( sources, s -> Position( vertices, s ) );
+    targets := List( oldarrows, a -> Concatenation( String( Target( a ) ), "'" ) );
+    targets := List( targets, t -> Position( vertices, t ) );
+    
+    return Quiver( Direction( Q ), Concatenation( label, "separated" ), vertices, arrows, sources, targets ); 
+end
+  );
+
+#############################################################################
+##
+#P  IsAcyclicQuiver(<Q>)
+##
+##  This function returns true if a quiver <Q>  does not 
+##  contain an oriented cycle. 
+##
+InstallMethod( IsAcyclicQuiver,
+"for quivers",
+[ IsQuiver ],
+function ( Q )
+    
+    local Visit, color, GRAY, BLACK, WHITE,
+          vert, vertex_list, res, tsorted;
+    
+    WHITE := 0; GRAY := 1; BLACK := -1;
+    
+    tsorted := [];
+
+    Visit := function( v )
+      local adj, uPos, result; # adjacent vertices
+        
+      color[ v ] := GRAY;
+        
+      adj := List( Neighbors( vertex_list[ v ] ), x -> Position( vertex_list, x ) );
+      if not IsEmpty( adj ) and ForAny( adj, x -> color[ x ] = GRAY ) then
+          return false;
+      fi;
+
+      for uPos in adj do
+          if color[ uPos ] = WHITE then
+              result := Visit( uPos );
+              if not result then
+                  return false;
+              fi;
+          fi;
+      od;
+      
+      Add( tsorted, vertex_list[ v ] );
+      color[ v ] := BLACK;
+      return true;
+    end;
+    
+    color := [ ];
+    vertex_list := Vertices( Q );
+
+    for vert in [ 1 .. Length( vertex_list ) ] do
+        color[ vert ] := WHITE;
+    od;
+    
+    for vert in [ 1 .. Length( vertex_list ) ] do
+        if color[ vert ] = WHITE then
+            res := Visit( vert );
+            if not res then
+                return false;
+            fi;
+        fi;
+    od;
+    
+    tsorted := Reversed( tsorted );
+    
+    return true;
+end
+  ); # IsAcyclicQuiver
+
+#############################################################################
+##
+#P  IsTreeQuiver(<Q>)
+##
+##  This function returns true if a quiver <Q> is a tree as a graph
+##  (i.e. it is connected and contains no unoriented cycles).
+##
+InstallMethod( IsTreeQuiver,
+"for quivers",
+[ IsQuiver ],
+function ( Q )
+    
+    return ( NumberOfArrows( Q ) = NumberOfVertices( Q ) - 1 ) and IsConnected( Q );
+end
+  ); #IsTreeQuiver
+
+#############################################################################
+##
+#P  IsUnorientedAcyclicQuiver(<Q>)
+##
+##  This function returns true if a quiver <Q>  does not 
+##  contain an unoriented cycle. 
+##  Note: an oriented cycle is also an unoriented cycle
+##
+InstallMethod( IsUnorientedAcyclicQuiver,
+"for quivers",
+[ IsQuiver ],
+function ( Q )
+    
+    local Visit, color, GRAY, BLACK, WHITE,
+          vertex_list, res, vert, i;
+    
+    WHITE := 0; GRAY := 1; BLACK := -1;
+    Visit := function( v, predecessor )
+      local adj, result, vertex, arrow; 
+        
+      color[ v ] := GRAY;
+      adj := [ ];
+      for arrow in IncomingArrows( vertex_list[ v ] ) do
+        vertex := Position( vertex_list, Source( arrow ) );
+        if vertex in adj then
+          return false; # (un)oriented cycle of length 1 or 2 detected!
+        fi;
+        Add( adj, vertex );
+      od;
+      for arrow in OutgoingArrows( vertex_list[ v ] ) do
+        vertex := Position( vertex_list, Target( arrow ) );
+        if vertex in adj then
+          return false; # (un)oriented cycle of length 1 or 2 detected!
+        fi;
+        Add( adj, vertex );
+      od; 
+      # Now adj contains all vertices adjacent to v by arrows incoming to v and outgoing from v 
+      
+      for vertex in adj do
+        if ( color[ vertex ] = GRAY ) and ( predecessor <> vertex ) then
+          #cycle detected!
+          return false;
+        fi;
+        if color[ vertex ] = WHITE then
+          if not Visit( vertex, v ) then
+            return false; 
+          fi;
+        fi;
+      od;
+      color[ v ] := BLACK;
+      
+      return true;
+    end;
+    
+    color := [ ];
+    vertex_list := Vertices( Q );
+    
+    for i in [ 1 .. Length( vertex_list ) ] do
+      color[ i ] := WHITE;
+    od;
+     
+    for vert in [ 1 .. Length( vertex_list ) ] do
+      if color[ vert ] = WHITE then
+        if not Visit( vert, -1 ) then
+          return false;
+        fi;
+      fi;
+    od;
+    
+    return true;
+end
+  ); #IsUnorientedAcyclicQuiver
+
+#
+#  TODO: Find isomorphism to "standard" Dynkin
+#
+#############################################################################
+##
+#A  DynkinType( <Q> )
+##
+##  This function returns the Dynkin type of the quiver <Q>  if it is a 
+##  Dynkin quiver or extended Dynkin quiver, i.e. the underlying graph is a 
+##  Dynkin diagram or extended Dynkin.
+##  Note: function works only for connected quivers.
+##
+InstallMethod( DynkinType,
+"for quivers",
+[ IsQuiver ],
+function ( Q )
+  
+    local   GoThrough,  vertices,  degrees,  fork_vertices,  v,  deg,  
+            fork_arrows,  star_type,  arr,  neighbors1,  neighbors2,  
+            neighbors1_deg,  neighbors2_deg,  pos1,  pos2,  pos,  
+            subvertices,  indices,  Qsub,  test;
+  
+    # uaxiliary function computing the max. length of an unoriented path
+    # starting from vertex s, going through the arrow
+    # It makes sense only in this particular local situation of a "star" quiver 
+    GoThrough := function( s, arrow )
+      local temp_s, temp_arr, can_go, counter, arrows;
+      
+      counter := 0;
+      can_go := true;
+      temp_s := s;
+      temp_arr := arrow;
+      while can_go do
+        if Target( temp_arr ) <> temp_s then
+          temp_s := Target( temp_arr );
+        else
+          temp_s := Source( temp_arr );
+        fi;
+        counter := counter + 1;
+        arrows := ShallowCopy( IncomingArrows( temp_s ) );
+        Append( arrows, OutgoingArrows( temp_s ) );
+        arrows := Difference( arrows, [ temp_arr ] );
+        if Length( arrows ) = 1 then
+          temp_arr := arrows[ 1 ];
+        else
+          can_go := false;
+        fi;
+      od;
+      
+      return counter;
+    end; # GoThrough
+    
+    if not IsConnected( Q ) then
+      Print( "Quiver is not connected.\n" );
+      return false;
+    fi;
+  
+    vertices := Vertices( Q );
+    degrees := [ ];
+    fork_vertices := [ ]; 
+    
+    # collecting info on degrees of vertices
+    for v in vertices do
+      deg := DegreeOfVertex( v );
+      if deg > 2 then
+        Add( fork_vertices, v );
+        Add( degrees, deg );
+      fi;
+    od;
+    
+    if not ( NumberOfArrows( Q ) = NumberOfVertices( Q ) - 1 ) then
+      for v in vertices do 
+        if DegreeOfVertex( v ) <> 2 then 
+          return false;
+        fi;
+      od;
+      SetIsExtendedDynkinQuiver( Q, true );          
+      return Concatenation( "A~", String( Length( vertices ) - 1 ) );;
+    fi;
+        
+    if Length( degrees ) = 0 then
+        # No vertex of degree > 2 and Q is tree => Q is  A_n
+      SetIsDynkinQuiver( Q, true );
+      return Concatenation( "A", String( Length( vertices ) ) );
+    fi;
+    
+    if degrees = [ 3 ] then
+    # necessary condition for being D_n, E_6,7,8 satisfied
+    # (i.e. we have a "star" quiver with 3 arms)  
+      fork_arrows := ShallowCopy( IncomingArrows( fork_vertices[ 1 ] ) );
+      Append( fork_arrows, OutgoingArrows( fork_vertices[ 1 ] ) );
+      star_type := [ ];
+      for arr in fork_arrows do
+        Add( star_type, GoThrough( fork_vertices[ 1 ], arr ) );
+      od;
+      Sort( star_type );
+        
+      if star_type{ [ 1, 2 ] } = [ 1, 1 ] then
+        SetIsDynkinQuiver( Q, true );            
+        return Concatenation( "D", String( Length( vertices ) ) );
+      fi;
+      if star_type in [ [ 1, 2, 2 ], [ 1, 2, 3 ], [ 1, 2, 4 ] ] then
+          SetIsDynkinQuiver( Q, true );
+          return Concatenation( "E", String( Length( vertices ) ) );
+      fi;
+      if star_type in [ [ 2, 2, 2 ], [ 1, 3, 3 ], [1, 2, 5 ] ] then
+        SetIsExtendedDynkinQuiver( Q, true );
+        return Concatenation( "E~", String( Length( vertices ) - 1 ) );
+      fi;
+    fi;
+    if degrees = [ 4 ] and ( NumberOfArrows( Q ) = 4 ) and ( NumberOfVertices( Q ) = 5 ) then
+      SetIsExtendedDynkinQuiver( Q, true );
+      return Concatenation( "D~", String( Length( vertices ) - 1 ) );
+    fi;
+    if degrees = [ 3, 3 ] then
+      neighbors1 := Neighbors( fork_vertices[ 1 ] );
+      neighbors2 := Neighbors( fork_vertices[ 2 ] );
+      neighbors1_deg := List( neighbors1, v -> DegreeOfVertex( v ) );
+      neighbors2_deg := List( neighbors2, v -> DegreeOfVertex( v ) );
+      pos1 := Positions( neighbors1_deg, 1 );
+      pos2 := Positions( neighbors2_deg, 1 );
+      if ( Length( pos1 ) <> 2 ) or ( Length( pos2 ) <> 2 ) then 
+        return false;
+      else
+        pos := Position( neighbors1_deg, 1 );
+        subvertices := vertices;
+        indices := [ 1..Length( vertices ) ];
+        Remove( indices, Position( vertices, neighbors1[ pos ] ) );
+        Qsub := FullSubquiver( Q, subvertices{ indices } );
+        test := DynkinType( Qsub );
+        if test[ 1 ] = 'D' and IsDigitChar( test[2] ) then
+          return Concatenation( "D~", String( Length( vertices ) - 1 ) );
+        fi;
+      fi;
+    fi;    
+    
+    return false;
+end
+  );
+
+#################################################################
+##
+#P  IsSpecialBiserialQuiver( <Q> ) 
+## 
+##  It tests if every vertex in quiver <Q> is a source (resp. target) 
+##  of at most 2 arrows.
+##
+##  NOTE: e.g. path algebra of one loop IS NOT special biserial, but
+##        one loop IS special biserial quiver.
+##
+InstallMethod( IsSpecialBiserialQuiver,
+"for quivers",
+[ IsQuiver ],
+function ( Q )
+    
+    local vertex_list, v;
+    
+    vertex_list := Vertices( Q );
+    for v in vertex_list do
+        if Outdegree( v ) > 2 then
+            return false;
+        fi;
+        if Indegree( v ) > 2 then
+            return false;
+        fi;
+    od;
+    
+    return true;
+end
+); # IsSpecialBiserialQuiver
 
