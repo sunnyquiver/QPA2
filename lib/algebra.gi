@@ -1940,3 +1940,47 @@ function( A )
     return Subalgebra( A, basis, "basis" );
 end
   );
+
+#######################################################################
+##
+#O  FindMultiplicativeIdentity( <A> )
+##
+##  This function finds the multiplicative identity of a finite 
+##  dimensional algebra, if it exists. 
+##
+InstallMethod ( FindMultiplicativeIdentity, 
+"for a finite dimensional algebra",
+[ IsAlgebra ],
+function( A )
+    
+    local   B,  constantterm,  matrix,  i,  b1,  partialmatrix,  b2,  
+            totalmatrix,  totalconstantterm,  identity;
+    
+    if not IsFiniteDimensional( A ) then
+        Error( "The entered algebra is not finite dimensional.\n" );
+    fi;
+    B := Basis( A ); 
+    
+    constantterm := [ ];
+    matrix := [ ];
+    i := 1;
+    for b1 in B do
+        partialmatrix := [ ];
+        for b2 in B do 
+            Add( partialmatrix, Coefficients( B, b2 * b1 ) );
+        od;
+        Add( constantterm, Coefficients( B, b1 ) );
+        Add( matrix, [ 1, i, partialmatrix ] );
+        i := i + 1;
+    od;
+    totalmatrix := BlockMatrix( matrix, 1, i - 1 );
+    totalconstantterm := Flat( constantterm );
+    identity := SolutionMat( totalmatrix, totalconstantterm );
+    
+    if identity = fail then
+        return fail;
+    else
+        return LinearCombination( B, identity );
+    fi;
+end
+  );

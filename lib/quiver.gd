@@ -351,6 +351,7 @@ DeclareAttribute( "QuiverCategory", IsQuiver );
 #! @Description
 #!  Returns <C>true</C> if the quiver does not contain any oriented cycle,
 #!  <C>false</C> otherwise.
+#! @Returns <C>IsBool</C>
 DeclareProperty( "IsAcyclicQuiver", IsQuiver );
 
 
@@ -1110,19 +1111,19 @@ DeclareAttribute( "DynkinType", IsQuiver );
 
 #! @Description
 #!  Returns true if the quiver <A>Q</A> is acyclic, that is, without oriented cycles.
-#! @Returns <C>IsBool/C>
+#! @Returns <C>IsBool</C>
 #! @Arguments Q
 DeclareProperty( "IsAcyclicQuiver", IsQuiver );
 
 #! @Description
 #!  Returns true if the quiver <A>Q</A> is Dynkin and the property has been set. 
-#! @Returns <C>IsBool/C>
+#! @Returns <C>IsBool</C>
 #! @Arguments Q
 DeclareProperty( "IsDynkinQuiver", IsQuiver );
 
 #! @Description
 #!  Returns true if the quiver <A>Q</A> is extended Dynkin and the property has been set. 
-#! @Returns <C>IsBool/C>
+#! @Returns <C>IsBool</C>
 #! @Arguments Q
 DeclareProperty( "IsExtendedDynkinQuiver", IsQuiver );
 
@@ -1130,19 +1131,19 @@ DeclareProperty( "IsExtendedDynkinQuiver", IsQuiver );
 #!  Functions tests if every vertex in quiver <A>Q</A> is a source (respectively a target) 
 #!  of at most 2 arrows.  Note that a path algebra of one loop IS NOT special biserial, but
 #!  one loop IS special biserial quiver.
-#! @Returns <C>IsBool/C>
+#! @Returns <C>IsBool</C>
 #! @Arguments Q
 DeclareProperty( "IsSpecialBiserialQuiver", IsQuiver );
 
 #! @Description
 #!  Returns true if the quiver <A>Q</A> is a tree. 
-#! @Returns <C>IsBool/C>
+#! @Returns <C>IsBool</C>
 #! @Arguments Q
 DeclareProperty( "IsTreeQuiver", IsQuiver );
 
 #! @Description
 #!  Returns true if the underlying graph of the quiver <A>Q</A> has no cycles. 
-#! @Returns <C>IsBool/C>
+#! @Returns <C>IsBool</C>
 #! @Arguments Q
 DeclareProperty( "IsUnorientedAcyclicQuiver", IsQuiver );
 

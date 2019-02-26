@@ -153,7 +153,7 @@ DeclareProperty( "IsSemicommutativeAlgebra", IsQuotientOfPathAlgebra);
 #!  The function tests if the argument <A>A</A>, given as <M>KQ/I</M>, is given by a special 
 #!  biserial quiver <M>Q</M>, an admissible ideal <M>I</M> and <M>I</M> satisfies 
 #!  the "special biserial" conditions, that is, for any arrow <M>a</M> there exists at most
-#!  one arrow <M>b</M> such that <M>ab\notin I</M> and there exists at most one arrow <M>c</<M> 
+#!  one arrow <M>b</M> such that <M>ab\notin I</M> and there exists at most one arrow <M>c</M> 
 #!  such that <M>ca\notin I</M>.
 #! @Returns <C>IsBool</C>
 #! @Arguments A

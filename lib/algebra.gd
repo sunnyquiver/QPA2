@@ -802,7 +802,12 @@ DeclareProperty( "IsElementaryAlgebra", IsAlgebra );
 #!
 InstallTrueMethod( IsBasicAlgebra, IsElementaryAlgebra );
 
-
+#! @Description
+#!  This function finds the multiplicative identity of a finite 
+#!  dimensional algebra <A>A</A>, if it exists.
+#! @Returns algebra element
+#! @Arguments A
+DeclareOperation( "FindMultiplicativeIdentity", [ IsAlgebra ] );
 
 
 #
