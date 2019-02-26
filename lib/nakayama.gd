@@ -13,15 +13,26 @@ DeclareAttribute( "AssociatedMonomialAlgebra", IsQuiverAlgebra );
 
 #! @Section Canonical algebras
 
+#! @BeginGroup CanonicalAlgebra
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
 #! @Description
 #!  Given a field  <A>K</A>, a sequence of  <A>weights</A>  and a sequence of 
 #!  coefficients <A>relcoeff</A> for the relations, this function constructs the 
 #!  canonical algebra with this data. If the number of weights is
 #!  two, then the number of coefficients for the relations must be
-#!  zero, that is, represented by an empty list, [].
-#! @Returns <Ref Filt="IsQuiverAlgebra"/>
+#!  zero, that is, represented by an empty list, [].<P/>
+#!  The algebra is constructed as a quiver algebra.
+#!  Use either <C>LeftCanonicalAlgebra</C> or <C>RightCanonicalAlgebra</C>
+#!  to get an algebra based on either a left or a right quiver.
+#!  (Alternatively, pass one of the constants <C>LEFT</C> or <C>RIGHT</C>
+#!  as the first argument to <C>CanonicalAlgebra</C>.)
+#! @Arguments dir, K, weights, relcoeff
+DeclareOperation( "CanonicalAlgebra", [ IsDirection, IsField, IsList, IsList ] );
 #! @Arguments K, weights, relcoeff
-DeclareOperation( "CanonicalAlgebra", [ IsField, IsList, IsList ] );
+DeclareOperation( "LeftCanonicalAlgebra", [ IsField, IsList, IsList ] );
+#! @Arguments K, weights, relcoeff
+DeclareOperation( "RightCanonicalAlgebra", [ IsField, IsList, IsList ] );
+#! @EndGroup
 
 #! @Description
 #!  Returns <C>true</C> if this property has been set for the algebra <A>A</A>.
@@ -38,12 +49,23 @@ DeclareProperty( "IsCanonicalAlgebra", IsAlgebra );
 #! @Arguments A
 DeclareProperty( "IsKroneckerAlgebra", IsAlgebra );
 
+#! @BeginGroup KroneckerAlgebra
+#! @Returns <Ref Filt="IsQuiverAlgebra"/>
 #! @Description
-#!  Given a field  <A>K</A> and a positive integer  <A>n</A>, this function constructs  
-#!  the Kronecker algebra with  <A>n</A>  arrows.
-#! @Returns <C>IsBool</C>
-#! @Arguments A
-DeclareOperation( "KroneckerAlgebra", [ IsField, IS_INT ] );
+#!  Construct the Kronecker algebra over a field <A>K</A> with  <A>n</A>  
+#!  arrows.<P/>
+#!  The algebra is constructed as a quiver algebra.
+#!  Use either <C>LeftKroneckerAlgebra</C> or <C>RightKroneckerAlgebra</C>
+#!  to get an algebra based on either a left or a right quiver.
+#!  (Alternatively, pass one of the constants <C>LEFT</C> or <C>RIGHT</C>
+#!  as the first argument to <C>KroneckerAlgebra</C>.)
+#! @Arguments dir, K, n
+DeclareOperation( "KroneckerAlgebra", [ IsDirection, IsField, IS_INT ] );
+#! @Arguments K, n
+DeclareOperation( "LeftKroneckerAlgebra", [ IsField, IS_INT] );
+#! @Arguments K, n
+DeclareOperation( "RightKroneckerAlgebra", [ IsField, IS_INT ] );
+#! @EndGroup
 
 
 #! @Section Nakayama algebras

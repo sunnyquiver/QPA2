@@ -81,12 +81,13 @@ end );
 ##  Given a field  K and a positive integer  n, this function constructs  
 ##  the Kronecker algebra with  n  arrows. 
 ##
-InstallMethod ( KroneckerAlgebra,
-"for a field and a positive integer", 
-[ IsField, IS_INT ],
-function( K, n )
-    
-    local   vertices,  arrows,  i,  sources,  targets,  Q,  KQ;
+DeclareDirectionOperations( KroneckerAlgebra, LeftKroneckerAlgebra, RightKroneckerAlgebra );
+
+InstallMethodWithDirections( KroneckerAlgebra,
+                             [ IsField, IS_INT ],
+dir -> function( K, n )
+
+  local vertices, arrows, i, sources, targets, Q, KQ;
 
     if n < 2 then
         Error( "The number of arrows in the Kronecker quiver must be greater or equal to 2.\n" );
@@ -101,7 +102,7 @@ function( K, n )
         Add( sources, 1 );
     od;
     targets := sources + sources;
-    Q := Quiver( RIGHT, Concatenation( "Kronecker(", String( n ), ")" ) , vertices, arrows, sources, targets );
+    Q := Quiver( dir, Concatenation( "Kronecker(", String( n ), ")" ) , vertices, arrows, sources, targets );
     KQ := PathAlgebra( K, Q );
     SetFilterObj( KQ, IsKroneckerAlgebra and IsPathAlgebra );
     
@@ -119,14 +120,14 @@ end
 ##  two, then the number of coefficients for the relations must be
 ##  zero, that is, represented by an empty list, [].
 ##
-InstallMethod ( CanonicalAlgebra,
-"for a field, list of lengths of arms, and coefficients for the relations", 
-[ IsField, IsList, IsList ],
-function( K, weights, relcoeff )
-    
-    local   n,  vertices,  i,  j,  sources,  targets,  arrows,  Q,  
-            KQ,  num_vert,  generators,  arms,  start,  temp,  
-            relations,  A;
+DeclareDirectionOperations( CanonicalAlgebra, LeftCanonicalAlgebra, RightCanonicalAlgebra );
+
+InstallMethodWithDirections( CanonicalAlgebra,
+                             [ IsField, IsList, IsList ],
+dir -> function( K, weights, relcoeff )
+
+  local n, vertices, i, j, sources, targets, arrows, Q, KQ, num_vert, 
+        generators, arms, start, temp, relations, A;
     #
     # Checking the input.
     #
@@ -179,7 +180,7 @@ function( K, weights, relcoeff )
     # 
     # Constructing the quiver and path algebra.
     #
-    Q := Quiver( RIGHT, "Canonical", vertices, arrows, sources, targets );
+    Q := Quiver( dir, "Canonical", vertices, arrows, sources, targets );
     KQ := PathAlgebra( K, Q );
     #
     # If n = 2, it is a path algebra, otherwise construct relations 
@@ -225,21 +226,21 @@ end
 
 #######################################################################
 ##
-#O  CanonicalAlgebra( <K>, <weights>)
+#O  CanonicalAlgebra( <dir>, <K>, <weights> )
 ##
 ##  CanonicalAlgebra with only two arguments, the field and the 
 ##  two weights.
 ##
 InstallOtherMethod ( CanonicalAlgebra,
 "for a field and a list of lengths of two arms", 
-[ IsField, IsList ],
-function( K, weights );
+[ IsDirection, IsField, IsList ],
+function( dir, K, weights );
 
     if Length( weights ) <> 2 then 
         Error( "The list of weights is different from two, need to enter coefficients for the relations then.\n");
     fi;
     
-    return CanonicalAlgebra( K, weights, [ ] );
+    return CanonicalAlgebra( dir, K, weights, [ ] );
 end
 );
 
