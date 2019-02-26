@@ -239,6 +239,7 @@ DeclareOperation( "LeftQuiver", [ IsDenseList, IsPosInt, IsList, IsDenseList ] )
 DeclareOperation( "LeftQuiver", [ IsObject, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
 #! @EndGroup
 
+
 #! @InsertChunk Example_LeftQuiver
 
 #! @BeginGroup RightQuiver
@@ -273,7 +274,8 @@ DeclareOperation( "RightQuiver", [ IsObject, IsDenseList, IsDenseList, IsDenseLi
 #!  first argument <A>quiver_cat</A>, which specifies whether the
 #!  quiver should be left- or right-oriented.
 #!  The value of this argument should be either <Ref Filt="IsLeftQuiver"/>
-#!  or <Ref Filt="IsRightQuiver"/>.
+#!  or <Ref Filt="IsRightQuiver"/>.  The last option allows the user to 
+#!  define a quiver via an adjacency matrix. 
 #! @Arguments quiver_cat, label_with_patterns, num_vertices, arrows
 DeclareOperation( "Quiver", [ IsDirection, IsString, IsPosInt, IsDenseList ] );
 #! @Arguments quiver_cat, label_with_patterns, vertex_labels, arrows
@@ -284,6 +286,8 @@ DeclareOperation( "Quiver", [ IsDirection, IsString ] );
 DeclareOperation( "Quiver", [ IsDirection, IsDenseList, IsPosInt, IsList, IsDenseList ] );
 #! @Arguments quiver_cat, label, vertex_labels, arrow_labels, source_indices, target_indices
 DeclareOperation( "Quiver", [ IsDirection, IsObject, IsDenseList, IsDenseList, IsDenseList, IsDenseList ] );
+#! @Arguments quiver_cat, label, matrix
+DeclareOperation( "Quiver", [ IsDirection, IsObject, IsMatrix ] );
 #! @EndGroup Quiver
 
 #! @InsertChunk Example_Quiver

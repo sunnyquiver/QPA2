@@ -2512,3 +2512,37 @@ function ( Q )
 end
 ); # IsSpecialBiserialQuiver
 
+InstallOtherMethod( Quiver, 
+"for a direction, label and a positive integral matrix",
+[ IsDirection, IsString, IsMatrix ],
+function( direction, label, matrix )
+    
+    local   dims,  vertices,  arrows,  arrow_count,  sources,  targets,  
+            i,  j,  u,  v,  k;
+    
+    dims := DimensionsMat( matrix ); 
+    if dims[ 1 ] <> dims[ 2 ] then
+      Error( "The adjacency matrix must be square." );
+    fi;
+    vertices := List( [ 1..dims[ 1 ] ], i -> Concatenation( "v", String( i ) ) ); 
+    
+    arrows := [ ];
+    arrow_count := 0;
+    sources := [ ];
+    targets := [ ]; 
+    for i in [ 1 .. dims[ 1 ] ] do
+        for j in [ 1..dims[ 2 ] ] do
+            u := vertices[i];
+            v := vertices[j];
+            for k in [ 1..matrix[ i ][ j ] ] do
+                arrow_count := arrow_count + 1; 
+                arrows[ arrow_count ] := Concatenation( "a", String( arrow_count ) );
+                sources[ arrow_count ] := Position( vertices, u );
+                targets[ arrow_count ] := Position( vertices, v );
+            od;
+        od;
+    od;
+    
+    return Quiver( direction, label , vertices, arrows, sources, targets );
+end
+  );
