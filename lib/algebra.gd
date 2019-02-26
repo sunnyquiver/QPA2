@@ -759,6 +759,12 @@ DeclareAttribute( "ArrowImages", IsQuiverAlgebraHomomorphism );
 # DeclareAttribute( "CartanMatrix", IsQuiverAlgebra );
 
 #! @Description
+#!  Returns the centre of the finite dimensional algebra <A>A</A>.
+#! @Returns <C>IsAlgebra</C>
+#! @Arguments A
+# DeclareAttribute( "Centre", IsQuiverAlgebra );
+
+#! @Description
 #!  Returns the Coxeter matrix of the finite dimensional algebra <A>A</A>.
 #! @Returns <C>IsMatrix</C>
 #! @Arguments A
