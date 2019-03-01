@@ -43,7 +43,7 @@ function( A, basis, basis_vertices, action )
 
   basis_by_vertex := List( [ 1 .. num_vertices ], i -> [] );
   for i in [ 1 .. Length( basis ) ] do
-    Add( basis_by_vertex[ VertexNumber( basis_vertices[ i ] ) ], i );
+    Add( basis_by_vertex[ VertexIndex( basis_vertices[ i ] ) ], i );
   od;
 
   perm_from_rep := AsPermutation( Transformation( Flat( basis_by_vertex ) ) );
@@ -51,11 +51,11 @@ function( A, basis, basis_vertices, action )
 
   matrices := [];
   for a in arrows do
-    src_basis_indices := basis_by_vertex[ VertexNumber( Source( a ) ) ];
-    tgt_basis_indices := basis_by_vertex[ VertexNumber( Target( a ) ) ];
+    src_basis_indices := basis_by_vertex[ VertexIndex( Source( a ) ) ];
+    tgt_basis_indices := basis_by_vertex[ VertexIndex( Target( a ) ) ];
     if not IsEmpty( src_basis_indices ) and not IsEmpty( tgt_basis_indices ) then
       matrix_rows := List( basis{ src_basis_indices }, b -> action( b, a ){ tgt_basis_indices } );
-      matrices[ ArrowNumber( a ) ] := matrix_rows;
+      matrices[ ArrowIndex( a ) ] := matrix_rows;
     fi;
   od;
 

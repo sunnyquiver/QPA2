@@ -49,8 +49,8 @@ InstallMethod( BasisOfHom,
     block_rows[ i ] := prev_row + 1;
     prev_row := num_rows;
     for a in OutgoingArrows( vertices[ i ] ) do
-      source_arrow := VertexNumber( Source( a ) );
-      target_arrow := VertexNumber( Target( a ) );
+      source_arrow := VertexIndex( Source( a ) );
+      target_arrow := VertexIndex( Target( a ) );
       if ( target_arrow in support_R2 ) and 
          ( ( source_arrow in support_R2 ) or ( target_arrow in support_R1 ) ) then 
         num_cols := num_cols + dim_R1[ source_arrow ] * dim_R2[ target_arrow ];
@@ -73,8 +73,8 @@ InstallMethod( BasisOfHom,
   prev_row := 0;
   for i in support_R1 do
     for a in OutgoingArrows( vertices[i] ) do
-      source_arrow := VertexNumber( Source( a ) );
-      target_arrow := VertexNumber( Target( a ) );
+      source_arrow := VertexIndex( Source( a ) );
+      target_arrow := VertexIndex( Target( a ) );
       if ( target_arrow in support_R2 ) and 
          ( ( source_arrow in support_R2 ) or ( target_arrow in support_R1 ) ) then
         for j in [ 1..dim_R1[ source_arrow ] ] do
@@ -84,14 +84,14 @@ InstallMethod( BasisOfHom,
           col_end_pos := prev_col + j * dim_R2[ target_arrow ];
           if ( source_arrow in support_R2 ) then 
             equations{ [ row_start_pos..row_end_pos ] }{ [ col_start_pos..col_end_pos ] } := 
-              mats_R2[ ArrowNumber( a ) ];
+              mats_R2[ ArrowIndex( a ) ];
           fi;
           if ( target_arrow in support_R1 ) then 
-            for m in [ 1..DimensionsMat( mats_R1[ ArrowNumber( a ) ] )[ 2 ] ] do
+            for m in [ 1..DimensionsMat( mats_R1[ ArrowIndex( a ) ] )[ 2 ] ] do
               for n in [ 1..dim_R2[ target_arrow ] ] do
                 b := block_rows[ target_arrow ] + (m - 1) * dim_R2[ target_arrow ];
                 equations[ b + n - 1 ][ col_start_pos + n - 1 ] := 
-                  equations[ b + n - 1 ][ col_start_pos + n - 1 ] + (-1) * mats_R1[ ArrowNumber( a ) ][ j ][ m ];
+                  equations[ b + n - 1 ][ col_start_pos + n - 1 ] + (-1) * mats_R1[ ArrowIndex( a ) ][ j ][ m ];
               od;
             od;
           fi;

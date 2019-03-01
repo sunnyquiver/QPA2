@@ -4,9 +4,9 @@ BindGlobal( "FamilyOfPaths", NewFamily( "paths" ) );
 BindGlobal( "FamilyOfQuivers", CollectionsFamily( FamilyOfPaths ) );
 
 DeclareRepresentation( "IsQuiverVertexRep", IsComponentObjectRep and IsAttributeStoringRep,
-                       [ "quiver", "number" ] );
+                       [ "quiver", "index" ] );
 DeclareRepresentation( "IsArrowRep", IsComponentObjectRep and IsAttributeStoringRep,
-                       [ "quiver", "label", "number", "source", "target" ] );
+                       [ "quiver", "label", "index", "source", "target" ] );
 DeclareRepresentation( "IsCompositePathRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "arrows" ] );
 DeclareRepresentation( "IsQuiverRep", IsComponentObjectRep and IsAttributeStoringRep,
@@ -408,7 +408,7 @@ dir -> function( label, vertex_labels, arrow_labels,
   make_vertex := function( num, label )
     return Objectify( vertex_type,
                       rec( quiver := Q,
-                           number := num,
+                           index := num,
                            label := label ) );
   end;
   Q!.vertices := ListN( [ 1 .. num_vertices ], vertex_labels,
@@ -424,7 +424,7 @@ dir -> function( label, vertex_labels, arrow_labels,
     fi;
     return Objectify( arrow_type,
                       rec( quiver := Q,
-                           number := num,
+                           index := num,
                            label := label,
                            source := Q!.vertices[ source_index ],
                            target := Q!.vertices[ target_index ] ) );
@@ -514,10 +514,10 @@ function( v )
   vertices := Vertices( Q );
   is_neighbor := List( [ 1 .. n ], i -> false );
   for a in OutgoingArrows( v ) do
-    is_neighbor[ VertexNumber( Target( a ) ) ] := true;
+    is_neighbor[ VertexIndex( Target( a ) ) ] := true;
   od;
   for a in IncomingArrows( v ) do
-    is_neighbor[ VertexNumber( Source( a ) ) ] := true;
+    is_neighbor[ VertexIndex( Source( a ) ) ] := true;
   od;
   neighbors := [];
   for i in [ 1 .. n ] do
@@ -639,18 +639,18 @@ function( Q )
   return QPA_LABEL_TO_STRING( Label( Q ) );
 end );
 
-InstallMethod( VertexNumber,
+InstallMethod( VertexIndex,
                "for vertex",
 	       [ IsQuiverVertex and IsQuiverVertexRep ],
 function( v )
-  return v!.number;
+  return v!.index;
 end );
 
-InstallMethod( ArrowNumber,
+InstallMethod( ArrowIndex,
                "for arrow",
 	       [ IsArrow and IsArrowRep ],
 function( a )
-  return a!.number;
+  return a!.index;
 end );
 
 InstallMethod( Composable,
@@ -901,9 +901,9 @@ function( p1, p2 )
   elif Length( p1 ) > Length( p2 ) then
     return false;
   elif IsQuiverVertex( p1 ) then
-    return VertexNumber( p1 ) < VertexNumber( p2 );
+    return VertexIndex( p1 ) < VertexIndex( p2 );
   elif IsArrow( p1 ) then
-    return ArrowNumber( p1 ) < ArrowNumber( p2 );
+    return ArrowIndex( p1 ) < ArrowIndex( p2 );
   else
     a1 := ArrowList( p1 );
     a2 := ArrowList( p2 );
@@ -1109,13 +1109,13 @@ end );
 InstallMethod( ArrowSourceIndices, "for quiver",
                [ IsQuiver ],
 function( Q )
-  return List( Arrows( Q ), a -> VertexNumber( Source( a ) ) );
+  return List( Arrows( Q ), a -> VertexIndex( Source( a ) ) );
 end );
 
 InstallMethod( ArrowTargetIndices, "for quiver",
                [ IsQuiver ],
 function( Q )
-  return List( Arrows( Q ), a -> VertexNumber( Target( a ) ) );
+  return List( Arrows( Q ), a -> VertexIndex( Target( a ) ) );
 end );
 
 InstallMethod( PrimitivePaths,
@@ -1241,7 +1241,7 @@ InstallMethod( String, "for quiver",
 function( Q )
   local vertices, arrows;
   if ForAll( Vertices( Q ),
-             v -> Label( v ) = VertexNumber( v ) ) then
+             v -> Label( v ) = VertexIndex( v ) ) then
     vertices := String( NumberOfVertices( Q ) );
   else
     vertices := JoinStringsWithSeparator( Vertices( Q ), "," );
@@ -1278,7 +1278,7 @@ end );
 #  	       [ IsQuiverVertex and IsQuiverVertexRep, IsQuiverVertex and IsQuiverVertexRep ],
 # function( v1, v2 )
 #   return QuiverOfPath( v1 ) = QuiverOfPath( v2 )
-#          and VertexNumber( v1 ) = VertexNumber( v2 );
+#          and VertexIndex( v1 ) = VertexIndex( v2 );
 # end );
 
 # InstallMethod( \=,
@@ -1286,7 +1286,7 @@ end );
 #  	       [ IsArrow and IsArrowRep, IsArrow and IsArrowRep ],
 # function( a1, a2 )
 #   return QuiverOfPath( a1 ) = QuiverOfPath( a2 )
-#          and ArrowNumber( a1 ) = ArrowNumber( a2 );
+#          and ArrowIndex( a1 ) = ArrowIndex( a2 );
 # end );
 
 InstallMethod( \=, "for vertices",
@@ -1362,10 +1362,10 @@ function( Q1, Q2, vertex_images, arrow_images )
   AssumeAll( arrow_images, IsArrow, "not an arrow" );
   AssumeAll( arrow_images, a -> a in Q2, "arrow not in range quiver" );
   for i in [ 1 .. NumberOfArrows( Q1 ) ] do
-    if Source( arrow_images[ i ] ) <> vertex_images[ VertexNumber( Source( Arrow( Q1, i ) ) ) ] then
+    if Source( arrow_images[ i ] ) <> vertex_images[ VertexIndex( Source( Arrow( Q1, i ) ) ) ] then
       Error( "wrong source for arrow image ", i );
     fi;
-    if Target( arrow_images[ i ] ) <> vertex_images[ VertexNumber( Target( Arrow( Q1, i ) ) ) ] then
+    if Target( arrow_images[ i ] ) <> vertex_images[ VertexIndex( Target( Arrow( Q1, i ) ) ) ] then
       Error( "wrong target for arrow image ", i );
     fi;
   od;
@@ -1395,10 +1395,10 @@ function( m, p )
     Error( "path is not in source of homomorphism" );
   fi;
   if IsQuiverVertex( p ) then
-    return VertexImages( m )[ VertexNumber( p ) ];
+    return VertexImages( m )[ VertexIndex( p ) ];
   else
     return PathFromArrowListNC( List( ArrowList( p ),
-                                      a -> ArrowImages( m )[ ArrowNumber( a ) ] ) );
+                                      a -> ArrowImages( m )[ ArrowIndex( a ) ] ) );
   fi;
 end );
 
@@ -1447,13 +1447,13 @@ end );
 InstallMethod( OppositePath,
                [ IsQuiverVertex ],
 function( v )
-  return Vertex( OppositeQuiver( QuiverOfPath( v ) ), VertexNumber( v ) );
+  return Vertex( OppositeQuiver( QuiverOfPath( v ) ), VertexIndex( v ) );
 end );
 
 InstallMethod( OppositePath,
                [ IsArrow ],
 function( a )
-  return Arrow( OppositeQuiver( QuiverOfPath( a ) ), ArrowNumber( a ) );
+  return Arrow( OppositeQuiver( QuiverOfPath( a ) ), ArrowIndex( a ) );
 end );
 
 InstallMethod( OppositePath,
@@ -1462,7 +1462,7 @@ function( p )
   return PathFromArrowListNC( Reversed( List( ArrowList( p ), OppositePath ) ) );
 end );
 
-InstallMethod( ProductQuiverVertexNumber,
+InstallMethod( ProductQuiverVertexIndex,
                [ IsDenseList, IsDenseList ],
 function( quivers, vertex_indices )
   local n, i, num_vertices, index, scale;
@@ -1490,7 +1490,7 @@ function( quivers, vertex_indices )
   return index;
 end );
 
-InstallMethod( ProductQuiverArrowNumber,
+InstallMethod( ProductQuiverArrowIndex,
                [ IsDenseList, IsPosInt, IsDenseList ],
 function( quivers, i, path_indices )
   local n, prod_num_vertices, index, j, scale;
@@ -1592,10 +1592,10 @@ function( L )
     Append( arrow_labels, Cartesian( labels ) );
     sources := ShallowCopy( v_i );
     sources[ i ] := src[ i ];
-    Append( arrow_sources, List( Cartesian( sources ), vs -> ProductQuiverVertexNumber( L, vs ) ) );
+    Append( arrow_sources, List( Cartesian( sources ), vs -> ProductQuiverVertexIndex( L, vs ) ) );
     targets := ShallowCopy( v_i );
     targets[ i ] := tgt[ i ];
-    Append( arrow_targets, List( Cartesian( targets ), vs -> ProductQuiverVertexNumber( L, vs ) ) );
+    Append( arrow_targets, List( Cartesian( targets ), vs -> ProductQuiverVertexIndex( L, vs ) ) );
   od;
 
   prod := Quiver( dir, label, vertex_labels, arrow_labels,
@@ -1769,13 +1769,13 @@ function( PQ, n, vertices, p )
       Error( "Vertex ", i, " is not in factor ", i, " of the product quiver" );
     fi;
   od;
-  paths := List( vertices, VertexNumber );
+  paths := List( vertices, VertexIndex );
   if IsQuiverVertex( p ) then
-    paths[ n ] := VertexNumber( p );
-    return Vertex( PQ, ProductQuiverVertexNumber( factors, paths ) );
+    paths[ n ] := VertexIndex( p );
+    return Vertex( PQ, ProductQuiverVertexIndex( factors, paths ) );
   else # IsArrow( p )
-    paths[ n ] := ArrowNumber( p );
-    return Arrow( PQ, ProductQuiverArrowNumber( factors, n, paths ) );
+    paths[ n ] := ArrowIndex( p );
+    return Arrow( PQ, ProductQuiverArrowIndex( factors, n, paths ) );
   fi;
 end );
 
@@ -1992,23 +1992,23 @@ end );
 
 InstallMethod( Subquiver, "for quiver and lists", [ IsQuiver, IsDenseList, IsDenseList ],
 function( Q, vertices, arrows )
-  local new_vertex_number, i, a, vertex_labels, arrow_labels,
+  local new_vertex_index, i, a, vertex_labels, arrow_labels,
         source_indices, target_indices, label;
-  new_vertex_number := List( [ 1 .. NumberOfVertices( Q ) ], i -> fail );
+  new_vertex_index := List( [ 1 .. NumberOfVertices( Q ) ], i -> fail );
   for i in [ 1 .. Length( vertices ) ] do
-    new_vertex_number[ VertexNumber( vertices[ i ] ) ] := i;
+    new_vertex_index[ VertexIndex( vertices[ i ] ) ] := i;
   od;
   for a in arrows do
-    if new_vertex_number[ VertexNumber( Source( a ) ) ] = fail then
+    if new_vertex_index[ VertexIndex( Source( a ) ) ] = fail then
       Error( "attempt to create subquiver containing arrow ", a, " but not its source vertex" );
-    elif new_vertex_number[ VertexNumber( Target( a ) ) ] = fail then
+    elif new_vertex_index[ VertexIndex( Target( a ) ) ] = fail then
       Error( "attempt to create subquiver containing arrow ", a, " but not its target vertex" );
     fi;
   od;
   vertex_labels := List( vertices, Label );
   arrow_labels := List( arrows, Label );
-  source_indices := List( arrows, a -> new_vertex_number[ VertexNumber( Source( a ) ) ] );
-  target_indices := List( arrows, a -> new_vertex_number[ VertexNumber( Target( a ) ) ] );
+  source_indices := List( arrows, a -> new_vertex_index[ VertexIndex( Source( a ) ) ] );
+  target_indices := List( arrows, a -> new_vertex_index[ VertexIndex( Target( a ) ) ] );
   if IsString( Label( Q ) ) then
     label := Concatenation( Label( Q ), "_sub" );
   else
@@ -2023,8 +2023,8 @@ function( Q, arrows )
   local vertex_included, a, vertices;
   vertex_included := List( [ 1 .. NumberOfVertices( Q ) ], i -> false );
   for a in arrows do
-    vertex_included[ VertexNumber( Source( a ) ) ] := true;
-    vertex_included[ VertexNumber( Target( a ) ) ] := true;
+    vertex_included[ VertexIndex( Source( a ) ) ] := true;
+    vertex_included[ VertexIndex( Target( a ) ) ] := true;
   od;
   vertices := Vertices( Q ){ Positions( vertex_included, true ) };
   return Subquiver( Q, vertices, arrows );
@@ -2035,12 +2035,12 @@ function( Q, vertices )
   local vertex_included, v, arrows, a;
   vertex_included := List( [ 1 .. NumberOfVertices( Q ) ], i -> false );
   for v in vertices do
-    vertex_included[ VertexNumber( v ) ] := true;
+    vertex_included[ VertexIndex( v ) ] := true;
   od;
   arrows := [];
   for a in Arrows( Q ) do
-    if vertex_included[ VertexNumber( Source( a ) ) ] and
-       vertex_included[ VertexNumber( Target( a ) ) ] then
+    if vertex_included[ VertexIndex( Source( a ) ) ] and
+       vertex_included[ VertexIndex( Target( a ) ) ] then
       Add( arrows, a );
     fi;
   od;
@@ -2057,9 +2057,9 @@ function( Q )
   visited := List( [ 1 .. n ], i -> false );
   while i <= Length( queue ) do
     v := queue[ i ];
-    visited[ VertexNumber( v ) ] := true;
+    visited[ VertexIndex( v ) ] := true;
     for n in Neighbors( v ) do
-      if not visited[ VertexNumber( n ) ] then
+      if not visited[ VertexIndex( n ) ] then
         Add( queue, n );
       fi;
     od;
@@ -2070,9 +2070,9 @@ end );
 
 InstallMethod( ConnectedComponentsAttr, "for quiver", [ IsQuiver ],
 function( Q )
-  local component_numbers, mark_component, num_components, v, component_name;
+  local component_indices, mark_component, num_components, v, component_name;
 
-  component_numbers := List( [ 1 .. NumberOfVertices( Q ) ], i -> 0 );
+  component_indices := List( [ 1 .. NumberOfVertices( Q ) ], i -> 0 );
 
   mark_component := function( start_vertex, comp_nr )
     local queue, i, v, n;
@@ -2080,11 +2080,11 @@ function( Q )
     i := 1;
     while i <= Length( queue ) do
       v := queue[ i ];
-      component_numbers[ VertexNumber( v ) ] := comp_nr;
+      component_indices[ VertexIndex( v ) ] := comp_nr;
       for n in Neighbors( v ) do
-        if component_numbers[ VertexNumber( n ) ] = 0 then
+        if component_indices[ VertexIndex( n ) ] = 0 then
           Add( queue, n );
-          component_numbers[ VertexNumber( n ) ] := comp_nr;
+          component_indices[ VertexIndex( n ) ] := comp_nr;
         fi;
       od;
       i := i + 1;
@@ -2093,7 +2093,7 @@ function( Q )
 
   num_components := 0;
   for v in Vertices( Q ) do
-    if component_numbers[ VertexNumber( v ) ] > 0 then
+    if component_indices[ VertexIndex( v ) ] > 0 then
       continue;
     fi;
     num_components := num_components + 1;
@@ -2111,7 +2111,7 @@ function( Q )
   return List( [ 1 .. num_components ],
                i -> RenameQuiver
                     ( component_name( i ),
-                      FullSubquiver( Q, Vertices( Q ){ Positions( component_numbers, i ) } ) ) );
+                      FullSubquiver( Q, Vertices( Q ){ Positions( component_indices, i ) } ) ) );
 end );
 
 InstallMethod( ConnectedComponentsAttr, "for quiver", [ IsQuiver ],
@@ -2134,8 +2134,8 @@ function( Q )
     n := Length( Vertices( Q ) );
     mat := NullMat( n, n );
     for a in arrows do
-        startpos := VertexNumber( Source( a ) );
-        endpos := VertexNumber( Target( a ) );
+        startpos := VertexIndex( Source( a ) );
+        endpos := VertexIndex( Target( a ) );
         mat[ startpos ][ endpos ] := mat[ startpos ][ endpos ] + 1;
     od;
     
@@ -2189,10 +2189,10 @@ function( Q )
       v := vertices[ i ];
       incoming := IncomingArrows( v );
       if ForAll( IncomingArrows( v ),
-                 a -> arrow_removed[ ArrowNumber( a ) ] ) then
+                 a -> arrow_removed[ ArrowIndex( a ) ] ) then
         Add( to_remove, i );
         for a in OutgoingArrows( v ) do
-          arrow_removed[ ArrowNumber( a ) ] := true;
+          arrow_removed[ ArrowIndex( a ) ] := true;
         od;
       fi;
     od;

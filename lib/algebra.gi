@@ -1320,11 +1320,11 @@ InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and two lists
         Error( "The vertices are not mapped to idempotents." );
     fi;
     for a in arrowsA do
-        position := ArrowNumber( a );
+        position := ArrowIndex( a );
         leftend := LeftEnd( a ); 
         rightend := RightEnd( a );
-        if not ( verteximages[ VertexNumber( leftend ) ] * arrowimages[ position ] = arrowimages[ position ] ) and
-                 ( arrowimages[ position ] * verteximages[ VertexNumber( rightend ) ] = arrowimages[ position ] ) then 
+        if not ( verteximages[ VertexIndex( leftend ) ] * arrowimages[ position ] = arrowimages[ position ] ) and
+                 ( arrowimages[ position ] * verteximages[ VertexIndex( rightend ) ] = arrowimages[ position ] ) then 
             Error( "The mapping is not well-defined. The arrow ",a," is the culprit." );
         fi;
     od;
@@ -1384,11 +1384,11 @@ InstallMethod( ImageElm, "for a homomorphism of quiver algebras",
     imageofpaths := [];
     for p in paths do
         if IsQuiverVertex( p ) then
-            Add( imageofpaths, VertexImages( f )[ VertexNumber( p ) ] );
+            Add( imageofpaths, VertexImages( f )[ VertexIndex( p ) ] );
         else
             temp := One( Range( f ) );
             for q in ArrowListLR( p ) do
-                temp := temp * ArrowImages( f )[ ArrowNumber( q ) ];
+                temp := temp * ArrowImages( f )[ ArrowIndex( q ) ];
             od;
             Add( imageofpaths, temp );
         fi;

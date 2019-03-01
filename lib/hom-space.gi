@@ -230,8 +230,8 @@ function( hom )
                   VectorSpaceOfRepresentation( R2, v ) );
         # g |-> PreCompose( MapForArrow( R1, a ), g )
       else
-        m := ZeroMorphism( vertex_spaces[ VertexNumber( v ) ],
-                           arrow_spaces[ ArrowNumber( a ) ] );
+        m := ZeroMorphism( vertex_spaces[ VertexIndex( v ) ],
+                           arrow_spaces[ ArrowIndex( a ) ] );
       fi;
       Add( morphisms_v, m );
     od;
