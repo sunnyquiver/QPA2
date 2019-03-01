@@ -347,13 +347,6 @@ DeclareAttribute( "LabelAsString", IsQuiver );
 #!  either <Ref Filt="IsLeftQuiver"/> or <Ref Filt="IsRightQuiver"/>.
 DeclareAttribute( "QuiverCategory", IsQuiver );
 
-#! @Arguments Q
-#! @Description
-#!  Returns <C>true</C> if the quiver does not contain any oriented cycle,
-#!  <C>false</C> otherwise.
-#! @Returns <C>IsBool</C>
-DeclareProperty( "IsAcyclicQuiver", IsQuiver );
-
 
 #! @Section Accessing paths in a quiver
 

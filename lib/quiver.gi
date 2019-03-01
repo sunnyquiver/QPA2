@@ -1070,31 +1070,6 @@ end );
 InstallMethod( QuiverCategory, [ IsLeftQuiver ], Q -> IsLeftQuiver );
 InstallMethod( QuiverCategory, [ IsRightQuiver ], Q -> IsRightQuiver );
 
-InstallMethod( IsAcyclicQuiver, [ IsQuiver ],
-function( Q )
-  local vertices, arrow_removed, to_remove, i, v, incoming, a;
-  vertices := ShallowCopy( Vertices( Q ) );
-  arrow_removed := List( [ 1 .. NumberOfArrows( Q ) ], i -> false );
-  repeat
-    to_remove := [];
-    for i in [ 1 .. Length( vertices ) ] do
-      v := vertices[ i ];
-      incoming := IncomingArrows( v );
-      if ForAll( IncomingArrows( v ),
-                 a -> arrow_removed[ ArrowNumber( a ) ] ) then
-        Add( to_remove, i );
-        for a in OutgoingArrows( v ) do
-          arrow_removed[ ArrowNumber( a ) ] := true;
-        od;
-      fi;
-    od;
-    for i in Reversed( to_remove ) do
-      Remove( vertices, i );
-    od;
-  until Length( vertices ) = 0 or Length( to_remove ) = 0;
-  return Length( vertices ) = 0;
-end );
-
 InstallMethod( VerticesAttr,
                "for quiver",
 	       [ IsQuiver and IsQuiverRep ],
@@ -2202,63 +2177,31 @@ end
 ##  This function returns true if a quiver <Q>  does not 
 ##  contain an oriented cycle. 
 ##
-InstallMethod( IsAcyclicQuiver,
-"for quivers",
-[ IsQuiver ],
-function ( Q )
-    
-    local Visit, color, GRAY, BLACK, WHITE,
-          vert, vertex_list, res, tsorted;
-    
-    WHITE := 0; GRAY := 1; BLACK := -1;
-    
-    tsorted := [];
-
-    Visit := function( v )
-      local adj, uPos, result; # adjacent vertices
-        
-      color[ v ] := GRAY;
-        
-      adj := List( Neighbors( vertex_list[ v ] ), x -> Position( vertex_list, x ) );
-      if not IsEmpty( adj ) and ForAny( adj, x -> color[ x ] = GRAY ) then
-          return false;
+InstallMethod( IsAcyclicQuiver, "for a quiver",
+               [ IsQuiver ],
+function( Q )
+  local vertices, arrow_removed, to_remove, i, v, incoming, a;
+  vertices := ShallowCopy( Vertices( Q ) );
+  arrow_removed := List( [ 1 .. NumberOfArrows( Q ) ], i -> false );
+  repeat
+    to_remove := [];
+    for i in [ 1 .. Length( vertices ) ] do
+      v := vertices[ i ];
+      incoming := IncomingArrows( v );
+      if ForAll( IncomingArrows( v ),
+                 a -> arrow_removed[ ArrowNumber( a ) ] ) then
+        Add( to_remove, i );
+        for a in OutgoingArrows( v ) do
+          arrow_removed[ ArrowNumber( a ) ] := true;
+        od;
       fi;
-
-      for uPos in adj do
-          if color[ uPos ] = WHITE then
-              result := Visit( uPos );
-              if not result then
-                  return false;
-              fi;
-          fi;
-      od;
-      
-      Add( tsorted, vertex_list[ v ] );
-      color[ v ] := BLACK;
-      return true;
-    end;
-    
-    color := [ ];
-    vertex_list := Vertices( Q );
-
-    for vert in [ 1 .. Length( vertex_list ) ] do
-        color[ vert ] := WHITE;
     od;
-    
-    for vert in [ 1 .. Length( vertex_list ) ] do
-        if color[ vert ] = WHITE then
-            res := Visit( vert );
-            if not res then
-                return false;
-            fi;
-        fi;
+    for i in Reversed( to_remove ) do
+      Remove( vertices, i );
     od;
-    
-    tsorted := Reversed( tsorted );
-    
-    return true;
-end
-  ); # IsAcyclicQuiver
+  until Length( vertices ) = 0 or Length( to_remove ) = 0;
+  return Length( vertices ) = 0;
+end );
 
 #############################################################################
 ##
