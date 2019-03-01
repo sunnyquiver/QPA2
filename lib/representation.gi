@@ -1478,63 +1478,199 @@ InstallMethod( Display,
 end );
 
 
-InstallMethod( AsLayeredRepresentation,
-               [ IsPosInt, IsQuiverRepresentation ],
-function( s, R )
-  local T, algebras, t, A, B, paths, Qa, Qb, Qt, catA, reps, w, objs, 
-        maps, rep, morphisms, b, source, range, morphism, cat;
-  T := AlgebraOfRepresentation( R );
+InstallMethod( TensorProductProjectionFunctors, "for quiver representation category",
+               [ IsQuiverRepresentationCategory ],
+function( cat )
+  local T, algebras, quiver_incs, projs, s, A;
+  # cat: representations over A \tensor B
+  # result: projs, list of two lists
+  # projs[ 1 ]: projections in first factor
+  #             list of one functor cat -> rep(A) for each vertex in B
+  # projs[ 2 ]: projections in second factor
+  #             list of one functor cat -> rep(B) for each vertex in A
+  T := AlgebraOfCategory( cat );
   if not IsTensorProductOfAlgebras( T ) then
-    Error( "representation is not over tensor algebra" );
+    Error( "representation category is not over tensor algebra" );
   fi;
   algebras := TensorProductFactors( T );
   if Length( algebras ) <> 2 then
-    Error( "representation over tensor product of ", Length( algebras ), " algebras; ",
+    Error( "representation category over tensor product of ", Length( algebras ), " algebras; ",
+           "should be 2" );
+  fi;
+  quiver_incs := ProductQuiverInclusions( QuiverOfAlgebra( T ) );
+  projs := [];
+  for s in [ 1, 2 ] do
+    A := algebras[ s ];
+    projs[ s ] := List( quiver_incs[ s ],
+                        inc -> RestrictionFunctor( inc, cat,
+                                                   CategoryOfQuiverRepresentations( A ) ) );
+  od;
+  return projs;
+  #TODO test
+end );
+
+
+InstallMethod( TensorProductProjectionNaturalTransformations,
+               [ IsQuiverRepresentationCategory ],
+function( cat )
+  local T, algebras, Q_T, quiver_incs, projs, nts, 
+        make_natural_transformation, s, t, B;
+  T := AlgebraOfCategory( cat );
+  if not IsTensorProductOfAlgebras( T ) then
+    Error( "representation category is not over tensor algebra" );
+  fi;
+  algebras := TensorProductFactors( T );
+  if Length( algebras ) <> 2 then
+    Error( "representation category over tensor product of ", Length( algebras ), " algebras; ",
+           "should be 2" );
+  fi;
+  # cat: representations over A \tensor B
+  # result: nts, list of two lists
+  # nts[ 1 ]: natural transformations between projections in first factor
+  #           list of one nat transf projs[ 1 ][ i ] -> projs[ 1 ][ j ]
+  #                   for each arrow a : i -> j in B
+  # nts[ 2 ]: natural transformations between projections in second factor
+  #           list of one nat transf projs[ 2 ][ i ] -> projs[ 2 ][ j ]
+  #                   for each arrow a : i -> j in A
+  Q_T := QuiverOfAlgebra( T );
+  quiver_incs := ProductQuiverInclusions( Q_T );
+  projs := TensorProductProjectionFunctors( cat );
+  nts := [];
+
+  make_natural_transformation := function( s, a )
+    local t, A, i, j, nt, ntfun;
+    t := 3 - s;
+    A := algebras[ s ];
+    i := VertexNumber( Source( a ) );
+    j := VertexNumber( Target( a ) );
+    nt := NaturalTransformation( projs[ s ][ i ], projs[ s ][ j ] );
+    ntfun := function( proj_i_R, R, proj_j_R )
+      local maps;
+      maps := List( Vertices( QuiverOfAlgebra( A ) ),
+                    v -> MapForArrow( R, PathInProductQuiver( Q_T, [ s, t ], [ v, a ] ) ) );
+      return QuiverRepresentationHomomorphism( proj_i_R, proj_j_R, maps );
+    end;
+    AddNaturalTransformationFunction( nt, ntfun );
+    return nt;
+  end;
+
+  for s in [ 1, 2 ] do
+    t := 3 - s;
+    B := algebras[ t ];
+    nts[ s ] := List( Arrows( QuiverOfAlgebra( B ) ),
+                      a -> make_natural_transformation( s, a ) );
+  od;
+  return nts;
+
+  # for s in [ 1, 2 ] do
+  #   t := 3 - s;
+  #   A := algebras[ s ];
+  #   B := algebras[ t ];
+  #   nts[ s ] := [];
+  #   for a in Arrows( QuiverOfAlgebra( B ) ) do
+  #     i := VertexNumber( Source( a ) );
+  #     j := VertexNumber( Target( a ) );
+  #     nt := NaturalTransformation( projs[ s ][ i ], projs[ s ][ j ] );
+  #     ntfun := function( proj_i_R, R, proj_j_R )
+  #       local maps;
+  #       maps := List( Vertices( QuiverOfAlgebra( A ) ),
+  #                     v -> MapForArrow( R, PathInProductQuiver( Q_T, [ s, t ], [ v, a ] ) ) );
+  #       return QuiverRepresentationHomomorphism( proj_i_R, proj_j_R, maps );
+  #     end;
+  #     AddNaturalTransformationFunction( nt, ntfun );
+  #     Add( nts[ s ], nt );
+  #   od;
+  # od;    
+  # return nts;
+  # TODO test
+end );
+
+
+InstallMethod( AsLayeredRepresentation, "for positive integer and quiver representation homomorphism",
+               [ IsPosInt, IsQuiverRepresentation ],
+function( s, R )
+  return ApplyFunctor( AsLayeredRepresentationFunctor( s, CapCategory( R ) ),
+                       R );
+end );
+
+
+InstallMethod( AsLayeredRepresentationHomomorphism, "for positive integer and quiver representation homomorphism",
+               [ IsPosInt, IsQuiverRepresentationHomomorphism ],
+function( s, f )
+  return ApplyFunctor( AsLayeredRepresentationFunctor( s, CapCategory( f ) ),
+                       f );
+end );
+
+
+InstallMethod( AsLayeredRepresentationFunctor, "for positive integer and quiver representation category",
+               [ IsPosInt, IsQuiverRepresentationCategory ],
+function( s, fcat )
+  local T, algebras, t, A, B, ucat, lcat, projs, proj_nts, layered, 
+        object_fun, morphism_fun;
+
+  if s = 1 and HasAsLayeredRepresentationFunctor1( fcat ) then
+    return AsLayeredRepresentationFunctor1( fcat );
+  elif s = 2 and HasAsLayeredRepresentationFunctor2( fcat ) then
+    return AsLayeredRepresentationFunctor2( fcat );
+  fi;
+
+  T := AlgebraOfCategory( fcat );
+  if not IsTensorProductOfAlgebras( T ) then
+    Error( "representation category is not over tensor algebra" );
+  fi;
+  algebras := TensorProductFactors( T );
+  if Length( algebras ) <> 2 then
+    Error( "representation category over tensor product of ", Length( algebras ), " algebras; ",
            "should be 2" );
   fi;
   if not s in [ 1, 2 ] then
     Error( "tensor factor number must be either 1 or 2, not ", s );
   fi;
+
   t := 3 - s;
   A := algebras[ s ];
   B := algebras[ t ];
-  paths := function( path_a, path_b )
-    local l;
-    l := [];
-    l[ s ] := path_a;
-    l[ t ] := path_b;
-    return l;
+  # Q_A := QuiverOfAlgebra( A );
+  # Q_B := QuiverOfAlgebra( B );
+  # Q_T := QuiverOfAlgebra( T );
+  # prod_path := function( path_a, path_b )
+  #   local l;
+  #   l := [];
+  #   l[ s ] := path_a;
+  #   l[ t ] := path_b;
+  #   return PathInProductQuiver( Q_T, l );
+  # end;
+  ucat := CategoryOfQuiverRepresentations( A );
+  lcat := CategoryOfQuiverRepresentationsOverVectorSpaceCategory( B, ucat );
+
+  projs := TensorProductProjectionFunctors( fcat )[ s ];
+  proj_nts := TensorProductProjectionNaturalTransformations( fcat )[ s ];
+  
+  layered := CapFunctor( "lrep", fcat, lcat );
+  object_fun := function( R )
+    return QuiverRepresentation( lcat,
+                                 List( projs, P -> ApplyFunctor( P, R ) ),
+                                 List( proj_nts, N -> ApplyNaturalTransformation( N, R ) ) );
   end;
-  # construct a representation over B,
-  # consisting of A-representations
-  Qa := QuiverOfAlgebra( A );
-  Qb := QuiverOfAlgebra( B );
-  Qt := QuiverOfAlgebra( T );
-  catA := CategoryOfQuiverRepresentations( A );
-  reps := [];
-  for w in Vertices( Qb ) do
-    objs := List( Vertices( Qa ),
-                  v -> VectorSpaceOfRepresentation( R, PathInProductQuiver( Qt, paths( v, w ) ) ) );
-    maps := List( Arrows( Qa ),
-                  a -> MapForArrow( R, PathInProductQuiver( Qt, paths( a, w ) ) ) );
-    rep := QuiverRepresentation( catA, objs, maps );
-    Add( reps, rep );
-  od;
-  morphisms := [];
-  for b in Arrows( Qb ) do
-    maps := List( Vertices( Qa ),
-                  v -> MapForArrow( R, PathInProductQuiver( Qt, paths( v, b ) ) ) );
-    source := reps[ VertexNumber( Source( b ) ) ];
-    range := reps[ VertexNumber( Target( b ) ) ];
-    morphism := QuiverRepresentationHomomorphism( source, range, maps );
-    Add( morphisms, morphism );
-  od;
-  cat := CategoryOfQuiverRepresentationsOverVectorSpaceCategory( B, catA );
-  return QuiverRepresentation( cat, reps, morphisms );
+  morphism_fun := function( S1, f, S2 )
+    return QuiverRepresentationHomomorphism( S1, S2,
+                                             List( projs, P -> ApplyFunctor( P, f ) ) );
+  end;
+  AddObjectFunction( layered, object_fun );
+  AddMorphismFunction( layered, morphism_fun );
+  return layered;
 end );
 
 
-InstallMethod( AsFlatRepresentation, "for quiver representation",
+InstallMethod( AsLayeredRepresentationFunctor1, "for quiver representation category",
+               [ IsQuiverRepresentationCategory ],
+               fcat -> AsLayeredRepresentationFunctor( 1, fcat ) );
+
+InstallMethod( AsLayeredRepresentationFunctor2, "for quiver representation category",
+               [ IsQuiverRepresentationCategory ],
+               fcat -> AsLayeredRepresentationFunctor( 2, fcat ) );
+
+InstallMethod( AsFlatRepresentation, "for positive integer and quiver representation",
                [ IsPosInt, IsQuiverRepresentation ],
 function( s, R )
   local t, cat, ucat, A, B, T, Qa, Qb, Qt, objs, v, factors, va, vb, 
