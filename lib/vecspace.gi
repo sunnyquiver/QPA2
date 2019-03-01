@@ -396,6 +396,11 @@ function( T, v )
   return Vector( Source( T ), x );
 end );
 
+InstallMethod( \=, [ IsVectorSpaceCategory, IsVectorSpaceCategory ],
+function( cat1, cat2 )
+  return UnderlyingField( cat1 ) = UnderlyingField( cat2 );
+end );
+
 InstallMethod( CategoryOfVectorSpaces, [ IsField ],
 function( F )
   local cat, equal_objects, equal_morphisms, zero_object,
@@ -549,7 +554,7 @@ function( F )
   DeactivateCachingOfCategory( cat );
   CapCategorySwitchLogicOff( cat ); # TODO test this
 
-  return cat;
+  return Intern( cat );
 end );
 
 InstallMethod( StackMatricesHorizontally, [ IsDenseList ],

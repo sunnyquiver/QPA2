@@ -850,6 +850,12 @@ function( A )
          ( A, UnderlyingCategoryForRepresentations( A ) );
 end );
 
+InstallMethod( \=, [ IsQuiverRepresentationCategory, IsQuiverRepresentationCategory ],
+function( cat1, cat2 )
+  return AlgebraOfCategory( cat1 ) = AlgebraOfCategory( cat2 )
+         and VectorSpaceCategory( cat1 ) = VectorSpaceCategory( cat2 );
+end );
+
 InstallMethod( CategoryOfQuiverRepresentationsOverVectorSpaceCategory,
                "for quiver algebra and vector space category",
                [ IsQuiverAlgebra, IsAbelianCategory ],
@@ -1057,7 +1063,7 @@ function( A, vecspace_cat )
     Finalize( cat );
   fi;
   
-  return cat;
+  return Intern( cat );
     
 end );
 
