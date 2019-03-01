@@ -11,6 +11,15 @@
 DeclareOperation( "RestrictionFunctor", [ IsQuiverAlgebraHomomorphism, IsCapCategory, IsCapCategory ] );
 
 #! @Description
+#!  Returns the restriction functor from the category <A>C</A> to the category <A>D</A>
+#!  when <A>m</A> is a quiver homomorphism from the quiver defining the category <A>D</A>
+#!  to the quiver defining the category <A>C</A>.
+#! @Returns IsCapFunctor 
+#! @Arguments m, C, D
+DeclareOperation( "RestrictionFunctor", [ IsQuiverHomomorphism,
+                                          IsQuiverRepresentationCategory, IsQuiverRepresentationCategory ] );
+
+#! @Description
 #!  Returns the restriction functor which forgets the right module structure. If the 
 #!  argument is a category of right modules, then it returns the restriction functor
 #!  to the category vector spaces. 
