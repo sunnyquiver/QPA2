@@ -7,7 +7,7 @@ function( A, basis, basis_vertices, action )
   if Length( basis ) <> Length( basis_vertices ) then
     Error( "list of vertices for basis does not have same length as list of basis elements" );
   fi;
-  if not ForAll( basis_vertices, v -> IsVertex( v ) and v in Q ) then
+  if not ForAll( basis_vertices, v -> IsQuiverVertex( v ) and v in Q ) then
     Error( "list of basis vertices contains at least one element which is not a vertex in the quiver" );
   fi;
   for i in [ 1 .. Length( basis ) ] do
@@ -124,7 +124,7 @@ function( a )
   return LinearCombination( B_rep, Permuted( Coefficients( B_alg, a ), perm ) );
 end );
 
-InstallMethod( AsAlgebraElement, [ IsQuiverRepresentationElement ],
+InstallMethod( AsAlgebraElementAttr, [ IsQuiverRepresentationElement ],
 function( r )
   local A, R, B_alg, B_rep, perm;
   R := RepresentationOfElement( r );
@@ -137,6 +137,8 @@ function( r )
   perm := BasisPermutationFromRepresentation( A );
   return LinearCombination( B_alg, Permuted( Coefficients( B_rep, r ), perm ) );
 end );
+
+InstallMethod( AsAlgebraElement, [ IsQuiverRepresentationElement ], AsAlgebraElementAttr );
 
 InstallMethod( AsRepresentationElementEnv, [ IsQuiverAlgebraElement ],
 function( a )
@@ -195,7 +197,7 @@ side -> function( a )
   return AsModuleElement( side, r );
 end );
 
-InstallMethod( AsAlgebraElement, [ IsQuiverModuleElement ],
+InstallMethod( AsAlgebraElementAttr, [ IsQuiverModuleElement ],
 function( m )
   local r, R;
   r := UnderlyingRepresentationElement( m );
@@ -208,3 +210,5 @@ function( m )
     return OppositeAlgebraElement( AsAlgebraElement( r ) );
   fi;
 end );
+
+InstallMethod( AsAlgebraElement, [ IsQuiverModuleElement ], AsAlgebraElementAttr );

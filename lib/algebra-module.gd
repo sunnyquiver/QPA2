@@ -16,7 +16,8 @@ DeclareAttribute( "BasisPermutationFromRepresentationEnv", IsQuiverAlgebra );
 DeclareAttribute( "AsRepresentationElement", IsQuiverAlgebraElement );
 DeclareAttribute( "AsRepresentationElementEnv", IsQuiverAlgebraElement );
 
-DeclareAttribute( "AsAlgebraElement", IsQuiverRepresentationElement );
+DeclareAttribute( "AsAlgebraElementAttr", IsQuiverRepresentationElement );
+DeclareOperation( "AsAlgebraElement", [ IsQuiverRepresentationElement ] );
 DeclareAttribute( "AsAlgebraElementEnv", IsQuiverRepresentationElement );
 
 DeclareAttribute( "AlgebraAsLeftModule", IsQuiverAlgebra );
@@ -29,6 +30,7 @@ DeclareAttribute( "AsLeftModuleElement", IsQuiverAlgebraElement );
 DeclareAttribute( "AsRightModuleElement", IsQuiverAlgebraElement );
 DeclareAttribute( "AsBimoduleElement", IsQuiverAlgebraElement );
 
-DeclareAttribute( "AsAlgebraElement", IsQuiverModuleElement );
+DeclareAttribute( "AsAlgebraElementAttr", IsQuiverModuleElement );
+DeclareOperation( "AsAlgebraElement", [ IsQuiverModuleElement ] );
 
 #

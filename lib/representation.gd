@@ -100,7 +100,7 @@ DeclareOperation( "ElementVector", [ IsQuiverRepresentationElement, IsPosInt ] )
 #!  Returns the vector of the element <A>e</A> at the vertex <A>v</A>.
 #! @Returns <Ref BookName="Reference" Filt="IsVector"/>
 #! @Arguments e, v
-DeclareOperation( "ElementVector", [ IsQuiverRepresentationElement, IsVertex ] );
+DeclareOperation( "ElementVector", [ IsQuiverRepresentationElement, IsQuiverVertex ] );
 
 #! @Arguments e
 #! @Description
@@ -264,7 +264,7 @@ DeclareAttribute( "VectorSpacesOfRepresentation", IsQuiverRepresentation );
 DeclareOperation( "VectorSpaceOfRepresentation", [ IsQuiverRepresentation, IsPosInt ] );
 
 #!
-DeclareOperation( "VectorSpaceOfRepresentation", [ IsQuiverRepresentation, IsVertex ] );
+DeclareOperation( "VectorSpaceOfRepresentation", [ IsQuiverRepresentation, IsQuiverVertex ] );
 
 #!
 DeclareAttribute( "MapsOfRepresentation", IsQuiverRepresentation );
@@ -281,7 +281,7 @@ DeclareOperation( "VertexDimension", [ IsQuiverRepresentation, IsPosInt ] );
 #!  at the vertex <A>v</A>.
 #! @Returns <Ref BookName="Reference" Filt="IsVector"/>
 #! @Arguments R, v
-DeclareOperation( "VertexDimension", [ IsQuiverRepresentation, IsVertex ] );
+DeclareOperation( "VertexDimension", [ IsQuiverRepresentation, IsQuiverVertex ] );
 
 #! @Description
 #!  Returns a list of the matrices for the maps in the representation <A>R</A>.
@@ -346,7 +346,7 @@ DeclareAttribute( "MatricesOfRepresentationHomomorphism",
 
 #!
 DeclareOperation( "MapForVertex",
-                  [ IsQuiverRepresentationHomomorphism, IsVertex ] );
+                  [ IsQuiverRepresentationHomomorphism, IsQuiverVertex ] );
 
 #!
 DeclareOperation( "MapForVertex",

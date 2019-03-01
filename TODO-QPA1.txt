@@ -15,7 +15,6 @@ Q.name -> Q[ vertex_label ], Q.arrow_label
 VerticesOfQuiver( quiver ) -> Vertices( quiver ) (name collision with package GRAPE, should change name)
 ArrowsOfQuiver( quiver )   -> Arrows( quiver ) (change name to ArrowsOfQuiver)
 OrderingOfQuiver( quiver ) -- no
-IsQuiverVertex( obj ) -> IsVertex( obj ) (name collision with package GRAPE, should change name)
 IsArrow( obj ) -- same (change name to IsQuiverArrow)
 IsZeroPath( obj ) -- no, there are no zero paths
 Poset( P, rel ) -- no (should be ported, use existing structure of posets in GAP?)

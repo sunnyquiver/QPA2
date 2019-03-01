@@ -34,7 +34,7 @@ DeclareCategory( "IsNontrivialPath", IsPath ); # not vertex
 DeclareCategory( "IsCompositePath", IsNontrivialPath );
 
 #!
-DeclareCategory( "IsVertex", IsPrimitivePath );
+DeclareCategory( "IsQuiverVertex", IsPrimitivePath );
 
 #!
 DeclareCategory( "IsArrow", IsNontrivialPath and IsPrimitivePath );
@@ -363,11 +363,12 @@ DeclareProperty( "IsAcyclicQuiver", IsQuiver );
 #!  The ordering of the list corresponds to the ordering of the vertices
 #!  in the quiver.
 #!  That is, the vertex at position <C>i</C> in the list has number <C>i</C>
-#!  (see <Ref Attr="VertexNumber" Label="for IsVertex"/>) and is the vertex which is returned by
+#!  (see <Ref Attr="VertexNumber" Label="for IsQuiverVertex"/>) and is the vertex which is returned by
 #!  <C>Vertex( <A>Q</A>, i )</C>.
 #! @Arguments Q
-#! @Returns list of <Ref Filt="IsVertex"/>
-DeclareAttribute( "Vertices", IsQuiver );
+#! @Returns list of <Ref Filt="IsQuiverVertex"/>
+DeclareOperation( "Vertices", [ IsQuiver ] );
+DeclareAttribute( "VerticesAttr", IsQuiver );
 
 #! @Description
 #!  Returns the arrows of the quiver <A>Q</A> as a list.
@@ -443,7 +444,7 @@ DeclareAttribute( "PrimitivePaths", IsQuiver );
 #! @Description
 #!  The vertex with number <A>i</A> in the quiver <A>Q</A>.
 #! @Arguments Q, i
-#! @Returns <C>IsVertex</C>
+#! @Returns <C>IsQuiverVertex</C>
 DeclareOperation( "Vertex", [ IsQuiver, IsPosInt ] );
 
 #! @Description
@@ -495,7 +496,7 @@ DeclareAttribute( "SinkVertices", IsQuiver );
 DeclareAttribute( "QuiverOfPath", IsPath );
 
 #! @BeginGroup PathEnds
-#! @Returns <Ref Filt="IsVertex"/>
+#! @Returns <Ref Filt="IsQuiverVertex"/>
 #! @Description
 #!  The **source** of a path is the vertex where the path starts;
 #!  the **target** of a path is the vertex where the path ends.
@@ -547,7 +548,7 @@ DeclareGlobalFunction( "QPA_LABEL_TO_STRING" );
 #!  The number of the vertex <A>v</A>.
 #!  In a quiver with $n$ vertices, the vertices are assigned
 #!  numbers $1, \ldots, n$ when the quiver is constructed.
-DeclareAttribute( "VertexNumber", IsVertex );
+DeclareAttribute( "VertexNumber", IsQuiverVertex );
 
 #! @Arguments a
 #! @Returns positive integer
@@ -561,34 +562,34 @@ DeclareAttribute( "ArrowNumber", IsArrow );
 #! @Returns list of arrows
 #! @Description
 #!  A list containing all arrows starting in the vertex <A>v</A>.
-DeclareAttribute( "OutgoingArrows", IsVertex );
+DeclareAttribute( "OutgoingArrows", IsQuiverVertex );
 
 #! @Arguments v
 #! @Returns list of arrows
 #! @Description
 #!  A list containing all arrows ending in the vertex <A>v</A>.
-DeclareAttribute( "IncomingArrows", IsVertex );
+DeclareAttribute( "IncomingArrows", IsQuiverVertex );
 
 #! @Arguments v
 #! @Returns IsInt
 #! @Description
 #!  The outdegree of the vertex <A>v</A>; that is, the number of arrows
 #!  starting in <A>v</A>.
-DeclareAttribute( "Outdegree", IsVertex );
+DeclareAttribute( "Outdegree", IsQuiverVertex );
 
 #! @Arguments v
 #! @Returns IsInt
 #! @Description
 #!  The indegree of the vertex <A>v</A>; that is, the number of arrows
 #!  ending in <A>v</A>.
-DeclareAttribute( "Indegree", IsVertex );
+DeclareAttribute( "Indegree", IsQuiverVertex );
 
 #! @Arguments v
 #! @Returns IsInt
 #! @Description
 #!  The degree of the vertex <A>v</A>; that is, the number of arrows
 #!  starting or ending in <A>v</A>.
-DeclareAttribute( "DegreeOfVertex", IsVertex );
+DeclareAttribute( "DegreeOfVertex", IsQuiverVertex );
 
 #! @Arguments v
 #! @Returns list of vertices
@@ -596,7 +597,7 @@ DeclareAttribute( "DegreeOfVertex", IsVertex );
 #!  Returns a list containing the neighbors of the vertex <A>v</A>;
 #!  that is, all vertices <C>w</C> such that there is an arrow from
 #!  <A>v</A> to <C>w</C> or from <C>w</C> to <A>v</A>.
-DeclareAttribute( "Neighbors", IsVertex );
+DeclareAttribute( "Neighbors", IsQuiverVertex );
 
 
 #! @Section Composition of paths
@@ -1090,7 +1091,8 @@ DeclareProperty( "IsConnected", IsQuiver );
 #! @Returns list of quivers
 #! @Description
 #!  Returns a list of the connected components of the quiver <A>Q</A>.
-DeclareAttribute( "ConnectedComponents", IsQuiver );
+DeclareOperation( "ConnectedComponents", [ IsQuiver ] );
+DeclareAttribute( "ConnectedComponentsAttr", IsQuiver );
 
 #! @Section Quiver invariants
 
