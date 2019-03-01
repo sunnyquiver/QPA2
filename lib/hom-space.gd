@@ -5,7 +5,7 @@
 #! @Description
 #!  GAP category for hom spaces.
 #! @Label
-DeclareCategory( "IsHomSpace", IsQPAVectorSpace );
+DeclareCategory( "IsHomSpace", IsQPAVectorSpace and IsHomObject );
 
 #! @Description
 #!  Gives the hom space <M>\operatorname{Hom}(X,Y)</M> of two objects in a field category.
@@ -14,28 +14,6 @@ DeclareCategory( "IsHomSpace", IsQPAVectorSpace );
 #! @Label for two objects
 DeclareOperation( "Hom", [ IsFieldCategoryObject, IsFieldCategoryObject ] );
 
-#! @Description
-#!  Returns the source of all morphisms in a given hom space.
-#!  That is, if the argument <A>hom</A> is <M>\operatorname{Hom}(X,Y)</M>,
-#!  then the result is the object <M>X</M>.
-#! @Returns IsFieldCategoryObject
-#! @Arguments hom
-DeclareAttribute( "Source", IsHomSpace );
-
-#! @Description
-#!  Returns the range of all morphisms in a given hom space.
-#!  That is, if the argument <A>hom</A> is <M>\operatorname{Hom}(X,Y)</M>,
-#!  then the result is the object <M>Y</M>.
-#! @Returns IsFieldCategoryObject
-#! @Arguments hom
-DeclareAttribute( "Range", IsHomSpace );
-
-#! @Description
-#!  For a given hom space <M>\operatorname{Hom}_{\mathscr{C}}(X, Y)</M>,
-#!  returns the category <M>\mathscr{C}</M>.
-#! @Returns IsFieldCategory
-#! @Arguments hom
-DeclareAttribute( "CategoryOfHomSpace", IsHomSpace );
 
 
 #! @Section Hom spaces of vector spaces
