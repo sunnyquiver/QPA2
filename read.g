@@ -9,6 +9,7 @@ ReadPackage( "QPA", "lib/dynkin.gi" );
 ReadPackage( "QPA", "lib/algebra.gi" );
 ReadPackage( "QPA", "lib/nakayama.gi" );
 ReadPackage( "QPA", "lib/representation.gi" );
+ReadPackage( "QPA", "lib/map.gi" );
 ReadPackage( "QPA", "lib/module.gi" );
 ReadPackage( "QPA", "lib/special-representations.gi" );
 ReadPackage( "QPA", "lib/special-modules.gi" );

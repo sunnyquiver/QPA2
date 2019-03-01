@@ -10,6 +10,7 @@ ReadPackage( "QPA", "lib/dynkin.gd" );
 ReadPackage( "QPA", "lib/algebra.gd" );
 ReadPackage( "QPA", "lib/nakayama.gd" );
 ReadPackage( "QPA", "lib/representation.gd" );
+ReadPackage( "QPA", "lib/map.gd" );
 ReadPackage( "QPA", "lib/module.gd" );
 ReadPackage( "QPA", "lib/special-representations.gd" );
 ReadPackage( "QPA", "lib/special-modules.gd" );
