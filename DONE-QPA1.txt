@@ -176,6 +176,7 @@ BlockSplittingIdempotents( M ) -- for modules and representations
 
 CanonicalAlgebra( field, weights[, relcoeff] )
 CartanMatrix( A ) 
+Centre( A ), Center( A )
 CommonDirectSummand( M, N ) 
 ComplexityOfAlgebra( A, n )
 CoxeterMatrix( A ) 
@@ -238,6 +239,7 @@ IsSplitMonomorphism( f ) -- (from CAP, undocumented)
 IsStringAlgebra( A ) -- no (should be ported)
 IsTreeQuiver( quiver ) 
 IsUniform( element )
+IsWeaklySymmetricAlgebra( A )
 IsZero( f ) -- (from CAP, undocumented)
 IyamaGenerator( M )
 
@@ -258,6 +260,7 @@ m ^ p -- same (action of an element from a path algebra on a module)
 MaximalCommonDirectSummand( M, N )
 MinimalGeneratingSetOfIdeal( I )
 
+NakayamaPermutation( A )
 NthPowerOfArrowIdeal( FQ, n )
 NthSyzygy( M, n )
 NumberOfArrows( quiver )
@@ -292,3 +295,10 @@ Source( f ) --  (undocumented)
 
 TensorProductOfAlgebras( FQ1, FQ2 )
 TensorProductOfModules( M, N )
+
+VerticesOfQuiver( quiver )
+
+New operations:
+
+DeclareAttribute( "DynkinType", IsQuiver );
+DeclareProperty( "IsExtendedDynkinQuiver", IsQuiver );

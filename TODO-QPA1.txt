@@ -12,7 +12,6 @@ Quiver( adjacencymatrix )  -- no
 InfoQuiver                 -- no
 OrderedBy( quiver, ordering) -- no
 Q.name -> Q[ vertex_label ], Q.arrow_label
-VerticesOfQuiver( quiver ) -> Vertices( quiver ) (name collision with package GRAPE, should change name)
 ArrowsOfQuiver( quiver )   -> Arrows( quiver ) (change name to ArrowsOfQuiver)
 OrderingOfQuiver( quiver ) -- no
 IsArrow( obj ) -- same (change name to IsQuiverArrow)
@@ -41,9 +40,7 @@ IsAdmissibleQuotientOfPathAlgebra( A ) -- no (should be ported)
 IsGorensteinAlgebra( A ) -- no (should be ported)
 IsSymmetricAlgebra( A ) -- no (should be ported)
 IsTriangularReduced( A ) -- no (should be ported)
-IsWeaklySymmetricAlgebra( A ) -- no (should be ported)
 IsFiniteTypeAlgebra( A ) -- no (should be ported)
-Centre( A ), Center( A ) -- no (should be ported)
 Dimension( A ) -- same (undocumented) 
 NakayamaAutomorphism( A ) -- no (should be ported)
 OrderOfNakayamaAutomorphism( A ) -- no (should be ported)
@@ -54,7 +51,6 @@ OriginalPathAlgebra( algebra ) -> PathAlgebra( algebra ) (TODO: should change to
 PosetAlgebra( F, P ) -- no (should be ported)
 PosetOfPosetAlgebra( A ) -- no (should be ported)
 TruncatedPathAlgebra( F, Q, n ) -- no (should be ported)
-IsSpecialBiserialQuiver( Q ) -- no (should be ported)
 IsQuiverProductDecomposition( obj ) -- no (not needed)
 IsEnvelopingAlgebra( A ) -- no (needed?)
 DualOfAlgebraAsModuleOverEnvelopingAlgebra( A ) -- no (should be ported)
