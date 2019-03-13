@@ -12,9 +12,9 @@ Quiver( adjacencymatrix )  -- no
 InfoQuiver                 -- no
 OrderedBy( quiver, ordering) -- no
 Q.name -> Q[ vertex_label ], Q.arrow_label
-ArrowsOfQuiver( quiver )   -> Arrows( quiver ) (change name to ArrowsOfQuiver)
 OrderingOfQuiver( quiver ) -- no
 IsArrow( obj ) -- same (change name to IsQuiverArrow)
+OrderingOfQuiver( quiver ) -- no
 IsZeroPath( obj ) -- no, there are no zero paths
 Poset( P, rel ) -- no (should be ported, use existing structure of posets in GAP?)
 Size( P ) -- no (the same as above)
@@ -29,28 +29,20 @@ a < b -- no (needed?)
 MakeUniformOnRight( elems ) -- no (check if needed, see NthPowerOfArrowIdeal)
 MappedExpression( expr, gens1, gens2 ) -- no (not needed)
 AssignGeneratorVariables( A ) -- no (should be ported)
-Ideal( FQ, elems ) -- same (undocumented) or QuiverAlgebraTwoSidedIdeal( FQ, elems )
-IdealOfQuotient( A ) -- same
 elt in I -- same
 IsIdealInPathAlgebra( I ) -- no (check if needed)
 ProductOfIdeals( I, J ) -- no (should be ported)
 QuadraticPerpOfPathAlgebraIdeal( rels ) -- no (should be ported)
-GroebnerBasisOfIdeal( I ) -> GroebnerBasis( I ) 
 IsAdmissibleQuotientOfPathAlgebra( A ) -- no (should be ported)
-IsGorensteinAlgebra( A ) -- no (should be ported)
-IsSymmetricAlgebra( A ) -- no (should be ported)
 IsTriangularReduced( A ) -- no (should be ported)
 IsFiniteTypeAlgebra( A ) -- no (should be ported)
-Dimension( A ) -- same (undocumented) 
 NakayamaAutomorphism( A ) -- no (should be ported)
 OrderOfNakayamaAutomorphism( A ) -- no (should be ported)
-Coefficients( B, element ) -- same (undocumented)
 IsNormalForm( element ) -- no (needed?)
 a < b (documented twice in QPA1 manual) -- no (needed?)
-OriginalPathAlgebra( algebra ) -> PathAlgebra( algebra ) (TODO: should change to OriginalPathAlgebra)
+OriginalPathAlgebra( algebra ) -> PathAlgebra( algebra ) (TODO: should change to OriginalPathAlgebra ) 
 PosetAlgebra( F, P ) -- no (should be ported)
 PosetOfPosetAlgebra( A ) -- no (should be ported)
-TruncatedPathAlgebra( F, Q, n ) -- no (should be ported)
 IsQuiverProductDecomposition( obj ) -- no (not needed)
 IsEnvelopingAlgebra( A ) -- no (needed?)
 DualOfAlgebraAsModuleOverEnvelopingAlgebra( A ) -- no (should be ported)

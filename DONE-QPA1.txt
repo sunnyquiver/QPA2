@@ -5,6 +5,7 @@ AlgebraAsModuleOverEnvelopingAlgebra( A ) -> AlgebraAsBimodule( A ) (undocumente
 AllComplementsOfAlmostCompleteTiltingModule( <M>, <X> ) -> AllComplementsOfAlmostCompleteTiltingRepresentation( <R>, <X> )
 AllComplementsOfAlmostCompleteCoiltingModule( <M>, <X> ) -> AllComplementsOfAlmostCompleteCotiltingRepresentation( <R>, <X> )
 AnnihilatorOfModule( M ) -> AnnihilatorOfModule( M ) and AnnihilatorOfRepresentation( R )
+ArrowsOfQuiver( quiver )   -> Arrows( quiver )
 
 BasicVersionOfModule( M ) -> BasicVersionOfRepresentation( R )
 BlockDecompositionOfModule( M ) -> BlockDecompositionOfModule( M ) and BlockDecompositionOfRepresentation( R )
@@ -45,7 +46,7 @@ HaveFiniteCoresolutionInAddM( <N>, <M>, <n> ) -> FiniteCoresolutionInAddR( N, M,
 HomFactoringThroughProjOverAlgebra( M, N ) -> HomFactoringThroughProj( M, N )
 HomOverAlgebra( M, N ) -> Hom( M, N ) # returns vector space instead of list
 
-
+Ideal( FQ, elems ) -> QuiverAlgebraTwoSidedIdeal( FQ, elems )
 IdentityMapping( M ) -> IdentityMorphism( M ) (from CAP, undocumented in QPA)
 Image( f ) -> ImageObject( f ) (from CAP, undocumented in QPA)
 ImageInclusion( f ) -> ImageEmbedding( f ) (from CAP, undocumented in QPA)
@@ -72,6 +73,7 @@ IsPathAlgebraMatModule( obj ) -> IsQuiverModule( obj ) / IsRightQuiverModule( ob
 IsPathAlgebraModuleHomomorphism( f ) -> IsQuiverModuleHomomorphism( f )
 IsQuadraticIdeal( I ) -> IsQuadraticElements( list )
 IsQuiver( obj )            -> IsQuiver( obj ), IsLeftQuiver, IsRightQuiver( obj )
+
 IsRigidModule( M ) -> IsRigidObject( M )
 IsSemisimpleModule( M ) -> IsSemisimpleRepresentation( R )
 IsSimpleQPAModule( M ) -> IsSimpleRepresentation( R ) and IsSimpleQuiverModule( M )
@@ -158,6 +160,7 @@ TopOfModuleProjection( R ) -> TopProjection( R ) for representations
 TraceOfModule( M, N ) -> TraceOfRepresentation( R, N )
 
 VertexPosition( element ) -- can use VertexNumber( LeadingPath( element ) )
+VerticesOfQuiver( quiver ) -> Vertices( quiver )
 
 WalkOfPath( path ) -> ArrowList( path )
 
@@ -177,11 +180,13 @@ BlockSplittingIdempotents( M ) -- for modules and representations
 CanonicalAlgebra( field, weights[, relcoeff] )
 CartanMatrix( A ) 
 Centre( A ), Center( A )
+Coefficients( B, element ) 
 CommonDirectSummand( M, N ) 
 ComplexityOfAlgebra( A, n )
 CoxeterMatrix( A ) 
 CoxeterPolynomial( A ) 
 
+Dimension( A ) -- same (undocumented) 
 Dimension( M )
 DimensionVector( R )
 DominantDimension( R )
@@ -199,10 +204,13 @@ f + g -- (undocumented)
 FaithfulDimension( M )
 FullSubquiver( quiver, list )
 
+Ideal( FQ, elems )
+IdealOfQuotient( A ) 
 InjDimension( M )
 InjectiveEnvelope( M )
 IsAcyclicQuiver( quiver ) 
 IsAdmissibleIdeal( I )
+IsArrow( obj ) -- same (change name to IsQuiverArrow)
 IsBasicAlgebra( A )
 IsCanonicalAlgebra( A ) 
 IsDirectSummand( M, N )
@@ -211,7 +219,8 @@ IsDynkinQuiver( quiver )
 IsElementaryAlgebra( A )
 IsFiniteDimensional( A )
 IsFiniteGlobalDimensionAlgebra( A )
-IsGentleAlgebra( A ) 
+IsGentleAlgebra( A )
+IsGorensteinAlgebra( A )
 IsHereditaryAlgebra( A )
 IsInAdditiveClosure( M, N ) 
 IsIsomorphism( f ) -- (from CAP, undocumented)
@@ -224,6 +233,7 @@ IsNthSyzygy( R )
 IsOmegaPeriodic( M )
 IsPathAlgebra( obj )
 IsQuiverAlgebra( A )
+IsQuiverVertex( obj ) 
 IsQuotientOfPathAlgebra( object )
 IsRadicalSquareZeroAlgebra( A )
 IsRightMinimal( f )
@@ -236,7 +246,8 @@ IsSpecialBiserialQuiver( Q )
 IsSpecialBiserialAlgebra( A )
 IsSplitEpimorphism( f ) -- (from CAP, undocumented)
 IsSplitMonomorphism( f ) -- (from CAP, undocumented)
-IsStringAlgebra( A ) -- no (should be ported)
+IsStringAlgebra( A ) 
+IsSymmetricAlgebra( A ) 
 IsTreeQuiver( quiver ) 
 IsUniform( element )
 IsWeaklySymmetricAlgebra( A )
@@ -295,8 +306,7 @@ Source( f ) --  (undocumented)
 
 TensorProductOfAlgebras( FQ1, FQ2 )
 TensorProductOfModules( M, N )
-
-VerticesOfQuiver( quiver )
+TruncatedPathAlgebra( F, Q, n )
 
 New operations:
 
