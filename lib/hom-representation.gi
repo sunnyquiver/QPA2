@@ -49,7 +49,8 @@ InstallMethod( HomFunctor,
                [ IsPosInt, IsQuiverRepresentationCategory, IsQuiverRepresentationCategory ],
 function( s, cat1, cat2 )
   local t, T1, T2, algs1, A1, B1, pre_functor_1, algs2, A2, B2, 
-        pre_functor_2, A, hom_A, map_hom;
+        pre_functor_2, A, hom_A, map_hom, compute_hom_functor, range, 
+        hom_functor, hom;
   if not s in [ 1, 2 ] then
     Error( "tensor factor number must be either 1 or 2, not ", s );
   fi;
@@ -85,7 +86,21 @@ function( s, cat1, cat2 )
   else
     hom_A := HomFunctor( CategoryOfQuiverRepresentations( A ) ); # Hom_A(-,-)
     map_hom := MapRepresentation( hom_A, [ B1, B2 ] );
-    return PreComposeFunctors( [ pre_functor_1, pre_functor_2 ], map_hom );
+    compute_hom_functor := PreComposeFunctors( [ pre_functor_1, pre_functor_2 ], map_hom );
+    range := AsCapCategory( Range( compute_hom_functor ) );
+    hom_functor := CapFunctor( "Hom",
+                               [ [ cat1, true ], [ cat2, false ] ],
+                               range );
+    AddObjectFunction( hom_functor, function( R1, R2 )
+      local hom;
+      hom := ApplyFunctor( compute_hom_functor, R1, R2 );
+      SetFilterObj( hom, IsHomRepresentation );
+      SetSource( hom, R1 );
+      SetRange( hom, R2 );
+      return hom;
+    end );
+    AddMorphismFunction( hom_functor, FunctorMorphismOperation( compute_hom_functor ) );
+    return hom_functor;
   fi;
 end );
 
