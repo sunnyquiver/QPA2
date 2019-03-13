@@ -34,3 +34,4 @@ ReadPackage( "QPA", "lib/radical.gd" );
 ReadPackage( "QPA", "lib/socle.gd" );
 ReadPackage( "QPA", "lib/minimal.gd" );
 ReadPackage( "QPA", "lib/propmodrep.gd" );
+ReadPackage( "QPA", "lib/nice-basis.gd" );

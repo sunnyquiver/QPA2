@@ -33,3 +33,4 @@ ReadPackage( "QPA", "lib/radical.gi" );
 ReadPackage( "QPA", "lib/socle.gi" );
 ReadPackage( "QPA", "lib/minimal.gi" );
 ReadPackage( "QPA", "lib/propmodrep.gi" );
+ReadPackage( "QPA", "lib/nice-basis.gi" );
