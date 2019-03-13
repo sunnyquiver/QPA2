@@ -1078,7 +1078,7 @@ DeclareOperation( "FullSubquiver", [ IsQuiver, IsDenseList ] );
 #! @Returns IsBool
 #! @Description
 #!  Check if the quiver <A>Q</A> is connected.
-DeclareProperty( "IsConnected", IsQuiver );
+DeclareAttribute( "IsConnected", IsQuiver );
 
 #! @Arguments Q
 #! @Returns list of quivers
