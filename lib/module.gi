@@ -185,6 +185,12 @@ function( M )
   return AsModuleElement( Zero( R ), M );
 end );
 
+InstallMethod( Zero,
+               [ IsQuiverModuleElement ],
+function( elem )
+  return Zero( ModuleOfElement( elem ) );
+end );
+
 InstallMethod( ElementVectors,
                [ IsQuiverModuleElement ],
 function( e )
