@@ -21,6 +21,7 @@ ReadPackage( "QPA", "lib/hom-object.gi" );
 ReadPackage( "QPA", "lib/hom-space.gi" );
 ReadPackage( "QPA", "lib/hom-morphism.gi" );
 ReadPackage( "QPA", "lib/hom-representation.gi" );
+ReadPackage( "QPA", "lib/hom-module.gi" );
 ReadPackage( "QPA", "lib/tensor.gi" );
 ReadPackage( "QPA", "lib/restrictionfunctors.gi" );
 ReadPackage( "QPA", "lib/hash.gi" );
