@@ -1,15 +1,15 @@
-InstallMethod( String, [ IsHomObject ],
+InstallMethod( String, [ IsHomObject ], 1000,
 function( hom )
   return Concatenation( "Hom(", String( Source( hom ) ),
                         ", ", String( Range( hom ) ), ")" );
 end );
 
-InstallMethod( PrintObj, [ IsHomObject ],
+InstallMethod( PrintObj, [ IsHomObject ], 1000,
 function( hom )
   Print( String( hom ) );
 end );
 
-InstallMethod( ViewObj, [ IsHomObject ],
+InstallMethod( ViewObj, [ IsHomObject ], 1000,
 function( hom )
   Print( String( hom ) );
 end );
