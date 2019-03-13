@@ -15,7 +15,7 @@ DeclareOperation( "Hom", [ IsPosInt, IsQuiverRepresentationHomomorphism, IsQuive
 DeclareOperation( "HomFunctor",
                   [ IsPosInt, IsQuiverRepresentationCategory, IsQuiverRepresentationCategory ] );
 
-DeclareAttribute( "HomFunctor", IsQuiverRepresentationCategory );
+DeclareOperation( "HomFunctor", [ IsQuiverRepresentationCategory ] );
 
 
 DeclareOperation( "PreComposeFunctors", [ IsCapFunctor, IsCapFunctor ] );
