@@ -84,7 +84,7 @@ function( s, cat1, cat2 )
     return HomFunctor( cat1 );
   else
     hom_A := HomFunctor( CategoryOfQuiverRepresentations( A ) ); # Hom_A(-,-)
-    map_hom := MapRepresentation( hom_A, [ B1, fail ] );
+    map_hom := MapRepresentation( hom_A, [ B1, B2 ] );
     return PreComposeFunctors( [ pre_functor_1, pre_functor_2 ], map_hom );
   fi;
 end );
