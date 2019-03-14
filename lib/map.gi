@@ -170,8 +170,8 @@ function( F, list )
     morphism_fun := function( arg )
       local morphisms, sources, ranges, afun_source, afun_range, mfun;
       morphisms := arg{ [ 2 .. Length( arg ) - 1 ] };
-      sources := List( morphisms, Source );
-      ranges := List( morphisms, Range );
+      sources := List( morphisms, m -> IdentityMorphism( Source( m ) ) );
+      ranges := List( morphisms, m -> IdentityMorphism( Range( m ) ) );
       afun_source := m -> apply_F( Replace( sources, rep_i, m ) );
       afun_range := m -> apply_F( Replace( ranges, rep_i, m ) );
       mfun := m -> apply_F( Replace( morphisms, rep_i, m ) );

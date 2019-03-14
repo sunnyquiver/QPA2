@@ -90,7 +90,7 @@ function( m, repQ2, repQ1 )
   morphism_fun := function( R1, f, R2 )
     return QuiverRepresentationHomomorphism
            ( R1, R2,
-             List( Vertices( Q2 ),
+             List( Vertices( Q1 ),
                    v -> MapForVertex( f, Image( m, v ) ) ) );
   end;
   

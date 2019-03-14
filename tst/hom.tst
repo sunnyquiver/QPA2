@@ -35,6 +35,13 @@ gap> Source( hom ) = PP5;
 true
 gap> Range( hom ) = P1;
 true
+gap> h := Hom( 1, PP5, RadicalInclusion( P1 ) );;
+gap> IsQuiverRepresentationHomomorphism( h );
+true
+gap> Source( h ) = Hom( 1, PP5, RadicalOfRepresentation( P1 ) );
+true
+gap> Range( h ) = hom;
+true
 
 gap> A := LeftNakayamaAlgebra( Rationals, [3,2,1] );;
 gap> B := LeftNakayamaAlgebra( Rationals, [2,1] );;

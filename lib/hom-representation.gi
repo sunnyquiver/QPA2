@@ -11,7 +11,7 @@ InstallMethod( Hom, "for positive integer, quiver representation and quiver repr
 function( s, R, m )
   local hom_functor;
   hom_functor := HomFunctor( s, CapCategory( R ), CapCategory( m ) );
-  return ApplyFunctor( hom_functor, R, m );
+  return ApplyFunctor( hom_functor, IdentityMorphism( R ), m );
 end );
 
 InstallMethod( Hom, "for positive integer, quiver representation homomorphism and quiver representation",
@@ -19,7 +19,7 @@ InstallMethod( Hom, "for positive integer, quiver representation homomorphism an
 function( s, m, R )
   local hom_functor;
   hom_functor := HomFunctor( s, CapCategory( m ), CapCategory( R ) );
-  return ApplyFunctor( hom_functor, m, R );
+  return ApplyFunctor( hom_functor, m, IdentityMorphism( R ) );
 end );
 
 InstallMethod( Hom, "for positive integer and quiver representation homomorphisms",
@@ -210,7 +210,7 @@ function( Fs, G )
     args := arg{ [ 2 .. n + 1 ] };
     result_of_Fs := [];
     for i in [ 1 .. n_G ] do
-      args_i := arg{ [ argument_indices[ i ][ 1 ] .. argument_indices[ i ][ 2 ] ] };
+      args_i := args{ [ argument_indices[ i ][ 1 ] .. argument_indices[ i ][ 2 ] ] };
       result_of_Fs[ i ] := CallFuncList( ApplyFunctor, Concatenation( [ Fs[ i ] ], args_i ) );
     od;
     return CallFuncList( ApplyFunctor, Concatenation( [ G ], result_of_Fs ) );

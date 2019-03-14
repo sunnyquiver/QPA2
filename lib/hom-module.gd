@@ -19,6 +19,9 @@ DeclareOperation( "Hom", [ IsSide, IsQuiverModuleHomomorphism, IsQuiverModule ] 
 DeclareOperation( "Hom", [ IsSide, IsQuiverModule, IsQuiverModuleHomomorphism ] );
 
 #!
+DeclareOperation( "Hom", [ IsSide, IsQuiverModuleHomomorphism, IsQuiverModuleHomomorphism ] );
+
+#!
 DeclareOperation( "HomFunctor", [ IsSide, IsQuiverModuleCategory, IsQuiverModuleCategory ] );
 
 #!

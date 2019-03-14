@@ -40,3 +40,24 @@ function( side, M, N )
                        M, N );
 end );
 
+InstallMethod( Hom, "for side, quiver module and quiver module homomorphism",
+               [ IsSide, IsQuiverModule, IsQuiverModuleHomomorphism ],
+function( side, M, g )
+  return ApplyFunctor( HomFunctor( side, CapCategory( M ), CapCategory( g ) ),
+                       IdentityMorphism( M ), g );
+end );
+
+InstallMethod( Hom, "for side, quiver module homomorphism and quiver module",
+               [ IsSide, IsQuiverModuleHomomorphism, IsQuiverModule ],
+function( side, f, N )
+  return ApplyFunctor( HomFunctor( side, CapCategory( f ), CapCategory( N ) ),
+                       f, IdentityMorphism( N ) );
+end );
+
+InstallMethod( Hom, "for side and quiver module homomorphisms",
+               [ IsSide, IsQuiverModuleHomomorphism, IsQuiverModuleHomomorphism ],
+function( side, f, g )
+  return ApplyFunctor( HomFunctor( side, CapCategory( f ), CapCategory( g ) ),
+                       f, g );
+end );
+
