@@ -33,8 +33,8 @@ InstallMethod( RestrictionFunctor, "for a homomorphism of quiver algebras",
         projectionsbyvertex := List( inclusionsbyvertex, LeftInverse );
         linear_transformations := [ ];
         for i in [ 1..Length( arrows ) ] do
-            source := VertexNumber( Source( arrows[ i ] ) ); 
-            target := VertexNumber( Target( arrows[ i ] ) );
+            source := VertexIndex( Source( arrows[ i ] ) ); 
+            target := VertexIndex( Target( arrows[ i ] ) );
             lintrans := PreCompose( [ inclusionsbyvertex[ source ], 
                                 QuiverAlgebraActionAsLinearTransformation( R, arrowimages[ i ] ), projectionsbyvertex[ target ] ] ); 
             Add( linear_transformations, lintrans );

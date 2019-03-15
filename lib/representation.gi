@@ -66,7 +66,7 @@ function( R, vertices, vectors )
       
   rep_vectors := List( VectorSpacesOfRepresentation( R ), Zero );
   for i in [ 1 .. num_vectors ] do
-    vertex_number := VertexNumber( vertices[ i ] );
+    vertex_number := VertexIndex( vertices[ i ] );
     if IsBound( vectors[ i ] ) then
       rep_vectors[ vertex_number ] := vectors[ i ];
     fi;
@@ -130,7 +130,7 @@ end );
 InstallMethod( ElementVector, "for quiver representation element and vertex",
                [ IsQuiverRepresentationElement, IsQuiverVertex ],
 function( e, v )
-  return ElementVectors( e )[ VertexNumber( v ) ];
+  return ElementVectors( e )[ VertexIndex( v ) ];
 end );
 
 InstallMethod( PathAction,
@@ -252,8 +252,8 @@ function( A, dimensions, matrices )
   for i in [ 1 .. Length( matrices ) ] do
     if IsBound( matrices[ i ] ) then
       a := Arrow( Q, i );
-      source := objects[ VertexNumber( Source( a ) ) ];
-      range := objects[ VertexNumber( Target( a ) ) ];
+      source := objects[ VertexIndex( Source( a ) ) ];
+      range := objects[ VertexIndex( Target( a ) ) ];
       morphisms[ i ] := m( source, range, matrices[ i ] );
     fi;
   od;
@@ -271,7 +271,7 @@ function( A, dimensions, arrows, matrices_for_arrows )
   matrices := [];
   for i in [ 1 .. Length( arrows ) ] do
     if IsBound( matrices_for_arrows[ i ] ) then
-      matrices[ ArrowNumber( arrows[ i ] ) ] := matrices_for_arrows[ i ];
+      matrices[ ArrowIndex( arrows[ i ] ) ] := matrices_for_arrows[ i ];
     fi;
   od;
   return QuiverRepresentation( A, dimensions, matrices );
@@ -324,9 +324,9 @@ function( cat, objects, morphisms )
              " is not a CAP object in the correct category" );
     fi;
     src := Source( morphisms[ i ] );
-    correct_src := objects[ VertexNumber( Source( arrows[ i ] ) ) ];
+    correct_src := objects[ VertexIndex( Source( arrows[ i ] ) ) ];
     rng := Range( morphisms[ i ] );
-    correct_rng := objects[ VertexNumber( Target( arrows[ i ] ) ) ];
+    correct_rng := objects[ VertexIndex( Target( arrows[ i ] ) ) ];
     if not IsEqualForObjects( src, correct_src ) then
       Error( "Morphism ", morphisms[ i ], " for arrow ", arrows[ i ],
              " has wrong source (is ", src, ", should be ", correct_src, ")" );
@@ -350,7 +350,7 @@ function( cat, objects, arrows, morphisms_for_arrows )
   fi;
   for i in [ 1 .. Length( arrows ) ] do
     if IsBound( morphisms_for_arrows[ i ] ) then
-      morphisms[ ArrowNumber( arrows[ i ] ) ] := morphisms_for_arrows[ i ];
+      morphisms[ ArrowIndex( arrows[ i ] ) ] := morphisms_for_arrows[ i ];
     fi;
   od;
   return QuiverRepresentation
@@ -370,8 +370,8 @@ function( cat, objects, morphisms )
   for i in [ 1 .. NumberOfArrows( Q ) ] do
     if not IsBound( morphisms[ i ] ) then
       a := Arrow( Q, i );
-      source := objects[ VertexNumber( Source( a ) ) ];
-      target := objects[ VertexNumber( Target( a ) ) ];
+      source := objects[ VertexIndex( Source( a ) ) ];
+      target := objects[ VertexIndex( Target( a ) ) ];
       morphisms[ i ] := ZeroMorphism( source, target );
     fi;
   od;
@@ -546,7 +546,7 @@ end );
 InstallMethod( VectorSpaceOfRepresentation, "for quiver representation and vertex",
                [ IsQuiverRepresentation, IsQuiverVertex ],
 function( R, v )
-  return VectorSpacesOfRepresentation( R )[ VertexNumber( v ) ];
+  return VectorSpacesOfRepresentation( R )[ VertexIndex( v ) ];
 end );
 
 InstallMethod( VertexDimension, "for quiver representation and positive integer",
@@ -558,7 +558,7 @@ end );
 InstallMethod( VertexDimension, "for quiver representation and vertex",
                [ IsQuiverRepresentation, IsQuiverVertex ],
 function( R, v )
-  return VertexDimension( R, VertexNumber( v ) );
+  return VertexDimension( R, VertexIndex( v ) );
 end );
 
 InstallMethod( MapForArrow, "for quiver representation and positive integer",
@@ -570,7 +570,7 @@ end );
 InstallMethod( MapForArrow, "for quiver representation and arrow",
                [ IsQuiverRepresentation, IsArrow ],
 function( R, a )
-  return MapForArrow( R, ArrowNumber( a ) );
+  return MapForArrow( R, ArrowIndex( a ) );
 end );
 
 InstallMethod( MapForPath, "for quiver representation and vertex",
@@ -729,8 +729,8 @@ function( R1, R2, maps )
 
   for a in Arrows( Q ) do
     comp1 := PreCompose( MapForArrow( R1, a ),
-                         morphisms[ VertexNumber( Target( a ) ) ] );
-    comp2 := PreCompose( morphisms[ VertexNumber( Source( a ) ) ],
+                         morphisms[ VertexIndex( Target( a ) ) ] );
+    comp2 := PreCompose( morphisms[ VertexIndex( Source( a ) ) ],
                          MapForArrow( R2, a ) );
     if not IsEqualForMorphisms( comp1, comp2 ) then
       Error( "maps for representation homomorphism do not commute with maps for arrow ", a );
@@ -827,7 +827,7 @@ end );
 InstallMethod( MapForVertex, "for quiver representation homomorphism and vertex",
                [ IsQuiverRepresentationHomomorphism, IsQuiverVertex ],
 function( f, v )
-  return MapsOfRepresentationHomomorphism( f )[ VertexNumber( v ) ];
+  return MapsOfRepresentationHomomorphism( f )[ VertexIndex( v ) ];
 end );
 
 InstallMethod( MapForVertex, "for quiver representation homomorphism and positive integer",
@@ -1118,7 +1118,7 @@ function( R, gens )
     temp := Remove( queue, 1);
     v := temp[ 1 ];
     g := temp[ 2 ];
-    Add( spanningset[ VertexNumber( v ) ], ElementVector( g, v ) );
+    Add( spanningset[ VertexIndex( v ) ], ElementVector( g, v ) );
     outgoingarrows := OutgoingArrows( v );
     for a in outgoingarrows do
       ga := PathAction( g, a );
@@ -1132,8 +1132,8 @@ function( R, gens )
   arrows := Arrows( Q );
   maps := [ ]; 
   for a in arrows do
-    s := VertexNumber( Source( a ) );
-    t := VertexNumber( Target( a ) );
+    s := VertexIndex( Source( a ) );
+    t := VertexIndex( Target( a ) );
     Add( maps, LiftAlongMonomorphism( inclusions[ t ], PreCompose( inclusions[ s ], MapForArrow( R, a ) ) ) );
   od;
   U := QuiverRepresentation( CapCategory( R ), List( inclusions, Source ), maps );
@@ -1300,7 +1300,7 @@ function( r, R )
 
   A := AlgebraOfRepresentation( R );
   k := FieldOfRepresentation( R );
-  n := VertexNumber( supp[1] );
+  n := VertexIndex( supp[1] );
   B := BasisOfProjectives( A )[ n ];
   mats := [ ];
   for i in [ 1 .. Length( B ) ] do
@@ -1360,15 +1360,15 @@ function( R1, R2, generators, images )
         local   target,  vec,  temp;
         
         target := Target( p );
-        if Length( spanofgens[ VertexNumber( target ) ][ 1 ] ) = VertexDimension( R1, target ) then
+        if Length( spanofgens[ VertexIndex( target ) ][ 1 ] ) = VertexDimension( R1, target ) then
             return;
         fi;
         vec := AsList( ElementVector( PathAction( g, p ), target ) ); 
-        temp := Concatenation( spanofgens[ VertexNumber( target ) ][ 1 ], [ vec ] ); 
+        temp := Concatenation( spanofgens[ VertexIndex( target ) ][ 1 ], [ vec ] ); 
         if RankMat( temp ) = Length( temp ) then 
-            Add( spanofgens[ VertexNumber( target ) ][ 1 ], vec );
-            Add( spanofgens[ VertexNumber( target ) ][ 2 ], p );
-            Add( spanofgens[ VertexNumber( target ) ][ 3 ], g );
+            Add( spanofgens[ VertexIndex( target ) ][ 1 ], vec );
+            Add( spanofgens[ VertexIndex( target ) ][ 2 ], p );
+            Add( spanofgens[ VertexIndex( target ) ][ 3 ], g );
             Add( queue, [ p , g ] ); 
         fi;        
     end;
@@ -1395,14 +1395,14 @@ function( R1, R2, generators, images )
     for v in vertices do
         dim := VertexDimension( R1, v ); 
         if dim > 0 then
-            temp := spanofgens[  VertexNumber( v ) ];
+            temp := spanofgens[  VertexIndex( v ) ];
             basis := temp[ 1 ];
             paths := temp[ 2 ];
             gens := temp[ 3 ];
             matrix := List( [ 1..Length( gens ) ], i -> PathAction( images[ Position( generators, gens[ i ] ) ], paths[ i ] ) );
             matrix := List( matrix, m -> AsList( ElementVector( m, v ) ) );
             basischangemat := temp[ 1 ]^( -1 );            
-            hommatrices[ VertexNumber( v ) ] := basischangemat * matrix; 
+            hommatrices[ VertexIndex( v ) ] := basischangemat * matrix; 
         fi;
     od;
     f := QuiverRepresentationHomomorphism( R1, R2, hommatrices );
@@ -1518,8 +1518,8 @@ function( s, R )
   for b in Arrows( Qb ) do
     maps := List( Vertices( Qa ),
                   v -> MapForArrow( R, PathInProductQuiver( Qt, paths( v, b ) ) ) );
-    source := reps[ VertexNumber( Source( b ) ) ];
-    range := reps[ VertexNumber( Target( b ) ) ];
+    source := reps[ VertexIndex( Source( b ) ) ];
+    range := reps[ VertexIndex( Target( b ) ) ];
     morphism := QuiverRepresentationHomomorphism( source, range, maps );
     Add( morphisms, morphism );
   od;

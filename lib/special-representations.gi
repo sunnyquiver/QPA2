@@ -66,8 +66,8 @@ function( A )
   list := List( Vertices( QuiverOfAlgebra( A ) ),
                 v -> List( Vertices( QuiverOfAlgebra( A ) ), w -> [] ) );
   for b in basis do
-    i := VertexNumber( Source( Paths( b )[ 1 ] ) );
-    j := VertexNumber( Target( Paths( b )[ 1 ] ) );
+    i := VertexIndex( Source( Paths( b )[ 1 ] ) );
+    j := VertexIndex( Target( Paths( b )[ 1 ] ) );
     Add( list[ i ][ j ], b );
   od;
   return list;
@@ -97,8 +97,8 @@ function( A )
     arrows_with_matrices := [];
     matrices := [];
     for a in arrows do
-      source := VertexNumber( Source( a ) );
-      target := VertexNumber( Target( a ) );
+      source := VertexIndex( Source( a ) );
+      target := VertexIndex( Target( a ) );
       dim_source := dimensions[ source ];
       dim_target := dimensions[ target ];
       if dim_source <> 0 and dim_target <> 0 then

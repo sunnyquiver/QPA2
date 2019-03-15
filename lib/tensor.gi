@@ -70,8 +70,8 @@ InstallMethod( TensorProductOfRepresentations,
             istart := PathInProductQuiver( QB1, [ i, start ] );
             targetl := PathInProductQuiver( QB2, [ OppositePath( target ), l ] );
             
-            for b1 in BasisVectorsByVertex( Basis( R1 ) )[ VertexNumber( istart ) ] do
-                for b2 in BasisVectorsByVertex( Basis( R2 ) )[ VertexNumber( targetl ) ] do
+            for b1 in BasisVectorsByVertex( Basis( R1 ) )[ VertexIndex( istart ) ] do
+                for b2 in BasisVectorsByVertex( Basis( R2 ) )[ VertexIndex( targetl ) ] do
                     Add( temprelations, partialtensor( QuiverAlgebraAction( b1, ElementaryTensor( One( A1 ), One( A2 ) * a, B1 ) ), b2, v) - 
                          partialtensor( b1, QuiverAlgebraAction( b2, ElementaryTensor( One( OppositeAlgebra( A2 ) ) * OppositePath( a ), One( A3), B2) ), v ) );
                 od;
@@ -89,7 +89,7 @@ InstallMethod( TensorProductOfRepresentations,
             alpha := PathInProductQuiver( QB3, [ a, j ] );
             source := Source( alpha );
             target := Target( alpha );
-            if dimension[ VertexNumber( source ) ] = 0 or dimension[ VertexNumber( target ) ] = 0 then
+            if dimension[ VertexIndex( source ) ] = 0 or dimension[ VertexIndex( target ) ] = 0 then
                 continue;
             fi;
             Add( arrowsB3, alpha );
@@ -101,8 +101,8 @@ InstallMethod( TensorProductOfRepresentations,
                 iprime := Target( a );
                 iB1 := PathInProductQuiver( QB1, [ i, l ] );
                 iprimeB1 := PathInProductQuiver( QB1, [ iprime, l ] );
-                basisR1_i_l := BasisVectorsByVertex( Basis( R1 ) )[ VertexNumber( iB1 ) ];
-                basisR2_l_j := BasisVectorsByVertex( Basis( R2 ) )[ VertexNumber( PathInProductQuiver( QB2, [ OppositePath( l ), j ] ) ) ];
+                basisR1_i_l := BasisVectorsByVertex( Basis( R1 ) )[ VertexIndex( iB1 ) ];
+                basisR2_l_j := BasisVectorsByVertex( Basis( R2 ) )[ VertexIndex( PathInProductQuiver( QB2, [ OppositePath( l ), j ] ) ) ];
                 for b in basisR1_i_l do
                     for bprime in basisR2_l_j do
                         Add( basis_i_j, partialtensor( b, bprime, PathInProductQuiver( QB3, [ i, j ] ) ) );  
@@ -111,9 +111,9 @@ InstallMethod( TensorProductOfRepresentations,
                 od;
             od;
             matrix := [ ];
-            for b in BasisVectors( Basis( Range( projections[ VertexNumber( source ) ] ) ) ) do
-                bprime := PreImagesRepresentative( projections[ VertexNumber( source ) ], b ); 
-                Add( matrix, ImageElm( projections[ VertexNumber( target ) ], bprime * basis_i_j^( -1 ) * images_iprime_j ) );
+            for b in BasisVectors( Basis( Range( projections[ VertexIndex( source ) ] ) ) ) do
+                bprime := PreImagesRepresentative( projections[ VertexIndex( source ) ], b ); 
+                Add( matrix, ImageElm( projections[ VertexIndex( target ) ], bprime * basis_i_j^( -1 ) * images_iprime_j ) );
             od;
             Add( maps, matrix );
         od;
@@ -124,7 +124,7 @@ InstallMethod( TensorProductOfRepresentations,
             alpha := PathInProductQuiver( QB3, [ i, a ] );
             source := Source( alpha );
             target := Target( alpha );
-            if dimension[ VertexNumber( source ) ] = 0 or dimension[ VertexNumber( target ) ] = 0 then
+            if dimension[ VertexIndex( source ) ] = 0 or dimension[ VertexIndex( target ) ] = 0 then
                 continue;
             fi;
             Add( arrowsB3, alpha );
@@ -136,8 +136,8 @@ InstallMethod( TensorProductOfRepresentations,
                 jprime := Target( a );
                 jB2 := PathInProductQuiver( QB2, [ OppositePath( l ), j ] );
                 jprimeB2 := PathInProductQuiver( QB2, [ OppositePath( l ), jprime ] );
-                basisR1_i_l := BasisVectorsByVertex( Basis( R1 ) )[ VertexNumber( PathInProductQuiver( QB1, [ i, l ] ) ) ];
-                basisR2_l_j := BasisVectorsByVertex( Basis( R2 ) )[ VertexNumber( jB2 ) ];
+                basisR1_i_l := BasisVectorsByVertex( Basis( R1 ) )[ VertexIndex( PathInProductQuiver( QB1, [ i, l ] ) ) ];
+                basisR2_l_j := BasisVectorsByVertex( Basis( R2 ) )[ VertexIndex( jB2 ) ];
                 for b in basisR1_i_l do
                     for bprime in basisR2_l_j do
                         Add( basis_i_j, partialtensor( b, bprime, PathInProductQuiver( QB3, [ i, j ] ) ) );  
@@ -146,9 +146,9 @@ InstallMethod( TensorProductOfRepresentations,
                 od;
             od;
             matrix := [ ];
-            for b in BasisVectors( Basis( Range( projections[ VertexNumber( source ) ] ) ) ) do
-                bprime := PreImagesRepresentative( projections[ VertexNumber( source ) ], b ); 
-                Add( matrix, ImageElm( projections[ VertexNumber( target ) ], bprime * basis_i_j^( -1 ) * images_i_jprime ) );
+            for b in BasisVectors( Basis( Range( projections[ VertexIndex( source ) ] ) ) ) do
+                bprime := PreImagesRepresentative( projections[ VertexIndex( source ) ], b ); 
+                Add( matrix, ImageElm( projections[ VertexIndex( target ) ], bprime * basis_i_j^( -1 ) * images_i_jprime ) );
             od;
             Add( maps, matrix );
         od;
@@ -160,8 +160,8 @@ InstallMethod( TensorProductOfRepresentations,
         
         vectors := [ ];
         for v in verticesB3 do
-           if dimension[ VertexNumber( v ) ] > 0 then
-               vectors[ VertexNumber( v ) ] := ImageElm( projections[ VertexNumber( v ) ], partialtensor( r1, r2, v ) );
+           if dimension[ VertexIndex( v ) ] > 0 then
+               vectors[ VertexIndex( v ) ] := ImageElm( projections[ VertexIndex( v ) ], partialtensor( r1, r2, v ) );
            fi;
        od;
        

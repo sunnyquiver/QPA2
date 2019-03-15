@@ -355,8 +355,8 @@ DeclareAttribute( "QuiverCategory", IsQuiver );
 #!  <P/>
 #!  The ordering of the list corresponds to the ordering of the vertices
 #!  in the quiver.
-#!  That is, the vertex at position <C>i</C> in the list has number <C>i</C>
-#!  (see <Ref Attr="VertexNumber" Label="for IsQuiverVertex"/>) and is the vertex which is returned by
+#!  That is, the vertex at position <C>i</C> in the list has index <C>i</C>
+#!  (see <Ref Attr="VertexIndex" Label="for IsQuiverVertex"/>) and is the vertex which is returned by
 #!  <C>Vertex( <A>Q</A>, i )</C>.
 #! @Arguments Q
 #! @Returns list of <Ref Filt="IsQuiverVertex"/>
@@ -368,8 +368,8 @@ DeclareAttribute( "VerticesAttr", IsQuiver );
 #!  <P/>
 #!  The ordering of the list corresponds to the ordering of the arrows
 #!  in the quiver.
-#!  That is, the arrow at position <C>i</C> in the list has number <C>i</C>
-#!  (see <C>ArrowNumber</C>) and is the arrow which is returned by
+#!  That is, the arrow at position <C>i</C> in the list has index <C>i</C>
+#!  (see <C>ArrowIndex</C>) and is the arrow which is returned by
 #!  <C>Arrow( <A>Q</A>, i )</C>.
 #! @Arguments Q
 #! @Returns list of <Ref Filt="IsArrow"/>
@@ -435,13 +435,13 @@ DeclareAttribute( "ArrowTargetIndices", IsQuiver );
 DeclareAttribute( "PrimitivePaths", IsQuiver );
 
 #! @Description
-#!  The vertex with number <A>i</A> in the quiver <A>Q</A>.
+#!  The vertex with index <A>i</A> in the quiver <A>Q</A>.
 #! @Arguments Q, i
 #! @Returns <C>IsQuiverVertex</C>
 DeclareOperation( "Vertex", [ IsQuiver, IsPosInt ] );
 
 #! @Description
-#!  The arrow with number <A>i</A> in the quiver <A>Q</A>.
+#!  The arrow with index <A>i</A> in the quiver <A>Q</A>.
 #! @Arguments Q, i
 #! @Returns <Ref Filt="IsArrow"/>
 DeclareOperation( "Arrow", [ IsQuiver, IsPosInt ] );
@@ -538,18 +538,18 @@ DeclareGlobalFunction( "QPA_LABEL_TO_STRING" );
 #! @Arguments v
 #! @Returns positive integer
 #! @Description
-#!  The number of the vertex <A>v</A>.
+#!  The index of the vertex <A>v</A>.
 #!  In a quiver with $n$ vertices, the vertices are assigned
-#!  numbers $1, \ldots, n$ when the quiver is constructed.
-DeclareAttribute( "VertexNumber", IsQuiverVertex );
+#!  indices $1, \ldots, n$ when the quiver is constructed.
+DeclareAttribute( "VertexIndex", IsQuiverVertex );
 
 #! @Arguments a
 #! @Returns positive integer
 #! @Description
-#!  The number of the arrow <A>a</A>.
+#!  The index of the arrow <A>a</A>.
 #!  In a quiver with $m$ arrows, the arrows are assigned
-#!  numbers $1, \ldots, m$ when the quiver is constructed.
-DeclareAttribute( "ArrowNumber", IsArrow );
+#!  indices $1, \ldots, m$ when the quiver is constructed.
+DeclareAttribute( "ArrowIndex", IsArrow );
 
 #! @Arguments v
 #! @Returns list of arrows
@@ -984,29 +984,29 @@ DeclareOperation( "ProductQuiverInclusion", [ IsProductQuiver, IsPosInt, IsPosIn
 DeclareAttribute( "ProductQuiverInclusions", IsProductQuiver );
 
 #! @Description
-#!  Gives the vertex number of a certain vertex in a product quiver.
+#!  Gives the vertex index of a certain vertex in a product quiver.
 #!  The argument <A>quivers</A> is a list of quivers,
-#!  and the argument <A>vertex_numbers</A> is a list of positive integers.
-#!  The result is the number of the vertex in <C>QuiverProduct( quivers )</C>
-#!  which is made by combining the vertices with the given vertex numbers
+#!  and the argument <A>vertex_indices</A> is a list of positive integers.
+#!  The result is the index of the vertex in <C>QuiverProduct( quivers )</C>
+#!  which is made by combining the vertices with the given vertex indices
 #!  from each quiver.
 #! @Returns positive integer
-#! @Arguments quivers, vertex_numbers
-DeclareOperation( "ProductQuiverVertexNumber", [ IsDenseList, IsDenseList ] );
+#! @Arguments quivers, vertex_indices
+DeclareOperation( "ProductQuiverVertexIndex", [ IsDenseList, IsDenseList ] );
 
 #! @Description
-#!  Gives the arrow number of a certain arrow in a product quiver.
+#!  Gives the arrow index of a certain arrow in a product quiver.
 #!  The argument <A>quivers</A> is a list of quivers,
 #!  <A>i</A> is a positive integer, and
-#!  <A>path_numbers</A> is a list of positive integers.
-#!  Each element in <A>path_numbers</A> should be the number of a vertex
-#!  in the corresponding quiver, except <C>path_numbers[i]</C>, which
-#!  is the number of an arrow.
-#!  The result is the number of the arrow in <C>QuiverProduct( quivers )</C>
+#!  <A>path_indices</A> is a list of positive integers.
+#!  Each element in <A>path_indices</A> should be the index of a vertex
+#!  in the corresponding quiver, except <C>path_indices[i]</C>, which
+#!  is the index of an arrow.
+#!  The result is the index of the arrow in <C>QuiverProduct( quivers )</C>
 #!  which is made by combining the given arrow and vertices.
 #! @Returns positive integer
-#! @Arguments quivers, i, path_numbers
-DeclareOperation( "ProductQuiverArrowNumber", [ IsDenseList, IsPosInt, IsDenseList ] );
+#! @Arguments quivers, i, path_indices
+DeclareOperation( "ProductQuiverArrowIndex", [ IsDenseList, IsPosInt, IsDenseList ] );
 
 
 DeclareOperation( "\^", [ IsQuiver, IsSide ] );
@@ -1078,7 +1078,7 @@ DeclareOperation( "FullSubquiver", [ IsQuiver, IsDenseList ] );
 #! @Returns IsBool
 #! @Description
 #!  Check if the quiver <A>Q</A> is connected.
-DeclareProperty( "IsConnected", IsQuiver );
+DeclareAttribute( "IsConnected", IsQuiver );
 
 #! @Arguments Q
 #! @Returns list of quivers
