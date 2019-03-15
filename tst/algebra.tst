@@ -35,4 +35,11 @@ false
 gap> IsAdmissibleQuiverAlgebra( PathAlgebra( Rationals, LeftQuiver( "Q(2)[a:1->2,b:1->2]" ) ) );
 true
 
+gap> A := PathAlgebra( Rationals, LeftQuiver( "Q(2)[a:1->2]" ) );;
+gap> f := QuiverAlgebraHomomorphism( A, A, IdFunc );;
+gap> IsQuiverAlgebraHomomorphism( f );
+true
+gap> A.a = ImageElm( f, A.a );
+true
+
 gap> STOP_TEST( "algebra" );

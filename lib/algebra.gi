@@ -1371,6 +1371,16 @@ InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and a list of
     return QuiverAlgebraHomomorphism( A, B, verteximages, arrowimages ); 
 end );
 
+InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and a function",
+               [ IsQuiverAlgebra, IsQuiverAlgebra, IsFunction ],
+function( A, B, f )
+  local vertex_images, arrow_images;
+  vertex_images := List( Vertices( A ), f );
+  arrow_images := List( Arrows( A ), f );
+  return QuiverAlgebraHomomorphism( A, B, vertex_images, arrow_images );
+end );
+
+
 InstallMethod( ImageElm, "for a homomorphism of quiver algebras",
         [ IsQuiverAlgebraHomomorphism, IsQuiverAlgebraElement ],
         function( f, x )

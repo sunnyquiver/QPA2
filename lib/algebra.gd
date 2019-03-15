@@ -729,6 +729,16 @@ DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebr
 #!  It signals an error if the arguments do not give a well-defined homomorphism of algebras. 
 DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsHomogeneousList ] );
 
+#! @Arguments A, B, f
+#! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
+#! @Description
+#!  Returns the algebra homomorphism from the quiver algebra <A>A</A> to the quiver
+#!  algebra <A>B</A> given by the function <A>f</A>.
+#!
+#!  The function <A>f</A> should take an element of <A>A</A> as argument
+#!  and return an element of <A>B</A>.
+DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsFunction ] );
+
 #! @Arguments f
 #! @Returns a list of algebra elements
 #! @Description
