@@ -127,6 +127,33 @@ DeclareOperation( "TruncatedPathAlgebra", [ IsField, IsQuiver, IS_INT ] );
 #! @Arguments A
 DeclareProperty( "IsSelfinjectiveAlgebra",  IsQuiverAlgebra );
 
+#! @Description
+#!  Checks if the entered algebra is selfinjective, and returns false
+#!  otherwise. When the algebra is selfinjective, then it returns a 
+#!  list of two elements, where the first is the Nakayama permutation 
+#!  on the simple modules, while the second is the Nakayama permutation
+#!  on the indexing set of the simple modules. 
+#! @Returns two permutations
+#! @Arguments A
+DeclareAttribute( "NakayamaPermutation", IsQuiverAlgebra );
+
+#! @Description
+#!  Checks if the entered algebra is selfinjective, and returns false
+#!  otherwise. When the algebra is selfinjective, then it returns the 
+#!  Nakayama automorphism of  <A>A</A>.
+#! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
+#! @Arguments A
+DeclareAttribute( "NakayamaAutomorphism", IsQuiverAlgebra ); 
+
+#! @Description
+#!  Checks if the entered algebra is selfinjective, and returns false
+#!  otherwise. When the algebra is selfinjective, then it returns a 
+#!  list of two elements, where the first is the Nakayama permutation 
+#!  on the simple modules, while the second is the Nakayama permutation
+#!  on the indexing set of the simple modules.
+#! @Returns <C>IS_INT</C>
+#! @Arguments A
+DeclareAttribute( "OrderOfNakayamaAutomorphism", IsQuiverAlgebra );
 
 
 #! @Section Other classes of algebras

@@ -765,5 +765,218 @@ function( A )
 end 
   );
 
+#######################################################################
+##
+#A  NakayamaPermutation( <A> )
+##
+##  Checks if the entered algebra is selfinjective, and returns false
+##  otherwise. When the algebra is selfinjective, then it returns a 
+##  list of two elements, where the first is the Nakayama permutation 
+##  on the simple modules, while the second is the Nakayama permutation
+##  on the indexing set of the simple modules. 
+## 
+InstallMethod( NakayamaPermutation, 
+"for an algebra",
+[ IsQuotientOfPathAlgebra ],
+function( A )
+
+    local perm, nakayamaperm, nakayamaperm_index;
+    
+    if not IsSelfinjectiveAlgebra( A ) then
+        return false;
+    fi;
+    perm := List( IndecProjRepresentations( A ), p -> SocleOfRepresentation( p ) );
+    nakayamaperm := function( x )
+        local dimvector, pos;
+        
+        dimvector := DimensionVector( x );
+        if Dimension( x ) <> 1 then
+            Error( "The entered argument for the Nakayama permutation is not a simple representation.\n" );
+        fi;
+        pos := Position( dimvector, 1 );
+        return perm[ pos ];
+    end;
+
+    nakayamaperm_index := function( x )
+        local pos;
+        
+        if not x in [ 1..Length( perm ) ] then
+            Error( "An incorrect value was entered as an argument for the Nakayama permutation.\n" );
+        fi;
+        
+        return Position( DimensionVector( perm[ x ] ), 1 );
+    end;
+    return [ nakayamaperm, nakayamaperm_index];
+end
+);
+
+InstallOtherMethod( NakayamaPermutation, 
+"for an algebra",
+[ IsPathAlgebra ],
+function( A )
+
+    local n, nakayamaperm, nakayamaperm_index;
+    
+    if not IsSelfinjectiveAlgebra( A ) then 
+        return false;
+    fi;
+    n := NumberOfVertices( QuiverOfAlgebra( A ) );
+    nakayamaperm := function( x )
+        local dimvector, pos;
+        
+        dimvector := DimensionVector( x );
+        if Dimension( x ) <> 1 then
+            Error( "The entered argument for the Nakayama permutation is not a simple representation.\n" );
+        fi;
+
+        return x;
+    end;
+    nakayamaperm_index := function( x )
+        local pos;
+        
+        if not x in [ 1..n ] then
+            Error( "An incorrect value was entered as an argument for the Nakayama permutation.\n" );
+        fi;
+        
+        return x;
+    end;
+    
+    return [ nakayamaperm, nakayamaperm_index ];
+end
+  );
+
+#######################################################################
+##
+#A  NakayamaAutomorphism( <A> )
+##
+##  Checks if the entered algebra is selfinjective, and returns false
+##  otherwise. When the algebra is selfinjective, then it returns the 
+##  Nakayama automorphism of  <A>. 
+##
+InstallMethod( NakayamaAutomorphism, 
+"for an algebra",
+[ IsQuotientOfPathAlgebra ],
+function( A )
+
+    local ABasis, arrows, socleequations, soclesolutions, ABasisVector, temp,
+          newspan, newABasis, V, pi_map, P, beta, nakaauto;
+    
+    if not IsSelfinjectiveAlgebra( A ) then 
+        return false;
+    fi;
+    ABasis := CanonicalBasis( A ); 
+    arrows := List( Arrows( QuiverOfAlgebra( A ) ), x -> x * One( A ) );
+    #
+    # Finding the solce of the algebra A
+    #
+    socleequations := List( ABasis, b -> List( arrows, a -> Coefficients( ABasis, b * a ) ) );
+    socleequations := List( socleequations, s -> Flat( s ) );
+    soclesolutions := NullspaceMat( socleequations );
+    #
+    # Finding a new basis for the algebra  A, where the first basis vectors are 
+    # a basis for the socle of the algebra  A.
+    #
+    ABasisVector := List( ABasis, b -> Coefficients( ABasis, b ) );
+    temp := BaseSteinitzVectors( ABasisVector, soclesolutions );     
+    newspan := ShallowCopy( temp!.subspace );
+    Append( newspan, temp!.factorspace );
+    newABasis := List( newspan, b -> LinearCombination( ABasis, b ) );
+    #
+    # Redefining the vector space  A  to have the basis found above. 
+    #
+    V := Subspace( A, newABasis, "basis" ); 
+    #
+    # Finding the linear map  \pi\colon A \to k being the sum of the dual 
+    # basis elements corresponding to a basis of the socle of  A. 
+    #
+    pi_map := function(x) 
+        return Sum( Coefficients( Basis( V ), x ){ [ 1..Length( soclesolutions ) ] } );
+    end;
+    #
+    # Findind a matrix  P  such that  "x"*P*"y"^T = \pi(x*y), where "x" and
+    # "y" means x and y in terms of the basis Basis(V). 
+    #
+    P := [ ];
+    for beta in newABasis do
+        Add( P, List( newABasis, b -> pi_map( beta * b ) ) );
+    od;
+    # 
+    # Since "a"*P*"y"^T = y*P*"\mu(a)"^T = "\mu(a)"*P^T*"y"^T, it follows 
+    # that "a"*P = "\mu(a)"*P^T and therefore "\mu(a)" = "a"*P*P^(-T), where
+    # \mu is the Nakayama automorphism. Hence, it is given by the following:
+    # 
+    nakaauto := function( x ) 
+        local tempo;
+        
+        if not x in A then 
+            Error( "the entered argument is not in the algebra.\n" );
+        fi;
+        tempo := Coefficients( Basis( V ), x ) * P * ( TransposedMat( P )^( -1 ) );
+        
+        return LinearCombination( Basis( V ), tempo );
+    end;
+    
+    return QuiverAlgebraHomomorphism( A, A, nakaauto );
+end
+);
+
+InstallOtherMethod( NakayamaAutomorphism, 
+"for an algebra",
+[ IsPathAlgebra ],
+function( A )
+
+    local nakaauto;
+    
+    if not IsSelfinjectiveAlgebra( A ) then 
+        return false;
+    fi;
+    nakaauto := function(x);
+        if not x in A then 
+            Error( "argument not in the algebra.\n" );
+        fi;
+        
+        return x;
+    end;
+    
+    return QuiverAlgebraHomomorphism( A, A, nakaauto );
+end
+);
+
+#######################################################################
+##
+#A  OrderOfNakayamaAutomorphism( <A> )
+##
+##  Checks if the entered algebra is selfinjective, and returns false
+##  otherwise. When the algebra is selfinjective, then it returns a 
+##  list of two elements, where the first is the Nakayama permutation 
+##  on the simple modules, while the second is the Nakayama permutation
+##  on the indexing set of the simple modules. 
+##
+InstallMethod( OrderOfNakayamaAutomorphism, 
+"for an algebra",
+[ IsQuotientOfPathAlgebra ],
+function( A )
+
+    local nakaauto, matrixofnakaauto; 
+    
+    nakaauto := NakayamaAutomorphism( A ); 
+    matrixofnakaauto := List( CanonicalBasis( A ), b -> 
+                             Coefficients( CanonicalBasis( A ) , nakaauto( b ) ) );
+    return Order( matrixofnakaauto );
+end
+);
+
+InstallOtherMethod( OrderOfNakayamaAutomorphism, 
+"for a path algebra",
+[ IsPathAlgebra ],
+function( A );
+
+    if not IsSelfinjectiveAlgebra(A) then 
+        return false;
+    fi;
+
+    return 1;
+end
+);
 
 
