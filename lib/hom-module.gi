@@ -2,7 +2,7 @@ InstallMethod( HomFunctor, "for side and quiver module categories",
                [ IsSide, IsQuiverModuleCategory, IsQuiverModuleCategory ],
 function( side, cat1, cat2 )
   local side_result, rep1, rep2, rep_cat1, rep_cat2, hom_rep, 
-        as_module;
+        as_module, compute_hom_functor, range, hom_functor, hom;
   if side = Side( cat1 ) and side = Side( cat2 ) then
     return HomFunctor( cat1 );
   fi;
@@ -19,8 +19,22 @@ function( side, cat1, cat2 )
   rep_cat2 := UnderlyingRepresentationCategory( cat2 );
   hom_rep := HomFunctor( Int( side ), rep_cat1, rep_cat2 );
   as_module := AsModuleFunctor( side_result, AsCapCategory( Range( hom_rep ) ) );
-  return PreComposeFunctors( PreComposeFunctors( [ rep1, rep2 ], hom_rep ),
-                             as_module );
+  compute_hom_functor := PreComposeFunctors( PreComposeFunctors( [ rep1, rep2 ], hom_rep ),
+                                             as_module );
+    range := AsCapCategory( Range( compute_hom_functor ) );
+  hom_functor := CapFunctor( "Hom",
+                             [ [ cat1, true ], [ cat2, false ] ],
+                             range );
+  AddObjectFunction( hom_functor, function( M1, M2 )
+    local hom;
+    hom := ApplyFunctor( compute_hom_functor, M1, M2 );
+    SetFilterObj( hom, IsHomModule );
+    SetSource( hom, M1 );
+    SetRange( hom, M2 );
+    return hom;
+  end );
+  AddMorphismFunction( hom_functor, FunctorMorphismOperation( compute_hom_functor ) );
+  return hom_functor;
 end );
 
 InstallMethod( HomFunctor, "for quiver module category",

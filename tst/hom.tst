@@ -48,5 +48,11 @@ gap> B := LeftNakayamaAlgebra( Rationals, [2,1] );;
 gap> P := IndecProjBimodules([A,B]);;
 gap> S := SimpleLeftModules(A);;
 gap> h11 := Hom(LEFT, P[1], S[1]);;
+gap> IsHomModule( h11 );
+true
+gap> Source( h11 ) = P[1];
+true
+gap> Range( h11 ) = S[1];
+true
 
 gap> STOP_TEST( "hom" );
