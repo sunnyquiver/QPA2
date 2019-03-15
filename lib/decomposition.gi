@@ -157,14 +157,14 @@ function( M1, M2 )
 
   local side, R1, R2, maxcommon;
 
-  side := Side( R1 );
-  if side <> Side( R2 ) then
+  side := Side( M1 );
+  if side <> Side( M2 ) then
     Error( "The entered modules are not modules on the same side.\n" );
   fi;
   R1 := UnderlyingRepresentation( M1 );
   R2 := UnderlyingRepresentation( M2 );
   maxcommon := MaximalCommonDirectSummand( R1, R2 );
-  maxcommon[ 1 ] := List( maxcommon, m -> AsModule( side, m ) );
+  maxcommon[ 1 ] := List( maxcommon[ 1 ], m -> AsModule( side, m ) );
   maxcommon{ [ 2..3 ] } := List(  maxcommon{ [ 2..3 ] }, m -> AsModule( side, m ) );
   
   return maxcommon;
