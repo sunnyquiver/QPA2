@@ -93,4 +93,13 @@ DeclareCategory( "IsQuiverBimoduleHomSpace", IsQuiverModuleHomSpace );
 #!
 DeclareAttribute( "UnderlyingRepresentationHomSpace", IsQuiverModuleHomSpace );
 
+#! @Section Hom functors
+
+DeclareOperation( "HomFunctor", [ IsFieldCategory ] );
+
+DeclareOperation( "HomFunctor", [ IsFieldCategoryObject, IsFieldCategory ] );
+
+DeclareOperation( "HomFunctor", [ IsFieldCategory, IsFieldCategoryObject ] );
+
+
 #

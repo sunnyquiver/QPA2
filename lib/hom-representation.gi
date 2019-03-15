@@ -104,6 +104,38 @@ function( s, cat1, cat2 )
   fi;
 end );
 
+InstallMethod( HomFunctor,
+               [ IsPosInt, IsQuiverRepresentation, IsQuiverRepresentationCategory ],
+function( s, R, cat )
+  return FixFunctorArguments( HomFunctor( s, CapCategory( R ), cat ),
+                              [ R, fail ] );
+end );
+
+InstallMethod( HomFunctor,
+               [ IsPosInt, IsQuiverRepresentationCategory, IsQuiverRepresentation ],
+function( s, cat, R )
+  return FixFunctorArguments( HomFunctor( s, cat, CapCategory( R ) ),
+                              [ fail, R ] );
+end );
+
+InstallMethod( HomFunctor,
+               [ IsFieldCategoryObject, IsFieldCategory ],
+function( obj, cat )
+  if not IsIdenticalObj( CapCategory( obj ), cat ) then
+    Error( "object from wrong category" );
+  fi;
+  return FixFunctorArguments( HomFunctor( cat ), [ obj, fail ] );
+end );
+
+InstallMethod( HomFunctor,
+               [ IsFieldCategory, IsFieldCategoryObject ],
+function( cat, obj )
+  if not IsIdenticalObj( CapCategory( obj ), cat ) then
+    Error( "object from wrong category" );
+  fi;
+  return FixFunctorArguments( HomFunctor( cat ), [ fail, obj ] );
+end );
+
 
 InstallMethod( PreComposeFunctors,
                [ IsCapFunctor, IsCapFunctor ],
@@ -220,3 +252,57 @@ function( Fs, G )
   return result;
 end );
 
+InstallMethod( FixFunctorArguments,
+               [ IsCapFunctor, IsDenseList ],
+function( F, args )
+  local sig_F, n, sig, blank_positions, i, name, object_fun, 
+        morphism_fun, fixed_F;
+  sig_F := InputSignature( F );
+  if Length( sig_F ) <> Length( args ) then
+    Error( "length of argument list does not match arity of functor" );
+  fi;
+  n := Length( sig_F );
+  sig := [];
+  blank_positions := [];
+  for i in [ 1 .. n ] do
+    if args[ i ] = fail then
+      Add( blank_positions, i );
+      Add( sig, sig_F[ i ] );
+    elif not IsIdenticalObj( CapCategory( args[ i ] ), sig_F[ i ][ 1 ] ) then
+      Error( "fixed argument at position ", i, " is in wrong category" );
+    fi;
+  od;
+
+  name := Concatenation( Name( F ), "(" );
+  for i in [ 1 .. n ] do
+    if args[ i ] = fail then
+      name := Concatenation( name, "-" );
+    elif HasName( args[ i ] ) then
+      name := Concatenation( name, Name( args[ i ] ) );
+    else
+      name := Concatenation( name, String( args[ i ] ) );
+    fi;
+    if i < n then
+      name := Concatenation( name, "," );
+    fi;
+  od;
+  name := Concatenation( name, ")" );
+  
+  object_fun := function( arg )
+    local args_F;
+    args_F := ShallowCopy( args );
+    args_F{ blank_positions } := arg;
+    return CallFuncList( ApplyFunctor, Concatenation( [ F ], args_F ) );
+  end;
+  morphism_fun := function( arg )
+    local args_F;
+    args_F := ShallowCopy( args );
+    args_F{ blank_positions } := arg{ [ 2 .. Length( arg ) - 1 ] };
+    return CallFuncList( ApplyFunctor, Concatenation( [ F ], args_F ) );
+  end;
+
+  fixed_F := CapFunctor( name, sig, AsCapCategory( Range( F ) ) );
+  AddObjectFunction( fixed_F, object_fun );
+  AddMorphismFunction( fixed_F, morphism_fun );
+  return fixed_F;
+end );

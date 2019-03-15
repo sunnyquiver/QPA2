@@ -47,6 +47,20 @@ function( cat )
   return PreComposeFunctors( [ rep, rep ], hom_rep );
 end );
 
+InstallMethod( HomFunctor, "for side, quiver module and quiver module category",
+               [ IsSide, IsQuiverModule, IsQuiverModuleCategory ],
+function( side, M, cat )
+  return FixFunctorArguments( HomFunctor( side, CapCategory( M ), cat ),
+                              [ M, fail ] );
+end );
+
+InstallMethod( HomFunctor, "for side, quiver module and quiver module category",
+               [ IsSide, IsQuiverModuleCategory, IsQuiverModule ],
+function( side, cat, M )
+  return FixFunctorArguments( HomFunctor( side, cat, CapCategory( M ) ),
+                              [ fail, M ] );
+end );
+
 InstallMethod( Hom, "for side and quiver modules",
                [ IsSide, IsQuiverModule, IsQuiverModule ],
 function( side, M, N )
