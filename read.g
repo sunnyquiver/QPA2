@@ -7,7 +7,7 @@ ReadPackage( "QPA", "lib/vecspace.gi" );
 ReadPackage( "QPA", "lib/quiver.gi" );
 ReadPackage( "QPA", "lib/dynkin.gi" );
 ReadPackage( "QPA", "lib/algebra.gi" );
-ReadPackage( "QPA", "lib/nakayama.gi" );
+ReadPackage( "QPA", "lib/special-algebras.gi" );
 ReadPackage( "QPA", "lib/representation.gi" );
 ReadPackage( "QPA", "lib/module.gi" );
 ReadPackage( "QPA", "lib/special-representations.gi" );
