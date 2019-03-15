@@ -479,6 +479,15 @@ DeclareAttribute( "BasisVectorsByVertex", IsQuiverRepresentationBasis );
 DeclareOperation( "QuiverRepresentationHomomorphismByImages", [ IsQuiverRepresentation, IsQuiverRepresentation, IsHomogeneousList, IsHomogeneousList ] );
 
 
+#! @Section Representations over different algebras
+
+#!
+DeclareAttribute( "TensorProductProjectionFunctors", IsQuiverRepresentationCategory );
+
+#!
+DeclareAttribute( "TensorProductProjectionNaturalTransformations", IsQuiverRepresentationCategory );
+
+
 #! @Section Layered representations
 
 #! @Description
@@ -494,6 +503,14 @@ DeclareOperation( "QuiverRepresentationHomomorphismByImages", [ IsQuiverRepresen
 #! @Returns IsQuiverRepresentation
 #! @Arguments s, R
 DeclareOperation( "AsLayeredRepresentation", [ IsPosInt, IsQuiverRepresentation ] );
+
+DeclareOperation( "AsLayeredRepresentationHomomorphism", [ IsPosInt, IsQuiverRepresentationHomomorphism ] );
+
+DeclareOperation( "AsLayeredRepresentationFunctor", [ IsPosInt, IsQuiverRepresentationCategory ] );
+
+DeclareAttribute( "AsLayeredRepresentationFunctor1", IsQuiverRepresentationCategory );
+
+DeclareAttribute( "AsLayeredRepresentationFunctor2", IsQuiverRepresentationCategory );
 
 #! @Description
 #!  Turn a layered representation into a flat representation.

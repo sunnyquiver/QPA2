@@ -65,6 +65,41 @@ InstallMethod( RestrictionFunctor, "for a homomorphism of quiver algebras",
 end 
   ); 
 
+InstallMethod( RestrictionFunctor, "for quiver homomorphism and quiver representation categories",
+               [ IsQuiverHomomorphism,
+                 IsQuiverRepresentationCategory, IsQuiverRepresentationCategory ],
+function( m, repQ2, repQ1 )
+  local Q1, Q2, object_fun, morphism_fun, restriction;
+  Q1 := Source( m );
+  Q2 := Range( m );
+  if Q1 <> QuiverOfAlgebra( AlgebraOfCategory( repQ1 ) ) then
+    Error( "wrong source of quiver homomorphism" );
+  fi;
+  if Q2 <> QuiverOfAlgebra( AlgebraOfCategory( repQ2 ) ) then
+    Error( "wrong range of quiver homomorphism" );
+  fi;
+
+  object_fun := function( R )
+    return QuiverRepresentation
+           ( repQ1,
+             List( Vertices( Q1 ),
+                   v -> VectorSpaceOfRepresentation( R, Image( m, v ) ) ),
+             List( Arrows( Q1 ),
+                   a -> MapForArrow( R, Image( m, a ) ) ) );
+  end;
+  morphism_fun := function( R1, f, R2 )
+    return QuiverRepresentationHomomorphism
+           ( R1, R2,
+             List( Vertices( Q1 ),
+                   v -> MapForVertex( f, Image( m, v ) ) ) );
+  end;
+  
+  restriction := CapFunctor( "Restriction", repQ2, repQ1 );
+  AddObjectFunction( restriction, object_fun );
+  AddMorphismFunction( restriction, morphism_fun );
+  return restriction;
+end );
+
 InstallMethod( RestrictionToLeftFunctor, "for a bimodule category",
         [ IsQuiverBimoduleCategory ],
         function( C )

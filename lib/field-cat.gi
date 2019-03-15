@@ -1,3 +1,6 @@
+InstallMethod( \=, [ IsFieldCategory, IsFieldCategory ],
+               ReturnFalse );
+
 InstallMethod( UnderlyingField,
                [ IsFieldCategoryObject ],
                obj -> UnderlyingField( CapCategory( obj ) ) );

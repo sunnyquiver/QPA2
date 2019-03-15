@@ -41,34 +41,11 @@ function( X, Y )
   type := NewType( fam, hom_space_type and IsHomSpaceRep );
   hom := rec();
   ObjectifyWithAttributes( hom, type,
-                           CategoryOfHomSpace, cat,
+                           HomCategory, cat,
                            Source, X,
                            Range, Y );
   Add( vcat, hom );
   return Intern( hom );
-end );
-
-InstallMethod( String, [ IsHomSpace ],
-function( hom )
-  return Concatenation( "Hom(", String( Source( hom ) ),
-                        ", ", String( Range( hom ) ), ")" );
-end );
-
-InstallMethod( PrintObj, [ IsHomSpace ],
-function( hom )
-  Print( String( hom ) );
-end );
-
-InstallMethod( ViewObj, [ IsHomSpace ],
-function( hom )
-  Print( String( hom ) );
-end );
-
-InstallMethod( \=, [ IsHomSpace, IsHomSpace ],
-function( hom1, hom2 )
-  return IsIdenticalObj( CategoryOfHomSpace( hom1 ), CategoryOfHomSpace( hom2 ) )
-         and Source( hom1 ) = Source( hom2 )
-         and Range( hom1 ) = Range( hom2 );
 end );
 
 InstallMethod( Zero, [ IsHomSpace ],

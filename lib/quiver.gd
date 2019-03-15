@@ -979,6 +979,33 @@ DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList ] );
 #! @Arguments Q, paths, permutation
 DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList, IsPerm ] );
 
+#! @Description
+#!  Create a path in a product quiver.
+#!  The argument <A>Q</A> is a product quiver which is the product of <C>n</C> quivers,
+#!  <A>factors</A> is a list of the <C>n</C> integers <C>1</C>, <C>2</C>, ..., <C>n</C>, 
+#!  in some order,
+#!  and <A>paths</A> is a list of paths from each factor of <A>Q</A>,
+#!  such that <C>paths[ i ]</C> lies in the quiver <C>factors[ i ]</C>.
+#!  The result is a path in <A>Q</A> with <A>paths</A> as its projections
+#!  to each factor.
+#! @Arguments Q, factors, paths
+DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList, IsDenseList ] );
+
+#! @Description
+#!  Create a path in a product quiver.
+#!  The argument <A>Q</A> is a product quiver which is the product of <C>n</C> quivers,
+#!  <A>factors</A> is a list of the <C>n</C> integers <C>1</C>, <C>2</C>, ..., <C>n</C>, 
+#!  in some order,
+#!  and <A>paths</A> is a list of paths from each factor of <A>Q</A>,
+#!  such that <C>paths[ i ]</C> lies in the quiver <C>factors[ i ]</C>.
+#!  The result is a path in <A>Q</A> with <A>paths</A> as its projections
+#!  to each factor.
+#!
+#!  The argument <A>permutation</A> is a permutation which describes
+#!  in which order the given paths should appear in the resulting path.
+#! @Arguments Q, factors, paths, permutation
+DeclareOperation( "PathInProductQuiver", [ IsProductQuiver, IsDenseList, IsDenseList, IsPerm ] );
+
 DeclareOperation( "ProductQuiverInclusion", [ IsProductQuiver, IsPosInt, IsPosInt ] );
 
 DeclareAttribute( "ProductQuiverInclusions", IsProductQuiver );

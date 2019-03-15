@@ -1825,6 +1825,35 @@ function( PQ, paths )
   return PathInProductQuiver( PQ, paths, () );
 end );
 
+InstallMethod( PathInProductQuiver, "for product quiver, two dense lists, and permutation",
+               [ IsProductQuiver, IsDenseList, IsDenseList, IsPerm ],
+function( PQ, factors, paths, permutation )
+  local num_factors, paths_in_order, i;
+  num_factors := Length( ProductQuiverFactors( PQ ) );
+  if Length( factors ) <> num_factors then
+    Error( "Product quiver has ", num_factors,
+           " factors, but ", Length( factors ), " factor numbers were given" );
+  fi;
+  if Length( paths ) <> num_factors then
+    Error( "Product quiver has ", num_factors,
+           " factors, but ", Length( paths ), " paths were given" );
+  fi;
+  if PermList( factors ) = fail then
+    Error( "Bad factors list" );
+  fi;
+  paths_in_order := [];
+  for i in [ 1 .. num_factors ] do
+    paths_in_order[ factors[ i ] ] := paths[ i ];
+  od;
+  return PathInProductQuiver( PQ, paths_in_order, permutation );
+end );
+
+InstallMethod( PathInProductQuiver, "for product quiver and two dense lists",
+               [ IsProductQuiver, IsDenseList, IsDenseList ],
+function( PQ, factors, paths )
+  return PathInProductQuiver( PQ, factors, paths, () );
+end );
+
 InstallMethod( ProductQuiverInclusion, "for product quiver and positive integers",
                [ IsProductQuiver, IsPosInt, IsPosInt ],
 function( PQ, i, j )
