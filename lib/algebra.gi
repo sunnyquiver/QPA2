@@ -1486,8 +1486,8 @@ function( A )
   paths := Arrows( Q );
   next_paths := [];
 
-  cycle_length_limit := 2 * Maximum( List( GeneratorsOfIdeal( I ),
-                                           g -> Length( LeadingPath( g ) ) ) );
+  cycle_length_limit := Maximum( List( GeneratorsOfIdeal( I ),
+                                       g -> Length( LeadingPath( g ) ) ) );
 
   while not IsEmpty( paths ) do
     for p in paths do
@@ -1495,7 +1495,8 @@ function( A )
         for a in OutgoingArrows( Target( p ) ) do
           Add( next_paths, ComposePaths( p, a ) );
         od;
-        if Source( p ) = Target( p ) and path_length >= cycle_length_limit then
+        if Source( p ) = Target( p ) and path_length >= cycle_length_limit
+           and is_nonreducible( p * p ) then
           return false;
         fi;
       fi;
