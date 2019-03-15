@@ -118,7 +118,24 @@ DeclareAttribute( "AdmissibleSequence", IsQuiverAlgebra );
 #! @Arguments K, Q, n
 DeclareOperation( "TruncatedPathAlgebra", [ IsField, IsQuiver, IS_INT ] );
 
-#! @Section Properties of algebras with test functions
+#! @Section Selfinjective algebras
+
+#! @Description
+#!  Returns true or false depending on whether or not 
+#!  the algebra  <A>A</A>  is selfinjective.
+#! @Returns <C>IS_INT</C> or <C>false</C>
+#! @Arguments A
+DeclareProperty( "IsSelfinjectiveAlgebra",  IsQuiverAlgebra );
+
+
+
+#! @Section Other classes of algebras
+
+#!  Returns <C>true</C> if the attribute <C>IsFiniteGlobalDimensionAlgebra</C>
+#!  has been set to true.
+#! @Returns <C>true</C> or <C>false</C>
+#! @Arguments A
+DeclareProperty( "IsFiniteGlobalDimensionAlgebra", IsAlgebra );
 
 #! @Description
 #!  The function returns true is  <A>A</A>  is a gentle algebra, and false otherwise.
@@ -131,10 +148,23 @@ DeclareProperty( "IsGorensteinAlgebra", IsAlgebra );
 InstallTrueMethod( IsGorensteinAlgebra, IsGentleAlgebra );
 
 #! @Description
+#!  Returns true or false depending on whether or not 
+#!  the algebra  <A>A</A>  is hereditary.
+#! @Returns <C>IS_INT</C> or <C>false</C>
+#! @Arguments A
+DeclareProperty( "IsHereditaryAlgebra", IsQuiverAlgebra );
+
+#! @Description
 #!  The function returns true is  <A>A</A>  is a radical square zero algebra, and false otherwise.
 #! @Returns <C>IsBool</C>
 #! @Arguments A
 DeclareProperty( "IsRadicalSquareZeroAlgebra", IsAlgebra );
+
+#! @Description
+#! The function returns true if  <A>A</A>  is a finite dimensional semisimple 
+#! algebra and searches for another method otherwise.
+#! @Arguments A
+DeclareProperty( "IsSemisimpleAlgebra", IsAlgebra );
 
 #! @Description
 #!  The function returns true is  <A>A</A>  is a Schurian algebra, and false otherwise.

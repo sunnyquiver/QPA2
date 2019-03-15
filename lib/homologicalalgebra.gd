@@ -156,35 +156,6 @@ DeclareOperation( "RejectOfRepresentation", [ IsQuiverRepresentation, IsQuiverRe
 #! @Arguments R, N
 DeclareOperation( "TraceOfRepresentation", [ IsQuiverRepresentation, IsQuiverRepresentation ] );
 
-#! @Section Classes of algebras
-
-#! @Description
-#!  Returns <C>true</C> if the attribute <C>IsFiniteGlobalDimensionAlgebra</C>
-#!  has been set to true.
-#! @Returns <C>true</C> or <C>false</C>
-#! @Arguments A
-DeclareProperty( "IsFiniteGlobalDimensionAlgebra", IsAlgebra );
-
-#! @Description
-#!  Returns true or false depending on whether or not 
-#!  the algebra  <A>A</A>  is hereditary.
-#! @Returns <C>IS_INT</C> or <C>false</C>
-#! @Arguments A
-DeclareProperty( "IsHereditaryAlgebra", IsQuiverAlgebra );
-
-#! @Description
-#!  Returns true or false depending on whether or not 
-#!  the algebra  <A>A</A>  is selfinjective.
-#! @Returns <C>IS_INT</C> or <C>false</C>
-#! @Arguments A
-DeclareProperty( "IsSelfinjectiveAlgebra",  IsQuiverAlgebra );
-
-#! @Description
-#! The function returns true if  <A>A</A>  is a finite dimensional semisimple 
-#! algebra and searches for another method otherwise.
-#! @Arguments A
-DeclareProperty( "IsSemisimpleAlgebra", IsAlgebra );
-
 #! @Section Dimensions
 
 #! @Description
