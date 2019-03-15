@@ -284,9 +284,10 @@ function( cat, objects, morphisms )
         vecspace_cat, i, src, correct_src, rng, correct_rng;
 
   A := AlgebraOfCategory( cat );
+  vecspace_cat := VectorSpaceCategory( cat );
   if IsQuotientOfPathAlgebra( A ) then
     R := QuiverRepresentation
-         ( CategoryOfQuiverRepresentations( PathAlgebra( A ) ),
+         ( CategoryOfQuiverRepresentationsOverVectorSpaceCategory( PathAlgebra( A ), vecspace_cat ),
            objects, morphisms );
     return AsRepresentationOfQuotientAlgebra( R, A );
   fi;
@@ -296,7 +297,6 @@ function( cat, objects, morphisms )
   num_vertices := Length( vertices );
   arrows := Arrows( Q );
   num_arrows := Length( arrows );
-  vecspace_cat := VectorSpaceCategory( cat );
 
   if Length( objects ) <> num_vertices then
     Error( "Wrong number of objects ",
@@ -447,7 +447,7 @@ InstallMethod( AsRepresentationOfQuotientAlgebra,
                "for quiver representation and quotient of path algebra",
                [ IsQuiverRepresentation, IsQuotientOfPathAlgebra ],
 function( R, A )
-  local kQ, rels, rel, R_;
+  local kQ, rels, rel, R_, cat;
   kQ := AlgebraOfRepresentation( R );
   if kQ <> PathAlgebra( A ) then
     Error( "The algebra ", A, " is not a quotient of the algebra ", kQ );
@@ -459,8 +459,10 @@ function( R, A )
              "; does not respect the relation ", rel );
     fi;
   od;
+  cat := CategoryOfQuiverRepresentationsOverVectorSpaceCategory
+         ( A, VectorSpaceCategory( CapCategory( R ) ) );
   R_ := QuiverRepresentationNC
-        ( CategoryOfQuiverRepresentations( A ),
+        ( cat,
           VectorSpacesOfRepresentation( R ),
           MapsOfRepresentation( R ) );
   SetAsRepresentationOfPathAlgebra( R_, R );
@@ -470,13 +472,15 @@ end );
 InstallMethod( AsRepresentationOfPathAlgebra, "for quiver representation",
                [ IsQuiverRepresentation ],
 function( R )
-  local A;
+  local A, cat;
   A := AlgebraOfRepresentation( R );
   if IsPathAlgebra( A ) then
     return R;
   else
+    cat := CategoryOfQuiverRepresentationsOverVectorSpaceCategory
+           ( PathAlgebra( A ), VectorSpaceCategory( CapCategory( R ) ) );
     return QuiverRepresentationNC
-           ( PathAlgebra( A ),
+           ( cat,
              VectorSpacesOfRepresentation( R ),
              MapsOfRepresentation( R ) );
   fi;
