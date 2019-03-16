@@ -130,7 +130,8 @@ end );
 
 InstallMethod( IsAdmissibleIdeal, [ IsPathAlgebraIdeal ],
 function( I )
-  local gens, kQ, Q, A, is_reducible, path_length, paths, next_paths, p, a;
+  local kQ, gens, GB, Q, A, is_reducible, path_length, paths, 
+        next_paths, p, a, new_path;
 
   kQ := AlgebraOfIdeal( I );
   if IsZeroIdeal( I ) then
@@ -138,6 +139,7 @@ function( I )
   fi;
 
   gens := GeneratorsOfIdeal( I );
+  GB := GroebnerBasis( I );
   
   # check I \subseteq J^2:
   if not ForAll( gens, g -> ForAll( Paths( g ), IsCompositePath ) ) then
@@ -164,7 +166,10 @@ function( I )
   while not ForAll( paths, is_reducible ) do
     for p in paths do
       for a in OutgoingArrows( Target( p ) ) do
-        Add( next_paths, ComposePaths( p, a ) );
+        new_path := ComposePaths( p, a );
+        if not IsZero( Reduce( PathAsAlgebraElement( kQ, p ), GB ) ) then
+          Add( next_paths, new_path );
+        fi;
       od;
     od;
     path_length := path_length + 1;
