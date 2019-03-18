@@ -157,7 +157,6 @@ function( I )
   power_of_J := J;
   repeat
     dim := Dimension( power_of_J );
-    Print( dim, "\n" );
     power_of_J := ProductSpace( power_of_J, power_of_J );
   until dim = Dimension( power_of_J );
   return dim = 0;
