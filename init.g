@@ -40,3 +40,4 @@ ReadPackage( "QPA", "lib/socle.gd" );
 ReadPackage( "QPA", "lib/minimal.gd" );
 ReadPackage( "QPA", "lib/propmodrep.gd" );
 ReadPackage( "QPA", "lib/nice-basis.gd" );
+ReadPackage( "QPA", "lib/combinartorial.gd" );
