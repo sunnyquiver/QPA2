@@ -1512,7 +1512,13 @@ end );
 
 InstallMethod( IsAdmissibleQuiverAlgebra, "for quiver algebra",
                [ IsQuiverAlgebra ],
-               A -> IsAdmissibleIdeal( IdealOfQuotient( A ) ) );
+function( A )
+  if IsTensorProductOfAlgebras( A ) then
+    return ForAll( TensorProductFactors( A ),
+                   IsAdmissibleQuiverAlgebra );
+  fi;
+  return IsAdmissibleIdeal( IdealOfQuotient( A ) );
+end );
 
 
 InstallMethod( NaturalHomomorphismByIdeal, [ IsPathAlgebra, IsQuiverAlgebraTwoSidedIdeal ],

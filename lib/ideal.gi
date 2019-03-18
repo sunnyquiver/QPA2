@@ -130,8 +130,7 @@ end );
 
 InstallMethod( IsAdmissibleIdeal, [ IsPathAlgebraIdeal ],
 function( I )
-  local kQ, gens, GB, Q, A, is_reducible, path_length, paths, 
-        next_paths, p, a, new_path;
+  local kQ, gens, GB, Q, A, J, power_of_J, dim;
 
   kQ := AlgebraOfIdeal( I );
   if IsZeroIdeal( I ) then
@@ -154,30 +153,14 @@ function( I )
     return false;
   fi;
 
-  is_reducible :=
-    p ->
-    ( Representative( PathAsAlgebraElement( A, p ) )
-      <> PathAsAlgebraElement( PathAlgebra( A ), p ) );
-
-  path_length := 1;
-  paths := Arrows( Q );
-  next_paths := [];
-
-  while not ForAll( paths, is_reducible ) do
-    for p in paths do
-      for a in OutgoingArrows( Target( p ) ) do
-        new_path := ComposePaths( p, a );
-        if not IsZero( Reduce( PathAsAlgebraElement( kQ, p ), GB ) ) then
-          Add( next_paths, new_path );
-        fi;
-      od;
-    od;
-    path_length := path_length + 1;
-    paths := next_paths;
-    next_paths := [];
-  od;
-
-  return ForAll( paths, p -> IsZero( PathAsAlgebraElement( A, p ) ) );
+  J := Ideal( A, Arrows( A ) );
+  power_of_J := J;
+  repeat
+    dim := Dimension( power_of_J );
+    Print( dim, "\n" );
+    power_of_J := ProductSpace( power_of_J, power_of_J );
+  until dim = Dimension( power_of_J );
+  return dim = 0;
 end );
 
 InstallMethod( IsZeroIdeal, "for quiver algebra ideal",
