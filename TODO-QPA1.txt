@@ -16,10 +16,6 @@ OrderingOfQuiver( quiver ) -- no
 IsArrow( obj ) -- same (change name to IsQuiverArrow)
 OrderingOfQuiver( quiver ) -- no
 IsZeroPath( obj ) -- no, there are no zero paths
-Poset( P, rel ) -- no (should be ported, use existing structure of posets in GAP?)
-Size( P ) -- no (the same as above)
-UnderlyingSet( P ) -- no (the same as above)
-PartialOrderOfPoset( P ) -- no (the same as above)
 
 CHAPTER 4: PATH ALGEBRAS
 
@@ -41,8 +37,6 @@ OrderOfNakayamaAutomorphism( A ) -- no (should be ported)
 IsNormalForm( element ) -- no (needed?)
 a < b (documented twice in QPA1 manual) -- no (needed?)
 OriginalPathAlgebra( algebra ) -> PathAlgebra( algebra ) (TODO: should change to OriginalPathAlgebra ) 
-PosetAlgebra( F, P ) -- no (should be ported)
-PosetOfPosetAlgebra( A ) -- no (should be ported)
 IsQuiverProductDecomposition( obj ) -- no (not needed)
 IsEnvelopingAlgebra( A ) -- no (needed?)
 DualOfAlgebraAsModuleOverEnvelopingAlgebra( A ) -- no (should be ported)
@@ -77,7 +71,6 @@ RightGroebnerBasisOfIdeal( I ) -- no
 
 CHAPTER 6: RIGHT MODULES OVER PATH ALGEBRAS
 
-RightAlgebraModuleToPathAlgebraMatModule( M ) -- no  (should be ported, change name)
 IsDirectSumOfModules( M ) -- no (should be ported)
 IsTauRigidModule( M ) -- no (should be ported)
 IsZero( M ) -- same (undocumented)

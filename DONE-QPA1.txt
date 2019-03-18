@@ -128,6 +128,7 @@ QuiverProductDecomposition( Q ) -> ProductQuiverFactors( Q )
 RadicalOfModule( M ) -> RadicalOfModule( M ), RadicalOfRepresentation( R )
 RadicalOfModuleInclusion( R ) -> RadicalInclusion( R ) for representations
 RejectOfModule( M, N ) -> RejectOfRepresentation( R, N )
+RightAlgebraModuleToPathAlgebraMatModule( M ) -> RightAlgebraModuleToRightQuiverModule( M )
 RightApproximationByAddR( C, M) -> RightApproximationByAddR( C, R )
 RightModuleHomOverAlgebra( M, N, mats ) -> QuiverModuleHomomorphism( M, N, mats ) # different format for mats
 RightModuleOverPathAlgebra( A, dim_vector, gens ) -> RightQuiverModule( A, dim_vector, matrices ) # different format for matrices
@@ -284,8 +285,12 @@ p * q -- same for paths
 p = q -- same for paths
 p < q -- same for paths (undocumented)
 PartialIyamaGenerator( M )
+PartialOrderOfPoset( P ) 
 PathAlgebra( F, Q )
 PathsOfLengthTwo( Q ) 
+Poset( P, rel )
+PosetAlgebra( F, P )
+PosetOfPosetAlgebra( A )
 PreImagesRepresentative( f, elem ) --  (undocumented)
 ProjectiveCover( M )
 ProjDimension( M )
@@ -301,6 +306,7 @@ RightInverseOfHomomorphism( f )
 RightMinimalVersion( f )
 
 SeparatedQuiver( quiver )
+Size( P ) 
 SocleSeries( M )
 Source( f ) --  (undocumented)
 
@@ -308,7 +314,10 @@ TensorProductOfAlgebras( FQ1, FQ2 )
 TensorProductOfModules( M, N )
 TruncatedPathAlgebra( F, Q, n )
 
+UnderlyingSet( P )
+
 New operations:
 
 DeclareAttribute( "DynkinType", IsQuiver );
 DeclareProperty( "IsExtendedDynkinQuiver", IsQuiver );
+DeclareOperation( "RightAlgebraModuleToRightQuiverModule", IsRightAlgebraModuleElementCollection );
