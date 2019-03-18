@@ -8,6 +8,7 @@ ReadPackage( "QPA", "lib/vecspace.gd" );
 ReadPackage( "QPA", "lib/quiver.gd" );
 ReadPackage( "QPA", "lib/dynkin.gd" );
 ReadPackage( "QPA", "lib/algebra.gd" );
+ReadPackage( "QPA", "lib/qpa-poset.gd" );
 ReadPackage( "QPA", "lib/special-algebras.gd" );
 ReadPackage( "QPA", "lib/representation.gd" );
 ReadPackage( "QPA", "lib/map.gd" );

@@ -2,6 +2,9 @@
 
 #! @Section Associated monomial algebras
 
+#!
+DeclareProperty( "IsFiniteGlobalDimensionAlgebra", IsAlgebra );
+
 #! @Description
 #!  Returns the associated monomial algebra by using the Groebner basis  <A>A</A>  is 
 #!  endoved with and in particular the ordering of the vertices and the arrows.
@@ -108,6 +111,31 @@ DeclareProperty( "IsNakayamaAlgebra", IsQuiverAlgebra );
 #! @Arguments A
 DeclareAttribute( "AdmissibleSequence", IsQuiverAlgebra );
 
+#! @Section Poset algebras
+
+#! @Description
+#!  Returns true if the algebra <A>A</A> was constructed as a poset algebra. 
+#! @Returns <C>IsBool</C>
+#! @Arguments A
+DeclareProperty( "IsPosetAlgebra", IsQuiverAlgebra ); 
+
+#! @Description 
+#!  Takes as arguments a field  <A>K</A>  and a poset  <A>P</A> 
+#!  and returns associated poset algebra  <M>KP</M>  as a quiver algebra.
+#! @Returns <Ref Filt="IsPosetAlgebra"/>
+#! @Arguments K, A
+DeclareOperation( "PosetAlgebra", [ IsField, IsPoset ] ); 
+
+#! @Description
+#!  Given a poset algebra, this function returns the poset from which it was
+#!  constructed. 
+#! @Returns <Ref Filt="IsPoset"/>
+#! @Arguments A
+DeclareAttribute( "PosetOfPosetAlgebra", IsPosetAlgebra );
+
+#!
+InstallTrueMethod( IsFiniteGlobalDimensionAlgebra, IsPosetAlgebra );
+
 #! @Section Truncated path algebras
 
 #! @Description
@@ -162,7 +190,7 @@ DeclareAttribute( "OrderOfNakayamaAutomorphism", IsQuiverAlgebra );
 #!  has been set to true.
 #! @Returns <C>true</C> or <C>false</C>
 #! @Arguments A
-DeclareProperty( "IsFiniteGlobalDimensionAlgebra", IsAlgebra );
+# DeclareProperty( "IsFiniteGlobalDimensionAlgebra", IsAlgebra );
 
 #! @Description
 #!  The function returns true is  <A>A</A>  is a gentle algebra, and false otherwise.
