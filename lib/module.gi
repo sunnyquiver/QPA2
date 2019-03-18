@@ -538,3 +538,161 @@ function( M )
   return AsModuleHomomorphism( Side( M ),
                                ProjectiveCover( UnderlyingRepresentation( M ) ) );
 end );
+
+#######################################################################
+##
+#O  RightAlgebraModuleToRightQuiverModule( <M> ) 
+##  
+##  This function constructs a right quiver module over a (quotient of a) 
+##  path algebra  A  from a RightAlgebraModule over the same algebra  A.
+##  The function checks if  A  actually is a quotient of a path algebra
+##  if the module  M  is finite dimensional. In either cases it returns
+##  and an error message. 
+##
+InstallMethod ( RightAlgebraModuleToRightQuiverModule, 
+"for an RightAlgebraModule",
+[ IsRightAlgebraModuleElementCollection ],
+function( M )
+
+  local A, vertices, num_vert, B, arrows, generators_in_vertices, i, 
+        j, vertexwise_basis, dimensions, mat, arrow_list, vertices_Q, 
+        a, partial_mat, source, target, source_index, target_index, 
+        rows, cols, arrow, b, vector;
+    
+    if not IsFiniteDimensional( M ) then
+        Error( "The entered module is not finite dimensional.\n" );
+    fi;
+    A := RightActingAlgebra( M ); 
+    if not IsQuiverAlgebra( A ) then 
+        Error( "The entered module is not a module over a quotient of a path algebra.\n" );
+    fi;
+    vertices := Vertices( QuiverOfAlgebra( A ) );
+    vertices := List( vertices, x -> x * One( A ) );
+    num_vert := Length( vertices ); 
+    B := BasisVectors( Basis( M ) );
+    arrows := Arrows( QuiverOfAlgebra( A ) );
+    arrows := List( arrows, x -> x * One( A ) );    
+    #
+    #  Constructing a uniform basis of  M. 
+    #
+    generators_in_vertices := List( vertices, x -> [ ] ); 
+    for i in [1..Length( B ) ] do
+        for j in [ 1..num_vert ] do
+            if ( B[ i ]^vertices[ j ] <> Zero( M ) ) then
+                Add( generators_in_vertices[ j ], B[ i ]^vertices[ j ] );
+            fi;
+        od;
+    od;    
+    #
+    #   Finding a K-basis of M in each vertex.
+    #
+    vertexwise_basis := List( generators_in_vertices, x -> Basis( Subspace( M, x ) ) );
+    dimensions := List( vertexwise_basis, Length );
+    # 
+    #   Finding the matrices defining the representation
+    # 
+    mat := [];
+    arrow_list := [ ]; 
+    vertices_Q:= Vertices( QuiverOfAlgebra( A ) ); 
+    for a in arrows do
+        partial_mat := [];
+        source := Source( LeadingPath( a!.representative ) );
+        target := Target( LeadingPath( a!.representative ) );
+        source_index := Position( vertices_Q, source );
+        target_index := Position( vertices_Q, target );
+        rows := Length( BasisVectors( vertexwise_basis[ source_index ] ) );
+        cols := Length( BasisVectors( vertexwise_basis[ target_index ] ) );
+        arrow := LeadingPath( a!.representative );
+        if ( rows <> 0 and cols <> 0 ) then
+            for b in BasisVectors( vertexwise_basis[ source_index ] ) do
+                vector := Coefficients( vertexwise_basis[ target_index ], b^a ); 
+                Add( partial_mat, vector );
+            od;
+            Add( arrow_list, arrow );
+            Add( mat, partial_mat );
+        fi;
+    od;
+    
+    return RightQuiverModule( A, dimensions, arrow_list, mat );
+end
+  );
+
+#######################################################################
+##
+#O  LeftAlgebraModuleToLeftQuiverModule( <M> ) 
+##  
+##  This function constructs a left quiver module over a (quotient of a) 
+##  path algebra  A  from a LeftAlgebraModule over the same algebra  A.
+##  The function checks if  A  actually is a quotient of a path algebra
+##  if the module  M  is finite dimensional. In either cases it returns
+##  and an error message. 
+##
+InstallMethod ( LeftAlgebraModuleToLeftQuiverModule, 
+"for an LeftAlgebraModule",
+[ IsLeftAlgebraModuleElementCollection ],
+function( M )
+
+  local A, vertices, num_vert, B, arrows, generators_in_vertices, i, 
+        j, vertexwise_basis, dimensions, mat, arrow_list, vertices_Q, 
+        a, partial_mat, source, target, source_index, target_index, 
+        rows, cols, arrow, b, vector;
+    
+    if not IsFiniteDimensional( M ) then
+        Error( "The entered module is not finite dimensional.\n" );
+    fi;
+    A := LeftActingAlgebra( M ); 
+    if not IsQuiverAlgebra( A ) then 
+        Error( "The entered module is not a module over a quotient of a path algebra.\n" );
+    fi;
+    vertices := Vertices( QuiverOfAlgebra( A ) );
+    vertices := List( vertices, x -> x * One( A ) );
+    num_vert := Length( vertices ); 
+    B := BasisVectors( Basis( M ) );
+    arrows := Arrows( QuiverOfAlgebra( A ) );
+    arrows := List( arrows, x -> x * One( A ) );    
+    #
+    #  Constructing a uniform basis of  M. 
+    #
+    generators_in_vertices := List( vertices, x -> [ ] ); 
+    for i in [1..Length( B ) ] do
+        for j in [ 1..num_vert ] do
+            if ( vertices[ j ]^B[ i ] <> Zero( M ) ) then
+                Add( generators_in_vertices[ j ], vertices[ j ]^B[ i ] );
+            fi;
+        od;
+    od;    
+    #
+    #   Finding a K-basis of M in each vertex.
+    #
+    vertexwise_basis := List( generators_in_vertices, x -> Basis( Subspace( M, x ) ) );
+    dimensions := List( vertexwise_basis, Length );
+    # 
+    #   Finding the matrices defining the representation
+    # 
+    mat := [];
+    arrow_list := [ ]; 
+    vertices_Q:= Vertices( QuiverOfAlgebra( A ) ); 
+    for a in arrows do
+        partial_mat := [];
+        source := Source( LeadingPath( a!.representative ) );
+        target := Target( LeadingPath( a!.representative ) );
+        source_index := Position( vertices_Q, source );
+        target_index := Position( vertices_Q, target );
+        rows := Length( BasisVectors( vertexwise_basis[ source_index ] ) );
+        cols := Length( BasisVectors( vertexwise_basis[ target_index ] ) );
+        arrow := LeadingPath( a!.representative );
+        if ( rows <> 0 and cols <> 0 ) then
+            for b in BasisVectors( vertexwise_basis[ source_index ] ) do
+                vector := Coefficients( vertexwise_basis[ target_index ], a^b ); 
+                Add( partial_mat, vector );
+            od;
+            Add( arrow_list, arrow );
+            Add( mat, partial_mat );
+        fi;
+    od;
+    mat := List( mat, TransposedMat ); 
+    
+    return LeftQuiverModule( A, dimensions, arrow_list, mat );
+end
+  );
+

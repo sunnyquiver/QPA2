@@ -214,6 +214,25 @@ DeclareOperation( "QuiverBimodule", [ IsDenseList, IsDenseList, IsList ] );
 DeclareOperation( "QuiverBimodule", [ IsDenseList, IsDenseList, IsDenseList, IsList ] );
 #! @EndGroup
 
+#! @Description
+#!  This function constructs a right quiver module over a (quotient of a) 
+#!  path algebra  <M>A</M>  from a <C>RightAlgebraModule</C> over the same 
+#!  algebra  <M>A</M>. The function checks if  <M>A</M>  actually is a 
+#!  quotient of a path algebra the module  <A>M</A>  is finite dimensional. 
+#!  In either cases it returns an error message. 
+#! @Returns <Ref Filt="IsRightQuiverModule"/> 
+#! @Arguments M
+DeclareOperation( "RightAlgebraModuleToRightQuiverModule", [ IsRightAlgebraModuleElementCollection ] ); 
+
+#! @Description
+#!  This function constructs a left quiver module over a (quotient of a) 
+#!  path algebra  <M>A</M>  from a <C>LeftAlgebraModule</C> over the same 
+#!  algebra  <M>A</M>. The function checks if  <M>A</M>  actually is a 
+#!  quotient of a path algebra the module  <A>M</A>  is finite dimensional. 
+#!  In either cases it returns an error message. 
+#! @Returns <Ref Filt="IsLeftQuiverModule"/> 
+#! @Arguments M
+DeclareOperation( "LeftAlgebraModuleToLeftQuiverModule", [ IsLeftAlgebraModuleElementCollection ] ); 
 
 #! @Section Information about a module
 
