@@ -29,3 +29,5 @@ DeclareOperation( "HomFunctor", [ IsSide, IsQuiverModule, IsQuiverModuleCategory
 
 #!
 DeclareOperation( "HomFunctor", [ IsSide, IsQuiverModuleCategory, IsQuiverModule ] );
+
+#
