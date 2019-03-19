@@ -176,6 +176,7 @@ AdjacencyMatrixOfQuiver( quiver )
 AssociatedMonomialAlgebra( A ) 
 
 BasisOfProjectives( A )
+BilinearFormOfUnitForm
 BlockSplittingIdempotents( M ) -- for modules and representations
 
 CanonicalAlgebra( field, weights[, relcoeff] )
@@ -194,6 +195,7 @@ DominantDimension( R )
 DominantDimensionOfAlgebra( A, n )
 
 EnvelopingAlgebra( A )
+EulerBilinearFormOfAlgebra
 
 GlobalDimension( A ) 
 GlobalDimensionOfAlgebra( A, n )
@@ -220,6 +222,7 @@ IsDynkinQuiver( quiver )
 IsElementaryAlgebra( A )
 IsFiniteDimensional( A )
 IsFiniteGlobalDimensionAlgebra( A )
+IsFiniteTypeAlgebra( A )
 IsGentleAlgebra( A )
 IsGorensteinAlgebra( A )
 IsHereditaryAlgebra( A )
@@ -251,6 +254,8 @@ IsStringAlgebra( A )
 IsSymmetricAlgebra( A ) 
 IsTreeQuiver( quiver ) 
 IsUniform( element )
+IsWeaklyNonnegativeUnitForm
+IsWeaklyPositiveUnitForm
 IsWeaklySymmetricAlgebra( A )
 IsZero( f ) -- (from CAP, undocumented)
 IyamaGenerator( M )
@@ -272,6 +277,7 @@ m ^ p -- same (action of an element from a path algebra on a module)
 MaximalCommonDirectSummand( M, N )
 MinimalGeneratingSetOfIdeal( I )
 
+NakayamaAutomorphism( A )
 NakayamaPermutation( A )
 NthPowerOfArrowIdeal( FQ, n )
 NthSyzygy( M, n )
@@ -280,6 +286,7 @@ NumberOfVertices( quiver )
 
 OppositePath( p )
 OppositeQuiver( quiver )
+OrderOfNakayamaAutomorphism( A )
 
 p * q -- same for paths
 p = q -- same for paths
@@ -291,15 +298,18 @@ PathsOfLengthTwo( Q )
 Poset( P, rel )
 PosetAlgebra( F, P )
 PosetOfPosetAlgebra( A )
+PositiveRootsOfUnitForm
 PreImagesRepresentative( f, elem ) --  (undocumented)
 ProjectiveCover( M )
 ProjDimension( M )
 
+QuadraticFormOfUnitForm
 QuiverProduct( Q1, Q1 )
 
 RadicalSeries( M )
 RadicalSeriesOfAlgebra( A )
 Range( f ) --  (undocumented)
+ReflectionByBilinearForm
 RelationsOfAlgebra( A )
 RightApproximationByPerpT( T, M )
 RightInverseOfHomomorphism( f )
@@ -309,12 +319,15 @@ SeparatedQuiver( quiver )
 Size( P ) 
 SocleSeries( M )
 Source( f ) --  (undocumented)
+SymmetricMatrixOfUnitForm
 
 TensorProductOfAlgebras( FQ1, FQ2 )
 TensorProductOfModules( M, N )
+TitsUnitFormOfAlgebra
 TruncatedPathAlgebra( F, Q, n )
 
 UnderlyingSet( P )
+UnitForm
 
 New operations:
 

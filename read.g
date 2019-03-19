@@ -40,3 +40,5 @@ ReadPackage( "QPA", "lib/minimal.gi" );
 ReadPackage( "QPA", "lib/propmodrep.gi" );
 ReadPackage( "QPA", "lib/nice-basis.gi" );
 ReadPackage( "QPA", "lib/combinartorial.gi" );
+ReadPackage( "QPA", "lib/pathalgebrareptype.gi" );
+

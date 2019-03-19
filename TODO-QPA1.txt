@@ -31,9 +31,6 @@ ProductOfIdeals( I, J ) -- no (should be ported)
 QuadraticPerpOfPathAlgebraIdeal( rels ) -- no (should be ported)
 IsAdmissibleQuotientOfPathAlgebra( A ) -- no (should be ported)
 IsTriangularReduced( A ) -- no (should be ported)
-IsFiniteTypeAlgebra( A ) -- no (should be ported)
-NakayamaAutomorphism( A ) -- no (should be ported)
-OrderOfNakayamaAutomorphism( A ) -- no (should be ported)
 IsNormalForm( element ) -- no (needed?)
 a < b (documented twice in QPA1 manual) -- no (needed?)
 OriginalPathAlgebra( algebra ) -> PathAlgebra( algebra ) (TODO: should change to OriginalPathAlgebra ) 
@@ -120,11 +117,6 @@ Either improve the `complex' package or use `ComplexesForCAP' by Kamal Saleh
 CHAPTER 11: PROJECTIVE RESOLUTIONS AND THE BOUNDED DERIVED CATEGORY
 
 [ everything from Projective resolutions and the bounded derived category ] -- no
-
-CHAPTER 12: Combinatorial representation theory
-
-[ everything from Combinatorial representation theory ] -- no
-
 
 CHAPTER 13: DEGENERATION ORDER FOR MODULES IN FINITE TYPE
 

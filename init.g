@@ -41,3 +41,4 @@ ReadPackage( "QPA", "lib/minimal.gd" );
 ReadPackage( "QPA", "lib/propmodrep.gd" );
 ReadPackage( "QPA", "lib/nice-basis.gd" );
 ReadPackage( "QPA", "lib/combinartorial.gd" );
+ReadPackage( "QPA", "lib/pathalgebrareptype.gd" );
