@@ -901,16 +901,20 @@ InstallMethod( \=, "for quotient of path algebra and path algebra",
                ReturnFalse );
 
 InstallMethod( OppositeAlgebra,
-               [ IsPathAlgebra ],
+               [ IsQuiverAlgebra ],
 function( A )
-  return PathAlgebra( LeftActingDomain( A ), OppositeQuiver( QuiverOfAlgebra( A ) ) );
-end );
-
-InstallMethod( OppositeAlgebra,
-               [ IsQuotientOfPathAlgebra ],
-function( A )
-  return QuotientOfPathAlgebra( OppositeAlgebra( PathAlgebra( A ) ),
-                                List( RelationsOfAlgebra( A ), OppositeAlgebraElement ) );
+  local A_op;
+  if IsTensorProductOfAlgebras( A ) then
+    A_op := TensorProductOfAlgebras( List( TensorProductFactors( A ),
+                                           OppositeAlgebra ) );
+  elif IsPathAlgebra( A ) then
+    A_op := PathAlgebra( LeftActingDomain( A ), OppositeQuiver( QuiverOfAlgebra( A ) ) );
+  else
+    A_op := QuotientOfPathAlgebra( OppositeAlgebra( PathAlgebra( A ) ),
+                                   List( RelationsOfAlgebra( A ), OppositeAlgebraElement ) );
+  fi;
+  SetOppositeAlgebra( A_op, A );
+  return A_op;
 end );
 
 InstallMethod( OppositeAlgebraElement,
@@ -1105,6 +1109,20 @@ InstallMethod( TensorProductFactors,
                [ IsQuiverAlgebra ],
 function( T )
   # TODO
+end );
+
+InstallMethod( TensorProductFactorsLeftRight,
+               [ IsQuiverAlgebra ],
+function( T )
+  local factors;
+  if not IsTensorProductOfAlgebras( T ) then
+    Error( "not a tensor algebra" );
+  fi;
+  factors := TensorProductFactors( T );
+  if Length( factors ) <> 2 then
+    Error( "not a tensor product of two algebras" );
+  fi;
+  return [ factors[ 1 ]^LEFT, factors[ 2 ]^RIGHT ];
 end );
 
 InstallMethod( ElementaryTensor,
