@@ -62,14 +62,18 @@ InstallMethod( DualFunctor, "for a category of quiver modules",
     
     local   side,  F,  RC,  repdual,  RD,  G;
     
-    side := Opposite( Side( C ) );
+    if Side( C ) = LEFT_RIGHT then
+      side := LEFT_RIGHT;
+    else
+      side := Opposite( Side( C ) );
+    fi;
     F := UnderlyingRepresentationFunctor( C );
     RC := AsCapCategory( Range( F ) );
     repdual := DualFunctor( RC );
     RD := AsCapCategory( Range( repdual ) ); 
     G := AsModuleFunctor( side, RD );
     
-    return PreCompose( [ F, repdual, G ] );
+    return PreComposeFunctors( PreComposeFunctors( F, repdual ), G );
 end 
   );
 
