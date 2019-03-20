@@ -152,7 +152,7 @@ function( F, G )
   if not IsIdenticalObj( sig_G[ 1 ][ 1 ], range_F ) then
     Error( "non-composable functors" );
   fi;
-  sig := ShallowCopy( sig_F );
+  sig := List( sig_F, ShallowCopy );
   if sig_G[ 1 ][ 2 ] then # G is contravariant
     for i in [ 1 .. Length( sig ) ] do
       sig[ i ][ 2 ] := not sig[ i ][ 2 ];
