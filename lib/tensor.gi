@@ -78,7 +78,11 @@ InstallMethod( TensorProductOfRepresentations,
             od;
         od;
         V := K^tempdim;
-        Add( projections, NaturalHomomorphismBySubspace( V, Subspace( V, temprelations ) ) );
+        if tempdim = 0 then
+          Add( projections, IdentityMapping( V ) );
+        else
+          Add( projections, NaturalHomomorphismBySubspace( V, Subspace( V, temprelations ) ) );
+        fi;
     od;
     
     arrowsB3 := [ ];
