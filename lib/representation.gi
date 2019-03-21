@@ -884,6 +884,10 @@ function( A, vecspace_cat )
   equal_objects := function( R1, R2 )
     return AlgebraOfRepresentation( R1 ) = AlgebraOfRepresentation( R2 ) and
            DimensionVector( R1 ) = DimensionVector( R2 ) and
+           ForAll( ListN( VectorSpacesOfRepresentation( R1 ),
+                          VectorSpacesOfRepresentation( R2 ),
+                          IsEqualForObjects ),
+                   IdFunc ) and
            ForAll( ListN( MapsOfRepresentation( R1 ),
                           MapsOfRepresentation( R2 ),
                           IsEqualForMorphisms ),
