@@ -192,6 +192,11 @@ function( V1, V2 )
          Dimension( V1 ) = Dimension( V2 );
 end );
 
+InstallMethod( \=,  [ IsQPAVectorSpace, IsQPAVectorSpace ],
+function( V1, V2 )
+  return false;
+end );
+
 InstallMethod( Zero, [ IsQPAVectorSpace ],
 function( V )
   local F, dim;
