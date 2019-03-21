@@ -23,6 +23,7 @@ ReadPackage( "QPA", "lib/hom-space.gd" );
 ReadPackage( "QPA", "lib/hom-morphism.gd" );
 ReadPackage( "QPA", "lib/hom-representation.gd" );
 ReadPackage( "QPA", "lib/hom-module.gd" );
+ReadPackage( "QPA", "lib/hom.gd" );
 ReadPackage( "QPA", "lib/tensor.gd" );
 ReadPackage( "QPA", "lib/restrictionfunctors.gd" );
 ReadPackage( "QPA", "lib/hash.gd" );

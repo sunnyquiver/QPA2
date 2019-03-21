@@ -96,23 +96,30 @@ function( hom )
   local ker, ker_basis, vertex_spaces, vertex_projection_maps, 
         ker_to_morphism, basis_morphisms, basis;
 
-  ker := KernelEmbedding( HomSpaceVertexToArrowMap( hom ) );
-  ker_basis := Basis( Source( ker ) );
+  # ker := KernelEmbedding( HomSpaceVertexToArrowMap( hom ) );
+  # ker_basis := Basis( Source( ker ) );
+  #
+  # vertex_spaces := VertexHomSpaces( hom );
+  # vertex_projection_maps := List( [ 1 .. Length( vertex_spaces ) ],
+  #                                 i -> ProjectionInFactorOfDirectSum( vertex_spaces, i ) );
+  #
+  # ker_to_morphism := function( v )
+  #   local vertex_sum_elem, vertex_projections;
+  #   vertex_sum_elem := ImageElm( ker, v );
+  #   vertex_projections := List( vertex_projection_maps,
+  #                               m -> ImageElm( m, vertex_sum_elem ) );
+  #   return QuiverRepresentationHomomorphism
+  #          ( Source( hom ), Range( hom ), vertex_projections );
+  # end;
+  #
+  # basis_morphisms := List( ker_basis, ker_to_morphism );
 
-  vertex_spaces := VertexHomSpaces( hom );
-  vertex_projection_maps := List( [ 1 .. Length( vertex_spaces ) ],
-                                  i -> ProjectionInFactorOfDirectSum( vertex_spaces, i ) );
+  ## Above: Compute basis by using underlying category
+  ## (commented out, since it is very slow)
+  ## Below: Compute basis by combining matrices
+  ## (not very readable, but much faster than the above)
 
-  ker_to_morphism := function( v )
-    local vertex_sum_elem, vertex_projections;
-    vertex_sum_elem := ImageElm( ker, v );
-    vertex_projections := List( vertex_projection_maps,
-                                m -> ImageElm( m, vertex_sum_elem ) );
-    return QuiverRepresentationHomomorphism
-           ( Source( hom ), Range( hom ), vertex_projections );
-  end;
-
-  basis_morphisms := List( ker_basis, ker_to_morphism );
+  basis_morphisms := BasisOfHom( Source( hom ), Range( hom ) );
 
   basis := rec();
   ObjectifyWithAttributes( basis,
