@@ -980,49 +980,32 @@ end );
 InstallMethod( TensorProductOfAlgebras,
                [ IsQuiverAlgebra, IsQuiverAlgebra ],
 function( A, B )
-  local Qa, Qb, Q, kQ, commutativity_relations, rels_a, rels_b,
-        make_commutativity_relation, inc_rel_a, inc_rel_b, T;
-  if LeftActingDomain( A ) <> LeftActingDomain( B ) then
-    Error( "Algebras over different fields" );
-  fi;
-  Qa := QuiverOfAlgebra( A );
-  Qb := QuiverOfAlgebra( B );
-  Q := QuiverProduct( Qa, Qb );
-  kQ := PathAlgebra( LeftActingDomain( A ), Q );
-  make_commutativity_relation := function( list )
-    local comp1, comp2;
-    comp1 := PathAsAlgebraElement( kQ, PathInProductQuiver( Q, list, () ) );
-    comp2 := PathAsAlgebraElement( kQ, PathInProductQuiver( Q, list, (1,2) ) );
-    return comp1 - comp2;
-  end;
-  commutativity_relations := List( Cartesian( Arrows( Qa ), Arrows( Qb ) ),
-                                   make_commutativity_relation );
-  inc_rel_a := function( list )
-    return TranslateAlgebraElement( list[ 1 ], kQ, p -> PathInProductQuiver( Q, [ p, list[ 2 ] ] ) );
-  end;
-  inc_rel_b := function( list )
-    return TranslateAlgebraElement( list[ 2 ], kQ, p -> PathInProductQuiver( Q, [ list[ 1 ], p ] ) );
-  end;
-  rels_a := List( Cartesian( RelationsOfAlgebra( A ), Vertices( Qb ) ), inc_rel_a );
-  rels_b := List( Cartesian( Vertices( Qa ), RelationsOfAlgebra( B ) ), inc_rel_b );
-  T := kQ / Concatenation( commutativity_relations, rels_a, rels_b );
-  SetTensorProductFactors( T, [ A, B ] );
-  SetTensorProductFactorsLeftRight( T, [ A^LEFT, B^RIGHT ] );
-  SetIsTensorProductOfAlgebras( T, true );
-  return T;
+  return TensorProductOfAlgebras( [ A, B ] );
 end );
 
 InstallMethod( TensorProductOfAlgebras, "for list of quiver algebras",
                [ IsDenseList ],
 function( As )
-  local k, Qs, Q, kQ, n, commutativity_relations, i, j, path_lists, 
-        path_lists_prod, p, comp1, comp2, included_relations, rels, rel,
-        vertices1, vertices2, vs1, vs2, new_rel, relations, T;
+  local k, Qs, dir, Q, kQ, n, commutativity_relations, i, j, 
+        path_lists, path_lists_prod, p, comp1, comp2, 
+        included_relations, rels, vertices1, vertices2, rel, vs1, vs2, 
+        new_rel, relations, T;
 
-  # TODO: check that algebras are compatible (same field, same direction)
-  #       and that list is nonempty
+  if IsEmpty( As ) then
+    Error( "empty list of algebras" );
+  fi;
+
   k := LeftActingDomain( As[ 1 ] );
+  if not ForAll( As, A -> LeftActingDomain( A ) = k ) then
+    Error( "algebras over different fields" );
+  fi;
+
   Qs := List( As, QuiverOfAlgebra );
+  dir := Direction( Qs[ 1 ] );
+  if not ForAll( Qs, Q -> Direction( Q ) = dir ) then
+    Error( "algebras over differently directed quivers" );
+  fi;
+
   Q := QuiverProduct( Qs );
   kQ := PathAlgebra( k, Q );
   n := Length( As );
