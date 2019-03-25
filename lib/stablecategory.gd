@@ -52,16 +52,17 @@ DeclareAttribute( "StableHomProjection", IsStableHomSpaceModuloProjectives );
 DeclareAttribute( "OriginalHomSpace", IsStableHomSpaceModuloProjectives );
 
 #! @Description
-#!  Returns the representation <A>R</A> as an object in the stable
+#!  Returns the object <A>obj</A> as an object in the stable
 #!  category <A>C</A> modulo projectives.  
 #! @Returns IsStableCategoryModuloProjectivesObject
-#! @Arguments R, C
-DeclareOperation( "AsStableCategoryObject", [ IsQuiverRepresentation, IsStableCategoryModuloProjectives ] );
+#! @Arguments obj, C
+DeclareOperation( "AsStableCategoryObject",
+                  [ IsFieldCategoryObject, IsStableCategoryModuloProjectives ] );
 
 #! @Description
 #!  Given an object <A>X</A> in a stable category modulo projectives, returns 
 #!  the corresponding object in the original category.  
-#! @Returns IsQuiverRepresentation
+#! @Returns IsFieldCategoryObject
 #! @Arguments X
 DeclareAttribute( "OriginalObject", IsStableCategoryModuloProjectivesObject );
 
@@ -70,18 +71,26 @@ DeclareAttribute( "OriginalObject", IsStableCategoryModuloProjectivesObject );
 #!  category <A>C</A> modulo projectives.  
 #! @Returns IsStableCategoryModuloProjectivesObject
 #! @Arguments f, C
-DeclareOperation( "AsStableCategoryMorphism", [ IsQuiverRepresentationHomomorphism, IsStableCategoryModuloProjectives ] );
+DeclareOperation( "AsStableCategoryMorphism",
+                  [ IsFieldCategoryMorphism, IsStableCategoryModuloProjectives ] );
+
 #! @Description
 #!  Given a morphism <A>f</A> in a stable category modulo projectives, returns 
 #!  the corresponding homomorphism in the original category.  
-#! @Returns IsQuiverRepresentationHomomorphism
-#! @Arguments X
+#! @Returns IsFieldCategoryMorphism
+#! @Arguments f
 DeclareAttribute( "OriginalMorphism", IsStableCategoryModuloProjectivesMorphism );
 
 #! @Description
 #!  Returns the stable category modulo projectives of the category <A>C</A>.
 #! @Returns IsStableCategoryModuloProjectives
 #! @Arguments C
-DeclareAttribute( "StableCategoryModuloProjectives", IsQuiverRepresentationCategory );
+DeclareAttribute( "StableCategoryModuloProjectives", IsFieldCategory );
+
+#! @Description
+#!  Returns the category from which the stable category <A>C</A> was constructed.
+#! @Returns IsFieldCategory
+#! @Arguments C
+DeclareAttribute( "OriginalCategory", IsStableCategoryModuloProjectives );
 
 #

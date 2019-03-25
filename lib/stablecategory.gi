@@ -6,8 +6,8 @@ BindGlobal( "FamilyOfStableMorphisms",
         NewFamily( "stable morphisms" ) );
 
 InstallMethod( AsStableCategoryObject, 
-        "for a quiver algebra representation", 
-        [ IsQuiverRepresentation, IsStableCategoryModuloProjectives ], 
+        "for a field category object and a stable category modulo projectives", 
+        [ IsFieldCategoryObject, IsStableCategoryModuloProjectives ], 
         function ( R, C )
     local   type,  obj;
     
@@ -23,8 +23,8 @@ end
   );
 
 InstallMethod( AsStableCategoryMorphism, 
-        "for a quiver algebra representation homomorphism", 
-        [ IsQuiverRepresentationHomomorphism, IsStableCategoryModuloProjectives ], 
+        "for a field category morphism and a stable category modulo projectives", 
+        [ IsFieldCategoryMorphism, IsStableCategoryModuloProjectives ], 
         function ( f, C )
     local   type,  obj;
     
@@ -65,22 +65,18 @@ end
   );
 
 InstallMethod( StableCategoryModuloProjectives,
-               "for quiver algebra category",
-               [ IsQuiverRepresentationCategory ],
+               "for field category",
+               [ IsFieldCategory ],
 function( C )
-    local   A,  cat,  equal_objects,  equal_morphisms,  zero_object,  
-            zero_morphism,  identity_morphism,  pre_compose,  
-            addition,  additive_inverse,  direct_sum,  direct_sum_inj,  
-            direct_sum_proj,  to_be_finalized;
+  local cat, equal_objects, equal_morphisms, zero_object, 
+        zero_morphism, identity_morphism, pre_compose, addition, 
+        additive_inverse, direct_sum, direct_sum_inj, direct_sum_proj, 
+        to_be_finalized;
     
-  A := AlgebraOfCategory( C );
-  
-  cat := CreateCapCategory( Concatenation( "stable quiver representations over ", String( A ) ) );
+  cat := CreateCapCategory( Concatenation( Name( C ), " / proj" ) );
   SetFilterObj( cat, IsStableCategoryModuloProjectives );
-  SetAlgebraOfCategory( cat, A );
+  SetOriginalCategory( cat, C );
   SetUnderlyingField( cat, UnderlyingField( C ) );
-#  SetVectorSpaceCategory( cat, vecspace_cat );
-  
   
   equal_objects := function( R1, R2 )
       return OriginalObject( R1 ) = OriginalObject( R2 );
