@@ -744,6 +744,16 @@ function( R1, R2, maps )
   return QuiverRepresentationHomomorphismNC( R1, R2, morphisms );
 end );
 
+InstallMethod( QuiverRepresentationHomomorphism,
+               "for quiver representations and function",
+               [ IsQuiverRepresentation, IsQuiverRepresentation, IsFunction ],
+function( R1, R2, f )
+  local B, fB;
+  B := BasisVectors( Basis( R1 ) );
+  fB := List( B, f );
+  return QuiverRepresentationHomomorphismByImages( R1, R2, B, fB );
+end );
+
 InstallMethod( QuiverRepresentationHomomorphismNC,
                "for quiver representations and dense list",
                [ IsQuiverRepresentation, IsQuiverRepresentation,

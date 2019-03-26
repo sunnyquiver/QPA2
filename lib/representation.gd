@@ -331,6 +331,16 @@ DeclareOperation( "QuiverRepresentationHomomorphism",
                   [ IsQuiverRepresentation, IsQuiverRepresentation,
                     IsList ] );
 
+#! @Description
+#!  Construct a homomorphism of representations from a function.
+#!  The function <A>f</A> should take an element from <A>R1</A> as argument
+#!  and return an element in <A>R2</A>.
+#! @Returns IsQuiverRepresentationHomomorphism
+#! @Arguments R1, R2, f
+DeclareOperation( "QuiverRepresentationHomomorphism",
+                  [ IsQuiverRepresentation, IsQuiverRepresentation,
+                    IsFunction ] );
+
 #!
 DeclareOperation( "QuiverRepresentationHomomorphismNC",
                   [ IsQuiverRepresentation, IsQuiverRepresentation,
