@@ -10,6 +10,15 @@ DeclareAttribute( "TopOfModule", IsQuiverModule );
 DeclareAttribute( "TopOfRepresentation", IsQuiverRepresentation );
 #! @EndGroup
 
+#! @BeginGroup TopBasis
+#! @Description
+#!  Returns a list of elements in <A>M</A> which constitute a basis for the top.
+#! @Returns list
+#! @Arguments M
+DeclareAttribute( "TopBasis", IsQuiverModule );
+#! @Arguments R
+DeclareAttribute( "TopBasis", IsQuiverRepresentation );
+#! @EndGroup
 
 # 
 

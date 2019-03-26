@@ -30,3 +30,13 @@ function( M )
     return AsModule( side, top );
 end
 );
+
+InstallMethod( TopBasis, "for quiver representation",
+               [ IsQuiverRepresentation ],
+function( R )
+  local top_proj, top, basis;
+  top_proj := TopProjection( R );
+  top := Range( top_proj );
+  basis := BasisVectors( Basis( top ) );
+  return List( basis, b -> PreImagesRepresentative( top_proj, b ) );
+end );
