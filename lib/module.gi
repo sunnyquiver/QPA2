@@ -428,6 +428,9 @@ side -> function( rep_cat )
   AddColiftAlongEpimorphism( cat, function( e, test )
     return _m( ColiftAlongEpimorphism( _r( e ), _r( test ) ) );
   end );
+  AddProjectiveLift( cat, function( pi, epsilon )
+    return _m( ProjectiveLift( _r( pi ), _r( epsilon ) ) );
+  end );
   AddDirectSum( cat, function( summands )
     return _M( DirectSum( List( summands, _R ) ) );
   end );

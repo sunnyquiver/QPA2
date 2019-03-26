@@ -1,5 +1,14 @@
 gap> START_TEST( "representation" );
 
+# test ProjectiveLift
+gap> A := LeftNakayamaAlgebra( Rationals, [ 3, 2, 1 ] );;
+gap> R := QuiverRepresentation( A, [ 2, 2, 1 ], [ [ 1, 1, 0, 0 ], [ 1, 1 ] ] );;
+gap> f := TopProjection( R );;
+gap> p := ProjectiveCover( Range( f ) );;
+gap> l := ProjectiveLift( p, f );;
+gap> PreCompose( l, f ) = p;
+true
+
 # test Display for representations
 gap> A := PathAlgebra( Rationals, LeftQuiver( "Q(3)[a:1->2,b:2->3]" ) );;
 gap> R := QuiverRepresentation( A, [ 1, 0, 0 ], [] );;

@@ -874,11 +874,11 @@ InstallMethod( CategoryOfQuiverRepresentationsOverVectorSpaceCategory,
                "for quiver algebra and vector space category",
                [ IsQuiverAlgebra, IsAbelianCategory ],
 function( A, vecspace_cat )
-  local Q, cat, equal_objects, equal_morphisms, zero_object, zero_morphism,
-        identity_morphism, pre_compose, addition, additive_inverse,
-        kernel, kernel_emb, coker, coker_proj,
-        mono_lift, epi_colift,
-        direct_sum, direct_sum_inj, direct_sum_proj, to_be_finalized;
+  local Q, cat, equal_objects, equal_morphisms, zero_object, 
+        zero_morphism, identity_morphism, pre_compose, addition, 
+        additive_inverse, kernel_emb, coker, coker_proj, mono_lift, 
+        epi_colift, proj_lift, direct_sum, direct_sum_inj, 
+        direct_sum_proj, to_be_finalized;
 
   Q := QuiverOfAlgebra( A );
 
@@ -1023,6 +1023,18 @@ function( A, vecspace_cat )
                     ColiftAlongEpimorphism ) );
   end;
   AddColiftAlongEpimorphism( cat, epi_colift );
+
+  proj_lift := function( pi, epsilon )
+    local P, A, B, top_basis, images;
+    P := Source( pi );
+    A := Range( pi );
+    B := Source( epsilon );
+    top_basis := TopBasis( P );
+    images := List( top_basis,
+                    elm -> PreImagesRepresentative( epsilon, ImageElm( pi, elm ) ) );
+    return QuiverRepresentationHomomorphismByImages( P, B, top_basis, images );
+  end;
+  AddProjectiveLift( cat, proj_lift );
 
   direct_sum := function( summands )
     return QuiverRepresentation
