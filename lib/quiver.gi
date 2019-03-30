@@ -2077,7 +2077,7 @@ function( Q, vertices )
 end );
 
 
-InstallMethod( IsConnected, "for quiver", [ IsQuiver ],
+InstallMethod( IsConnectedQuiver, "for quiver", [ IsQuiver ],
 function( Q )
   local n, queue, i, visited, v;
   n := NumberOfVertices( Q );
@@ -2096,6 +2096,8 @@ function( Q )
   od;
   return ForAll( visited, IdFunc );
 end );
+
+InstallMethod( IsConnected, "for quiver", [ IsQuiver ], IsConnectedQuiver );
 
 InstallMethod( ConnectedComponentsAttr, "for quiver", [ IsQuiver ],
 function( Q )
