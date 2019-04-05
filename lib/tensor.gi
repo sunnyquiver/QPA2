@@ -265,8 +265,8 @@ InstallMethod( LeftTensorFunctor,
     
     A := RightActingAlgebra( M );
     B := LeftActingAlgebra( M );
-    C := AlgebrasOfCategory( AmodC )[ 2 ];
-    if A <> AlgebrasOfCategory( AmodC )[ 1 ] then
+    C := ActingAlgebras( AmodC )[ 2 ];
+    if A <> ActingAlgebras( AmodC )[ 1 ] then
         Error( "Entered bimodule and category has incompatible structures,\n" );
     fi;
     BmodC := BimoduleCategory( B, C );
@@ -288,8 +288,8 @@ InstallMethod( RightTensorFunctor,
     
     A := LeftActingAlgebra( M );
     B := RightActingAlgebra( M );
-    C := AlgebrasOfCategory( CmodA )[ 1 ];
-    if A <> AlgebrasOfCategory( CmodA )[ 2 ] then
+    C := ActingAlgebras( CmodA )[ 1 ];
+    if A <> ActingAlgebras( CmodA )[ 2 ] then
         Error( "Entered bimodule and category has incompatible structures,\n" );
     fi;
     CmodB := BimoduleCategory( C, B );

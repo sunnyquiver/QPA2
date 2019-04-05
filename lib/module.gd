@@ -236,6 +236,12 @@ DeclareOperation( "LeftAlgebraModuleToLeftQuiverModule", [ IsLeftAlgebraModuleEl
 
 #! @Section Information about a module
 
+#!
+DeclareOperation( "ActingAlgebra", [ IsSide, IsQuiverModule ] );
+
+#!
+DeclareAttribute( "ActingAlgebras", IsQuiverModule );
+
 #! @Description
 #!  Returns the quiver representation for the module <A>M</A>.
 #!  All module operations are delegated to the underlying representation.
@@ -409,6 +415,9 @@ DeclareOperation( "BimoduleCategory", [ IsDenseList ] );
 DeclareOperation( "BimoduleCategory", [ IsQuiverAlgebra, IsQuiverAlgebra ] );
 
 #!
+DeclareOperation( "ModuleCategory", [ IsDenseList ] );
+
+#!
 DeclareAttribute( "AsDirectModuleCategory", IsQuiverRepresentationCategory );
 
 #!
@@ -440,10 +449,16 @@ DeclareOperation( "BimoduleCategoryOverVectorSpaceCategory",
                   [ IsQuiverAlgebra, IsQuiverAlgebra, IsVectorSpaceCategory ] );
 
 #!
-DeclareAttribute( "AlgebraOfCategory", IsQuiverModuleCategory );
+DeclareOperation( "ActingAlgebra", [ IsSide, IsQuiverModuleCategory ] );
 
 #!
-DeclareAttribute( "AlgebrasOfCategory", IsQuiverModuleCategory );
+DeclareAttribute( "LeftActingAlgebra", IsQuiverModuleCategory );
+
+#!
+DeclareAttribute( "RightActingAlgebra", IsQuiverModuleCategory );
+
+#!
+DeclareAttribute( "ActingAlgebras", IsQuiverModuleCategory );
 
 #!
 DeclareAttribute( "UnderlyingRepresentationCategory", IsQuiverModuleCategory );
@@ -495,6 +510,15 @@ DeclareAttribute( "AsRightModuleFunctor", IsQuiverRepresentationCategory );
 #! @Arguments C
 #!
 DeclareAttribute( "AsBimoduleFunctor", IsQuiverRepresentationCategory );
+
+#!
+DeclareOperation( "AsRepresentationOfModules", [ IsDirection, IsQuiverBimodule ] );
+
+#!
+DeclareAttribute( "AsRepresentationOfLeftModules", IsQuiverBimodule );
+
+#!
+DeclareAttribute( "AsRepresentationOfRightModules", IsQuiverBimodule );
 
 #! @Section Operations on modules
 
