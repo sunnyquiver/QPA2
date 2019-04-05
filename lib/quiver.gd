@@ -821,6 +821,24 @@ DeclareOperation( "QuiverHomomorphism",
 #! @Description
 #!  Create a quiver homomorphism.
 #!
+#!  The result is a homomorphism from the quiver <A>Q1</A>
+#!  to the quiver <A>Q2</A>
+#!  where the list <A>images</A>
+#!  determines what each primitive path is sent to.
+#!  The homomorphism sends vertex number <C>i</C> in <A>Q1</A>
+#!  to <C>images[ i ]</C>
+#!  and arrow number <C>j</C> in <A>Q1</A>
+#!  to <C>arrow_images[ n + j ]</C>,
+#!  where <C>n</C> is the number of vertices in <A>Q1</A>.
+#! @Arguments Q1, Q2, images
+#! @Returns <Ref Filt="IsQuiverHomomorphism"/>
+#! @Label
+DeclareOperation( "QuiverHomomorphism",
+                  [ IsQuiver, IsQuiver, IsDenseList ] );
+
+#! @Description
+#!  Create a quiver homomorphism.
+#!
 #!  This operation is like <Ref Oper="QuiverHomomorphism"/>
 #!  except that no checking of the arguments is performed.
 #! @Arguments Q1, Q2, vertex_images, arrow_images
@@ -1034,6 +1052,16 @@ DeclareOperation( "ProductQuiverVertexIndex", [ IsDenseList, IsDenseList ] );
 #! @Returns positive integer
 #! @Arguments quivers, i, path_indices
 DeclareOperation( "ProductQuiverArrowIndex", [ IsDenseList, IsPosInt, IsDenseList ] );
+
+
+#! @Description
+#!  Given a quiver <A>P</A>
+#!  which is the product $Q_1 \times Q_2$ of two quivers,
+#!  returns the canonical isomorphism from <A>P</A> to the
+#!  product $Q_2 \times Q_1$ of the same two quivers in the opposite order.
+#! @Arguments P
+#! @Returns IsQuiverHomomorphism
+DeclareAttribute( "FlipProductQuiver", IsProductQuiver );
 
 
 DeclareOperation( "\^", [ IsQuiver, IsSide ] );
