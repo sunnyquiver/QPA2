@@ -45,3 +45,4 @@ ReadPackage( "QPA", "lib/combinartorial.gd" );
 ReadPackage( "QPA", "lib/pathalgebrareptype.gd" );
 ReadPackage( "QPA", "lib/star.gd" );
 ReadPackage( "QPA", "lib/transpose.gd" );
+ReadPackage( "QPA", "lib/ARtheory.gd" );

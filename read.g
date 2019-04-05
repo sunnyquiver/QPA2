@@ -44,4 +44,4 @@ ReadPackage( "QPA", "lib/combinartorial.gi" );
 ReadPackage( "QPA", "lib/pathalgebrareptype.gi" );
 ReadPackage( "QPA", "lib/star.gi" );
 ReadPackage( "QPA", "lib/transpose.gi" );
-
+ReadPackage( "QPA", "lib/ARtheory.gi" );

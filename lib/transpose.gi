@@ -33,7 +33,7 @@ function( h )
     Error( "The construction of the transpose is on one-sided modules.\n" );
   fi;
   
-  A := AlgebraOfRepresentation( UnderlyingRepresentation( N ) );  
+  A := AlgebraOfRepresentation( UnderlyingRepresentation( Source( h ) ) );  
   M := AlgebraAsBimodule( A );
   M1 := Source( h );
   M2 := Range( h );
