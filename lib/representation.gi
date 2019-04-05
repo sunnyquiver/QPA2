@@ -1097,6 +1097,13 @@ function( A, vecspace_cat )
     
 end );
 
+InstallMethod( ChangeBaseCategory, "for quiver representation category and abelian category",
+               [ IsQuiverRepresentationCategory, IsAbelianCategory ],
+function( cat, ucat )
+  local A;
+  A := AlgebraOfCategory( cat );
+  return CategoryOfQuiverRepresentationsOverVectorSpaceCategory( A, ucat );
+end );
 
 InstallMethod( UnderlyingField, "for quiver representation category",
                [ IsQuiverRepresentationCategory ],
