@@ -1076,6 +1076,36 @@ function( T )
   return QuiverAlgebraHomomorphism( T_iter, T_flat, images );
 end );
 
+InstallMethod( IsomorphismFromFlatTensorProduct, "for tensor product of algebras",
+               [ IsTensorProductOfAlgebras ],
+function( T )
+  local unpack, As_iter, As_flat, T_iter, T_flat, Q_iter, Q_flat, prim_iter, image_prim_paths, images;
+
+  unpack := function( A )
+    if IsTensorProductOfAlgebras( A ) then
+      return List( TensorProductFactors( A ), unpack );
+    fi;
+    return A;
+  end;
+  As_iter := unpack( T );
+  As_flat := Flat( As_iter );
+  
+  T_iter := T;
+  T_flat := TensorProductOfAlgebras( As_flat );
+
+  Q_iter := QuiverOfAlgebra( T_iter );
+  Q_flat := QuiverOfAlgebra( T_flat );
+  
+  prim_iter := PrimitivePaths( Q_iter );
+
+  image_prim_paths := List( PrimitivePaths( Q_flat ),
+                  p -> First( prim_iter, q -> Flat(Label(q)) = Label(p) ) );
+  
+  images := List( image_prim_paths, p -> AlgebraElementByLabel( T_iter, Label(p) ) );
+
+  return QuiverAlgebraHomomorphism( T_flat, T_iter, images );
+end );
+
 InstallMethod( IsTensorProductOfAlgebras, "for quiver algebra",
                [ IsQuiverAlgebra ], ReturnFalse ); # TODO should actually check
 
