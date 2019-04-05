@@ -739,6 +739,12 @@ DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebr
 #!  and return an element of <A>B</A>.
 DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsFunction ] );
 
+#! @Description
+#!  Construct a quiver algebra homomorphism from a quiver homomorphism.
+#! @Arguments A, B, f
+#! @Returns IsQuiverAlgebraHomomorphism
+DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverHomomorphism ] );
+
 #! @Arguments f
 #! @Returns a list of algebra elements
 #! @Description

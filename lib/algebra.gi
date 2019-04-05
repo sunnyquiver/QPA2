@@ -1381,6 +1381,21 @@ function( A, B, f )
   return QuiverAlgebraHomomorphism( A, B, vertex_images, arrow_images );
 end );
 
+InstallMethod( QuiverAlgebraHomomorphism, "for quiver algebras and quiver homomorphism",
+               [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverHomomorphism ],
+function( A, B, f )
+  local images;
+  if Source( f ) <> QuiverOfAlgebra( A ) then
+    Error( "quiver homomorphism with wrong source" );
+  fi;
+  if Range( f ) <> QuiverOfAlgebra( B ) then
+    Error( "quiver homomorphism with wrong range" );
+  fi;
+  images := List( PrimitivePaths( QuiverOfAlgebra( A ) ),
+                  p -> PathAsAlgebraElement( B, ImageElm( f, p ) ) );
+  return QuiverAlgebraHomomorphism( A, B, images );
+end );
+
 
 InstallMethod( ImageElm, "for a homomorphism of quiver algebras",
         [ IsQuiverAlgebraHomomorphism, IsQuiverAlgebraElement ],
