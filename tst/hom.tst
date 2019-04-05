@@ -23,26 +23,6 @@ gap> idR_ := LinearCombination( B, idRcoeff );;
 gap> idR_ = idR;
 true
 
-gap> A := LeftNakayamaAlgebra( Rationals, [ 3, 2, 1 ] );;
-gap> B := LeftNakayamaAlgebra( Rationals, [ 2, 1 ] );;
-gap> P1 := IndecProjRepresentations( A )[ 1 ];;
-gap> T := TensorProductOfAlgebras( A, B );;
-gap> PP5 := IndecProjRepresentations( T )[ 5 ];;
-gap> hom := Hom( 1, PP5, P1 );;
-gap> IsHomRepresentation( hom );
-true
-gap> Source( hom ) = PP5;
-true
-gap> Range( hom ) = P1;
-true
-gap> h := Hom( 1, PP5, RadicalInclusion( P1 ) );;
-gap> IsQuiverRepresentationHomomorphism( h );
-true
-gap> Source( h ) = Hom( 1, PP5, RadicalOfRepresentation( P1 ) );
-true
-gap> Range( h ) = hom;
-true
-
 gap> A := LeftNakayamaAlgebra( Rationals, [3,2,1] );;
 gap> B := LeftNakayamaAlgebra( Rationals, [2,1] );;
 gap> P := IndecProjBimodules([A,B]);;
