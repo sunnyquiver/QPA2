@@ -113,4 +113,8 @@ DeclareAttribute( "AsVectorSpaceFunctor", IsQuiverRepresentationCategory );
 #! @Arguments C
 DeclareAttribute( "AsVectorSpaceFunctor", IsQuiverModuleCategory ); 
 
+DeclareAttribute( "TensorFlipRestrictionFunctor", IsQuiverRepresentationCategory );
+
+DeclareAttribute( "TensorFlipRestriction", IsQuiverRepresentation );
+
 #
