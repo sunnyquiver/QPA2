@@ -38,11 +38,16 @@ DeclareAttribute( "DualOfModule", IsQuiverModule );
 DeclareAttribute( "DualOfRepresentation", IsQuiverRepresentation ); 
 #! @EndGroup
 
+#! @BeginGroup
 #! @Description
 #!  This function computes the dual <M>D(f)</M> of the a homomorphism  <A>f</A>, that is, 
 #!  it computes <M>\Hom_k(f, k)</M>. 
 #! @Returns <Ref Filt="IsQuiverRepresentationHomomorphism"/> 
 #! @Arguments f
 DeclareAttribute( "DualOfRepresentationHomomorphism", IsQuiverRepresentationHomomorphism );
+#! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
+#! @Arguments f
+DeclareAttribute( "DualOfModuleHomomorphism", IsQuiverModuleHomomorphism );
+#! @EndGroup
 
 #
