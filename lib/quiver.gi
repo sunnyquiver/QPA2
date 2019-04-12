@@ -1372,6 +1372,19 @@ function( Q1, Q2, vertex_images, arrow_images )
   return QuiverHomomorphismNC( Q1, Q2, vertex_images, arrow_images );
 end );
 
+InstallMethod( QuiverHomomorphism, "for two quivers and dense list",
+               [ IsQuiver, IsQuiver, IsDenseList ],
+function( Q1, Q2, images )
+  local n, m, l;
+  n := NumberOfVertices( Q1 );
+  m := NumberOfArrows( Q1 );
+  l := Length( images );
+  if l <> n + m then
+    Error( "list of images has wrong length" );
+  fi;
+  return QuiverHomomorphism( Q1, Q2, images{ [ 1 .. n ] }, images{ [ ( n + 1 ) .. l ] } );
+end );
+
 InstallMethod( QuiverHomomorphismNC, "for two quivers and two dense lists",
                [ IsQuiver, IsQuiver, IsDenseList, IsDenseList ],
 function( Q1, Q2, vertex_images, arrow_images )
@@ -1884,6 +1897,36 @@ function( PQ )
     Add( incs, incs_Q );
   od;
   return incs;
+end );
+
+InstallMethod( FlipProductQuiver, "for product quiver",
+               [ IsProductQuiver ],
+function( P )
+  local Qs, P_flip, images, path, path_factors, flipped_path, 
+        images_inv, iso, iso_inv;
+  Qs := ProductQuiverFactors( P );
+  if Length( Qs ) <> 2 then
+    Error( "product quiver to be flipped must have exactly two factors" );
+  fi;
+  P_flip := QuiverProduct( Qs[ 2 ], Qs[ 1 ] );
+  images := [];
+  for path in PrimitivePaths( P ) do
+    path_factors := ProductPathFactors( path );
+    flipped_path := PathInProductQuiver( P_flip, [ path_factors[ 2 ], path_factors[ 1 ] ] );
+    Add( images, flipped_path );
+  od;
+  images_inv := [];
+  for path in PrimitivePaths( P_flip ) do
+    path_factors := ProductPathFactors( path );
+    flipped_path := PathInProductQuiver( P, [ path_factors[ 2 ], path_factors[ 1 ] ] );
+    Add( images_inv, flipped_path );
+  od;
+  iso := QuiverHomomorphism( P, P_flip, images );
+  iso_inv := QuiverHomomorphism( P_flip, P, images_inv );
+  SetInverseGeneralMapping( iso, iso_inv );
+  SetInverseGeneralMapping( iso_inv, iso );
+  # set IsIsomorphism?
+  return iso;
 end );
 
 # InstallMethod( AsLeftQuiver, "for left quiver", [ IsLeftQuiver ], IdFunc );

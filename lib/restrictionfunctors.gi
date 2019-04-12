@@ -245,3 +245,23 @@ InstallMethod( AsVectorSpaceFunctor, "for a representation category",
     return PreCompose( UnderlyingRepresentationFunctor( C ), AsVectorSpaceFunctor( UnderlyingRepresentationCategory( C ) ) );
 end
   );
+
+
+InstallMethod( TensorFlipRestrictionFunctor, "for representation category",
+               [ IsQuiverRepresentationCategory ],
+function( cat )
+  local T, flip, T_flip;
+  T := AlgebraOfCategory( cat );
+  flip := InverseGeneralMapping( FlipTensorAlgebra( T ) );
+  T_flip := Source( flip );
+  return RestrictionFunctor( flip,
+                             cat,
+                             CategoryOfQuiverRepresentations( T_flip ) );
+end );
+
+InstallMethod( TensorFlipRestriction, "for quiver representation",
+               [ IsQuiverRepresentation ],
+function( R )
+  return ApplyFunctor( TensorFlipRestrictionFunctor( CapCategory( R ) ),
+                       R );
+end );

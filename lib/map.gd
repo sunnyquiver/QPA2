@@ -15,6 +15,9 @@ DeclareOperation( "MapRepresentation", [ IsFunction, IsQuiverRepresentationHomom
 DeclareOperation( "MapRepresentation", [ IsFunction, IsFunction, IsDenseList,
                                          IsQuiverRepresentationCategory ] );
 
+DeclareOperation( "MapRepresentation", [ IsFunction, IsDenseList,
+                                         IsQuiverRepresentationCategory ] );
+
 DeclareOperation( "MapRepresentation", [ IsFunction, IsFunction, IsFunction, IsDenseList,
                                          IsQuiverRepresentationCategory ] );
 

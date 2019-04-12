@@ -711,6 +711,15 @@ DeclareOperation( "TensorAlgebraRightIdentification", [ IsTensorProductOfAlgebra
 #!  Returns the enveloping algebra of <A>A</A>.
 DeclareAttribute( "EnvelopingAlgebra", IsQuiverAlgebra );
 
+#! @Description
+#!  Given an algebra <A>T</A>
+#!  which is the tensor product $A \otimes_k B$ of two algebras,
+#!  returns the canonical isomorphism from <A>T</A> to
+#!  the tensor product $B \otimes_k A$
+#!  of the same algebras in the opposite order.
+#! @Arguments T
+DeclareAttribute( "FlipTensorAlgebra", IsTensorProductOfAlgebras );
+
 #! @Section Algebra homomorphisms 
 
 #! @Description
@@ -745,6 +754,12 @@ DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebr
 #!  The function <A>f</A> should take an element of <A>A</A> as argument
 #!  and return an element of <A>B</A>.
 DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsFunction ] );
+
+#! @Description
+#!  Construct a quiver algebra homomorphism from a quiver homomorphism.
+#! @Arguments A, B, f
+#! @Returns IsQuiverAlgebraHomomorphism
+DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverHomomorphism ] );
 
 #! @Arguments f
 #! @Returns a list of algebra elements

@@ -54,10 +54,17 @@ function( vfun, afun, Rs, cat )
   T := AlgebraOfCategory( cat );
   Q_T := QuiverOfAlgebra( T );
   objects := List( Vertices( Q_T ),
-                   v -> vfun( ListN( Rs, ProductPathFactors( v ), VectorSpaceOfRepresentation ) ) );
+                   v -> CallFuncList( vfun, ListN( Rs, ProductPathFactors( v ), VectorSpaceOfRepresentation ) ) );
   maps := List( Arrows( Q_T ),
-                a -> afun( ListN( Rs, ProductPathFactors( a ), MapForPath ) ) );
+                a -> CallFuncList( afun, ListN( Rs, ProductPathFactors( a ), MapForPath ) ) );
   return QuiverRepresentation( cat, objects, maps );
+end );
+
+InstallMethod( MapRepresentation, "for function, dense list and representation category",
+               [ IsFunction, IsDenseList,
+                 IsQuiverRepresentationCategory ],
+function( fun, Rs, cat )
+  return MapRepresentation( fun, fun, Rs, cat );
 end );
 
 InstallMethod( MapRepresentation, "for three functions, dense list and representation category",
@@ -111,13 +118,40 @@ end );
 InstallMethod( MapRepresentation, "for functor and dense list",
                [ IsCapFunctor, IsDenseList ],
 function( F, list )
-  local sig_u, sig, algebras, algebra_indices, i, cat_u, contra, alg, 
-        cat, range_alg, range_ucat, range_cat, map_F, apply_F, rep_i, 
-        object_fun, morphism_fun;
+  local sig_u, apply_F, Rs, n, algebras, i, A, contra, T, cat_u, cat, 
+        sig, algebra_indices, alg, range_alg, range_ucat, range_cat, 
+        map_F, rep_i, object_fun, morphism_fun;
   sig_u := InputSignature( F );
   if Length( list ) <> Length( sig_u ) then
-    Error( "length of algebra list does not match input signature of functor" );
+    Error( "length of list does not match input signature of functor" );
   fi;
+
+  if ForAll( list, IsQuiverRepresentation ) then
+    # Case 1: map functor across representations
+    Rs := list;
+    n := Length( Rs );
+    algebras := [];
+    for i in [ 1 .. n ] do
+      if sig_u[ i ][ 1 ] <> VectorSpaceCategory( CapCategory( Rs[ i ] ) ) then
+        Error( "base category of representation ", i, " does not match input signature of functor" );
+      fi;
+      A := AlgebraOfRepresentation( Rs[ i ] );
+      contra := sig_u[ i ][ 2 ];
+      if contra then
+        A := OppositeAlgebra( A );
+      fi;
+      algebras[ i ] := A;
+    od;
+    T := TensorProductOfAlgebras( algebras );
+    cat_u := AsCapCategory( Range( F ) );
+    cat := CategoryOfQuiverRepresentationsOverVectorSpaceCategory( T, cat_u );
+    apply_F := function( arg )
+      return CallFuncList( ApplyFunctor, Concatenation( [ F ], arg ) );
+    end;
+    return MapRepresentation( apply_F, Rs, cat );
+  fi;
+
+  # Case 2: construct new functor
   sig := [];
   algebras := [];
   algebra_indices := [];
@@ -154,8 +188,8 @@ function( F, list )
   map_F := CapFunctor( Concatenation( "Map(", Name( F ), ")" ),
                        sig, range_cat );
   
-  apply_F := function( args )
-    return CallFuncList( ApplyFunctor, Concatenation( [ F ], args ) );
+  apply_F := function( arg_list )
+    return CallFuncList( ApplyFunctor, Concatenation( [ F ], arg_list ) );
   end;
 
   if Length( algebras ) = 1 then
@@ -179,10 +213,11 @@ function( F, list )
     end;
   else
     object_fun := function( arg )
-      local id_morphisms, vfun, afun;
-      id_morphisms := List( arg, x -> IdentityMorphism( x ) );
-      vfun := xs -> apply_F( Replace( arg, algebra_indices, xs ) );
-      afun := ms -> apply_F( Replace( id_morphisms, algebra_indices, ms ) );
+      local objects, id_morphisms, vfun, afun;
+      objects := arg;
+      id_morphisms := List( objects, x -> IdentityMorphism( x ) );
+      vfun := function( arg ) return apply_F( Replace( objects, algebra_indices, arg ) ); end;
+      afun := function( arg ) return apply_F( Replace( id_morphisms, algebra_indices, arg ) ); end;
       return MapRepresentation( vfun, afun, arg{ algebra_indices }, range_cat );
     end;
     morphism_fun := function( arg )
@@ -190,9 +225,9 @@ function( F, list )
       morphisms := arg{ [ 2 .. Length( arg ) - 1 ] };
       sources := List( morphisms, Source );
       ranges := List( morphisms, Range );
-      afun_source := ms -> apply_F( Replace( sources, algebra_indices, ms ) );
-      afun_range := ms -> apply_F( Replace( ranges, algebra_indices, ms ) );
-      mfun := ms -> apply_F( Replace( morphisms, algebra_indices, ms ) );
+      afun_source := function( arg ) return apply_F( Replace( sources, algebra_indices, arg ) ); end;
+      afun_range := function( arg ) return apply_F( Replace( ranges, algebra_indices, arg ) ); end;
+      mfun := function( arg ) return apply_F( Replace( morphisms, algebra_indices, arg ) ); end;
       return MapRepresentation( mfun, afun_source, afun_range, morphisms{ algebra_indices }, range_cat );
     end;
   fi;

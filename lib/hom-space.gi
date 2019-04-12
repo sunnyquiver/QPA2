@@ -53,6 +53,20 @@ function( hom )
   return ZeroMorphism( Source( hom ), Range( hom ) );
 end );
 
+InstallMethod( HomFunctor, "for field category",
+               [ IsFieldCategory ],
+function( cat )
+  local hom, morphism_fun;
+  hom := CapFunctor( "Hom",
+                     [ [ cat, true ], [ cat, false ] ],
+                     CategoryOfVectorSpaces( UnderlyingField( cat ) ) );
+  AddObjectFunction( hom, Hom );
+  morphism_fun := function( source, f1, f2, range )
+    return Hom( f1, f2 );
+  end;
+  AddMorphismFunction( hom, morphism_fun );
+  return hom;
+end );
 
 
 ####### Hom spaces for vector spaces #######

@@ -38,6 +38,10 @@ DeclareAttribute( "LinearTransformationConstructor", IsQuiverRepresentationCateg
 DeclareOperation( "CategoryOfQuiverRepresentationsOverVectorSpaceCategory",
                   [ IsQuiverAlgebra, IsAbelianCategory ] );
 
+#!
+DeclareOperation( "ChangeBaseCategory",
+                  [ IsQuiverRepresentationCategory, IsAbelianCategory ] );
+
 
 #! @Section Constructing elements
 

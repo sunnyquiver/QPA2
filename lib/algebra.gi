@@ -1175,6 +1175,25 @@ function( A )
   return TensorProductOfAlgebras( A^LEFT, A^RIGHT );
 end );
 
+InstallMethod( FlipTensorAlgebra, "for a tensor algebra",
+               [ IsTensorProductOfAlgebras ],
+function( T )
+  local As, T_flip, quiver_iso, quiver_iso_inv, iso, iso_inv;
+  As := TensorProductFactors( T );
+  if Length( As ) <> 2 then
+    Error( "tensor algebra to be flipped must have exactly two factors" );
+  fi;
+  T_flip := TensorProductOfAlgebras( As[ 2 ], As[ 1 ] );
+  quiver_iso := FlipProductQuiver( QuiverOfAlgebra( T ) );
+  quiver_iso_inv := InverseGeneralMapping( quiver_iso );
+  iso := QuiverAlgebraHomomorphism( T, T_flip, quiver_iso );
+  iso_inv := QuiverAlgebraHomomorphism( T_flip, T, quiver_iso_inv );
+  SetInverseGeneralMapping( iso, iso_inv );
+  SetInverseGeneralMapping( iso_inv, iso );
+  # set IsIsomorphism?
+  return iso;
+end );
+
 
 BindGlobal( "FamilyOfQuiverAlgebraBases",
             NewFamily( "quiver algebra bases" ) );
@@ -1409,6 +1428,21 @@ function( A, B, f )
   vertex_images := List( Vertices( A ), f );
   arrow_images := List( Arrows( A ), f );
   return QuiverAlgebraHomomorphism( A, B, vertex_images, arrow_images );
+end );
+
+InstallMethod( QuiverAlgebraHomomorphism, "for quiver algebras and quiver homomorphism",
+               [ IsQuiverAlgebra, IsQuiverAlgebra, IsQuiverHomomorphism ],
+function( A, B, f )
+  local images;
+  if Source( f ) <> QuiverOfAlgebra( A ) then
+    Error( "quiver homomorphism with wrong source" );
+  fi;
+  if Range( f ) <> QuiverOfAlgebra( B ) then
+    Error( "quiver homomorphism with wrong range" );
+  fi;
+  images := List( PrimitivePaths( QuiverOfAlgebra( A ) ),
+                  p -> PathAsAlgebraElement( B, ImageElm( f, p ) ) );
+  return QuiverAlgebraHomomorphism( A, B, images );
 end );
 
 

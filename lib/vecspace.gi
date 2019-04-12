@@ -631,14 +631,14 @@ function( V, gens )
   fi;
   K := UnderlyingField( V );
   if ForAll( gens, IsZero ) then
-    return ZeroMorphism( ZeroVectorSpace( K ), V );
+    f := ZeroMorphism( ZeroVectorSpace( K ), V );
+  else
+    W := VectorSpace( K, List( gens, AsList ) );
+    B := BasisVectors( CanonicalBasis( W ) );
+    matrix := MatrixByRows( K, B );
+    WQPA := StandardVectorSpace( K, Length( B ) );
+    f := LinearTransformationByRightMatrix( WQPA, V, matrix );
   fi;
-  W := VectorSpace( K, List( gens, AsList ) );
-  B := BasisVectors( CanonicalBasis( W ) );
-  matrix := MatrixByRows( K, B );
-  WQPA := StandardVectorSpace( K, Length( B ) );
-  
-  f := LinearTransformationByRightMatrix( WQPA, V, matrix );
   SetIsInjective( f, true );
   return f;
 end );

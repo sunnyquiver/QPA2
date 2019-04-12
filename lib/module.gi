@@ -26,13 +26,6 @@ side -> function( R )
   local k, Q, rep_algebra, cat, module_type, left_algebra,  
         right_algebra, algebras, M;
 
-  M := rec();
-  ObjectifyWithAttributes( M, NewType( FamilyOfQuiverModules,
-                                       IsQuiverModule^side and IsQuiverModuleRep ),
-                           UnderlyingRepresentation, R,
-                           LeftActingDomain, FieldOfRepresentation( R ),
-                           Side, side );
-
   rep_algebra := AlgebraOfRepresentation( R );
   if side = LEFT_RIGHT then
     algebras := TensorProductFactorsLeftRight( rep_algebra );
@@ -40,12 +33,14 @@ side -> function( R )
     algebras := [ fail, fail ];
     algebras[ Int( side ) ] := rep_algebra^side;
   fi;
-  if algebras[ Int( LEFT ) ] <> fail then
-    SetLeftActingAlgebra( M, algebras[ Int( LEFT ) ] );
-  fi;
-  if algebras[ Int( RIGHT ) ] <> fail then
-    SetRightActingAlgebra( M, algebras[ Int( RIGHT ) ] );
-  fi;
+
+  M := rec();
+  ObjectifyWithAttributes( M, NewType( FamilyOfQuiverModules,
+                                       IsQuiverModule^side and IsQuiverModuleRep ),
+                           UnderlyingRepresentation, R,
+                           LeftActingDomain, FieldOfRepresentation( R ),
+                           ActingAlgebras, algebras,
+                           Side, side );
 
   cat := AsModuleCategory( side, CapCategory( R ) );
   Add( cat, M );
@@ -101,6 +96,28 @@ InstallMethod( ViewObj,
 function( R )
   Print( "<", String( R ), ">" );
 end );
+
+InstallMethod( Side, [ IsQuiverModule ],
+               M -> Side( CapCategory( M ) ) );
+
+DeclareSideOperations( ActingAlgebra,
+                       LeftActingAlgebra, RightActingAlgebra, ActingAlgebras );
+
+InstallMethodWithSides( ActingAlgebra, [ IsQuiverModule ],
+side -> function( M )
+  return ActingAlgebra( side, CapCategory( M ) );
+end );
+
+InstallMethod( ActingAlgebra, "for side and quiver module category",
+               [ IsSide, IsQuiverModuleCategory ],
+function( side, cat )
+  return ( ActingAlgebra^side )( cat );
+end );
+
+InstallMethod( LeftActingAlgebra, "for quiver module category", [ IsQuiverModuleCategory ],
+               cat -> ActingAlgebras( cat )[ 1 ] );
+InstallMethod( RightActingAlgebra, "for quiver module category", [ IsQuiverModuleCategory ],
+               cat -> ActingAlgebras( cat )[ 2 ] );
 
 InstallMethod( QuiverOfModule,
                [ IsQuiverModule ],
@@ -380,17 +397,18 @@ side -> function( rep_cat )
     B := algebras[ 2 ];
     cat := CreateCapCategory( Concatenation( "bimodules over ", String( A ), " and ", String( B ) ) );
     SetFilterObj( cat, IsQuiverBimoduleCategory );
-    SetAlgebrasOfCategory( cat, algebras );
   else
     A := rep_algebra^side;
+    algebras := [ fail, fail ];
+    algebras[ Int( side ) ] := A;
     cat := CreateCapCategory( Concatenation( String( side ), " modules over ", String( A ) ) );
     if side = LEFT then
       SetFilterObj( cat, IsLeftQuiverModuleCategory );
     else
       SetFilterObj( cat, IsRightQuiverModuleCategory );
     fi;
-    SetAlgebraOfCategory( cat, A );
   fi;
+  SetActingAlgebras( cat, algebras );
   SetSide( cat, side );
   SetUnderlyingRepresentationCategory( cat, rep_cat );
   SetIsAbelianCategory( cat, true );
@@ -460,6 +478,27 @@ function( A, B )
   return BimoduleCategory( [ A, B ] );
 end );
 
+InstallMethod( ModuleCategory, "for dense list", [ IsDenseList ],
+function( algebras )
+  local side, A;
+  if Length( algebras ) <> 2 then
+    Error( "list of algebras must have length two" );
+  fi;
+  if IsQuiverAlgebra( algebras[ 1 ] ) and algebras[ 2 ] = fail then
+    side := LEFT;
+    A := algebras[ 1 ];
+  elif algebras[ 1 ] = fail and IsQuiverAlgebra( algebras[ 2 ] ) then
+    side := RIGHT;
+    A := algebras[ 2 ];
+  elif IsQuiverAlgebra( algebras[ 1 ] ) and IsQuiverAlgebra( algebras[ 2 ] ) then
+    side := LEFT_RIGHT;
+    A := algebras;
+  else
+    Error( "list of algebras must consist of quiver algebras or `fail`" );
+  fi;
+  return ( ModuleCategory ^ side )( A );
+end );
+
 InstallMethod( UnderlyingField, "for module category",
                [ IsQuiverModuleCategory ],
                cat -> UnderlyingField( UnderlyingRepresentationCategory( cat ) ) );
@@ -494,6 +533,19 @@ side -> function( C )
             function( M, f, N ) return AsModuleHomomorphism( side, f ); end );
     
     return F;
+end );
+
+DeclareDirectionOperations( AsRepresentationOfModules,
+                            AsRepresentationOfLeftModules, AsRepresentationOfRightModules );
+
+InstallMethodWithDirections( AsRepresentationOfModules,
+                             [ IsQuiverBimodule ],
+dir -> function( M )
+  local layered, cat;
+  layered := AsLayeredRepresentation( Int( dir ), UnderlyingRepresentation( M ) );
+  cat := ChangeBaseCategory( CapCategory( layered ),
+                             ModuleCategory( dir, ActingAlgebra( dir, M ) ) );
+  return MapRepresentation( AsModule^dir, AsModuleHomomorphism^dir, layered, cat );
 end );
 
 InstallMethod ( AnnihilatorOfModule, 
