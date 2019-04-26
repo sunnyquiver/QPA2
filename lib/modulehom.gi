@@ -51,6 +51,22 @@ function( M1, M2, matrices )
   return AsModuleHomomorphism( Side( M1 ), rf );
 end );
 
+InstallMethod( QuiverModuleHomomorphism,
+               [ IsQuiverModule, IsQuiverModule, IsFunction ],
+function( M, N, f )
+  local R1, R2, rf, rm;
+  # TODO check that M and N are in same category
+  R1 := UnderlyingRepresentation( M );
+  R2 := UnderlyingRepresentation( N );
+  rf := function( e )
+    local m;
+    m := AsModuleElement( Side( M ), e );
+    return UnderlyingRepresentationElement( f( m ) );
+  end;
+  rm := QuiverRepresentationHomomorphism( R1, R2, rf );
+  return AsModuleHomomorphism( Side( M ), rm );
+end );
+
 InstallMethod( String,
                "for quiver module homomorphism",
                [ IsQuiverModuleHomomorphism ],

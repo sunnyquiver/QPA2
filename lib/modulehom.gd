@@ -38,6 +38,14 @@ DeclareOperation( "QuiverModuleHomomorphismNC",
 #! @EndGroup
 
 #! @Description
+#!  Create a homomorphism from <A>M</A> to <A>N</A>.
+#!  The action of the homomorphism is given by the function <A>f</A>.
+#! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
+#! @Arguments M, N, f
+DeclareOperation( "QuiverModuleHomomorphism",
+                  [ IsQuiverModule, IsQuiverModule, IsFunction ] );
+
+#! @Description
 #!  The representation homomorphism <A>f</A> considered as a module homomorphism.
 #! @Arguments f, side
 #! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
