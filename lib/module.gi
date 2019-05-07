@@ -580,10 +580,10 @@ function( list )
       return fail;
   fi;  
   side := Side( list[ 1 ] );
-  temp := List( list, UnderlyingRepresentation );
+  temp := List( list, UnderlyingRepresentationHomomorphism );
   temp := IntersectionOfRepresentations( temp );
   
-  return AsModule( side, temp );
+  return AsModuleHomomorphism( side, temp );
 end
   );
 

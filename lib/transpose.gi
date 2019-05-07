@@ -3,18 +3,21 @@ InstallMethod( TransposeOfModule,
 [ IsQuiverModule ],
 function( N )
     
-  local   side,  M,  projres,  d1,  d1star;
+  local   side,  A,  M,  projres,  d1,  cat,  star,  d1star;
   
   side := Side( N );
   if side = LEFT_RIGHT then 
     Error( "The construction of the transpose is on one-sided modules.\n" );
   fi;
-  
-  M := AlgebraAsBimodule( AlgebraOfRepresentation( UnderlyingRepresentation( N ) ) );  
+
+  A := AlgebraOfRepresentation( UnderlyingRepresentation( N ) );
+  M := AlgebraAsBimodule( A );  
   projres := AsChainComplex( ProjectiveResolution( N ) );
   d1 := projres^1;
-  d1star := Hom( side, d1, M );
-    
+  cat := ModuleCategory( side, A );
+  star := HomFunctor( side, cat, M );
+  d1star := ApplyFunctor( star, d1 );
+  
   return CokernelObject( d1star );
 end 
   );
