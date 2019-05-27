@@ -2069,3 +2069,106 @@ function( A )
     fi;
 end
   );
+
+InstallMethod( IsUnit, 
+"for a quiver algebra and an element in a quiver algebra",
+[ IsQuiverAlgebra, IsQuiverAlgebraElement ],
+function( A, a )
+
+  local coeffs;
+
+  if not IsFiniteDimensional( A ) then
+    Error( "The entered algebra is not finite dimensional.\n" );
+  fi;
+  if not IsAdmissibleQuiverAlgebra( A ) then
+    Error( "The entered algebra is not an admissible quiver algebra.\n" );
+  fi;
+  coeffs := CoefficientsOfPaths( Vertices( QuiverOfAlgebra( A ) ), a );
+  
+  return ForAll( coeffs, c -> c <> Zero( c ) );
+end
+  );
+
+InstallOtherMethod( IsUnit, 
+"for an element in a quiver algebra",
+[ IsQuiverAlgebraElement ],
+function( a )
+
+  return IsUnit( AlgebraOfElement( a ), a );
+end
+  );
+                    
+InstallOtherMethod( Inverse, 
+"for an element in an admissible quotient of a path algebra",
+[ IsQuiverAlgebraElement ],
+function( a )
+
+  local A, coeffs, c, r, coeffsinv, c_inv, a_inv, rprime, temp, i;
+  
+  A := AlgebraOfElement( a );
+  if not IsUnit( a ) then
+    return fail;
+  fi;
+  coeffs := CoefficientsOfPaths( Vertices( QuiverOfAlgebra( A ) ), a );
+  c := LinearCombination( One(A) * Vertices( QuiverOfAlgebra( A) ), coeffs );
+  r := c - a;
+  coeffsinv := List( coeffs, x -> x^( -1 ) );
+  c_inv := LinearCombination( One(A) * Vertices( QuiverOfAlgebra( A ) ), coeffsinv ); 
+  a_inv := One( A );
+  rprime := r * c_inv;
+  temp := rprime; 
+  i := 0;
+  while not IsZero( temp ) do
+    i := i + 1;
+    a_inv := a_inv + temp;
+    temp := temp * rprime;
+  od;
+  a_inv := c_inv * a_inv;
+  
+  return a_inv;  
+end
+  );
+
+InstallMethod( IsOne,
+"for an quiver algebra element",
+[ IsQuiverAlgebraElement ],
+function( a )
+  return a = One( a );
+end
+  );
+
+InstallMethod( Units, 
+"for a quiver algebra",
+[ IsQuiverAlgebra ],
+function( A )
+  
+  local k, vertices, num_vert, nonzero_vectors, nonzero_vertex_comb, 
+        BA, BArad, rad_dim, gens, units;
+  
+  if not IsFiniteDimensional( A ) then
+    Error( "The entered algebra is not finite dimensional.\n" );
+  fi;
+  if not IsAdmissibleQuiverAlgebra( A ) then
+    Error( "The entered algebra is not an admissible quiver algebra.\n" );
+  fi;
+  if not IsFinite( LeftActingDomain( A ) ) then
+    Error( "The entered algebra is not defined over a finite field.\n" );
+  fi;
+  
+  k := LeftActingDomain( A );
+  vertices := Vertices( QuiverOfAlgebra( A ) );
+  num_vert := Length( vertices ); 
+  nonzero_vectors := Filtered( Elements( k^num_vert ), v -> ForAll( v, w -> not IsZero( w ) ) );
+  nonzero_vertex_comb := List( nonzero_vectors, v -> LinearCombination( One(A) * vertices, v ) );
+  BA := BasisVectors( Basis( A ) );
+  BArad := BA{[ num_vert + 1..Length( BA ) ]};
+  rad_dim := Length( BArad );
+  gens := List( nonzero_vertex_comb, nzvc -> List( Elements( k^rad_dim ), v -> nzvc + LinearCombination( BArad, v ) ) ); 
+  gens := Flat( gens );
+  units := Group( gens, One( A ) );
+  SetSize( units, Length( gens ) );
+  
+  return units;
+end
+  );
+

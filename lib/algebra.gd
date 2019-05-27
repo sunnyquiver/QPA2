@@ -8,7 +8,7 @@
 
 #! @Description
 #!  Category for elements of quiver algebras.
-DeclareCategory( "IsQuiverAlgebraElement", IsRingElementWithOne and IsObjectWithDirection );
+DeclareCategory( "IsQuiverAlgebraElement", IsRingElementWithOne and IsObjectWithDirection and IsMultiplicativeElementWithInverse );
 
 #! @Description
 #!  Category for quiver algebras.
@@ -842,6 +842,27 @@ InstallTrueMethod( IsBasicAlgebra, IsElementaryAlgebra );
 #! @Returns algebra element
 #! @Arguments A
 DeclareOperation( "FindMultiplicativeIdentity", [ IsAlgebra ] );
+
+
+#! @Section Units and inverses
+
+#! @BeginGroup IsUnit
+#! @Description
+#!  Returns <C>true</C> or <C>false</C> according to whether the element <A>a</A> in 
+#!  the algebra <A>A</A> is a multiplication unit or not.
+#! @Returns <C>IsBool</C>
+#! @Arguments a
+# DeclareOperation( "IsUnit", [ IsQuiverAlgebraElement ] );
+#! @Arguments A, a
+# DeclareOperation( "IsUnit", [ IsQuiverAlgebra, IsQuiverAlgebraElement ] );
+#! @EndGroup
+
+#! @Description
+#!  Returns the group of units in the algebra <A>A</A>, whenever <A>A</A> is an
+#!  admissible quotient of a path algebra over a finite field. 
+#! @Returns <C>IsGroup</C>
+#! @Arguments A
+# DeclareAttribute( "Units", IsQuiverAlgebra );
 
 
 #
