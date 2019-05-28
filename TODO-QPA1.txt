@@ -8,12 +8,10 @@ with information about whether the same functionality is implemented in QPA2.
 
 CHAPTER 3: QUIVERS
 
-Quiver( adjacencymatrix )  -- no
 InfoQuiver                 -- no
 OrderedBy( quiver, ordering) -- no
 Q.name -> Q[ vertex_label ], Q.arrow_label
 OrderingOfQuiver( quiver ) -- no
-IsArrow( obj ) -- same (change name to IsQuiverArrow)
 OrderingOfQuiver( quiver ) -- no
 IsZeroPath( obj ) -- no, there are no zero paths
 

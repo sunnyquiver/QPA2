@@ -30,11 +30,11 @@ DynkinQuiver( Delta, n, orientation) --> DynkinQuiver( args ), LeftDynkinQuiver(
 
 ElementOfPathAlgebra( PA, path ) -> PathAsAlgebraElement( PA, path )
 ElementOfQuotientOfPathAlgebra( family, element, computenormal ) -> QuotientOfPathAlgebraElement( A, element )
-EndOverAlgebra( M ) -> EndomorphismAlgebra( M )
+EndOverAlgebra( M ) -> EndomorphismAlgebra( M ), EndomorphismAlgebra( R )
 EndModuloProjOverAlgebra( M ) -> StableEndomorphismAlgebraModuleProj( R )
 
 f * g -> PreCompose( f, g ) (from CAP, undocumented in QPA)
-FromEndMToHomMM( f ) -> FromEndRToHomRR( f )
+FromEndMToHomMM( f ) -> FromEndMToHomMM( f ), FromEndRToHomRR( f )
 FromHomMMToEndM( f ) -> FromHomRRToEndR( f )
 
 GeneratorsOfQuiver( quiver ) -> PrimitivePaths( quiver )
@@ -71,6 +71,7 @@ IsomorphicModules( M, N ) -> IsomorphicModules( M, N ), IsomorphicRepresentation
 IsPath( obj ) -> IsPath( obj ), IsLeftPath( obj), IsRightPath( obj )
 IsPathAlgebraMatModule( obj ) -> IsQuiverModule( obj ) / IsRightQuiverModule( obj )
 IsPathAlgebraModuleHomomorphism( f ) -> IsQuiverModuleHomomorphism( f )
+IsProjectiveModule( M ) -> IsProjectiveModule( M ), IsProjectiveRepresentation( R )
 IsQuadraticIdeal( I ) -> IsQuadraticElements( list )
 IsQuiver( obj )            -> IsQuiver( obj ), IsLeftQuiver, IsRightQuiver( obj )
 
@@ -122,6 +123,7 @@ ProjectFromProductQuiver( i, p ) -> ProjectPathFromProductQuiver( i, p )
 
 Quiver( N, arrows )        -> Quiver( args ), LeftQuiver( args ), RightQuiver( args )
 Quiver( vertices, arrows ) -> RightQuiver( "Q", vertices, arrows ) # different format for arrows
+Quiver( adjacencymatrix )  -> Quiver( direction, name, matrix )
 QuiverOfPathAlgebra( FQ ) -> QuiverOfAlgebra( FQ )
 QuiverProductDecomposition( Q ) -> ProductQuiverFactors( Q )
 

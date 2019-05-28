@@ -287,11 +287,15 @@ DeclareOperation( "IsN_RigidObject", [ IsFieldCategoryObject, IS_INT ] );
 #! @Arguments R, n
 DeclareOperation( "IsNthSyzygy", [ IsQuiverRepresentation, IS_INT ] );
 
+#! @BeginGroup
 #! @Description
-#!  Checks if the representation  <A>R</A> is injective or not.
+#!  Checks if the module/the representation <A>M</A>/<A>R</A> is projective or not.
 #! @Returns <C>true</C> or <C>false</C>
+#! @Arguments M
+DeclareProperty( "IsProjectiveModule",  IsQuiverModule );
 #! @Arguments R
 DeclareProperty( "IsProjectiveRepresentation",  IsQuiverRepresentation  );
+#! @EndGroup
 
 #! @Section Tilting theory 
 

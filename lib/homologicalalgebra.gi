@@ -672,6 +672,25 @@ end
 
 #######################################################################
 ##
+#P  IsProjectiveModule( <M> )
+##
+##  Checks whether <M> is projective.
+##
+InstallMethod( IsProjectiveModule, 
+"for a IsQuiverModule",
+[ IsQuiverModule ],
+function( M ) 
+
+  local   R;
+
+  R := UnderlyingRepresentation( M );
+   
+  return IsProjectiveRepresentation( R );
+end
+  );
+
+#######################################################################
+##
 #P  IsInjectiveRepresentation( <R> )
 ##
 ##  Checks whether <R> is injective.

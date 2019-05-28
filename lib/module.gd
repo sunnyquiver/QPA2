@@ -530,12 +530,26 @@ DeclareAttribute( "AsRepresentationOfRightModules", IsQuiverBimodule );
 DeclareAttribute( "AnnihilatorOfModule", IsQuiverModule );
 
 #! @Description
+#! This function computes endomorphism ring of the module  <A>M</A>  and
+#! representing it as an general GAP algebra. The algorithm it uses is
+#! based purely on linear algebra.
+#! @Arguments M
+#! @Returns an algebra
+DeclareOperation( "EndomorphismAlgebra", [ IsQuiverModule ] );
+
+#! @Description
 #!  Returns the intersection of a finite set of quiver modules which are 
 #!  submodules of one given quiver module. 
 #! @Returns <Ref Filt="IsQuiverModule"/>
 #! @Arguments list
 DeclareOperation( "IntersectionOfModules", [ IsDenseList ] );
 
+#! @Description
+#!  Converts an element in the endomorphism algebra of a module to an
+#!  endomorphism of the module <A>M</A>.
+#! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
+#! @Arguments M, matrix
+DeclareOperation( "FromEndMToHomMM", [ IsQuiverModule, IsMatrix ] );
 
 #! @Description
 #! Returns the projective cover of the quiver module <A>M</A>. 

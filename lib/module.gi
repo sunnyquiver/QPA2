@@ -751,3 +751,23 @@ function( M )
 end
   );
 
+InstallMethod( FromEndMToHomMM, 
+"for endomorphism algebra of a module to the space of homomorphisms", 
+[ IsQuiverModule, IsMatrix ],
+function( M, x )
+    local   f;
+    
+    f := FromEndRToHomRR( UnderlyingRepresentation( M ), x );
+    
+    return AsModuleHomomorphism( Side( M ), f );
+end
+  );
+
+InstallOtherMethod( EndomorphismAlgebra,
+"for a IsQuiverModule",
+[ IsQuiverModule ],
+function( M )
+    
+    return EndomorphismAlgebra( UnderlyingRepresentation( M ) );
+end
+  );
