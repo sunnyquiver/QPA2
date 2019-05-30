@@ -74,13 +74,13 @@ DeclareProperty( "IsZeroMatrix", IsQPAMatrix );
 #! @Returns list of lists of ring elements
 #! @Description
 #!  Returns the rows of the matrix <A>M</A>, as a list of lists.
-DeclareOperation( "RowsOfMatrix", [ IsQPAMatrix ] );
+DeclareAttribute( "RowsOfMatrix", IsQPAMatrix );
 
 #! @Arguments M
 #! @Returns list of lists of ring elements
 #! @Description
 #!  Returns the columns of the matrix <A>M</A>, as a list of lists.
-DeclareOperation( "ColsOfMatrix", [ IsQPAMatrix ] );
+DeclareAttribute( "ColsOfMatrix", IsQPAMatrix );
 
 #! @Arguments M
 #! @Description

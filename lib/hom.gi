@@ -65,7 +65,7 @@ InstallMethod( BasisOfHom,
   #
   # Finding the linear equations for the maps between M and N
   #
-  equations := MutableNullMat( num_rows, num_cols, F);
+  equations := NullMat( num_rows, num_cols, F);
   arrows := Arrows( QuiverOfAlgebra( A ) );
   mats_R1 := List( MapsOfRepresentation( R1 ), m -> RowsOfMatrix( RightMatrixOfLinearTransformation( m ) ) ); 
   mats_R2 := List( MapsOfRepresentation( R2 ), m -> RowsOfMatrix( RightMatrixOfLinearTransformation( m ) ) ); 
@@ -115,7 +115,7 @@ InstallMethod( BasisOfHom,
     k := 1;
     for i in [ 1..num_vert ] do 
       if ( dim_R1[ i ] <> 0 ) and ( dim_R2[ i ] <> 0 ) then 
-        mat := MutableNullMat( dim_R1[ i ], dim_R2[ i ], F );
+        mat := NullMat( dim_R1[ i ], dim_R2[ i ], F );
         for y in [ 1..dim_R1[ i ] ] do 
           for x in [ 1..dim_R2[ i ] ] do 
             mat[ y ][ x ] := b[ k ];
