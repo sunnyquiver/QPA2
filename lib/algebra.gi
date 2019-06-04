@@ -2407,3 +2407,53 @@ function( A, direction )
     fi;
 end
   );
+
+InstallMethod( \<,
+"for two path algebra elements",
+IsIdenticalObj,
+[ IsPathAlgebraElement, IsPathAlgebraElement ],
+function( p1, p2 )
+  local paths1, coeffs1, paths2, coeffs2, min, i;
+  
+  if IsZero( p2 ) then
+    return false; 
+  fi;
+  if IsZero( p1) then 
+    return true;
+  fi;
+  paths1 := Paths( p1 );
+  coeffs1 := Coefficients( p1 );
+  paths2 := Paths( p2 );
+  coeffs2 := Coefficients( p2 );
+  min := Minimum( Length( paths1 ), Length( paths2 ) );
+  for i in [ 1..min ] do
+    if paths1[ i ] < paths2[ i ] then
+      return true;
+    elif paths1[ i ] > paths2[ i ] then
+      return false;
+    else
+      if coeffs1[ i ] < coeffs2[ i ] then
+        return true;
+      elif  coeffs1[ i ] > coeffs2[ i ] then
+        return false;
+      fi;
+    fi;
+  od;
+
+  if Length( paths1 ) < Length( paths2 ) then
+    return true;
+  else
+    return false;
+  fi;
+end );
+
+InstallMethod( \<,
+"for two path algebra elements",
+IsIdenticalObj,
+[ IsQuotientOfPathAlgebraElement, IsQuotientOfPathAlgebraElement ],
+function( p1, p2 )
+  
+  return Representative( p1 ) < Representative( p2 );
+end
+  );
+
