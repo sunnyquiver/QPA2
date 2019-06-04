@@ -2172,3 +2172,237 @@ function( A )
 end
   );
 
+InstallMethod ( FindQuiverOfAlgebra, 
+"for a finite dimensional algebra",
+[ IsAlgebra, IsDirection ],
+function( A, direction )
+  
+  local F, idA, C, id, centralidempotentsinA, radA, g, centralidem, 
+        factoralgebradecomp, c, temp, dimcomponents, pi, ppowerr, 
+        gens, D, idD, order, generatorinD, K, i, alghom, vertices, 
+        radAsquare, h, radAmodsquare, arrows, adjacencymatrix, j, t, 
+        Q, KQ, Jtplus1, n, images;
+  #
+  # Checking if  <A>  is a finite dimensional algebra over a finite field.
+  #
+  F := LeftActingDomain( A );
+  if not IsFinite( F ) then
+    Error( "The entered algebra is not an algebra over a finite field.\n" );
+  fi;
+  if not IsFiniteDimensional( A ) then
+    Error( "The entered algebra is not finite dimensional.\n" );
+  fi; 
+  if One( A ) = fail then
+    idA := FindMultiplicativeIdentity( A );
+    SetOne( A, idA );
+  fi;
+  #
+  # Checking if the algebra is indecomposable.
+  #
+  C := Center( A );
+  id := FindMultiplicativeIdentity( C );
+  if id = fail then
+    Error( "The center of the entered algebra does not have a multiplicative identity.\n" );
+  else
+    SetOne( C, id );
+  fi;
+  centralidempotentsinA := CentralIdempotentsOfAlgebra( C );
+  if Length( centralidempotentsinA ) > 1 then
+    Error( "The entered algebra is not indecomposable.\n" );
+  fi;
+  #
+  # Checking if the algebra is basic.  Remember all finite division rings are fields.
+  #
+  radA := RadicalOfAlgebra( A );
+  g := NaturalHomomorphismByIdeal( A, radA );
+  centralidem := CentralIdempotentsOfAlgebra( Range( g ) ); 
+  factoralgebradecomp := [ ];
+  for c in centralidem do
+    temp := FLMLORByGenerators( LeftActingDomain( A ), Filtered( c * BasisVectors( Basis( Range( g ) ) ), b -> b <> Zero( A ) ) );
+    SetParent( temp, A ); 
+    SetOne( temp, c );
+    SetMultiplicativeNeutralElement( temp, c );        
+    Add( factoralgebradecomp, temp );
+  od;
+  if not ForAll( factoralgebradecomp, IsCommutative ) then
+    Error( "The entered algebra is not basic.\n" );
+  fi;
+  SetIsBasicAlgebra( A, true );
+  #
+  # Checking if the algebra is elementary.
+  #
+  dimcomponents := List( factoralgebradecomp, Dimension );
+  if not ForAll( dimcomponents, d -> d = dimcomponents[ 1 ] ) then 
+    Error( "The entered algebra is not elementary, hence not a quotient of a path algebra.\n" );
+  fi;
+  SetIsElementaryAlgebra( A, true );
+  #
+  # Finding the field  K  over which the algebra is K-elementary. Recall C = Center(A).
+  # 
+  pi := NaturalHomomorphismByIdeal( C, RadicalOfAlgebra( C ) ); 
+  #
+  # Known by the Wedderburn-Malcev «Principal» theorem that A is an algebra over 
+  # a field isomorphic to  C/radC. 
+  #
+  ppowerr := Size( Range( pi) );
+  gens := Filtered( BasisVectors(Basis( C ) ), b -> ForAll( centralidem, c -> c * ImageElm(g, b) <> Zero( One( Range( g ) ) ) ) ); 
+  D := Subalgebra( C, gens );
+  idD := FindMultiplicativeIdentity( D );
+  if idD = fail then
+    Error( "The center of the entered algebra does not have a multiplicative identity.\n");
+  else
+    SetOne( D, idD );
+  fi;    
+  order := function( obj )
+    
+    local one, pow, ord;
+    
+    if obj = Zero(obj) then
+      return -1;
+    fi;
+    one := One( D );
+    pow:= obj;
+    ord:= 1;
+    while pow <> one do
+      ord:= ord + 1;
+      pow:= pow * obj;
+      if pow = Zero( obj ) then
+        return -1;
+      fi;
+    od;
+    
+    return ord;
+  end;
+  generatorinD := Filtered( Elements( D ), d -> order( d ) = ppowerr - 1 );     
+  K := GF( ppowerr );
+  D := AsAlgebra( PrimeField(K), D );
+  i := 1;
+  repeat 
+    alghom := AlgebraHomomorphismByImages( K, D, GeneratorsOfDivisionRing( K ), [ generatorinD[ i ] ] );
+    i := i + 1;
+  until 
+    alghom <> fail or i = Length( generatorinD ) + 1;
+  #
+  # Finding representatives for the vertices in  A.
+  #
+  vertices := LiftCompleteSetOfOrthogonalIdempotents( g, centralidem ); 
+  #
+  # Finding the radical square in  <A> and storing it in  <radAsquare>. 
+  #
+  radAsquare := ProductSpace( radA, radA );
+  if Dimension( radAsquare ) = 0 then
+    radAsquare := Ideal( A, [ ] );
+  else
+    radAsquare := Ideal( A, BasisVectors( Basis( radAsquare ) ) );
+  fi;
+  #
+  # Finding the natural homomorphism  <A> ---> <A>/rad^2 <A> and 
+  # finding the image of  rad <A>  in  <A>/rad^2 <A>  and storing it in  <radmodsquare>. 
+  #
+  h := NaturalHomomorphismByIdeal( A, radAsquare );
+  radAmodsquare := Ideal( Range( h ), List( BasisVectors( Basis( radA ) ), b -> ImageElm( h, b ) ) );
+  #
+  # Finding a basis for the arrows for the algebra  <A>  inside  <A>. 
+  # At the same time finding the adjacency matrix for the quiver of  <A>. 
+  #
+  arrows := List( [ 1..Length( centralidem ) ], x -> List( [ 1..Length( centralidem ) ], y -> [ ] ) );
+  adjacencymatrix := NullMat( Length( centralidem ), Length( centralidem ) );
+  for i in [ 1..Length( centralidem ) ] do
+    for j in [ 1..Length( centralidem ) ] do
+      arrows[ i ][ j ] := Filtered( ImageElm( h, vertices[ i ] ) * BasisVectors( Basis( radAmodsquare ) ) * ImageElm( h, vertices[ j ] ), y -> y <> Zero( y ) );
+      arrows[ i ][ j ] := BasisVectors( Basis( Subspace( Range( h ), arrows[ i ][ j ] ) ) );
+      arrows[ i ][ j ] := List( arrows[ i ][ j ], x -> vertices[ i ] * PreImagesRepresentative( h, x ) * vertices[ j ] );
+      adjacencymatrix[ i ][ j ] := Length( arrows[ i ][ j ] );
+    od; 
+  od;
+  #
+  # Defining the quiver of the algebra  <A>  and storing it in  <Q>. 
+  #
+  Q := Quiver( direction, "QA", adjacencymatrix );
+  
+  return [ Q, vertices, arrows ];
+end
+  );
+
+InstallMethod ( AlgebraAsQuiverAlgebra, 
+"for a finite dimensional algebra",
+[ IsAlgebra, IsDirection ],
+function( A, direction )
+
+  local K, quiverdata, Q, vertices, arrows, n, images, i, j, t, KQ, 
+        Jtplus1, AA, generators, B, m, linearmap, b, btemp, temp, r, 
+        matrix, solutions, Solutions, AAarrows, radSoluplusSolurad, V, 
+        W, h, idealgens;
+
+    K := LeftActingDomain( A );
+    quiverdata := FindQuiverOfAlgebra( A , direction );
+    Q := quiverdata[ 1 ];
+    vertices := quiverdata[ 2 ];
+    arrows := quiverdata[ 3 ];
+    n := NumberOfVertices( Q );
+    images := ShallowCopy( vertices );   #  images of the vertices/trivial paths
+    for i in [ 1 .. n ] do
+      for j in [ 1 .. n ] do
+        Append( images, arrows[ i ][ j ] );
+      od;
+    od;
+    t := Length( RadicalSeriesOfAlgebra( A ) ) - 1; # then (rad A)^t = (0) 
+    KQ := PathAlgebra( K, Q );
+    Jtplus1 := NthPowerOfArrowIdeal( KQ, t + 1 );
+    #
+    #  Define  AA := KQ/J^(t + 1), where t = the Loewy length of  <A>, and 
+    #  in addition define f : AA ---> A. Find this as a linear map and find 
+    #  the kernel, and construct the relations from this.
+    #  
+    AA := KQ/Jtplus1;
+    generators := GeneratorsOfAlgebra( AA );
+    B := BasisVectors( Basis( AA ) );
+    m := Length( B );
+    linearmap := [ ];
+    for j in [ 1.. m ] do
+        b := B[ j ];
+        if Length( Paths( b ) ) > 1 then
+            Error( "The basis of the algebra AA does not consists of paths.\n" );
+        else
+            btemp := ArrowList( Paths( b )[ 1 ] );
+        fi; 
+        temp := One( A );
+        for i in [ 1..Length( btemp ) ] do
+            r := Position( generators, btemp[ i ] * One( AA ) );
+            temp := temp * images[ r ];
+        od;
+        Add( linearmap, temp ); 
+    od;
+    matrix := List( linearmap, x -> Coefficients( Basis( A ), x ) );
+    #
+    #  Finding a vector space basis for the kernel of the ring surjection  AA ---> A.
+    #
+    solutions := NullspaceMat( matrix );
+    Solutions := List( solutions, x -> LinearCombination( B, x ) );  # solutions as elements in  AA.
+    #
+    #  Finding a generating set for  J(Ker f) + (ker f)J. 
+    #
+    AAarrows := generators{ [ n + 1..Length( generators ) ] };
+    radSoluplusSolurad := List( AAarrows, x -> Filtered( Solutions * x, y -> y <> Zero( y ) ) );
+    Append( radSoluplusSolurad, List( AAarrows, x -> Filtered( x * Solutions, y -> y <> Zero( y ) ) ) );
+    radSoluplusSolurad := Flat( radSoluplusSolurad );
+    V := Subspace( AA, Solutions );
+    W := Subspace(V, radSoluplusSolurad );
+    h := NaturalHomomorphismBySubspace( V, W );  
+    #
+    #  Constructing the relations in  KQ.
+    # 
+    idealgens := List( BasisVectors( Basis( Range( h ) ) ), x -> PreImagesRepresentative( h, x ) );
+    #
+    #  Lifting the relations back to  KQ  and returning the answer.
+    #
+    if not IsPathAlgebra( AA ) then
+        idealgens := List( idealgens, x -> Representative( x ) );
+    fi;
+    if Length(idealgens) = 0 then 
+        return [ AA, images ];
+    else
+        return [ KQ/idealgens, images ];
+    fi;
+end
+  );

@@ -864,5 +864,34 @@ DeclareOperation( "FindMultiplicativeIdentity", [ IsAlgebra ] );
 #! @Arguments A
 # DeclareAttribute( "Units", IsQuiverAlgebra );
 
+#! @Section Finite dimensional algebras as quiver algebras
+
+#! @Description
+#!  Returns the quiver of the entered algebra <Arg>A</Arg> whenever possible
+#!  and a list of the images of the vertices and a list of the images of the
+#!  arrows in this quiver in <Arg>A</Arg>.  The operation only applies when
+#!  <Arg>A</Arg> is a finite dimensional indecomposable algebra over a finite 
+#!  field, otherwise it returns an error message.  It checks if the algebra 
+#!  <Arg>A</Arg> is basic and elementary over some field and otherwise it returns
+#!  an error message.  In the list of images the images of the
+#!  vertices are listed first and then the images of the arrows. 
+#! @Returns <C>[ IsQuiverAlgebra, IsPahtAlgebraElements ]</C>
+#! @Arguments A, direction
+DeclareOperation( "FindQuiverOfAlgebra", [ IsAlgebra, IsDirection ] );
+
+#! @Description
+#!  Returns a (quotient of a) path algebra isomorphic to the entered
+#!  algebra <Arg>A</Arg> whenever possible and a list of the images of
+#!  the vertices and the arrows in this path algebra in <Arg>A</Arg>.  
+#!  The operation only applies when <Arg>A</Arg> is a finite
+#!  dimensional indecomposable algebra over a finite field, otherwise
+#!  it returns an error message.  It checks if the algebra <Arg>A</Arg>
+#!  is basic and elementary over some field and otherwise it returns
+#!  an error message.  In the list of images the images of the
+#!  vertices are listed first and then the images of the arrows. 
+#! @Returns <C>[ IsQuiverAlgebra, IsPahtAlgebraElements ]</C>
+#! @Arguments A, direction
+DeclareOperation( "AlgebraAsQuiverAlgebra", [ IsAlgebra, IsDirection ] );
+
 
 #
