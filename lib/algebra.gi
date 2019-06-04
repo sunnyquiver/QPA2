@@ -1585,25 +1585,26 @@ function( A )
   return IsAdmissibleIdeal( IdealOfQuotient( A ) );
 end );
 
-
-InstallMethod( NaturalHomomorphismByIdeal, [ IsPathAlgebra, IsQuiverAlgebraTwoSidedIdeal ],
-# TODO: case where the algebra is a quotient of a path algebra
-function( kQ, I )
-  local Q, A, images;
-  Q := QuiverOfAlgebra( kQ );
-  A := kQ / I;
-  images := List( PrimitivePaths( Q ), p -> PathAsAlgebraElement( A, p ) );
-  return QuiverAlgebraHomomorphism( kQ, A, images );
-end );
-
 InstallMethod( NaturalHomomorphismByIdeal,
                "for quiver algebra and quiver algebra ideal",
                [ IsQuiverAlgebra, IsQuiverAlgebraTwoSidedIdeal ],
 function( A, I )
-  local A_I;
+  local A_I, f;
   A_I := A / I;
-  return QuiverAlgebraHomomorphism( A, A_I, PrimitivePaths( A_I ) );
+  f := QuiverAlgebraHomomorphism( A, A_I, PrimitivePaths( A_I ) );
+  SetKernelOfAdditiveGeneralMapping( f, I );
+  SetIsNaturalHomomorphismByIdeal( f, true ); 
+  return f;
 end );
+
+InstallMethod( PreImagesRepresentative, 
+               "for a IsNaturalHomomorphismByIdeal",
+               [ IsNaturalHomomorphismByIdeal, IsQuiverAlgebraElement ],
+function( f, a )
+   
+  return QuiverAlgebraElement( Source( f ), Coefficients( a ), Paths( a ) );
+end
+  );
 
 InstallMethod( RadicalOfAlgebra, 
 "for an quiver algebra", [ IsQuiverAlgebra ], 0,
@@ -2364,7 +2365,7 @@ function( A, direction )
         if Length( Paths( b ) ) > 1 then
             Error( "The basis of the algebra AA does not consists of paths.\n" );
         else
-            btemp := ArrowList( Paths( b )[ 1 ] );
+            btemp := AsListLR( Paths( b )[ 1 ] );
         fi; 
         temp := One( A );
         for i in [ 1..Length( btemp ) ] do
@@ -2387,7 +2388,7 @@ function( A, direction )
     Append( radSoluplusSolurad, List( AAarrows, x -> Filtered( x * Solutions, y -> y <> Zero( y ) ) ) );
     radSoluplusSolurad := Flat( radSoluplusSolurad );
     V := Subspace( AA, Solutions );
-    W := Subspace(V, radSoluplusSolurad );
+    W := Subspace( V, radSoluplusSolurad );
     h := NaturalHomomorphismBySubspace( V, W );  
     #
     #  Constructing the relations in  KQ.

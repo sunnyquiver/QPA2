@@ -784,6 +784,8 @@ DeclareAttribute( "ArrowImages", IsQuiverAlgebraHomomorphism );
 #! @Arguments A, I
 # DeclareOperation( "NaturalHomomorphismByIdeal", [ IsQuiverAlgebra, IsQuiverAlgebraIdeal ] )
 
+DeclareProperty( "IsNaturalHomomorphismByIdeal", IsQuiverAlgebraHomomorphism ); 
+
 #! @Section Properties of algebras
 
 #! @Description
