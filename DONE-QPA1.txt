@@ -175,6 +175,7 @@ Functions that are the same
 
 AddNthPowerToRelations( FQ, rels, n ) 
 AdjacencyMatrixOfQuiver( quiver ) 
+AlgebraAsQuiverAlgebra( A ) 
 AssociatedMonomialAlgebra( A ) 
 
 BasisOfProjectives( A )

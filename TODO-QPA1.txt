@@ -36,7 +36,6 @@ IsQuiverProductDecomposition( obj ) -- no (not needed)
 IsEnvelopingAlgebra( A ) -- no (needed?)
 DualOfAlgebraAsModuleOverEnvelopingAlgebra( A ) -- no (should be ported)
 TrivialExtensionOfQuiverAlgebra( A ) -- no (should be ported)
-AlgebraAsQuiverAlgebra( A ) -- no (should be ported)
 ReadAlgebra( file ) -- no (should be ported)
 SaveAlgebra( A, file, option ) -- no (should be ported)
 
