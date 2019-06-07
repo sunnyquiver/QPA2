@@ -2457,3 +2457,47 @@ function( p1, p2 )
 end
   );
 
+InstallOtherMethod( AsLinearTransformation, 
+"for a quiver algebra homomorphism",
+[ IsQuiverAlgebraHomomorphism ],  
+function( f )
+  local R, S, BR, BS, matrix, dimR, dimS, K, VR, VS;
+  
+  R := Source( f );
+  S := Range( f );
+  if not ( IsFiniteDimensional( R ) and IsFiniteDimensional( S ) ) then
+    Error( "The source and the range are not finite dimensional for the entered algebra homomorphisms.\n " );
+  fi;
+  
+  BR := Basis( R );
+  BS := Basis( S );
+  
+  matrix := List( BR, b -> Coefficients( BS, ImageElm( f, b ) ) );
+  dimR := Length( BR );
+  dimS := Length( BS );
+  K := LeftActingDomain( R );
+  VR := StandardVectorSpace( K, dimR );
+  VS := StandardVectorSpace( K, dimS );
+  
+  return LinearTransformationByRightMatrix( VR , VS, matrix );;
+end
+  );
+
+InstallOtherMethod( KernelObject, 
+"for a quiver algebra homomorphism",
+[ IsQuiverAlgebraHomomorphism ],  
+function( f )
+  local R, BR, flinear, kerf, Bkerf, kerfinR;
+
+  R := Source( f );
+  BR := Basis( R );
+  flinear := AsLinearTransformation( f );
+  kerf := KernelEmbedding( flinear );
+  Bkerf := Basis( Source( kerf ) );
+  Bkerf := List( BasisVectors( Bkerf ), b -> ImageElm( kerf, b ) );
+  kerfinR := List( Bkerf, b -> LinearCombination( BR, AsList( b ) ) );
+  
+  return Ideal( R, kerfinR );
+end
+  );
+

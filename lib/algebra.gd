@@ -775,7 +775,6 @@ DeclareAttribute( "VertexImages", IsQuiverAlgebraHomomorphism );
 #!  with the algebra homomorphism <A>f</A> defined from <C>A</C> to <C>B</C>. 
 DeclareAttribute( "ArrowImages", IsQuiverAlgebraHomomorphism );
 
-
 #! @Description
 #!  Creates the natural homomorphism from the algebra <A>A</A>
 #!  to the quotient algebra <A>A</A>/<A>I</A>,
@@ -785,6 +784,24 @@ DeclareAttribute( "ArrowImages", IsQuiverAlgebraHomomorphism );
 # DeclareOperation( "NaturalHomomorphismByIdeal", [ IsQuiverAlgebra, IsQuiverAlgebraIdeal ] )
 
 DeclareProperty( "IsNaturalHomomorphismByIdeal", IsQuiverAlgebraHomomorphism ); 
+
+#! @Description
+#!  Given a quiver algebra homomorphism <A>f</A>, say <M>f\colon R \to S</M>, 
+#!  this function returns this homomorphism as a linear transformation from a 
+#!  vectorspace <M>V_R</M> isomorphic to <M>R</M> and to a vectorspace <M>V_S</M> 
+#!  isomorphic to <M>S</M>. Can go from <M>x</M> in <M>R</M> to <M>V_R</M> by  
+#!  <C>Coefficients( Basis(R), x )</C>, and from <M>v</M> in <M>V_R</M> to 
+#!  <M>R</M> by <C>LinearCombination( Basis(R), v )</C>.  Similar for <M>S</M>. 
+#! @Returns <Ref Filt="IsLinearTransformation"/>
+#! @Arguments f
+# DeclareAttribute( "AsLinearTransformation", IsQuiverAlgebraHomomorphism );
+
+#! @Description
+#!  Given a quiver algebra homomorphism <A>f</A>, this function returns 
+#!  the kernel of this homomorphism as an ideal in the source of <A>f</A>. 
+#! @Returns <Ref Filt="IsQuiverAlgebraTwoSidedIdeal"/>
+#! @Arguments f
+# DeclareAttribute( "KernelObject", IsQuiverAlgebraHomomorphism );
 
 #! @Section Properties of algebras
 
