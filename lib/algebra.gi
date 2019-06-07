@@ -1336,9 +1336,6 @@ InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and two lists
     QA := QuiverOfAlgebra( A ); 
     verticesA := Vertices( QA );
     arrowsA := Arrows( QA );
-    QB := QuiverOfAlgebra( B );
-    verticesB := Vertices( QB );
-    arrowsB := Arrows( QB );
     if Length( verteximages ) <> Length( verticesA ) then
         Error( "The enter number of images of the vertices doesn't match the number of vertices in the domain," );
     fi;
