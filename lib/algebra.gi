@@ -1327,7 +1327,7 @@ end );
 BindGlobal( "FamilyOfQuiverAlgebraHomomorphisms", NewFamily( "quiver algebra homomorphisms" ) );
 
 InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and two lists of images",
-        [ IsPathAlgebra, IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ], 
+        [ IsPathAlgebra, IsAlgebraWithOne, IsHomogeneousList, IsHomogeneousList ], 
         function( A, B, verteximages, arrowimages )
     local   QA,  verticesA,  arrowsA,  QB,  verticesB,  arrowsB,  
             arguments,  images,  n,  i,  j,  a,  position,  leftend,  
@@ -1387,7 +1387,7 @@ InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and two lists
 end );
 
 InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and two lists of images",
-        [ IsQuotientOfPathAlgebra, IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ], 
+        [ IsQuotientOfPathAlgebra, IsAlgebraWithOne, IsHomogeneousList, IsHomogeneousList ], 
         function( A, B, verteximages, arrowimages )
     local   kQ,  f,  relations,  type,  map;
     
@@ -1406,7 +1406,7 @@ InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and two lists
 end );
 
 InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and a list of images",
-        [ IsQuiverAlgebra, IsQuiverAlgebra, IsHomogeneousList ], 
+        [ IsQuiverAlgebra, IsAlgebraWithOne, IsHomogeneousList ], 
         function( A, B, genimages )
     local   num_vertices,  num_arrows,  verteximages,  arrowimages;
     
@@ -1422,7 +1422,7 @@ InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and a list of
 end );
 
 InstallMethod( QuiverAlgebraHomomorphism, "for two quiver algebras and a function",
-               [ IsQuiverAlgebra, IsQuiverAlgebra, IsFunction ],
+               [ IsQuiverAlgebra, IsAlgebraWithOne, IsFunction ],
 function( A, B, f )
   local vertex_images, arrow_images;
   vertex_images := List( Vertices( A ), f );

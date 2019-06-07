@@ -733,7 +733,7 @@ DeclareCategory( "IsQuiverAlgebraHomomorphism", IsAlgebraWithOneHomomorphism );
 #!  algebra <A>B</A> that maps vertices in <A>A</A> to <A>verteximages</A> and the 
 #!  arrows in <A>A</A> to <A>arrowimages</A>.  It signals an error if the arguments
 #!  do not give a well-defined homomorphism of algebras. 
-DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsHomogeneousList, IsHomogeneousList ] );
+DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsAlgebraWithOne, IsHomogeneousList, IsHomogeneousList ] );
 
 #! @Arguments A, B, genimages
 #! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
@@ -743,7 +743,7 @@ DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebr
 #!  It is assumed that <A>genimages</A> is a list, where the first elements are the images of the vertices 
 #!  and the next elements are the images of the arrows, as elements in the algebra <A>B</A>.  
 #!  It signals an error if the arguments do not give a well-defined homomorphism of algebras. 
-DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsHomogeneousList ] );
+DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsAlgebraWithOne, IsHomogeneousList ] );
 
 #! @Arguments A, B, f
 #! @Returns <Ref Filt="IsQuiverAlgebraHomomorphism"/>
@@ -753,7 +753,7 @@ DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebr
 #!
 #!  The function <A>f</A> should take an element of <A>A</A> as argument
 #!  and return an element of <A>B</A>.
-DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsQuiverAlgebra, IsFunction ] );
+DeclareOperation( "QuiverAlgebraHomomorphism", [ IsQuiverAlgebra, IsAlgebraWithOne, IsFunction ] );
 
 #! @Description
 #!  Construct a quiver algebra homomorphism from a quiver homomorphism.
