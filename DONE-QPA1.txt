@@ -23,6 +23,9 @@ DirectSumOfQPAModules( L ) -> DirectSum( L ) (CAP operation, undocumented in QPA
 DirectSumInclusions( M ) -- use CAP operation InjectionOfCofactorOfDirectSum
 DirectSumProjections( M ) -- use CAP operation ProjectionInFactorOfDirectSum
 DominantDimensionOfModule( <M>, <n> ) -> DominantDimensionOfRepresentation( M, n )
+DualOfAlgebraAsModuleOverEnvelopingAlgebra( A ) -> 
+					    DualOfAlgebraAsLeftModule( A ), DualOfAlgebraAsRightModule( A ),
+					    DualOfAlgebraAsBimodule( A ), DualOfAlgebraAsModule( side, A )
 DualOfModule( M ) -> DualOfModule( M ), DualOfRepresentation( R )
 DualOfModuleHomomorphism( f ) -> DualOfRepresentationHomomorphism
 DynkinQuiver( Delta, n, orientation) --> DynkinQuiver( args ), LeftDynkinQuiver( Delta, n, orientation ),
@@ -254,7 +257,8 @@ IsSpecialBiserialAlgebra( A )
 IsSplitEpimorphism( f ) -- (from CAP, undocumented)
 IsSplitMonomorphism( f ) -- (from CAP, undocumented)
 IsStringAlgebra( A ) 
-IsSymmetricAlgebra( A ) 
+IsSymmetricAlgebra( A )
+IsTriangularReduced( A ) 
 IsTreeQuiver( quiver ) 
 IsUniform( element )
 IsWeaklyNonnegativeUnitForm

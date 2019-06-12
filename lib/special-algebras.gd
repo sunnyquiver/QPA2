@@ -257,6 +257,14 @@ DeclareProperty( "IsStringAlgebra", IsPathAlgebra );
 DeclareProperty( "IsStringAlgebra", IsQuotientOfPathAlgebra );
 
 #! @Description
+#!  Returns true if the algebra  <A>A</A>  is triangular reduced, that is, there
+#! is not a sum of vertices  <M>e</M>  such that  <M>e A (1 - e) = (0)</M>. The function
+#! checks if the algebra  <A>A</A>  is finite dimensional and gives an error
+#! message otherwise.  Otherwise it returns false.
+#! @Arguments A
+DeclareProperty( "IsTriangularReduced", IsQuiverAlgebra );
+
+#! @Description
 #!   This function determines if the algebra  <A>A</A>  is a weakly symmetric 
 #!   algebra.
 #! @Returns <C>IsBool</C>
