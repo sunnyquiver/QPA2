@@ -154,7 +154,211 @@ end );
 InstallMethod( ImageElm, "for enriched quiver module homomorphism and quiver module element",
                [ IsEnrichedQuiverModuleHomomorphism, IsQuiverModuleElement ],
 function( f, e )
-  #TODO
+  local hom, hom_rep, hom_rep_Q, hom_rep_Qs, side, uhom, M, N, e_, M_, 
+        N_, elms, w, summands, v, vw, rep_elm;
+  hom := ModuleOfElement( f );
+  hom_rep := UnderlyingRepresentation( hom );
+  hom_rep_Q := QuiverOfRepresentation( hom_rep );
+  hom_rep_Qs := ProductQuiverFactors( hom_rep_Q );
+  side := HomSide( hom );
+  uhom := UnderlyingHomFunctor( hom );
+  M := Source( hom );
+  N := Range( hom );
+  if Side( M ) = LEFT_RIGHT and Side( N ) = LEFT_RIGHT then
+    e_ := AsRepresentationOfModulesElement( side, e );
+    M_ := AsRepresentationOfModules( side, M );
+    N_ := AsRepresentationOfModules( side, N );
+    elms := [];
+    for w in Vertices( QuiverOfRepresentation( N_ ) ) do
+      summands := [];
+      for v in Vertices( QuiverOfRepresentation( M_ ) ) do
+        if side = LEFT then
+          vw := PathInProductQuiver( hom_rep_Q, [ v, w ] );
+        else
+          vw := PathInProductQuiver( hom_rep_Q, [ w, v ] );
+        fi;
+        Add( summands, ImageElm( ElementVector( f, vw ),
+                                 ElementVector( e_, v ) ) );
+      od;
+      elms[ VertexIndex( w ) ] := Sum( summands );
+    od;
+    rep_elm := QuiverRepresentationElement( N_, elms );
+    return RepresentationOfModulesElementAsBimoduleElement( rep_elm );
+  elif Side( M ) = LEFT_RIGHT then
+    e_ := AsRepresentationOfModulesElement( side, e );
+    return Sum( ListN( ElementVectors( f ), ElementVectors( e_ ),
+                       ImageElm ) );
+  elif Side( N ) = LEFT_RIGHT then
+    N_ := AsRepresentationOfModules( side, N );
+    elms := List( ElementVectors( f ), f_i -> ImageElm( f_i, e ) );
+    rep_elm := QuiverRepresentationElement( N_, elms );
+    return RepresentationOfModulesElementAsBimoduleElement( rep_elm );
+  else
+    e_ := UnderlyingRepresentationElement( e );
+    M_ := UnderlyingRepresentation( M );
+    N_ := UnderlyingRepresentation( N );
+    for w in Vertices( QuiverOfRepresentation( N_ ) ) do
+      summands := [];
+      for v in Vertices( QuiverOfRepresentation( M_ ) ) do
+        if side = LEFT then
+          vw := PathInProductQuiver( hom_rep_Q, [ v, w ] );
+        else
+          vw := PathInProductQuiver( hom_rep_Q, [ w, v ] );
+        fi;
+        Add( summands, ImageElm( ElementVector( f, vw ),
+                                 ElementVector( e_, v ) ) );
+      od;
+      elms[ VertexIndex( w ) ] := Sum( summands );
+    od;
+    rep_elm := QuiverRepresentationElement( N_, elms );
+    return AsModuleElement( rep_elm, N );
+  fi;
+end );
+
+InstallMethod( AsLinearTransformation, "for enriched quiver module homomorphism",
+               [ IsEnrichedQuiverModuleHomomorphism ],
+function( f )
+  local hom, M, N, Bm, Bn, Vm, Vn, fun;
+  hom := ModuleOfElement( f );
+  M := Source( hom );
+  N := Range( hom );
+  Bm := CanonicalBasis( M );
+  Bn := CanonicalBasis( N );
+  Vm := AsQPAVectorSpace( M );
+  Vn := AsQPAVectorSpace( N );
+  fun := function( v )
+    local m, n;
+    m := LinearCombination( Bm, v );
+    n := ImageElm( f, m );
+    return Coefficients( Bn, n );
+  end;
+  return LinearTransformationByFunction( Vm, Vn, fun );
+end );
+
+InstallMethod( MorphismByFunction, "for hom module and function",
+               [ IsHomModule, IsFunction ],
+function( hom, f )
+  local side, hom_rep, hom_rep_Q, M, N, M_, N_, Qm, Qn, morphisms, vw, 
+        vw_factors, v, w, i, j, f_ij, morph_ij, f_i, morph_i, f_j, 
+        morph_j;
+
+  side := HomSide( hom );
+  hom_rep := UnderlyingRepresentation( hom );
+  hom_rep_Q := QuiverOfRepresentation( hom_rep );
+  M := Source( hom );
+  N := Range( hom );
+
+  if Side( M ) = LEFT_RIGHT and Side( N ) = LEFT_RIGHT then
+    M_ := AsRepresentationOfModules( side, M );
+    N_ := AsRepresentationOfModules( side, N );
+    Qm := QuiverOfRepresentation( M_ );
+    Qn := QuiverOfRepresentation( N_ );
+    morphisms := [];
+    for vw in Vertices( hom_rep_Q ) do
+      vw_factors := ProductPathFactors( vw );
+      if side = LEFT then
+        v := vw_factors[ 1 ];
+        w := vw_factors[ 2 ];
+      else
+        v := vw_factors[ 2 ];
+        w := vw_factors[ 1 ];
+      fi;
+      i := VertexIndex( v );
+      j := VertexIndex( w );
+      f_ij := function( m_i )
+        local m_, m, n, n_, n_j;
+        m_ := QuiverRepresentationElement( M_, [ Vertex( Qm, i ) ], m_i );
+        m := RepresentationOfModulesElementAsBimoduleElement( m_ );
+        n := f( m );
+        n_ := AsRepresentationOfModulesElement( side, n );
+        n_j := ElementVector( n_, j );
+        return n_j;
+      end;
+      morph_ij := QuiverModuleHomomorphism( VectorSpaceOfRepresentation( M_, i ),
+                                            VectorSpaceOfRepresentation( N_, j ),
+                                            f_ij );
+      Add( morphisms, morph_ij );
+    od;
+    return EnrichedQuiverModuleHomomorphism( side, M, N, morphisms );
+  elif Side( M ) = LEFT_RIGHT then
+    M_ := AsRepresentationOfModules( side, M );
+    morphisms := [];
+    Qm := QuiverOfRepresentation( M_ );
+    for i in [ 1 .. NumberOfVertices( Qm ) ] do
+      f_i := function( m_i )
+        local m_, m, n;
+        m_ := QuiverRepresentationElement( M_, [ Vertex( Qm, i ) ], m_i );
+        m := RepresentationOfModulesElementAsBimoduleElement( m_ );
+        n := f( m );
+        return n;
+      end;
+      morph_i := QuiverModuleHomomorphism( VectorSpaceOfRepresentation( M_, i ), N, f_i );
+      Add( morphisms, morph_i );
+    od;
+    return EnrichedQuiverModuleHomomorphism( side, M, N, morphisms );
+  elif Side( N ) = LEFT_RIGHT then
+    N_ := AsRepresentationOfModules( side, N );
+    morphisms := [];
+    Qn := QuiverOfRepresentation( N_ );
+    for j in [ 1 .. NumberOfVertices( Qn ) ] do
+      f_j := function( m )
+        local n, n_, n_j;
+        n := f( m );
+        n_ := AsRepresentationOfModulesElement( side, n );
+        n_j := ElementVector( n_, j );
+        return n_j;
+      end;
+      morph_j := QuiverModuleHomomorphism( M, VectorSpaceOfRepresentation( N_, j ), f_j );
+      Add( morphisms, morph_j );
+    od;
+    return EnrichedQuiverModuleHomomorphism( side, M, N, morphisms );
+  else
+    M_ := UnderlyingRepresentation( M );
+    N_ := UnderlyingRepresentation( N );
+    morphisms := [];
+    Qm := QuiverOfRepresentation( M_ );
+    Qn := QuiverOfRepresentation( N_ );
+    for vw in Vertices( hom_rep_Q ) do
+      vw_factors := ProductPathFactors( vw );
+      if side = LEFT then
+        v := vw_factors[ 1 ];
+        w := vw_factors[ 2 ];
+      else
+        v := vw_factors[ 2 ];
+        w := vw_factors[ 1 ];
+      fi;
+      i := VertexIndex( v );
+      j := VertexIndex( w );
+      f_ij := function( m_i )
+        local m_, m, n, n_, n_j;
+        m_ := QuiverRepresentationElement( M_, [ Vertex( Qm, i ) ], m_i );
+        m := AsModuleElement( m_, M );
+        n := f( m );
+        n_ := UnderlyingRepresentationElement( n );
+        n_j := ElementVector( n_, j );
+        return n_j;
+      end;
+      morph_ij := LinearTransformationByFunction( VectorSpaceOfRepresentation( M_, i ),
+                                                  VectorSpaceOfRepresentation( N_, j ),
+                                                  f_ij );
+      Add( morphisms, morph_ij );
+    od;
+    return EnrichedQuiverModuleHomomorphism( side, M, N, morphisms );
+  fi;
+end );
+
+InstallMethod( PreCompose, "for two enriched quiver module homomorphisms",
+               [ IsEnrichedQuiverModuleHomomorphism, IsEnrichedQuiverModuleHomomorphism ],
+function( f1, f2 )
+  local M1, M2, T1, T2;
+  if Range( f1 ) <> Source( f2 ) then
+    Error( "morphisms are not composable" );
+  fi;
+  M1 := Source( f1 );
+  M2 := Range( f2 );
+  T1 := AsLinearTransformation( f1 );
+  T2 := AsLinearTransformation( f2 );
+  return MorphismByLinearTransformation( M1, M2, PreCompose( T1, T2 ) );
 end );
 
 # TODO precompose, isomorphism{to,from}{left,right}module

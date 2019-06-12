@@ -25,6 +25,18 @@ DeclareAttribute( "HomSide", IsEnrichedQuiverModuleHomomorphism );
 DeclareOperation( "EnrichedQuiverModuleHomomorphism",
                   [ IsSide, IsQuiverModule, IsQuiverModule, IsList ] );
 
+#!
+DeclareOperation( "EnrichedQuiverModuleHomomorphism",
+                  [ IsSide, IsQuiverModule, IsQuiverModule, IsLinearTransformation ] );
+
+#!
+DeclareOperation( "EnrichedQuiverModuleHomomorphism",
+                  [ IsSide, IsQuiverModule, IsQuiverModule, IsQuiverModuleHomomorphism ] );
+
+DeclareAttribute( "AsLinearTransformation", IsEnrichedQuiverModuleHomomorphism );
+
+DeclareAttribute( "AsHomomorphism", IsEnrichedQuiverModuleHomomorphism );
+
 DeclareAttribute( "IsomorphismToLeftModule", IsQuiverModule );
 
 DeclareAttribute( "IsomorphismFromLeftModule", IsQuiverModule );
