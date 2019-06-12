@@ -1730,16 +1730,21 @@ InstallMethod( AsLayeredRepresentationFunctor2, "for quiver representation categ
 InstallMethod( AsLayeredRepresentationElement, "for positive integer and quiver representation element",
                [ IsPosInt, IsQuiverRepresentationElement ],
 function( s, e )
-  local R, T, lR, incs, n, elems;
+  local R, T, Qt, incs, lR, elems, v, i, e_i;
   R := RepresentationOfElement( e );
   T := AlgebraOfRepresentation( R );
   if not IsTensorProductOfAlgebras( T ) then
     Error( "representation is not over tensor algebra" );
   fi;
-  lR := AsLayeredRepresentation( R );
-  incs := TensorAlgebraInclusions( T );
-  n := Length( incs );
-  elems := List( incs, inc -> RestrictQuiverRepresentationElement( e, inc ) );
+  Qt := QuiverOfAlgebra( T );
+  incs := ProductQuiverInclusions( Qt )[ s ];
+  lR := AsLayeredRepresentation( s, R );
+  elems := [];
+  for v in Vertices( QuiverOfRepresentation( lR ) ) do
+    i := VertexIndex( v );
+    e_i := RestrictQuiverRepresentationElement( e, incs[ i ], VectorSpaceOfRepresentation( lR, i ) );
+    Add( elems, e_i );
+  od;
   return QuiverRepresentationElement( lR, elems );
 end );
 
@@ -1801,7 +1806,7 @@ function( s, e )
   fi;
   t := 3 - s;
   R := RepresentationOfElement( e );
-  flat_R := AsFlatRepresentation( R );
+  flat_R := AsFlatRepresentation( s, R );
   T := AlgebraOfRepresentation( flat_R );
   Qt := QuiverOfAlgebra( T );
   vectors := [];
@@ -1812,7 +1817,7 @@ function( s, e )
     vector := ElementVector( ElementVector( e, vb ), va );
     Add( vectors, vector );
   od;
-  return QuiverRepresentationElement( AsFlatRepresentation( R ), vectors );
+  return QuiverRepresentationElement( flat_R, vectors );
 end );
 
 
