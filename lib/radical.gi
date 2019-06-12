@@ -107,7 +107,7 @@ end
 ##
 InstallMethod( RadicalSeriesOfAlgebra,
 "for an algebra",
-[ IsAlgebra ],
+[ IsAlgebraWithOne ],
 function ( A )
     
     local   radical,    # radical of the algebra <A> 

@@ -28,7 +28,7 @@ DeclareOperation( "RadicalSeries",  [ IsQuiverRepresentation ] );
 #!  radical of <A>A</A>, radical square of <A>A</A>, and so on.
 #! @Returns a list of <Ref Filt="IsQuiverAlgebraIdeal"/>
 #! @Arguments A
-DeclareAttribute( "RadicalSeriesOfAlgebra", IsAlgebra );
+DeclareAttribute( "RadicalSeriesOfAlgebra", IsAlgebraWithOne );
 
 
 #

@@ -33,7 +33,7 @@ DeclareOperation( "SingularIdempotent", [ IsSimpleAlgebra ] );
 #!          <M>\[A \simeq  Ae_1 + ... + Ae_n.\]</M>
 #! @Arguments A
 #! @Returns a list elements in an algebra
-DeclareOperation( "CompleteSetOfPrimitiveIdempotents", [ IsAlgebra ] );
+DeclareOperation( "CompleteSetOfPrimitiveIdempotents", [ IsAlgebraWithOne ] );
 
 #! @Description
 #! Given an onto homomorphism  <A>f</A>  of finite dimensional algebras and

@@ -1735,7 +1735,7 @@ end
 ##
 InstallMethod( IsBasicAlgebra,
 "for an algebra",
-[ IsAlgebra ],
+[ IsAlgebraWithOne ],
 function( A )
 
     local   K,  AA,  J,  L;
@@ -1775,7 +1775,7 @@ end
 ##
 InstallMethod( IsElementaryAlgebra,
 "for an algebra",
-[ IsAlgebra ],
+[ IsAlgebraWithOne ],
 function( A )
 
     local   K,  AA,  J,  D,  L;
@@ -2033,38 +2033,41 @@ end
 ##
 InstallMethod ( FindMultiplicativeIdentity, 
 "for a finite dimensional algebra",
-[ IsAlgebra ],
+[ IsAlgebraWithOne ],
 function( A )
     
-    local   B,  constantterm,  matrix,  i,  b1,  partialmatrix,  b2,  
-            totalmatrix,  totalconstantterm,  identity;
+  local B, constantterm, matrix, i, b1, partialmatrix, b2, 
+        totalmatrix, totalconstantterm, identity, one;
     
-    if not IsFiniteDimensional( A ) then
-        Error( "The entered algebra is not finite dimensional.\n" );
-    fi;
-    B := Basis( A ); 
-    
-    constantterm := [ ];
-    matrix := [ ];
-    i := 1;
-    for b1 in B do
-        partialmatrix := [ ];
-        for b2 in B do 
-            Add( partialmatrix, Coefficients( B, b2 * b1 ) );
-        od;
-        Add( constantterm, Coefficients( B, b1 ) );
-        Add( matrix, [ 1, i, partialmatrix ] );
-        i := i + 1;
+  if not IsFiniteDimensional( A ) then
+    Error( "The entered algebra is not finite dimensional.\n" );
+  fi;
+  B := Basis( A ); 
+  
+  constantterm := [ ];
+  matrix := [ ];
+  i := 1;
+  for b1 in B do
+    partialmatrix := [ ];
+    for b2 in B do 
+      Add( partialmatrix, Coefficients( B, b2 * b1 ) );
     od;
-    totalmatrix := BlockMatrix( matrix, 1, i - 1 );
-    totalconstantterm := Flat( constantterm );
-    identity := SolutionMat( totalmatrix, totalconstantterm );
-    
-    if identity = fail then
-        return fail;
-    else
-        return LinearCombination( B, identity );
-    fi;
+    Add( constantterm, Coefficients( B, b1 ) );
+    Add( matrix, [ 1, i, partialmatrix ] );
+    i := i + 1;
+  od;
+  totalmatrix := BlockMatrix( matrix, 1, i - 1 );
+  totalconstantterm := Flat( constantterm );
+  identity := SolutionMat( totalmatrix, totalconstantterm );
+  
+  if identity = fail then
+    return fail;
+  else
+    SetFilterObj( A, IsAlgebraWithOne );
+    one := LinearCombination( B, identity );
+    SetOne( A, one );
+    return one;
+  fi;
 end
   );
 
@@ -2324,84 +2327,31 @@ end
 
 InstallMethod ( AlgebraAsQuiverAlgebra, 
 "for a finite dimensional algebra",
-[ IsAlgebra, IsDirection ],
+[ IsAlgebraWithOne, IsDirection ],
 function( A, direction )
 
-  local K, quiverdata, Q, vertices, arrows, n, images, i, j, t, KQ, 
-        Jtplus1, AA, generators, B, m, linearmap, b, btemp, temp, r, 
-        matrix, solutions, Solutions, AAarrows, radSoluplusSolurad, V, 
-        W, h, idealgens;
+  local K, quiverdata, Q, vertices, arrows, KQ, t, Jtplus1, AA, f, I, 
+        gens, A_I;
 
-    K := LeftActingDomain( A );
-    quiverdata := FindQuiverOfAlgebra( A , direction );
-    Q := quiverdata[ 1 ];
-    vertices := quiverdata[ 2 ];
-    arrows := quiverdata[ 3 ];
-    n := NumberOfVertices( Q );
-    images := ShallowCopy( vertices );   #  images of the vertices/trivial paths
-    for i in [ 1 .. n ] do
-      for j in [ 1 .. n ] do
-        Append( images, arrows[ i ][ j ] );
-      od;
-    od;
-    t := Length( RadicalSeriesOfAlgebra( A ) ) - 1; # then (rad A)^t = (0) 
-    KQ := PathAlgebra( K, Q );
-    Jtplus1 := NthPowerOfArrowIdeal( KQ, t + 1 );
-    #
-    #  Define  AA := KQ/J^(t + 1), where t = the Loewy length of  <A>, and 
-    #  in addition define f : AA ---> A. Find this as a linear map and find 
-    #  the kernel, and construct the relations from this.
-    #  
-    AA := KQ/Jtplus1;
-    generators := GeneratorsOfAlgebra( AA );
-    B := BasisVectors( Basis( AA ) );
-    m := Length( B );
-    linearmap := [ ];
-    for j in [ 1.. m ] do
-        b := B[ j ];
-        if Length( Paths( b ) ) > 1 then
-            Error( "The basis of the algebra AA does not consists of paths.\n" );
-        else
-            btemp := AsListLR( Paths( b )[ 1 ] );
-        fi; 
-        temp := One( A );
-        for i in [ 1..Length( btemp ) ] do
-            r := Position( generators, btemp[ i ] * One( AA ) );
-            temp := temp * images[ r ];
-        od;
-        Add( linearmap, temp ); 
-    od;
-    matrix := List( linearmap, x -> Coefficients( Basis( A ), x ) );
-    #
-    #  Finding a vector space basis for the kernel of the ring surjection  AA ---> A.
-    #
-    solutions := NullspaceMat( matrix );
-    Solutions := List( solutions, x -> LinearCombination( B, x ) );  # solutions as elements in  AA.
-    #
-    #  Finding a generating set for  J(Ker f) + (ker f)J. 
-    #
-    AAarrows := generators{ [ n + 1..Length( generators ) ] };
-    radSoluplusSolurad := List( AAarrows, x -> Filtered( Solutions * x, y -> y <> Zero( y ) ) );
-    Append( radSoluplusSolurad, List( AAarrows, x -> Filtered( x * Solutions, y -> y <> Zero( y ) ) ) );
-    radSoluplusSolurad := Flat( radSoluplusSolurad );
-    V := Subspace( AA, Solutions );
-    W := Subspace( V, radSoluplusSolurad );
-    h := NaturalHomomorphismBySubspace( V, W );  
-    #
-    #  Constructing the relations in  KQ.
-    # 
-    idealgens := List( BasisVectors( Basis( Range( h ) ) ), x -> PreImagesRepresentative( h, x ) );
-    #
-    #  Lifting the relations back to  KQ  and returning the answer.
-    #
-    if not IsPathAlgebra( AA ) then
-        idealgens := List( idealgens, x -> Representative( x ) );
-    fi;
-    if Length(idealgens) = 0 then 
-        return [ AA, images ];
-    else
-        return [ KQ/idealgens, images ];
-    fi;
+  K := LeftActingDomain( A );
+  quiverdata := FindQuiverOfAlgebra( A , direction );
+  Q := quiverdata[ 1 ];
+  vertices := quiverdata[ 2 ];
+  arrows := Flat( quiverdata[ 3 ] );
+  KQ := PathAlgebra( K, Q );
+  t := Length( RadicalSeriesOfAlgebra( A ) ) - 1;     # then (rad A)^t = (0)
+  Jtplus1 := NthPowerOfArrowIdeal( KQ, t + 1 );
+  AA := KQ/Jtplus1;    
+  f := QuiverAlgebraHomomorphism( AA, A, vertices, arrows );
+  I := KernelObject( f );
+  gens := List( Generators( I ), g -> Representative( g ) );
+  I := QuiverAlgebraTwoSidedIdeal( KQ, gens );
+  gens := MinimalGeneratingSetOfIdeal( I );
+  I := QuiverAlgebraTwoSidedIdeal( KQ, gens );
+  A_I := KQ / I;
+  f := QuiverAlgebraHomomorphism( A_I, A, vertices, arrows );
+  
+  return f;
 end
   );
 

@@ -196,7 +196,7 @@ DeclareOperation( "GlobalDimensionOfAlgebra", [ IsQuiverAlgebra, IS_INT ] );
 #!  Returns the global dimension of <A>A</A>, if it has been computed. 
 #! @Returns <C>IS_INT</C>
 #! @Arguments A
-DeclareAttribute( "GlobalDimension", IsAlgebra );
+DeclareAttribute( "GlobalDimension", IsAlgebraWithOne );
 
 #! @Description
 #!  Checks if the Gorenstein dimension of  <A>A</A> is less or equal

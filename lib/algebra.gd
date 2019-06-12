@@ -842,7 +842,7 @@ DeclareProperty( "IsDistributiveAlgebra", IsQuiverAlgebra );
 #!  to algebras over finite fields.
 #! @Returns <C>true</C> or <C>false</C>
 #! @Arguments A
-DeclareProperty( "IsBasicAlgebra", IsAlgebra );
+DeclareProperty( "IsBasicAlgebra", IsAlgebraWithOne );
 
 #! @Description
 #!  This function returns true if the entered algebra  <A>A</A>  is a (finite
@@ -850,7 +850,7 @@ DeclareProperty( "IsBasicAlgebra", IsAlgebra );
 #!  applies to algebras over finite fields. 
 #! @Returns <C>true</C> or <C>false</C>
 #! @Arguments A
-DeclareProperty( "IsElementaryAlgebra", IsAlgebra );
+DeclareProperty( "IsElementaryAlgebra", IsAlgebraWithOne );
 
 #!
 InstallTrueMethod( IsBasicAlgebra, IsElementaryAlgebra );
@@ -896,7 +896,7 @@ DeclareOperation( "FindMultiplicativeIdentity", [ IsAlgebra ] );
 #!  vertices are listed first and then the images of the arrows. 
 #! @Returns <C>[ IsQuiverAlgebra, IsPahtAlgebraElements ]</C>
 #! @Arguments A, direction
-DeclareOperation( "FindQuiverOfAlgebra", [ IsAlgebra, IsDirection ] );
+DeclareOperation( "FindQuiverOfAlgebra", [ IsAlgebraWithOne, IsDirection ] );
 
 #! @Description
 #!  Returns a (quotient of a) path algebra isomorphic to the entered
@@ -910,7 +910,7 @@ DeclareOperation( "FindQuiverOfAlgebra", [ IsAlgebra, IsDirection ] );
 #!  vertices are listed first and then the images of the arrows. 
 #! @Returns <C>[ IsQuiverAlgebra, IsPahtAlgebraElements ]</C>
 #! @Arguments A, direction
-DeclareOperation( "AlgebraAsQuiverAlgebra", [ IsAlgebra, IsDirection ] );
+DeclareOperation( "AlgebraAsQuiverAlgebra", [ IsAlgebraWithOne, IsDirection ] );
 
 
 #

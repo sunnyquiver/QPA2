@@ -3,7 +3,7 @@
 #! @Section Associated monomial algebras
 
 #!
-DeclareProperty( "IsFiniteGlobalDimensionAlgebra", IsAlgebra );
+DeclareProperty( "IsFiniteGlobalDimensionAlgebra", IsAlgebraWithOne );
 
 #! @Description
 #!  Returns the associated monomial algebra by using the Groebner basis  <A>A</A>  is 
@@ -41,7 +41,7 @@ DeclareOperation( "RightCanonicalAlgebra", [ IsField, IsList, IsList ] );
 #!  Returns <C>true</C> if this property has been set for the algebra <A>A</A>.
 #! @Returns <C>IsBool</C>
 #! @Arguments A
-DeclareProperty( "IsCanonicalAlgebra", IsAlgebra );
+DeclareProperty( "IsCanonicalAlgebra", IsAlgebraWithOne );
 
 
 #! @Section Kronecker algebras
@@ -50,7 +50,7 @@ DeclareProperty( "IsCanonicalAlgebra", IsAlgebra );
 #!  Returns <C>true</C> if this property has been set for the algebra <A>A</A>.
 #! @Returns <C>IsBool</C>
 #! @Arguments A
-DeclareProperty( "IsKroneckerAlgebra", IsAlgebra );
+DeclareProperty( "IsKroneckerAlgebra", IsAlgebraWithOne );
 
 #! @BeginGroup KroneckerAlgebra
 #! @Returns <Ref Filt="IsQuiverAlgebra"/>
@@ -190,7 +190,7 @@ DeclareAttribute( "OrderOfNakayamaAutomorphism", IsQuiverAlgebra );
 #!  has been set to true.
 #! @Returns <C>true</C> or <C>false</C>
 #! @Arguments A
-# DeclareProperty( "IsFiniteGlobalDimensionAlgebra", IsAlgebra );
+# DeclareProperty( "IsFiniteGlobalDimensionAlgebra", IsAlgebraWithOne );
 
 #! @Description
 #!  The function returns true is  <A>A</A>  is a gentle algebra, and false otherwise.
@@ -199,7 +199,7 @@ DeclareAttribute( "OrderOfNakayamaAutomorphism", IsQuiverAlgebra );
 DeclareProperty( "IsGentleAlgebra",  IsQuiverAlgebra );
 
 #!
-DeclareProperty( "IsGorensteinAlgebra", IsAlgebra );
+DeclareProperty( "IsGorensteinAlgebra", IsAlgebraWithOne );
 InstallTrueMethod( IsGorensteinAlgebra, IsGentleAlgebra );
 
 #! @Description
@@ -213,13 +213,13 @@ DeclareProperty( "IsHereditaryAlgebra", IsQuiverAlgebra );
 #!  The function returns true is  <A>A</A>  is a radical square zero algebra, and false otherwise.
 #! @Returns <C>IsBool</C>
 #! @Arguments A
-DeclareProperty( "IsRadicalSquareZeroAlgebra", IsAlgebra );
+DeclareProperty( "IsRadicalSquareZeroAlgebra", IsAlgebraWithOne );
 
 #! @Description
 #! The function returns true if  <A>A</A>  is a finite dimensional semisimple 
 #! algebra and searches for another method otherwise.
 #! @Arguments A
-DeclareProperty( "IsSemisimpleAlgebra", IsAlgebra );
+DeclareProperty( "IsSemisimpleAlgebra", IsAlgebraWithOne );
 
 #! @Description
 #!  The function returns true is  <A>A</A>  is a Schurian algebra, and false otherwise.

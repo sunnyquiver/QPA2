@@ -15,7 +15,7 @@
 ##
 InstallMethod( CompleteSetOfPrimitiveIdempotents,
 "for an algebra", true,
-[ IsAlgebra ], 0,
+[ IsAlgebraWithOne ], 0,
 function( A )
 
   local F, d, e, eA, r, m, E, s, one, b, i, j, x, e_hat, map, semi, 

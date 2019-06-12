@@ -621,7 +621,7 @@ end
 ##
 InstallMethod( IsRadicalSquareZeroAlgebra,
 "for an algebra",
-[ IsAlgebra ],
+[ IsAlgebraWithOne ],
 function ( A )
     
     local radical; # radical of the algebra <A>
@@ -663,7 +663,7 @@ end
 ## algebra and searches for other methods oherwise.
 ## 
 InstallMethod( IsSemisimpleAlgebra,
-"for an algebra", [ IsAlgebra ], 0, 
+"for an algebra", [ IsAlgebraWithOne ], 0, 
 function( A )
     
   if IsFiniteDimensional( A ) then 
