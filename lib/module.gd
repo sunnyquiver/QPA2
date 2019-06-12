@@ -520,6 +520,25 @@ DeclareAttribute( "AsRepresentationOfLeftModules", IsQuiverBimodule );
 #!
 DeclareAttribute( "AsRepresentationOfRightModules", IsQuiverBimodule );
 
+#!
+DeclareOperation( "AsRepresentationOfModulesElement", [ IsDirection, IsQuiverBimoduleElement ] );
+
+#!
+DeclareAttribute( "AsRepresentationOfLeftModulesElement", IsQuiverBimoduleElement );
+
+#!
+DeclareAttribute( "AsRepresentationOfRightModulesElement", IsQuiverBimoduleElement );
+
+#!
+DeclareAttribute( "RepresentationOfModulesAsLayeredRepresentation", IsQuiverRepresentation );
+
+#!
+DeclareAttribute( "RepresentationOfModulesAsBimodule", IsQuiverRepresentation );
+
+#!
+DeclareAttribute( "RepresentationOfModulesElementAsBimoduleElement", IsQuiverRepresentationElement );
+
+
 #! @Section Operations on modules
 
 #! @Description

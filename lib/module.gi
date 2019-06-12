@@ -551,6 +551,59 @@ dir -> function( M )
   return MapRepresentation( AsModule^dir, AsModuleHomomorphism^dir, layered, cat );
 end );
 
+DeclareDirectionOperations( AsRepresentationOfModulesElement,
+                            AsRepresentationOfLeftModulesElement, AsRepresentationOfRightModulesElement );
+
+InstallMethodWithDirections( AsRepresentationOfModulesElement,
+                             [ IsQuiverBimoduleElement ],
+dir -> function( e )
+  local M, RoM, e_, e_l;
+  M := ModuleOfElement( e );
+  RoM := AsRepresentationOfModules( dir, M );
+  e_ := UnderlyingRepresentationElement( e );
+  e_l := AsLayeredRepresentationElement( Int( dir ), e_ );
+  return MapRepresentation( AsModuleElement^dir, e_l, RoM );
+end );
+
+InstallMethod( RepresentationOfModulesAsLayeredRepresentation,
+               "for quiver representation",
+               [ IsQuiverRepresentation ],
+function( RoM )
+  local cat, ucat_m, ucat_r, cat_l, layered;
+  cat := CapCategory( RoM );
+  ucat_m := VectorSpaceCategory( cat );
+  ucat_r := UnderlyingRepresentationCategory( ucat_m );
+  cat_l := CategoryOfQuiverRepresentationsOverVectorSpaceCategory
+           ( AlgebraOfCategory( cat ), ucat_r );
+  layered := MapRepresentation( UnderlyingRepresentation, UnderlyingRepresentationHomomorphism,
+                                RoM, cat_l );
+  return layered;
+end );
+
+InstallMethod( RepresentationOfModulesAsBimodule, "for quiver representation",
+               [ IsQuiverRepresentation ],
+function( RoM )
+  local layered, s, flat;
+  layered := RepresentationOfModulesAsLayeredRepresentation( RoM );
+  s := Opposite( Side( VectorSpaceCategory( CapCategory( RoM ) ) ) );
+  flat := AsFlatRepresentation( Int( s ), layered );
+  return AsBimodule( flat );
+end );
+
+InstallMethod( RepresentationOfModulesElementAsBimoduleElement, "for quiver representation element",
+               [ IsQuiverRepresentationElement ],
+function( e_RoM )
+  local RoM, layered, M, e_l, s, e_f;
+  RoM := RepresentationOfElement( e_RoM );
+  layered := RepresentationOfModulesAsLayeredRepresentation( RoM );
+  M := RepresentationOfModulesAsBimodule( RoM );
+  e_l := MapRepresentation( UnderlyingRepresentationElement, e_RoM, layered );
+  s := Opposite( Side( VectorSpaceCategory( CapCategory( RoM ) ) ) );
+  e_f := AsFlatRepresentationElement( Int( s ), e_l );
+  return AsBimoduleElement( e_f );
+end );
+
+
 InstallMethod ( AnnihilatorOfModule, 
 "for a QuiverModule",
 [ IsQuiverModule ],
