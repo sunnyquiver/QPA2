@@ -1725,6 +1725,22 @@ InstallMethod( AsLayeredRepresentationFunctor2, "for quiver representation categ
                [ IsQuiverRepresentationCategory ],
                fcat -> AsLayeredRepresentationFunctor( 2, fcat ) );
 
+InstallMethod( AsLayeredRepresentationElement, "for positive integer and quiver representation element",
+               [ IsPosInt, IsQuiverRepresentationElement ],
+function( s, e )
+  local R, T, lR, incs, n, elems;
+  R := RepresentationOfElement( e );
+  T := AlgebraOfRepresentation( R );
+  if not IsTensorProductOfAlgebras( T ) then
+    Error( "representation is not over tensor algebra" );
+  fi;
+  lR := AsLayeredRepresentation( R );
+  incs := TensorAlgebraInclusions( T );
+  n := Length( incs );
+  elems := List( incs, inc -> RestrictQuiverRepresentationElement( e, inc ) );
+  return QuiverRepresentationElement( lR, elems );
+end );
+
 InstallMethod( AsFlatRepresentation, "for positive integer and quiver representation",
                [ IsPosInt, IsQuiverRepresentation ],
 function( s, R )
@@ -1773,6 +1789,30 @@ function( s, R )
   return QuiverRepresentation( CategoryOfQuiverRepresentations( T ),
                                objs, morphisms );
 end );
+
+InstallMethod( AsFlatRepresentationElement, "for positive integer and quiver representation element",
+               [ IsPosInt, IsQuiverRepresentationElement ],
+function( s, e )
+  local t, R, flat_R, T, Qt, vectors, v, factors, va, vb, vector;
+  if not s in [ 1, 2 ] then
+    Error( "tensor factor number must be either 1 or 2, not ", s );
+  fi;
+  t := 3 - s;
+  R := RepresentationOfElement( e );
+  flat_R := AsFlatRepresentation( R );
+  T := AlgebraOfRepresentation( flat_R );
+  Qt := QuiverOfAlgebra( T );
+  vectors := [];
+  for v in Vertices( Qt ) do
+    factors := ProductPathFactors( v );
+    va := factors[ s ];
+    vb := factors[ t ];
+    vector := ElementVector( ElementVector( e, vb ), va );
+    Add( vectors, vector );
+  od;
+  return QuiverRepresentationElement( AsFlatRepresentation( R ), vectors );
+end );
+
 
 #######################################################################
 ##

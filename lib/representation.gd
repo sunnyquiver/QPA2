@@ -514,11 +514,16 @@ DeclareAttribute( "AsLayeredRepresentationFunctor1", IsQuiverRepresentationCateg
 
 DeclareAttribute( "AsLayeredRepresentationFunctor2", IsQuiverRepresentationCategory );
 
+DeclareOperation( "AsLayeredRepresentationElement", [ IsPosInt, IsQuiverRepresentationElement ] );
+
 #! @Description
 #!  Turn a layered representation into a flat representation.
 #! @Returns IsQuiverRepresentation
 #! @Arguments s, R
 DeclareOperation( "AsFlatRepresentation", [ IsPosInt, IsQuiverRepresentation ] );
+
+#!
+DeclareOperation( "AsFlatRepresentationElement", [ IsPosInt, IsQuiverRepresentationElement ] );
 
 #! @Section Operations on representations
 
