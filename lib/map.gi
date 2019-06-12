@@ -235,3 +235,11 @@ function( F, list )
   AddMorphismFunction( map_F, morphism_fun );
   return map_F;
 end );
+
+InstallMethod( MapRepresentation,
+               "for function, quiver representation element and quiver representation",
+               [ IsFunction, IsQuiverRepresentationElement, IsQuiverRepresentation ],
+function( f, e, R )
+  return QuiverRepresentationElement( R, List( ElementVectors( e ), f ) );
+end );
+
