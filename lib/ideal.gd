@@ -102,7 +102,7 @@ DeclareAttribute( "LeftActingDomain", IsQuiverAlgebraTwoSidedIdeal );
 #!  Returns a minimal generating set of the admissible ideal <A>I</A>.
 #! @Returns <C>IsList</C>
 #! @Arguments I
-DeclareOperation( "MinimalGeneratingSetOfIdeal", [ IsAdmissibleIdeal ] );
+DeclareOperation( "MinimalGeneratingSetOfIdeal", [ IsPathAlgebraIdeal ] );
 
 #! @Description
 #!  This function returns true, if the list of elements <A>gens</A> is a list of 

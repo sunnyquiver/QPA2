@@ -322,10 +322,14 @@ end
 ##  
 InstallMethod( MinimalGeneratingSetOfIdeal, 
 "for an admissible ideal in a path algebra",
-[ IsAdmissibleIdeal ],
+[ IsPathAlgebraIdeal ],
 function( I )
 
     local   generators,  kQ,  arrows,  JIplusIJ,  Aprime,  Ibar,  B;
+
+    if not IsAdmissibleIdeal( I ) then
+      Error( "The entered ideal is not an admissible ideal.\n" );
+    fi;
     #
     #  Finding a generating set for  JI + IJ. 
     #
