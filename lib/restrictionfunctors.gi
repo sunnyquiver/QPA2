@@ -100,6 +100,34 @@ function( m, repQ2, repQ1 )
   return restriction;
 end );
 
+
+InstallMethod( RestrictQuiverRepresentation,
+               [ IsQuiverRepresentation, IsQuiverAlgebraHomomorphism ],
+function( R, f )
+  local rest;
+  rest := RestrictionFunctor( f, CapCategory( R ), CategoryOfQuiverRepresentations( Source( f ) ) );
+  return ApplyFunctor( rest, R );
+end );
+
+InstallMethod( RestrictQuiverRepresentationElement,
+               [ IsQuiverRepresentationElement, IsQuiverAlgebraHomomorphism ],
+function( e, f )
+  local R, A, B, restR, vectors, v;
+  R := RepresentationOfElement( e );
+  A := Source( f );
+  B := Range( f );
+  if B <> AlgebraOfRepresentation( R ) then
+    Error( "algebra homomorphism has wrong range" );
+  fi;
+  restR := RestrictQuiverRepresentation( R, f );
+  vectors := [];
+  for v in Vertices( A ) do
+    Add( vectors, ElementVector( R, ImageElm( f, v ) ) );
+  od;
+  return QuiverRepresentationElement( restR, vectors );
+end );
+
+
 InstallMethod( RestrictionToLeftFunctor, "for a bimodule category",
         [ IsQuiverBimoduleCategory ],
         function( C )
@@ -265,3 +293,5 @@ function( R )
   return ApplyFunctor( TensorFlipRestrictionFunctor( CapCategory( R ) ),
                        R );
 end );
+
+
