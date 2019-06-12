@@ -21,10 +21,10 @@ function( R, vectors )
   fi;
   for i in [ 1 .. numVertices ] do
     space := VectorSpaceOfRepresentation( R, i );
-    if IsBound( vectors[ i ] ) then
-      vectors[ i ] := Vector( space, vectors[ i ] );
-    else
+    if not IsBound( vectors[ i ] ) then
       vectors[ i ] := Zero( space );
+    elif not ( vectors[ i ] in space ) then
+      vectors[ i ] := Vector( space, vectors[ i ] );
     fi;
   od;
   return QuiverRepresentationElementNC( R, vectors );
