@@ -856,6 +856,24 @@ function( f )
   return DirectSumFunctorial( MapsOfRepresentationHomomorphism( f ) );
 end );
 
+InstallMethod( MorphismByLinearTransformation, "for quiver representations and linear transformation",
+               [ IsQuiverRepresentation, IsQuiverRepresentation, IsLinearTransformation ],
+function( R1, R2, T )
+  local Q, n, Vs1, Vs2, maps;
+  if not IsIdenticalObj( CapCategory( R1 ),
+                         CapCategory( R2 ) ) then
+    Error( "representations from different categories" );
+  fi;
+  Q := QuiverOfRepresentation( R1 );
+  n := NumberOfVertices( Q );
+  Vs1 := VectorSpacesOfRepresentation( R1 );
+  Vs2 := VectorSpacesOfRepresentation( R2 );
+  maps := List( [ 1 .. n ],
+                i -> PreCompose( InjectionOfCofactorOfDirectSum( Vs1, i ),
+                                 T,
+                                 ProjectionInFactorOfDirectSum( Vs2, i ) ) );
+  return QuiverRepresentationHomomorphism( R1, R2, maps );
+end );
 
 InstallMethod( CategoryOfQuiverRepresentations, "for quiver algebra",
                [ IsQuiverAlgebra ],

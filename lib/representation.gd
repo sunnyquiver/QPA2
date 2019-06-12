@@ -219,11 +219,6 @@ DeclareOperation( "AsRepresentationOfQuotientAlgebra",
 #! @Arguments R
 DeclareAttribute( "AsRepresentationOfPathAlgebra", IsQuiverRepresentation );
 
-#! @Arguments R
-#! @Description
-#!  The quiver representation <A>R</A> considered as a vector space.
-DeclareAttribute( "AsQPAVectorSpace", IsQuiverRepresentation );
-
 #!
 DeclareAttribute( "UnderlyingCategoryForRepresentations", IsQuiverAlgebra );
 
@@ -365,13 +360,6 @@ DeclareOperation( "MapForVertex",
 #!
 DeclareOperation( "MapForVertex",
                   [ IsQuiverRepresentationHomomorphism, IsPosInt ] );
-
-#! @Arguments f
-#! @Returns <Ref Filt="IsLinearTransformation"/>
-#! @Description
-#!  Given a homomorphism <A>f</A> of quiver representations,
-#!  returns the corresponding linear transformation on the underlying vector spaces.
-DeclareAttribute( "AsLinearTransformation", IsQuiverRepresentationHomomorphism );
 
 # DeclareOperation( "ImageElm",
 #                   [ IsQuiverRepresentationHomomorphism,

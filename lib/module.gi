@@ -149,6 +149,9 @@ function( M, v )
   return VertexDimension( UnderlyingRepresentation( M ), v );
 end );
 
+InstallMethod( AsQPAVectorSpace, "for quiver module", [ IsQuiverModule ],
+               M -> AsQPAVectorSpace( UnderlyingRepresentation( M ) ) );
+
 InstallMethod( AsModuleElement,
                [ IsQuiverRepresentationElement, IsQuiverModule ],
 function( e, M )

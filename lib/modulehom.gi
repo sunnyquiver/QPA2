@@ -197,3 +197,24 @@ function( f )
     return false;
 end
   );
+
+InstallMethod( AsLinearTransformation, "for quiver module homomorphism",
+               [ IsQuiverModuleHomomorphism ],
+function( f )
+  return AsLinearTransformation( UnderlyingRepresentationHomomorphism( f ) );
+end );
+
+InstallMethod( MorphismByLinearTransformation, "for quiver modules and linear transformation",
+               [ IsQuiverModule, IsQuiverModule, IsLinearTransformation ],
+function( M1, M2, T )
+  local rep_morphism;
+  if not IsIdenticalObj( CapCategory( M1 ),
+                         CapCategory( M2 ) ) then
+    #Error( "modules from different categories" );
+    TryNextMethod();
+  fi;
+  rep_morphism :=  MorphismByLinearTransformation( UnderlyingRepresentation( M1 ),
+                                                   UnderlyingRepresentation( M2 ),
+                                                   T );
+  return AsModuleHomomorphism( Side( M1 ), rep_morphism );
+end );

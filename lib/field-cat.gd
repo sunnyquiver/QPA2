@@ -29,4 +29,17 @@ DeclareAttribute( "UnderlyingField", IsFieldCategoryObject );
 DeclareAttribute( "UnderlyingField", IsFieldCategoryMorphism );
 #! @EndGroup
 
+#! @Description
+#!  Given an object <A>X</A> in a field category,
+#!  returns the underlying vector space.
+#! @Arguments X
+DeclareAttribute( "AsQPAVectorSpace", IsFieldCategoryObject );
+
+#! @Description
+#!  Given a morphism <A>f</A> in a field category,
+#!  returns the corresponding linear transformation on the underlying vector spaces.
+#! @Returns <Ref Filt="IsLinearTransformation"/>
+#! @Arguments f
+DeclareAttribute( "AsLinearTransformation", IsFieldCategoryMorphism );
+
 #

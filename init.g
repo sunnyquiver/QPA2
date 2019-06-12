@@ -5,6 +5,7 @@ ReadPackage( "QPA", "lib/matrix.gd" );
 ReadPackage( "QPA", "lib/vector.gd" );
 ReadPackage( "QPA", "lib/field-cat.gd" );
 ReadPackage( "QPA", "lib/vecspace.gd" );
+ReadPackage( "QPA", "lib/field-cat2.gd" );
 ReadPackage( "QPA", "lib/quiver.gd" );
 ReadPackage( "QPA", "lib/dynkin.gd" );
 ReadPackage( "QPA", "lib/algebra.gd" );
