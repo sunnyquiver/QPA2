@@ -59,21 +59,28 @@ end
 InstallMethod( DualFunctor, "for a category of quiver modules",
         [ IsQuiverModuleCategory ],
         function( C )
-    
-    local   side,  F,  RC,  repdual,  RD,  G;
-    
-    if Side( C ) = LEFT_RIGHT then
-      side := LEFT_RIGHT;
-    else
-      side := Opposite( Side( C ) );
-    fi;
-    F := UnderlyingRepresentationFunctor( C );
-    RC := AsCapCategory( Range( F ) );
-    repdual := DualFunctor( RC );
-    RD := AsCapCategory( Range( repdual ) ); 
-    G := AsModuleFunctor( side, RD );
-    
-    return PreComposeFunctors( PreComposeFunctors( F, repdual ), G );
+  
+  local side, F, RC, repdual, RD, G, Gprime, H;
+
+  if Side( C ) = LEFT_RIGHT then
+    side := LEFT_RIGHT;
+  else
+    side := Opposite( Side( C ) );
+  fi;
+  F := UnderlyingRepresentationFunctor( C );
+  RC := AsCapCategory( Range( F ) );
+  repdual := DualFunctor( RC );
+  RD := AsCapCategory( Range( repdual ) );
+
+  if side = LEFT_RIGHT then
+    G := TensorFlipRestrictionFunctor( RD );
+    Gprime := AsModuleFunctor( side, AsCapCategory( Range( G ) ) );
+    H := PreComposeFunctors( G, Gprime );
+  else
+    H := AsModuleFunctor( side, RD );
+  fi;
+  
+  return PreComposeFunctors( PreComposeFunctors( F, repdual ), H );
 end 
   );
 
