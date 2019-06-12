@@ -2175,7 +2175,7 @@ end
 
 InstallMethod ( FindQuiverOfAlgebra, 
 "for a finite dimensional algebra",
-[ IsAlgebra, IsDirection ],
+[ IsAlgebraWithOne, IsDirection ],
 function( A, direction )
   
   local F, idA, C, id, centralidempotentsinA, radA, g, centralidem, 
