@@ -182,6 +182,30 @@ side -> function( A )
   return AsModule( side, R );
 end );
 
+DeclareSideOperations( DualOfAlgebraAsModule, DualOfAlgebraAsLeftModule, DualOfAlgebraAsRightModule,
+                       DualOfAlgebraAsBimodule );
+
+InstallMethodWithSides( DualOfAlgebraAsModule,
+                        [ IsQuiverAlgebra ],
+side -> function( A )
+  local M, cat, D, op_side;
+
+  if not IsFiniteDimensional( A ) then
+    Error( "The entered algebra is not finite dimensional.\n" );
+  fi;  
+  if side = LEFT_RIGHT then
+    M := AlgebraAsBimodule( A );
+    cat := CapCategory( M );
+    D := DualFunctor( cat );
+    
+    return ApplyFunctor( D, M );
+  else
+    op_side := Opposite( side );
+    
+    return DualOfModule( AlgebraAsModule( op_side, A ) );
+  fi;
+end );
+
 DeclareSideOperations( AsModuleElement, AsLeftModuleElement, AsRightModuleElement,
                        AsBimoduleElement );
 
