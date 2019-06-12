@@ -363,16 +363,6 @@ end );
 
 # TODO precompose, isomorphism{to,from}{left,right}module
 
-InstallMethod( HomFunctor, "for quiver module category",
-               [ IsQuiverModuleCategory ],
-function( cat )
-  local rep, rep_cat, hom_rep;
-  rep := UnderlyingRepresentationFunctor( cat );
-  rep_cat := UnderlyingRepresentationCategory( cat );
-  hom_rep := HomFunctor( rep_cat );
-  return PreComposeFunctors( [ rep, rep ], hom_rep );
-end );
-
 InstallMethod( HomFunctor, "for side, quiver module and quiver module category",
                [ IsSide, IsQuiverModule, IsQuiverModuleCategory ],
 function( side, M, cat )
