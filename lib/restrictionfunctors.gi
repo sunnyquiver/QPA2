@@ -300,13 +300,17 @@ end
 InstallMethod( TensorFlipRestrictionFunctor, "for representation category",
                [ IsQuiverRepresentationCategory ],
 function( cat )
-  local T, flip, T_flip;
+  local T, Qt, vcat, flip_alg, T_flip, cat_flip, flip_quiver;
+
   T := AlgebraOfCategory( cat );
-  flip := InverseGeneralMapping( FlipTensorAlgebra( T ) );
-  T_flip := Source( flip );
-  return RestrictionFunctor( flip,
-                             cat,
-                             CategoryOfQuiverRepresentations( T_flip ) );
+  Qt := QuiverOfAlgebra( T );
+  vcat := VectorSpaceCategory( cat );
+  flip_alg := InverseGeneralMapping( FlipTensorAlgebra( T ) );
+  T_flip := Source( flip_alg );
+  cat_flip := CategoryOfQuiverRepresentationsOverVectorSpaceCategory( T_flip, vcat );
+  flip_quiver := InverseGeneralMapping( FlipProductQuiver( Qt ) );
+
+  return RestrictionFunctor( flip_quiver, cat, cat_flip );
 end );
 
 InstallMethod( TensorFlipRestriction, "for quiver representation",
