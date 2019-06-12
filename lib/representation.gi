@@ -33,15 +33,17 @@ end );
 InstallMethod( QuiverRepresentationElementNC, "for quiver representation and collection",
                [ IsQuiverRepresentation, IsDenseList ],
 function( R, vectors )
-  local type, elem, V, vector;
+  local type, elem, V, list, vector;
   type := NewType( FamilyOfQuiverRepresentationElements,
                    IsQuiverRepresentationElement and IsQuiverRepresentationElementRep );
   elem := rec();
   V := AsQPAVectorSpace( R );
-  vector := Vector( V, Concatenation( List( vectors, AsList ) ) );
+  list := Concatenation( List( vectors, AsList ) );
+  vector := Vector( V, list );
   ObjectifyWithAttributes( elem, type,
                            RepresentationOfElement, R,
                            ElementVectors, vectors,
+                           AsList, list,
                            AsVector, vector );
   return elem;
 end );

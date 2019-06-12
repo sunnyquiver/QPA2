@@ -197,6 +197,14 @@ function( M, vertices, vectors )
   return AsModuleElement( e, M );
 end );
 
+InstallMethod( AsVector,
+               [ IsQuiverModuleElement ],
+               e -> AsVector( UnderlyingRepresentationElement( e ) ) );
+
+InstallMethod( AsList,
+               [ IsQuiverModuleElement ],
+               e -> AsList( UnderlyingRepresentationElement( e ) ) );
+
 InstallMethod( Zero,
                [ IsQuiverModule ],
 function( M )

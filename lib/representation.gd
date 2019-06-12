@@ -111,6 +111,12 @@ DeclareOperation( "ElementVector", [ IsQuiverRepresentationElement, IsQuiverVert
 #!  The representation element <A>e</A> considered as a vector.
 DeclareAttribute( "AsVector", IsQuiverRepresentationElement );
 
+#! @Arguments e
+#! @Description
+#!  Returns the coefficients of the element <A>e</A> (with respect to the
+#!  canonical basis of the representation it belongs to) as a list.
+DeclareAttribute( "AsList", IsQuiverRepresentationElement );
+
 #! @Section Acting on elements
 
 #! @Description
