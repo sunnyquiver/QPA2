@@ -127,6 +127,28 @@ function( e, f )
   return QuiverRepresentationElement( restR, vectors );
 end );
 
+InstallMethod( RestrictQuiverRepresentationElement,
+               [ IsQuiverRepresentationElement, IsQuiverHomomorphism, IsQuiverRepresentation ],
+function( e, f, restR )
+  local R, Qa, Qb, A, B, vectors, v;
+  R := RepresentationOfElement( e );
+  Qa := Source( f );
+  Qb := Range( f );
+  A := AlgebraOfRepresentation( restR );
+  B := AlgebraOfRepresentation( R );
+  if QuiverOfAlgebra( A ) <> Qa then
+    Error( "quiver homomorphism has wrong source" );
+  fi;
+  if QuiverOfAlgebra( B ) <> Qb then
+    Error( "quiver homomorphism has wrong range" );
+  fi;
+  vectors := [];
+  for v in Vertices( Qa ) do
+    Add( vectors, ElementVector( e, ImageElm( f, v ) ) );
+  od;
+  return QuiverRepresentationElement( restR, vectors );
+end );
+
 
 InstallMethod( RestrictionToLeftFunctor, "for a bimodule category",
         [ IsQuiverBimoduleCategory ],

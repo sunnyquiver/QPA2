@@ -27,6 +27,10 @@ DeclareOperation( "RestrictQuiverRepresentation",
 DeclareOperation( "RestrictQuiverRepresentationElement",
                   [ IsQuiverRepresentationElement, IsQuiverAlgebraHomomorphism ] );
 
+#!
+DeclareOperation( "RestrictQuiverRepresentationElement",
+                  [ IsQuiverRepresentationElement, IsQuiverHomomorphism, IsQuiverRepresentation ] );
+
 
 #! @Description
 #!  Returns the restriction functor which forgets the right module structure. If the 
