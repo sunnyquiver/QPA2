@@ -606,7 +606,7 @@ function( e_RoM )
   layered := RepresentationOfModulesAsLayeredRepresentation( RoM );
   M := RepresentationOfModulesAsBimodule( RoM );
   e_l := MapRepresentation( UnderlyingRepresentationElement, e_RoM, layered );
-  s := Opposite( Side( VectorSpaceCategory( CapCategory( RoM ) ) ) );
+  s := Side( VectorSpaceCategory( CapCategory( RoM ) ) );
   e_f := AsFlatRepresentationElement( Int( s ), e_l );
   return AsBimoduleElement( e_f );
 end );
