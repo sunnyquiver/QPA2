@@ -152,6 +152,9 @@ InstallMethod( QuiverAlgebraAction,
                [ IsQuiverRepresentationElement, IsQuiverAlgebraElement ],
 function( re, ae )
   local Cs, Ps;
+  if IsZero( ae ) then
+    return Zero( re );
+  fi;
   Cs := Coefficients( ae );
   Ps := Paths( ae );
   return Sum( ListN( Cs, List( Ps, p -> PathAction( re, p ) ),
