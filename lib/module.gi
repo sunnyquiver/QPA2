@@ -343,6 +343,13 @@ function( e, c )
                           ModuleOfElement( e ) );
 end );
 
+InstallMethod( AdditiveInverse, "for element of quiver module",
+               [ IsQuiverModuleElement ],
+function( e )
+  return AsModuleElement( AdditiveInverse( UnderlyingRepresentationElement( e ) ),
+                          ModuleOfElement( e ) );
+end );
+
 # basis of modules
 
 BindGlobal( "FamilyOfQuiverModuleBases",
