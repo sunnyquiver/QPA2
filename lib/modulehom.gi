@@ -13,19 +13,26 @@ DeclareRepresentation( "IsQuiverModuleHomomorphismRep",
 
 DeclareSideOperations( IsQuiverModuleHomomorphism,
                        IsLeftQuiverModuleHomomorphism, IsRightQuiverModuleHomomorphism, IsQuiverBimoduleHomomorphism );
-DeclareSideOperations( AsModuleHomomorphism,
-                       AsLeftModuleHomomorphism, AsRightModuleHomomorphism, AsBimoduleHomomorphism );
 
-InstallMethodWithSides( AsModuleHomomorphism,
-                        [ IsQuiverRepresentationHomomorphism ],
-side -> function( rf )
-  local R1, R2, rep_algebra, cat, hom_type, M1, M2, matrices, f;
+InstallMethod( AsModuleHomomorphism, "for quiver representation homomorphism and quiver modules",
+               [ IsQuiverRepresentationHomomorphism, IsQuiverModule, IsQuiverModule ],
+function( rf, M, N )
+  local cat, side, R1, R2, rep_algebra, hom_type, matrices, f;
+
+  cat := CapCategory( M );
+  if cat <> CapCategory( N ) then
+    Error( "modules from different categories" );
+  fi;
+  side := Side( cat );
   R1 := Source( rf );
   R2 := Range( rf );
-  M1 := AsModule( side, R1 );
-  M2 := AsModule( side, R2 );
+  if R1 <> UnderlyingRepresentation( M ) then
+    Error( "representation homomorphism has wrong source" );
+  fi;
+  if R2 <> UnderlyingRepresentation( N ) then
+    Error( "representation homomorphism has wrong range" );
+  fi;
   rep_algebra := AlgebraOfRepresentation( R1 );
-  cat := AsModuleCategory( side, CapCategory( R1 ) );
   hom_type := IsQuiverModuleHomomorphism^side;
   matrices := MatricesOfRepresentationHomomorphism( rf );
   f := rec();
@@ -35,10 +42,22 @@ side -> function( rf )
                            Side, side,
                            HomSide, side,
                            MatricesOfModuleHomomorphism, matrices,
-                           Source, M1,
-                           Range, M2 );
+                           Source, M,
+                           Range, N );
   Add( cat, f );
   return f;
+end );
+
+DeclareSideOperations( AsModuleHomomorphism,
+                       AsLeftModuleHomomorphism, AsRightModuleHomomorphism, AsBimoduleHomomorphism );
+
+InstallMethodWithSides( AsModuleHomomorphism,
+                        [ IsQuiverRepresentationHomomorphism ],
+side -> function( rf )
+  local R1, R2;
+  R1 := Source( rf );
+  R2 := Range( rf );
+  return AsModuleHomomorphism( rf, AsModule( side, R1 ), AsModule( side, R2 ) );
 end );
 
 InstallMethod( QuiverModuleHomomorphism,
@@ -49,7 +68,7 @@ function( M1, M2, matrices )
   R1 := UnderlyingRepresentation( M1 );
   R2 := UnderlyingRepresentation( M2 );
   rf := QuiverRepresentationHomomorphism( R1, R2, matrices );
-  return AsModuleHomomorphism( Side( M1 ), rf );
+  return AsModuleHomomorphism( rf, M1, M2 );
 end );
 
 InstallMethod( QuiverModuleHomomorphism,
@@ -61,11 +80,11 @@ function( M, N, f )
   R2 := UnderlyingRepresentation( N );
   rf := function( e )
     local m;
-    m := AsModuleElement( Side( M ), e );
+    m := AsModuleElement( e, M );
     return UnderlyingRepresentationElement( f( m ) );
   end;
   rm := QuiverRepresentationHomomorphism( R1, R2, rf );
-  return AsModuleHomomorphism( Side( M ), rm );
+  return AsModuleHomomorphism( rm, M, N );
 end );
 
 InstallMethod( String,

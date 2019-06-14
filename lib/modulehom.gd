@@ -46,6 +46,14 @@ DeclareOperation( "QuiverModuleHomomorphism",
                   [ IsQuiverModule, IsQuiverModule, IsFunction ] );
 
 #! @Description
+#!  The representation homomorphism <A>f</A> considered as a module homomorphism
+#!  from <A>M</A> to <A>N</A>.
+#! @Arguments f, M, N
+#! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
+DeclareOperation( "AsModuleHomomorphism",
+                  [ IsQuiverRepresentationHomomorphism, IsQuiverModule, IsQuiverModule ] );
+
+#! @Description
 #!  The representation homomorphism <A>f</A> considered as a module homomorphism.
 #! @Arguments f, side
 #! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
