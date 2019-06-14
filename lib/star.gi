@@ -9,7 +9,7 @@ function( N )
   if side = LEFT_RIGHT then 
     Error( "The construction of the star of a module is on one-sided modules.\n" );
   fi;
-  A := AlgebraOfCategory( CapCategory( N ) );
+  A := ActingAlgebra( side, N );
   M := AlgebraAsBimodule( A );
   
   return Hom( side, N, M );
@@ -27,7 +27,7 @@ function( f )
   if side = LEFT_RIGHT then 
     Error( "The construction of the star of a homomorphism is on one-sided modules.\n" );
   fi;
-  A := AlgebraOfCategory( CapCategory( Source( f ) ) );
+  A := ActingAlgebra( side, Source( f ) );
   M := AlgebraAsBimodule( A );
   
   return Hom( side, f, M );
@@ -41,8 +41,8 @@ function( C )
   
   local   A,  side,  D,  U,  V,  starfunctor,  morphism,  object;
   
-  A := AlgebraOfCategory( C );
   side := Side( C );
+  A := ActingAlgebra( side, C );
   if side = LEFT_RIGHT then 
     Error( "The construction of the star functor is on one-sided modules.\n" );
   fi;
