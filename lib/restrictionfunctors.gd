@@ -19,6 +19,19 @@ DeclareOperation( "RestrictionFunctor", [ IsQuiverAlgebraHomomorphism, IsCapCate
 DeclareOperation( "RestrictionFunctor", [ IsQuiverHomomorphism,
                                           IsQuiverRepresentationCategory, IsQuiverRepresentationCategory ] );
 
+#!
+DeclareOperation( "RestrictQuiverRepresentation",
+                  [ IsQuiverRepresentation, IsQuiverAlgebraHomomorphism ] );
+
+#!
+DeclareOperation( "RestrictQuiverRepresentationElement",
+                  [ IsQuiverRepresentationElement, IsQuiverAlgebraHomomorphism ] );
+
+#!
+DeclareOperation( "RestrictQuiverRepresentationElement",
+                  [ IsQuiverRepresentationElement, IsQuiverHomomorphism, IsQuiverRepresentation ] );
+
+
 #! @Description
 #!  Returns the restriction functor which forgets the right module structure. If the 
 #!  argument is a category of right modules, then it returns the restriction functor

@@ -21,10 +21,10 @@ function( R, vectors )
   fi;
   for i in [ 1 .. numVertices ] do
     space := VectorSpaceOfRepresentation( R, i );
-    if IsBound( vectors[ i ] ) then
-      vectors[ i ] := Vector( space, vectors[ i ] );
-    else
+    if not IsBound( vectors[ i ] ) then
       vectors[ i ] := Zero( space );
+    elif not ( vectors[ i ] in space ) then
+      vectors[ i ] := Vector( space, vectors[ i ] );
     fi;
   od;
   return QuiverRepresentationElementNC( R, vectors );
@@ -33,15 +33,17 @@ end );
 InstallMethod( QuiverRepresentationElementNC, "for quiver representation and collection",
                [ IsQuiverRepresentation, IsDenseList ],
 function( R, vectors )
-  local type, elem, V, vector;
+  local type, elem, V, list, vector;
   type := NewType( FamilyOfQuiverRepresentationElements,
                    IsQuiverRepresentationElement and IsQuiverRepresentationElementRep );
   elem := rec();
   V := AsQPAVectorSpace( R );
-  vector := Vector( V, Concatenation( List( vectors, AsList ) ) );
+  list := Concatenation( List( vectors, AsList ) );
+  vector := Vector( V, list );
   ObjectifyWithAttributes( elem, type,
                            RepresentationOfElement, R,
                            ElementVectors, vectors,
+                           AsList, list,
                            AsVector, vector );
   return elem;
 end );
@@ -856,6 +858,24 @@ function( f )
   return DirectSumFunctorial( MapsOfRepresentationHomomorphism( f ) );
 end );
 
+InstallMethod( MorphismByLinearTransformation, "for quiver representations and linear transformation",
+               [ IsQuiverRepresentation, IsQuiverRepresentation, IsLinearTransformation ],
+function( R1, R2, T )
+  local Q, n, Vs1, Vs2, maps;
+  if not IsIdenticalObj( CapCategory( R1 ),
+                         CapCategory( R2 ) ) then
+    Error( "representations from different categories" );
+  fi;
+  Q := QuiverOfRepresentation( R1 );
+  n := NumberOfVertices( Q );
+  Vs1 := VectorSpacesOfRepresentation( R1 );
+  Vs2 := VectorSpacesOfRepresentation( R2 );
+  maps := List( [ 1 .. n ],
+                i -> PreCompose( InjectionOfCofactorOfDirectSum( Vs1, i ),
+                                 T,
+                                 ProjectionInFactorOfDirectSum( Vs2, i ) ) );
+  return QuiverRepresentationHomomorphism( R1, R2, maps );
+end );
 
 InstallMethod( CategoryOfQuiverRepresentations, "for quiver algebra",
                [ IsQuiverAlgebra ],
@@ -1707,6 +1727,27 @@ InstallMethod( AsLayeredRepresentationFunctor2, "for quiver representation categ
                [ IsQuiverRepresentationCategory ],
                fcat -> AsLayeredRepresentationFunctor( 2, fcat ) );
 
+InstallMethod( AsLayeredRepresentationElement, "for positive integer and quiver representation element",
+               [ IsPosInt, IsQuiverRepresentationElement ],
+function( s, e )
+  local R, T, Qt, incs, lR, elems, v, i, e_i;
+  R := RepresentationOfElement( e );
+  T := AlgebraOfRepresentation( R );
+  if not IsTensorProductOfAlgebras( T ) then
+    Error( "representation is not over tensor algebra" );
+  fi;
+  Qt := QuiverOfAlgebra( T );
+  incs := ProductQuiverInclusions( Qt )[ s ];
+  lR := AsLayeredRepresentation( s, R );
+  elems := [];
+  for v in Vertices( QuiverOfRepresentation( lR ) ) do
+    i := VertexIndex( v );
+    e_i := RestrictQuiverRepresentationElement( e, incs[ i ], VectorSpaceOfRepresentation( lR, i ) );
+    Add( elems, e_i );
+  od;
+  return QuiverRepresentationElement( lR, elems );
+end );
+
 InstallMethod( AsFlatRepresentation, "for positive integer and quiver representation",
                [ IsPosInt, IsQuiverRepresentation ],
 function( s, R )
@@ -1755,6 +1796,30 @@ function( s, R )
   return QuiverRepresentation( CategoryOfQuiverRepresentations( T ),
                                objs, morphisms );
 end );
+
+InstallMethod( AsFlatRepresentationElement, "for positive integer and quiver representation element",
+               [ IsPosInt, IsQuiverRepresentationElement ],
+function( s, e )
+  local t, R, flat_R, T, Qt, vectors, v, factors, va, vb, vector;
+  if not s in [ 1, 2 ] then
+    Error( "tensor factor number must be either 1 or 2, not ", s );
+  fi;
+  t := 3 - s;
+  R := RepresentationOfElement( e );
+  flat_R := AsFlatRepresentation( s, R );
+  T := AlgebraOfRepresentation( flat_R );
+  Qt := QuiverOfAlgebra( T );
+  vectors := [];
+  for v in Vertices( Qt ) do
+    factors := ProductPathFactors( v );
+    va := factors[ s ];
+    vb := factors[ t ];
+    vector := ElementVector( ElementVector( e, vb ), va );
+    Add( vectors, vector );
+  od;
+  return QuiverRepresentationElement( flat_R, vectors );
+end );
+
 
 #######################################################################
 ##

@@ -28,3 +28,22 @@ DeclareAttribute( "Range", IsHomObject );
 #! @Arguments hom
 DeclareAttribute( "HomCategory", IsHomObject );
 
+#! @Description
+#!  Returns the morphism in the hom object <A>hom</A> corresponding to the
+#!  function <A>f</A>.
+#!  If <A>f</A> does not determine a well-defined morphism in <A>hom</A>,
+#!  the operation returns <C>fail</C>.
+#! @Arguments hom, f
+#! @Returns IsFieldCategoryMorphism
+DeclareOperation( "MorphismByFunction",
+                  [ IsHomObject, IsFunction ] );
+
+#! @Description
+#!  Returns the morphism in the hom object <A>hom</A> corresponding to the
+#!  linear transformation <A>T</A>.
+#!  If <A>T</A> does not determine a well-defined morphism in <A>hom</A>,
+#!  the operation returns <C>fail</C>.
+#! @Arguments hom, T
+#! @Returns IsFieldCategoryMorphism
+DeclareOperation( "MorphismByLinearTransformation",
+                  [ IsHomObject, IsLinearTransformation ] );

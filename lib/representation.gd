@@ -111,6 +111,12 @@ DeclareOperation( "ElementVector", [ IsQuiverRepresentationElement, IsQuiverVert
 #!  The representation element <A>e</A> considered as a vector.
 DeclareAttribute( "AsVector", IsQuiverRepresentationElement );
 
+#! @Arguments e
+#! @Description
+#!  Returns the coefficients of the element <A>e</A> (with respect to the
+#!  canonical basis of the representation it belongs to) as a list.
+DeclareAttribute( "AsList", IsQuiverRepresentationElement );
+
 #! @Section Acting on elements
 
 #! @Description
@@ -218,11 +224,6 @@ DeclareOperation( "AsRepresentationOfQuotientAlgebra",
 #! @Returns <Ref Filt="IsQuiverRepresentation"/>
 #! @Arguments R
 DeclareAttribute( "AsRepresentationOfPathAlgebra", IsQuiverRepresentation );
-
-#! @Arguments R
-#! @Description
-#!  The quiver representation <A>R</A> considered as a vector space.
-DeclareAttribute( "AsQPAVectorSpace", IsQuiverRepresentation );
 
 #!
 DeclareAttribute( "UnderlyingCategoryForRepresentations", IsQuiverAlgebra );
@@ -365,13 +366,6 @@ DeclareOperation( "MapForVertex",
 #!
 DeclareOperation( "MapForVertex",
                   [ IsQuiverRepresentationHomomorphism, IsPosInt ] );
-
-#! @Arguments f
-#! @Returns <Ref Filt="IsLinearTransformation"/>
-#! @Description
-#!  Given a homomorphism <A>f</A> of quiver representations,
-#!  returns the corresponding linear transformation on the underlying vector spaces.
-DeclareAttribute( "AsLinearTransformation", IsQuiverRepresentationHomomorphism );
 
 # DeclareOperation( "ImageElm",
 #                   [ IsQuiverRepresentationHomomorphism,
@@ -526,11 +520,16 @@ DeclareAttribute( "AsLayeredRepresentationFunctor1", IsQuiverRepresentationCateg
 
 DeclareAttribute( "AsLayeredRepresentationFunctor2", IsQuiverRepresentationCategory );
 
+DeclareOperation( "AsLayeredRepresentationElement", [ IsPosInt, IsQuiverRepresentationElement ] );
+
 #! @Description
 #!  Turn a layered representation into a flat representation.
 #! @Returns IsQuiverRepresentation
 #! @Arguments s, R
 DeclareOperation( "AsFlatRepresentation", [ IsPosInt, IsQuiverRepresentation ] );
+
+#!
+DeclareOperation( "AsFlatRepresentationElement", [ IsPosInt, IsQuiverRepresentationElement ] );
 
 #! @Section Operations on representations
 

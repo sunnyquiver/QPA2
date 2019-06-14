@@ -33,6 +33,7 @@ side -> function( rf )
                                        hom_type and IsQuiverModuleHomomorphismRep ),
                            UnderlyingRepresentationHomomorphism, rf,
                            Side, side,
+                           HomSide, side,
                            MatricesOfModuleHomomorphism, matrices,
                            Source, M1,
                            Range, M2 );
@@ -49,6 +50,22 @@ function( M1, M2, matrices )
   R2 := UnderlyingRepresentation( M2 );
   rf := QuiverRepresentationHomomorphism( R1, R2, matrices );
   return AsModuleHomomorphism( Side( M1 ), rf );
+end );
+
+InstallMethod( QuiverModuleHomomorphism,
+               [ IsQuiverModule, IsQuiverModule, IsFunction ],
+function( M, N, f )
+  local R1, R2, rf, rm;
+  # TODO check that M and N are in same category
+  R1 := UnderlyingRepresentation( M );
+  R2 := UnderlyingRepresentation( N );
+  rf := function( e )
+    local m;
+    m := AsModuleElement( Side( M ), e );
+    return UnderlyingRepresentationElement( f( m ) );
+  end;
+  rm := QuiverRepresentationHomomorphism( R1, R2, rf );
+  return AsModuleHomomorphism( Side( M ), rm );
 end );
 
 InstallMethod( String,
@@ -181,3 +198,24 @@ function( f )
     return false;
 end
   );
+
+InstallMethod( AsLinearTransformation, "for quiver module homomorphism",
+               [ IsQuiverModuleHomomorphism ],
+function( f )
+  return AsLinearTransformation( UnderlyingRepresentationHomomorphism( f ) );
+end );
+
+InstallMethod( MorphismByLinearTransformation, "for quiver modules and linear transformation",
+               [ IsQuiverModule, IsQuiverModule, IsLinearTransformation ],
+function( M1, M2, T )
+  local rep_morphism;
+  if not IsIdenticalObj( CapCategory( M1 ),
+                         CapCategory( M2 ) ) then
+    #Error( "modules from different categories" );
+    TryNextMethod();
+  fi;
+  rep_morphism :=  MorphismByLinearTransformation( UnderlyingRepresentation( M1 ),
+                                                   UnderlyingRepresentation( M2 ),
+                                                   T );
+  return AsModuleHomomorphism( Side( M1 ), rep_morphism );
+end );

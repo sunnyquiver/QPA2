@@ -376,6 +376,17 @@ DeclareOperation( "\[\]", [ IsQuiverModuleElement, IsPosInt ] );
 #! @Arguments e, v
 DeclareOperation( "ElementVector", [ IsQuiverModuleElement, IsQuiverVertex ] );
 
+#! @Arguments e
+#! @Description
+#!  The module element <A>e</A> considered as a vector.
+DeclareAttribute( "AsVector", IsQuiverModuleElement );
+
+#! @Arguments e
+#! @Description
+#!  Returns the coefficients of the element <A>e</A> (with respect to the
+#!  canonical basis of the module it belongs to) as a list.
+DeclareAttribute( "AsList", IsQuiverModuleElement );
+
 #! @Section Acting on elements
 
 #! @Description
@@ -519,6 +530,25 @@ DeclareAttribute( "AsRepresentationOfLeftModules", IsQuiverBimodule );
 
 #!
 DeclareAttribute( "AsRepresentationOfRightModules", IsQuiverBimodule );
+
+#!
+DeclareOperation( "AsRepresentationOfModulesElement", [ IsDirection, IsQuiverBimoduleElement ] );
+
+#!
+DeclareAttribute( "AsRepresentationOfLeftModulesElement", IsQuiverBimoduleElement );
+
+#!
+DeclareAttribute( "AsRepresentationOfRightModulesElement", IsQuiverBimoduleElement );
+
+#!
+DeclareAttribute( "RepresentationOfModulesAsLayeredRepresentation", IsQuiverRepresentation );
+
+#!
+DeclareAttribute( "RepresentationOfModulesAsBimodule", IsQuiverRepresentation );
+
+#!
+DeclareAttribute( "RepresentationOfModulesElementAsBimoduleElement", IsQuiverRepresentationElement );
+
 
 #! @Section Operations on modules
 

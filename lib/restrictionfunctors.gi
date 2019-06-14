@@ -100,6 +100,56 @@ function( m, repQ2, repQ1 )
   return restriction;
 end );
 
+
+InstallMethod( RestrictQuiverRepresentation,
+               [ IsQuiverRepresentation, IsQuiverAlgebraHomomorphism ],
+function( R, f )
+  local rest;
+  rest := RestrictionFunctor( f, CapCategory( R ), CategoryOfQuiverRepresentations( Source( f ) ) );
+  return ApplyFunctor( rest, R );
+end );
+
+InstallMethod( RestrictQuiverRepresentationElement,
+               [ IsQuiverRepresentationElement, IsQuiverAlgebraHomomorphism ],
+function( e, f )
+  local R, A, B, restR, vectors, v;
+  R := RepresentationOfElement( e );
+  A := Source( f );
+  B := Range( f );
+  if B <> AlgebraOfRepresentation( R ) then
+    Error( "algebra homomorphism has wrong range" );
+  fi;
+  restR := RestrictQuiverRepresentation( R, f );
+  vectors := [];
+  for v in Vertices( A ) do
+    Add( vectors, ElementVector( R, ImageElm( f, v ) ) );
+  od;
+  return QuiverRepresentationElement( restR, vectors );
+end );
+
+InstallMethod( RestrictQuiverRepresentationElement,
+               [ IsQuiverRepresentationElement, IsQuiverHomomorphism, IsQuiverRepresentation ],
+function( e, f, restR )
+  local R, Qa, Qb, A, B, vectors, v;
+  R := RepresentationOfElement( e );
+  Qa := Source( f );
+  Qb := Range( f );
+  A := AlgebraOfRepresentation( restR );
+  B := AlgebraOfRepresentation( R );
+  if QuiverOfAlgebra( A ) <> Qa then
+    Error( "quiver homomorphism has wrong source" );
+  fi;
+  if QuiverOfAlgebra( B ) <> Qb then
+    Error( "quiver homomorphism has wrong range" );
+  fi;
+  vectors := [];
+  for v in Vertices( Qa ) do
+    Add( vectors, ElementVector( e, ImageElm( f, v ) ) );
+  od;
+  return QuiverRepresentationElement( restR, vectors );
+end );
+
+
 InstallMethod( RestrictionToLeftFunctor, "for a bimodule category",
         [ IsQuiverBimoduleCategory ],
         function( C )
@@ -250,13 +300,17 @@ end
 InstallMethod( TensorFlipRestrictionFunctor, "for representation category",
                [ IsQuiverRepresentationCategory ],
 function( cat )
-  local T, flip, T_flip;
+  local T, Qt, vcat, flip_alg, T_flip, cat_flip, flip_quiver;
+
   T := AlgebraOfCategory( cat );
-  flip := InverseGeneralMapping( FlipTensorAlgebra( T ) );
-  T_flip := Source( flip );
-  return RestrictionFunctor( flip,
-                             cat,
-                             CategoryOfQuiverRepresentations( T_flip ) );
+  Qt := QuiverOfAlgebra( T );
+  vcat := VectorSpaceCategory( cat );
+  flip_alg := InverseGeneralMapping( FlipTensorAlgebra( T ) );
+  T_flip := Source( flip_alg );
+  cat_flip := CategoryOfQuiverRepresentationsOverVectorSpaceCategory( T_flip, vcat );
+  flip_quiver := InverseGeneralMapping( FlipProductQuiver( Qt ) );
+
+  return RestrictionFunctor( flip_quiver, cat, cat_flip );
 end );
 
 InstallMethod( TensorFlipRestriction, "for quiver representation",
@@ -265,3 +319,5 @@ function( R )
   return ApplyFunctor( TensorFlipRestrictionFunctor( CapCategory( R ) ),
                        R );
 end );
+
+

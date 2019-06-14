@@ -117,7 +117,7 @@ InstallMethod( FixFunctorArguments,
                [ IsCapFunctor, IsDenseList ],
 function( F, args )
   local sig_F, n, sig, blank_positions, i, name, object_fun, 
-        morphism_fun, fixed_F;
+        args_id_morphisms, morphism_fun, fixed_F;
   sig_F := InputSignature( F );
   if Length( sig_F ) <> Length( args ) then
     Error( "length of argument list does not match arity of functor" );
@@ -155,9 +155,17 @@ function( F, args )
     args_F{ blank_positions } := arg;
     return CallFuncList( ApplyFunctor, Concatenation( [ F ], args_F ) );
   end;
+  args_id_morphisms := [];
+  for i in [ 1 .. n ] do
+    if args[ i ] = fail then
+      args_id_morphisms[ i ] := fail;
+    else
+      args_id_morphisms[ i ] := IdentityMorphism( args[ i ] );
+    fi;
+  od;
   morphism_fun := function( arg )
     local args_F;
-    args_F := ShallowCopy( args );
+    args_F := ShallowCopy( args_id_morphisms );
     args_F{ blank_positions } := arg{ [ 2 .. Length( arg ) - 1 ] };
     return CallFuncList( ApplyFunctor, Concatenation( [ F ], args_F ) );
   end;

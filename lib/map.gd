@@ -23,3 +23,7 @@ DeclareOperation( "MapRepresentation", [ IsFunction, IsFunction, IsFunction, IsD
 
 DeclareOperation( "MapRepresentation", [ IsCapFunctor, IsQuiverAlgebra ] );
 DeclareOperation( "MapRepresentation", [ IsCapFunctor, IsDenseList ] );
+
+# for elements
+DeclareOperation( "MapRepresentation", [ IsFunction, IsQuiverRepresentationElement,
+                                         IsQuiverRepresentation ] );
