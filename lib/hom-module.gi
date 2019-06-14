@@ -67,7 +67,7 @@ function( side, cat1, cat2 )
     X1 := Source( f ); X2 := Range( f );
     Y1 := Source( g ); Y2 := Range( g );
     return QuiverModuleHomomorphism( hom1, hom2,
-                                     h -> PreCompose( f, h, g ) );
+                                     h -> PreCompose( [ f, h, g ] ) );
   end );
   return hom_functor;
 end );
