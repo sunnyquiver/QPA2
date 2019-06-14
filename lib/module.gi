@@ -242,13 +242,7 @@ end );
 InstallMethod( String,
                [ IsQuiverModuleElement ],
 function( e )
-  return Concatenation( "left module element ", String( ElementVectors( e ) ) );
-end );
-
-InstallMethod( String,
-               [ IsRightQuiverModuleElement ],
-function( e )
-  return Concatenation( "right module element ", String( ElementVectors( e ) ) );
+  return Concatenation( String( Side( e ) ), " module element ", String( ElementVectors( e ) ) );
 end );
 
 InstallMethod( ViewObj,
