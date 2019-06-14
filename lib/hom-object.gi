@@ -31,11 +31,11 @@ function( hom, T )
   f := function( m )
     local m_vec, T_m_vec, T_m;
     # move m down to M's underlying vector space
-    m_vec := Coefficients( CanonicalBasis( M ), m );
+    m_vec := AsVector( m );
     # apply T:
     T_m_vec := ImageElm( T, m_vec );
-    # move the result up to the module N:
-    T_m := LinearCombination( CanonicalBasis( N ), T_m_vec );
+    # move the result up to N:
+    T_m := LinearCombination( CanonicalBasis( N ), AsList( T_m_vec ) );
     return T_m;
   end;
   return MorphismByFunction( hom, f );
