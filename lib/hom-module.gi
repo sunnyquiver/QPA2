@@ -230,9 +230,9 @@ function( f )
   Vn := AsQPAVectorSpace( N );
   fun := function( v )
     local m, n;
-    m := LinearCombination( Bm, v );
+    m := LinearCombination( Bm, AsList( v ) );
     n := ImageElm( f, m );
-    return Coefficients( Bn, n );
+    return AsVector( n );
   end;
   return LinearTransformationByFunction( Vm, Vn, fun );
 end );
@@ -265,12 +265,12 @@ function( hom, f )
         v_op := vw_factors[ 2 ];
         w := vw_factors[ 1 ];
       fi;
-      v := OppositePath( v );
+      v := OppositePath( v_op );
       i := VertexIndex( v );
       j := VertexIndex( w );
       f_ij := function( m_i )
         local m_, m, n, n_, n_j;
-        m_ := QuiverRepresentationElement( M_, [ Vertex( Qm, i ) ], m_i );
+        m_ := QuiverRepresentationElement( M_, [ Vertex( Qm, i ) ], [ m_i ] );
         m := RepresentationOfModulesElementAsBimoduleElement( m_ );
         n := f( m );
         n_ := AsRepresentationOfModulesElement( side, n );
