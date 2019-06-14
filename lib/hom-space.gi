@@ -260,6 +260,12 @@ InstallMethod( Side, "for quiver module hom space",
                [ IsQuiverModuleHomSpace ],
                hom -> Side( Source( hom ) ) );
 
+InstallMethod( MorphismByFunction, "for quiver module hom space and function",
+               [ IsQuiverModuleHomSpace, IsFunction ],
+function( hom, f )
+  return QuiverModuleHomomorphism( Source( hom ), Range( hom ), f );
+end );
+
 InstallMethod( CanonicalBasis, [ IsQuiverModuleHomSpace ],
 function( hom )
   local basis, basis_vectors;
