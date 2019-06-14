@@ -380,7 +380,7 @@ InstallMethod( Coefficients, "for canonical quiver module basis and quiver modul
                [ IsCanonicalBasis and IsQuiverModuleBasisRep,
                  IsQuiverModuleElement ],
 function( B, e )
-  return AsVector( e );
+  return AsList( e );
 end );
 
 InstallMethod( BasisVectors, "for quiver module basis",
