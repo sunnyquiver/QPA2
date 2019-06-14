@@ -350,21 +350,44 @@ function( hom, f )
   fi;
 end );
 
-InstallMethod( PreCompose, "for two enriched quiver module homomorphisms",
-               [ IsEnrichedQuiverModuleHomomorphism, IsEnrichedQuiverModuleHomomorphism ],
-function( f1, f2 )
-  local M1, M2, T1, T2;
-  if Range( f1 ) <> Source( f2 ) then
-    Error( "morphisms are not composable" );
-  fi;
-  M1 := Source( f1 );
-  M2 := Range( f2 );
-  T1 := AsLinearTransformation( f1 );
-  T2 := AsLinearTransformation( f2 );
-  return MorphismByLinearTransformation( M1, M2, PreCompose( T1, T2 ) );
-end );
+CallFuncList(
+function()
+  local pre_compose;
+  pre_compose := function( f1, f2 )
+    local side1, side2, side, M1, M2, T1, T2;
+    if Range( f1 ) <> Source( f2 ) then
+      Error( "morphisms are not composable" );
+    fi;
+    side1 := HomSide( f1 );
+    side2 := HomSide( f2 );
+    if side1 = LEFT_RIGHT then
+      side := side2;
+    elif side2 = LEFT_RIGHT then
+      side := side1;
+    elif side1 = side2 then
+      side := side1;
+    else
+      # do not allow composition of left morphism and right morphism
+      Error( "morphisms are not composable" );
+    fi;
+    M1 := Source( f1 );
+    M2 := Range( f2 );
+    T1 := AsLinearTransformation( f1 );
+    T2 := AsLinearTransformation( f2 );
+    return MorphismByLinearTransformation( Hom( side, M1, M2 ), PreCompose( T1, T2 ) );
+  end;
+  InstallMethod( PreCompose, "for two enriched quiver module homomorphisms",
+                 [ IsEnrichedQuiverModuleHomomorphism, IsEnrichedQuiverModuleHomomorphism ],
+                 pre_compose );
+  InstallMethod( PreCompose, "for quiver module homomorphism and enriched quiver module homomorphism",
+                 [ IsQuiverModuleHomomorphism, IsEnrichedQuiverModuleHomomorphism ],
+                 pre_compose );
+  InstallMethod( PreCompose, "for enriched quiver module homomorphism and quiver module homomorphism",
+                 [ IsEnrichedQuiverModuleHomomorphism, IsQuiverModuleHomomorphism ],
+                 pre_compose );
+end, [] );
 
-# TODO precompose, isomorphism{to,from}{left,right}module
+# TODO isomorphism{to,from}{left,right}module
 
 InstallMethod( HomFunctor, "for side, quiver module and quiver module category",
                [ IsSide, IsQuiverModule, IsQuiverModuleCategory ],
