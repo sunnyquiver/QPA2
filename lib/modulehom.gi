@@ -33,6 +33,7 @@ side -> function( rf )
                                        hom_type and IsQuiverModuleHomomorphismRep ),
                            UnderlyingRepresentationHomomorphism, rf,
                            Side, side,
+                           HomSide, side,
                            MatricesOfModuleHomomorphism, matrices,
                            Source, M1,
                            Range, M2 );
