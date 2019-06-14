@@ -2193,20 +2193,10 @@ function( A, direction )
   if not IsFiniteDimensional( A ) then
     Error( "The entered algebra is not finite dimensional.\n" );
   fi; 
-  if One( A ) = fail then
-    idA := FindMultiplicativeIdentity( A );
-    SetOne( A, idA );
-  fi;
   #
   # Checking if the algebra is indecomposable.
   #
   C := Center( A );
-  id := FindMultiplicativeIdentity( C );
-  if id = fail then
-    Error( "The center of the entered algebra does not have a multiplicative identity.\n" );
-  else
-    SetOne( C, id );
-  fi;
   centralidempotentsinA := CentralIdempotentsOfAlgebra( C );
   if Length( centralidempotentsinA ) > 1 then
     Error( "The entered algebra is not indecomposable.\n" );

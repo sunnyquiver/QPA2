@@ -69,8 +69,8 @@ function( C )
     local   A,  side,  D,  U,  V,  transposefunctor,  M,  morphism,  
             object;
   
-  A := AlgebraOfCategory( C );
   side := Side( C );
+  A := ActingAlgebra( side, C );
   if side = LEFT_RIGHT then 
     Error( "The construction of the transpose functor is on one-sided modules.\n" );
   fi;
