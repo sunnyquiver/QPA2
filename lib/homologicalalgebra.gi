@@ -704,6 +704,25 @@ function( R );
 end
   );
 
+#######################################################################
+##
+#P  IsInjectiveModule( <M> )
+##
+##  Checks whether <M> is injective.
+##
+InstallMethod( IsInjectiveModule, 
+"for a IsQuiverModule",
+[ IsQuiverModule ],
+function( M ) 
+
+  local   R;
+
+  R := UnderlyingRepresentation( M );
+   
+  return IsInjectiveRepresentation( R );
+end
+  );
+
 InstallMethod( IsNthSyzygy, 
 "for a IsQuiverRepresentation",
 [ IsQuiverRepresentation, IS_INT ], 
