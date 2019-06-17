@@ -64,7 +64,45 @@ DeclareOperation( "PreCompose", [ IsQuiverModuleHomomorphism,
 
 
 
+#! @Description
+#!  Compute <M>Hom(M,N)</M>, where <A>M</A> and <A>N</A> are quiver modules,
+#!  not necessarily in the same category.
 #!
+#!  The arguments <A>M</A> and <A>N</A> are quiver modules
+#!  (each is either a left module, right module or bimodule),
+#!  and <A>side</A> is a side value
+#!  (one of the constants LEFT, RIGHT or LEFT_RIGHT).
+#!  The <A>side</A> argument determines which module structure
+#!  to hom over,
+#!  and the two modules must have the same acting algebra on this side.
+#!
+#!  The result is either a hom module or a hom space,
+#!  depending on the arguments.
+#!  If both modules only have module structure on the side given by
+#!  the argument <A>side</A>, then the result is a hom space,
+#!  and it is exactly the same as that obtained by calling
+#!  <C>Hom( M, N )</C>.
+#!  If one or both modules has some additional module structure,
+#!  then the result is a hom module.
+#!
+#!  The following table shows the different possible ways to call
+#!  this operation, and the type of the result in each case.
+#!  <Table Align="lccl">
+#!  <Row><Item>function call</Item><Item>M's acting algebras</Item><Item>N's acting algebras</Item><Item>result</Item></Row>
+#!  <Row><Item><C>Hom( LEFT, M, N )</C></Item><Item>(A,-)</Item><Item>(A,-)</Item><Item>vector space</Item></Row>
+#!  <Row><Item><C>Hom( LEFT, M, N )</C></Item><Item>(A,B)</Item><Item>(A,-)</Item><Item>left B-module</Item></Row>
+#!  <Row><Item><C>Hom( LEFT, M, N )</C></Item><Item>(A,-)</Item><Item>(A,C)</Item><Item>right C-module</Item></Row>
+#!  <Row><Item><C>Hom( LEFT, M, N )</C></Item><Item>(A,B)</Item><Item>(A,C)</Item><Item>B-C-bimodule</Item></Row>
+#!  <HorLine/>
+#!  <Row><Item><C>Hom( RIGHT, M, N )</C></Item><Item>(-,A)</Item><Item>(-,A)</Item><Item>vector space</Item></Row>
+#!  <Row><Item><C>Hom( RIGHT, M, N )</C></Item><Item>(-,A)</Item><Item>(B,A)</Item><Item>left B-module</Item></Row>
+#!  <Row><Item><C>Hom( RIGHT, M, N )</C></Item><Item>(C,A)</Item><Item>(-,A)</Item><Item>right C-module</Item></Row>
+#!  <Row><Item><C>Hom( RIGHT, M, N )</C></Item><Item>(C,A)</Item><Item>(B,A)</Item><Item>B-C-bimodule</Item></Row>
+#!  <HorLine/>
+#!  <Row><Item><C>Hom( LEFT_RIGHT, M, N )</C></Item><Item>(A,B)</Item><Item>(A,C)</Item><Item>vector space</Item></Row>
+#!  </Table>
+#!
+#! @Arguments side, M, N
 DeclareOperation( "Hom", [ IsSide, IsQuiverModule, IsQuiverModule ] );
 # Hom( LEFT, M, N )       (each is bimodule or left module; both must have same left structure)
 # Hom( RIGHT, M, N )      (each is bimodule or right module; both must have same right structure)
