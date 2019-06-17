@@ -154,3 +154,89 @@ function( M, n )
    return U;
 end
   );
+
+#######################################################################
+##
+#O  AlmostSplitSequence( <M>, side )
+##
+##  This function finds the almost split sequence ending or starting 
+##  in the module <M> depending on the second argument <side>.  It
+##  checks if the module is not injective or not projective also 
+##  depending on the argument <side>. It returns fail if the module 
+##  is projective and side = RIGHT and if the module is injective and 
+##  side = LEFT. The almost split sequence is returned as a pair of 
+##  maps, the monomorphism and the epimorphism. The function assumes 
+##  that the module  <M>  is indecomposable. The entered endterm and the
+##  returned endterm might be module that is isomorphic to the input, 
+##  not necessarily identical. 
+##
+InstallMethod( AlmostSplitSequence, 
+"for a quiver module",
+[ IsQuiverModule, IsDirection ],
+function( M, direction )
+
+  local K, startterm, endterm, ext, Bext, extension, cycle, 
+        Endstartterm, radEndstartterm, rad2Endstartterm, g, BImage_g, 
+        topradEndstartterm, temp, n, i, t, ass;
+#
+# ToDo: Add test of input with respect to being indecomposable.
+#
+  if direction = LEFT_RIGHT then 
+    Error( "Enter LEFT or RIGHT as a direction.\n" );
+  fi;
+  K := LeftActingDomain( M );
+  if direction = RIGHT and IsProjectiveModule( M ) then 
+      return fail;
+  fi;
+  if direction = LEFT and IsInjectiveModule( M ) then 
+      return fail;
+  fi;
+  if direction = RIGHT then
+    startterm := DTr( M );
+    endterm := M;
+  else
+    startterm := M;
+    endterm := TrD( M );
+  fi;
+  
+  ext := Ext( 1, endterm, startterm );
+  Bext := BasisVectors( Basis( ext ) );
+  extension := Bext[ Length( Bext ) ];
+  cycle := AsCycle( extension ); 
+  #
+  # Finding the radical of End(startterm)
+  #
+  Endstartterm := EndomorphismAlgebra( startterm );
+  radEndstartterm := RadicalOfAlgebra( Endstartterm );
+  rad2Endstartterm := ProductSpace( radEndstartterm, radEndstartterm );
+  g := NaturalHomomorphismByIdeal( radEndstartterm, rad2Endstartterm );
+  BImage_g := BasisVectors( Basis( Range( g ) ) );
+  if Length( BImage_g ) = 0 then
+      return AsExactSequence( extension );
+  fi;
+  topradEndstartterm := List( BImage_g, x -> FromEndMToHomMM( startterm, PreImagesRepresentative( g, x ) ) );
+  #
+  # Finding an element in the socle of Ext^1( endterm, startterm )
+  #
+  temp := cycle;
+  n := Length( topradEndstartterm );
+  i := 1;
+  repeat
+    t := topradEndstartterm[ i ];
+    if not IsZero( ExtensionFromCycle( ext, temp * t ) ) then 
+      temp := temp * t;
+      i := 1;
+    else
+      i := i + 1;
+    fi;
+  until
+    ( i = n + 1 );
+  #
+  # Constructing the almost split sequence in Ext^1(endterm,startterm)
+  #
+  ass := ExtensionFromCycle( ext, temp );
+
+  return AsExactSequence( ass );
+end
+);
+
