@@ -47,3 +47,4 @@ DeclareOperation( "MorphismByFunction",
 #! @Returns IsFieldCategoryMorphism
 DeclareOperation( "MorphismByLinearTransformation",
                   [ IsHomObject, IsLinearTransformation ] );
+
