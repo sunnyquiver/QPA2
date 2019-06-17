@@ -178,7 +178,8 @@ Functions that are the same
 
 AddNthPowerToRelations( FQ, rels, n ) 
 AdjacencyMatrixOfQuiver( quiver ) 
-AlgebraAsQuiverAlgebra( A ) 
+AlgebraAsQuiverAlgebra( A )
+AlmostSplitSequence( M, side )
 AssociatedMonomialAlgebra( A ) 
 
 BasisOfProjectives( A )
@@ -199,6 +200,7 @@ Dimension( M )
 DimensionVector( R )
 DominantDimension( R )
 DominantDimensionOfAlgebra( A, n )
+DTr( M[, n ] ), DualOfTranspose( M[, n ] ) 
 
 EnvelopingAlgebra( A )
 EulerBilinearFormOfAlgebra
@@ -326,11 +328,15 @@ SeparatedQuiver( quiver )
 Size( P ) 
 SocleSeries( M )
 Source( f ) --  (undocumented)
+StarOfModule( M ) 
+StarOfModuleHomomorphism( M ) 
 SymmetricMatrixOfUnitForm
 
 TensorProductOfAlgebras( FQ1, FQ2 )
 TensorProductOfModules( M, N )
 TitsUnitFormOfAlgebra
+TransposeOfModule( M )
+TrD( M[, n ] ), TransposeOfDual( M[, n ] ) 
 TruncatedPathAlgebra( F, Q, n )
 
 UnderlyingSet( P )
@@ -341,3 +347,5 @@ New operations:
 DeclareAttribute( "DynkinType", IsQuiver );
 DeclareProperty( "IsExtendedDynkinQuiver", IsQuiver );
 DeclareOperation( "RightAlgebraModuleToRightQuiverModule", IsRightAlgebraModuleElementCollection );
+DeclareOperation( "StarFunctor", [ IsQuiverModuleCategory ] );
+DeclareOperation( "TransposeFunctor", [ IsQuiverModuleCategory ] );

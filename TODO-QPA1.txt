@@ -68,14 +68,9 @@ IsTauRigidModule( M ) -- no (should be ported)
 IsZero( M ) -- same (undocumented)
 SubRepresentation( M, gens ) -- no (use Source( SubmoduleInclusion( M,gens ) )) 
 ElementOfIndecProjective( A, m, s ) -- no (implemented more generally in QPA2)
-DTr( M[, n ] ), DualOfTranspose( M[, n ] ) -- no (should be ported)
 NakayamaFunctorOfModule( M ) -- no (should be ported, as functor)
 NakayamaFunctorOfModuleHomomorphism( f ) -- no (should be ported, as functor)
 RestrictionViaAlgebraHomomorphism( f, M ) -- no (restriction implemented as functor on representation level)
-StarOfModule( M ) -- no (should be ported, as functor)
-StarOfModuleHomomorphism( M ) -- no (should be ported, as functor)
-TrD( M[, n ] ), TransposeOfDual( M[, n ] ) -- no
-TransposeOfModule( M ) -- no (should be ported)
 [ 6.7 Vertex projective modules and submodules thereof ] -- no (should be ported)
 
 CHAPTER 7: HOMOMORPHISMS OF RIGHT MODULES OVER PATH ALGEBRAS
