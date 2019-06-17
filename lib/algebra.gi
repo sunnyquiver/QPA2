@@ -2238,12 +2238,12 @@ function( A, direction )
   ppowerr := Size( Range( pi) );
   gens := Filtered( BasisVectors(Basis( C ) ), b -> ForAll( centralidem, c -> c * ImageElm(g, b) <> Zero( One( Range( g ) ) ) ) ); 
   D := Subalgebra( C, gens );
-  idD := FindMultiplicativeIdentity( D );
-  if idD = fail then
-    Error( "The center of the entered algebra does not have a multiplicative identity.\n");
-  else
-    SetOne( D, idD );
-  fi;    
+#  idD := FindMultiplicativeIdentity( D );
+#  if idD = fail then
+#    Error( "The center of the entered algebra does not have a multiplicative identity.\n");
+#  else
+#    SetOne( D, idD );
+#  fi;    
   order := function( obj )
     
     local one, pow, ord;
