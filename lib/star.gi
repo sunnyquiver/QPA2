@@ -38,8 +38,7 @@ InstallMethod( StarFunctor,
 "for a category of quiver modules",
 [ IsQuiverModuleCategory ],
 function( C )
-  
-  local   A,  side,  D,  U,  V,  starfunctor,  morphism,  object;
+  local side, A, D, starfunctor, morphism, object;
   
   side := Side( C );
   A := ActingAlgebra( side, C );
@@ -47,16 +46,14 @@ function( C )
     Error( "The construction of the star functor is on one-sided modules.\n" );
   fi;
   D := ModuleCategory( Opposite( Side( C ) ), A ); 
-  U := StableCategoryModuloProjectives( C ); 
-  V := StableCategoryModuloProjectives( D );
-  starfunctor := CapFunctor( "StarFunctor", [ [ U, true ] ], V );
+  starfunctor := CapFunctor( "StarFunctor", [ [ C, true ] ], D );
   
   morphism := function( M1, h, M2 ) 
-    return AsStableCategoryMorphism( StarOfModuleHomomorphism( OriginalMorphism( h ) ), V );
+    return StarOfModuleHomomorphism( h );
   end;
   
   object := function( N )
-    return AsStableCategoryObject( StarOfModule( OriginalObject( N ) ), V );
+    return StarOfModule( N );
   end;
   
   AddObjectFunction( starfunctor, object );
