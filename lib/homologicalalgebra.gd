@@ -301,6 +301,12 @@ DeclareProperty( "IsProjectiveModule",  IsQuiverModule );
 DeclareProperty( "IsProjectiveRepresentation",  IsQuiverRepresentation  );
 #! @EndGroup
 
+#! @Description
+#!  Returns true if the module <A>M</A>  is <M>\tau</M>-rigid, otherwise false. 
+#! @Returns <C>true</C> or <C>false</C>
+#! @Arguments M
+DeclareProperty( "IsTauRigidModule", IsQuiverModule );
+
 #! @Section Tilting theory 
 
 #! @BeginGroup

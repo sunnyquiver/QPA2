@@ -1507,3 +1507,19 @@ function( R, N )
     return SubrepresentationInclusion( N, trace );
 end
   );
+
+#######################################################################
+##
+#P  IsTauRigidModule( <M> )
+##
+##  This function returns true if the entered module  <M>  is a tau rigid 
+##  module, otherwise false.
+##
+InstallMethod( IsTauRigidModule,
+"for a quiver module",
+[ IsQuiverModule ], 0,
+function( M ); 
+    
+    return Dimension( Hom( M, DTr( M ) ) ) = 0;
+end
+  );

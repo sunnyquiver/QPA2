@@ -64,12 +64,9 @@ RightGroebnerBasisOfIdeal( I ) -- no
 CHAPTER 6: RIGHT MODULES OVER PATH ALGEBRAS
 
 IsDirectSumOfModules( M ) -- no (should be ported)
-IsTauRigidModule( M ) -- no (should be ported)
 IsZero( M ) -- same (undocumented)
 SubRepresentation( M, gens ) -- no (use Source( SubmoduleInclusion( M,gens ) )) 
 ElementOfIndecProjective( A, m, s ) -- no (implemented more generally in QPA2)
-NakayamaFunctorOfModule( M ) -- no (should be ported, as functor)
-NakayamaFunctorOfModuleHomomorphism( f ) -- no (should be ported, as functor)
 RestrictionViaAlgebraHomomorphism( f, M ) -- no (restriction implemented as functor on representation level)
 [ 6.7 Vertex projective modules and submodules thereof ] -- no (should be ported)
 
