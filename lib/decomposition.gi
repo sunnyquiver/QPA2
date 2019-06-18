@@ -83,16 +83,21 @@ InstallMethod( CommonDirectSummand,
 [ IsQuiverModule, IsQuiverModule ],
 function( M1, M2 ) 
 
-  local side, R1, R2;
+  local side, R1, R2, commondir;
 
-  side := Side( R1 );
-  if side <> Side( R2 ) then
+  side := Side( M1 );
+  if side <> Side( M2 ) then
     Error( "The entered modules are not modules on the same side.\n" );
   fi;
   R1 := UnderlyingRepresentation( M1 );
   R2 := UnderlyingRepresentation( M2 );
-
-  return List( CommonDirectSummand( R1, R2 ), m -> AsModule( side, m ) );
+  commondir := CommonDirectSummand( R1, R2 );
+ 
+  if commondir = false then 
+    return false;
+  else
+    return List( commondir, m -> AsModule( side, m ) );
+  fi;
 end
   );
 
@@ -291,14 +296,14 @@ InstallMethod ( DecomposeModuleWithMultiplicities,
 [ IsQuiverModule ],
 function( M )
 
-  local side, R, decomp;
+  local side, R, decomp, temp;
   
   side := Side( M );
   R := UnderlyingRepresentation( M );
   decomp := DecomposeRepresentationWithMultiplicities( R );
-  decomp[1] := List( decomp[ 1 ], r -> AsModule( side, r ) );
+  temp := List( decomp[ 1 ], r -> AsModule( side, r ) );
   
-  return decomp;
+  return [ temp, decomp[ 2 ] ];
 end
   );
 
