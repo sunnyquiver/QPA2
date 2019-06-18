@@ -63,3 +63,51 @@ function( C )
   return starfunctor;  
 end
   );
+
+#######################################################################
+##
+#A  NakayamaFunctorOfModule( <M> )
+##
+##  This function takes as an argument a module over an algebra  A  and
+##  computes the image of the Nakayama functor, that is, the module  
+##  Hom_K(Hom_A(M, A), K)  over  A. 
+##  
+InstallMethod( NakayamaFunctorOfModule, 
+"for a quiver module",
+[ IsQuiverModule ],
+function( M );
+    
+    return DualOfModule( StarOfModule( M ) );
+end
+  );
+
+#######################################################################
+##
+#A  NakayamaFunctorOfModuleHomomorphism( <f> )
+##
+##  This function takes as an argument a homomorphism  f  between two 
+##  modules  M  and  N  over an algebra  A  and computes the induced 
+##  homomorphism from the module  Hom_K(Hom_A(N, A), K)  to the module  
+##  Hom_K(Hom_A(M, A), K)  over  A. 
+##
+InstallMethod( NakayamaFunctorOfModuleHomomorphism, 
+"for a quiver module homomorphism",
+[ IsQuiverModuleHomomorphism ],
+function( f ); 
+
+  return DualOfModuleHomomorphism( StarOfModuleHomomorphism( f ) );
+end
+);
+
+InstallMethod( NakayamaFunctor, "for a category of quiver modules",
+        [ IsQuiverModuleCategory ],
+        function( C )
+  
+  local F, G;
+  
+  F := StarFunctor( C );
+  G := DualFunctor( AsCapCategory( Range( F ) ) );
+
+  return PreComposeFunctors( F, G );
+end 
+  );
