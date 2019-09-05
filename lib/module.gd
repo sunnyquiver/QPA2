@@ -568,6 +568,12 @@ DeclareAttribute( "AnnihilatorOfModule", IsQuiverModule );
 DeclareOperation( "EndomorphismAlgebra", [ IsQuiverModule ] );
 
 #! @Description
+#! Returns the injective envelope of the quiver module <A>M</A>. 
+#! @Returns IsQuiverModuleHomomorphism
+#! @Arguments M
+DeclareAttribute( "InjectiveEnvelope", IsQuiverModule );
+
+#! @Description
 #!  Returns the intersection of a finite set of quiver modules which are 
 #!  submodules of one given quiver module. 
 #! @Returns <Ref Filt="IsQuiverModule"/>
