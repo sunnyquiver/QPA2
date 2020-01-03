@@ -704,6 +704,25 @@ function( R );
 end
   );
 
+#######################################################################
+##
+#P  IsInjectiveModule( <M> )
+##
+##  Checks whether <M> is injective.
+##
+InstallMethod( IsInjectiveModule, 
+"for a IsQuiverModule",
+[ IsQuiverModule ],
+function( M ) 
+
+  local   R;
+
+  R := UnderlyingRepresentation( M );
+   
+  return IsInjectiveRepresentation( R );
+end
+  );
+
 InstallMethod( IsNthSyzygy, 
 "for a IsQuiverRepresentation",
 [ IsQuiverRepresentation, IS_INT ], 
@@ -1486,5 +1505,21 @@ function( R, N )
     trace := Flat(List(B, b -> List( homRN, f -> ImageElm( f, b ) ) ) ) ;
     
     return SubrepresentationInclusion( N, trace );
+end
+  );
+
+#######################################################################
+##
+#P  IsTauRigidModule( <M> )
+##
+##  This function returns true if the entered module  <M>  is a tau rigid 
+##  module, otherwise false.
+##
+InstallMethod( IsTauRigidModule,
+"for a quiver module",
+[ IsQuiverModule ], 0,
+function( M ); 
+    
+    return Dimension( Hom( M, DTr( M ) ) ) = 0;
 end
   );

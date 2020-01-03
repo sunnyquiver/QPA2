@@ -432,6 +432,7 @@ side -> function( rep_cat )
   SetUnderlyingRepresentationCategory( cat, rep_cat );
   SetIsAbelianCategory( cat, true );
   SetIsAbelianCategoryWithEnoughProjectives( cat, true );
+  SetIsAbelianCategoryWithEnoughInjectives( cat, true );
 
   AddIsEqualForObjects( cat,
   function( M1, M2 )
@@ -481,6 +482,7 @@ side -> function( rep_cat )
   end );
 
   AddEpimorphismFromSomeProjectiveObject( cat, ProjectiveCover );
+  AddMonomorphismIntoSomeInjectiveObject( cat, InjectiveEnvelope );
 
   Finalize( cat );
 
@@ -664,6 +666,13 @@ InstallMethod( ProjectiveCover, "for a quiver module",
 function( M )
   return AsModuleHomomorphism( Side( M ),
                                ProjectiveCover( UnderlyingRepresentation( M ) ) );
+end );
+
+InstallMethod( InjectiveEnvelope, "for a quiver module",
+               [ IsQuiverModule ],
+function( M )
+  return AsModuleHomomorphism( Side( M ),
+                               InjectiveEnvelope( UnderlyingRepresentation( M ) ) );
 end );
 
 #######################################################################

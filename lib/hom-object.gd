@@ -48,3 +48,4 @@ DeclareOperation( "MorphismByFunction",
 DeclareOperation( "MorphismByLinearTransformation",
                   [ IsHomObject, IsLinearTransformation ] );
 
+#

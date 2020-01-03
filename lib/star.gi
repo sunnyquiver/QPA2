@@ -38,8 +38,7 @@ InstallMethod( StarFunctor,
 "for a category of quiver modules",
 [ IsQuiverModuleCategory ],
 function( C )
-  
-  local   A,  side,  D,  U,  V,  starfunctor,  morphism,  object;
+  local side, A, D, starfunctor, morphism, object;
   
   side := Side( C );
   A := ActingAlgebra( side, C );
@@ -47,16 +46,14 @@ function( C )
     Error( "The construction of the star functor is on one-sided modules.\n" );
   fi;
   D := ModuleCategory( Opposite( Side( C ) ), A ); 
-  U := StableCategoryModuloProjectives( C ); 
-  V := StableCategoryModuloProjectives( D );
-  starfunctor := CapFunctor( "StarFunctor", [ [ U, true ] ], V );
+  starfunctor := CapFunctor( "StarFunctor", [ [ C, true ] ], D );
   
   morphism := function( M1, h, M2 ) 
-    return AsStableCategoryMorphism( StarOfModuleHomomorphism( OriginalMorphism( h ) ), V );
+    return StarOfModuleHomomorphism( h );
   end;
   
   object := function( N )
-    return AsStableCategoryObject( StarOfModule( OriginalObject( N ) ), V );
+    return StarOfModule( N );
   end;
   
   AddObjectFunction( starfunctor, object );
@@ -65,4 +62,52 @@ function( C )
   
   return starfunctor;  
 end
+  );
+
+#######################################################################
+##
+#A  NakayamaFunctorOfModule( <M> )
+##
+##  This function takes as an argument a module over an algebra  A  and
+##  computes the image of the Nakayama functor, that is, the module  
+##  Hom_K(Hom_A(M, A), K)  over  A. 
+##  
+InstallMethod( NakayamaFunctorOfModule, 
+"for a quiver module",
+[ IsQuiverModule ],
+function( M );
+    
+    return DualOfModule( StarOfModule( M ) );
+end
+  );
+
+#######################################################################
+##
+#A  NakayamaFunctorOfModuleHomomorphism( <f> )
+##
+##  This function takes as an argument a homomorphism  f  between two 
+##  modules  M  and  N  over an algebra  A  and computes the induced 
+##  homomorphism from the module  Hom_K(Hom_A(N, A), K)  to the module  
+##  Hom_K(Hom_A(M, A), K)  over  A. 
+##
+InstallMethod( NakayamaFunctorOfModuleHomomorphism, 
+"for a quiver module homomorphism",
+[ IsQuiverModuleHomomorphism ],
+function( f ); 
+
+  return DualOfModuleHomomorphism( StarOfModuleHomomorphism( f ) );
+end
+);
+
+InstallMethod( NakayamaFunctor, "for a category of quiver modules",
+        [ IsQuiverModuleCategory ],
+        function( C )
+  
+  local F, G;
+  
+  F := StarFunctor( C );
+  G := DualFunctor( AsCapCategory( Range( F ) ) );
+
+  return PreComposeFunctors( F, G );
+end 
   );

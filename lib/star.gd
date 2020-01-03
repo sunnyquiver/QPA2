@@ -23,4 +23,26 @@ DeclareAttribute( "StarOfModuleHomomorphism", IsQuiverModuleHomomorphism );
 #! @Arguments C
 DeclareOperation( "StarFunctor", [ IsQuiverModuleCategory ] );
 
+#! @Section The Nakayama functor
+
+#! @Description
+#!  This function computes the Nakayama functor from a quiver module category <Arg>C</Arg>.  
+#! @Returns <Ref Filt="IsQuiverModuleCategory"/>
+#! @Arguments C
+DeclareOperation( "NakayamaFunctor", [ IsQuiverModuleCategory ] );
+
+#! @Description
+#!  This function computes the Nakayama functor applied to a module <Arg>M</Arg>.  
+#! @Returns <Ref Filt="IsQuiverModule"/>
+#! @Arguments M
+DeclareAttribute( "NakayamaFunctorOfModule", IsQuiverModule );
+
+#! @Description
+#!  This function computes the Nakayama functor applied to a module homomorphism 
+#!  <Arg>f</Arg>.  
+#! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
+#! @Arguments f
+DeclareAttribute( "NakayamaFunctorOfModuleHomomorphism", IsQuiverModuleHomomorphism );
+
+
 #

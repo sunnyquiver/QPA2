@@ -178,7 +178,8 @@ Functions that are the same
 
 AddNthPowerToRelations( FQ, rels, n ) 
 AdjacencyMatrixOfQuiver( quiver ) 
-AlgebraAsQuiverAlgebra( A ) 
+AlgebraAsQuiverAlgebra( A )
+AlmostSplitSequence( M, side )
 AssociatedMonomialAlgebra( A ) 
 
 BasisOfProjectives( A )
@@ -199,6 +200,7 @@ Dimension( M )
 DimensionVector( R )
 DominantDimension( R )
 DominantDimensionOfAlgebra( A, n )
+DTr( M[, n ] ), DualOfTranspose( M[, n ] ) 
 
 EnvelopingAlgebra( A )
 EulerBilinearFormOfAlgebra
@@ -258,6 +260,7 @@ IsSplitEpimorphism( f ) -- (from CAP, undocumented)
 IsSplitMonomorphism( f ) -- (from CAP, undocumented)
 IsStringAlgebra( A ) 
 IsSymmetricAlgebra( A )
+IsTauRigidModule( M )
 IsTriangularReduced( A ) 
 IsTreeQuiver( quiver ) 
 IsUniform( element )
@@ -285,6 +288,8 @@ MaximalCommonDirectSummand( M, N )
 MinimalGeneratingSetOfIdeal( I )
 
 NakayamaAutomorphism( A )
+NakayamaFunctorOfModule( M ) 
+NakayamaFunctorOfModuleHomomorphism( f ) 
 NakayamaPermutation( A )
 NthPowerOfArrowIdeal( FQ, n )
 NthSyzygy( M, n )
@@ -326,11 +331,15 @@ SeparatedQuiver( quiver )
 Size( P ) 
 SocleSeries( M )
 Source( f ) --  (undocumented)
+StarOfModule( M ) 
+StarOfModuleHomomorphism( M ) 
 SymmetricMatrixOfUnitForm
 
 TensorProductOfAlgebras( FQ1, FQ2 )
 TensorProductOfModules( M, N )
 TitsUnitFormOfAlgebra
+TransposeOfModule( M )
+TrD( M[, n ] ), TransposeOfDual( M[, n ] ) 
 TruncatedPathAlgebra( F, Q, n )
 
 UnderlyingSet( P )
@@ -340,4 +349,7 @@ New operations:
 
 DeclareAttribute( "DynkinType", IsQuiver );
 DeclareProperty( "IsExtendedDynkinQuiver", IsQuiver );
+DeclareOperation( "NakayamaFunctor", [ IsQuiverModuleCategory ] );
 DeclareOperation( "RightAlgebraModuleToRightQuiverModule", IsRightAlgebraModuleElementCollection );
+DeclareOperation( "StarFunctor", [ IsQuiverModuleCategory ] );
+DeclareOperation( "TransposeFunctor", [ IsQuiverModuleCategory ] );

@@ -269,11 +269,15 @@ DeclareProperty( "IsRigidObject", IsFieldCategoryObject );
 
 #! @Section Objects defined by homological properties 
 
+#! @BeginGroup
 #! @Description
-#!  Checks if the representation  <A>R</A> is projective or not.
+#!  Checks if the module/the representation <A>M</A>/<A>R</A> is injective or not.
 #! @Returns <C>true</C> or <C>false</C>
+#! @Arguments M
+DeclareProperty( "IsInjectiveModule",  IsQuiverModule );
 #! @Arguments R
 DeclareProperty( "IsInjectiveRepresentation",  IsQuiverRepresentation  );
+#! @EndGroup
 
 #! @Description
 #!  Returns true if the object  <A>R</A>  is n-rigid, otherwise false. 
@@ -296,6 +300,12 @@ DeclareProperty( "IsProjectiveModule",  IsQuiverModule );
 #! @Arguments R
 DeclareProperty( "IsProjectiveRepresentation",  IsQuiverRepresentation  );
 #! @EndGroup
+
+#! @Description
+#!  Returns true if the module <A>M</A>  is <M>\tau</M>-rigid, otherwise false. 
+#! @Returns <C>true</C> or <C>false</C>
+#! @Arguments M
+DeclareProperty( "IsTauRigidModule", IsQuiverModule );
 
 #! @Section Tilting theory 
 
