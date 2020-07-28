@@ -26,7 +26,9 @@ DeclareAttribute( "UnderlyingField", IsFieldCategory );
 #! @Arguments X
 DeclareAttribute( "UnderlyingField", IsFieldCategoryObject );
 #! @Arguments m
+if false then
 DeclareAttribute( "UnderlyingField", IsFieldCategoryMorphism );
+fi;
 #! @EndGroup
 
 #! @Description

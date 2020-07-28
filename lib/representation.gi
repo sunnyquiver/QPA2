@@ -814,7 +814,7 @@ function( m1, m2 )
          and IsEqualForMorphisms( m1, m2 );
 end );
 
-InstallMethod( IsZero, [ IsQuiverRepresentationHomomorphism ],
+InstallOtherMethod( IsZero, [ IsQuiverRepresentationHomomorphism ],
                IsZeroForMorphisms );
 
 InstallMethod( ImageElm,
@@ -828,7 +828,7 @@ function( f, e )
                   ImageElm ) );
 end );
 
-InstallMethod( \+,
+InstallOtherMethod( \+,
                [ IsQuiverRepresentationHomomorphism, IsQuiverRepresentationHomomorphism ],
 function( f, g )
   if Source( f ) <> Source( g ) then
@@ -1481,7 +1481,7 @@ end
   );
 
 ##
-InstallMethod( InverseOp,
+InstallOtherMethod( InverseOp,
     [ IsQuiverRepresentationHomomorphism ],
 function( m )
   local maps;

@@ -403,7 +403,7 @@ function( M1, M2 )
   return true;
 end );
 
-InstallMethod( IsZero, "for QPA matrix", [ IsQPAMatrix ],
+InstallOtherMethod( IsZero, "for QPA matrix", [ IsQPAMatrix ],
 function( M )
   local dim, i, j;
   dim := DimensionsMat( M );

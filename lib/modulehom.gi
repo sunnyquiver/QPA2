@@ -103,7 +103,7 @@ function( f )
   Print( "<", String( f ), ">" );
 end );
 
-InstallMethod( IsZero, [ IsQuiverModuleHomomorphism ],
+InstallOtherMethod( IsZero, [ IsQuiverModuleHomomorphism ],
                IsZeroForMorphisms );
 
 InstallMethod( \=, "for quiver module homomorphisms",
@@ -113,7 +113,7 @@ function( f1, f2 )
          and UnderlyingRepresentationHomomorphism( f1 ) = UnderlyingRepresentationHomomorphism( f2 );
 end );
 
-InstallMethod( \+,
+InstallOtherMethod( \+,
                [ IsQuiverModuleHomomorphism, IsQuiverModuleHomomorphism ],
 function( f, g )
   if not IsIdenticalObj( CapCategory( f ), CapCategory( g ) ) then
@@ -133,7 +133,7 @@ function( c, m )
                                c * UnderlyingRepresentationHomomorphism( m ) );
 end );
 
-InstallMethod( InverseOp, "for quiver module homomorphism",
+InstallOtherMethod( InverseOp, "for quiver module homomorphism",
                [ IsQuiverModuleHomomorphism ],
 function( m )
   if not IsIsomorphism( m ) then
