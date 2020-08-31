@@ -2132,7 +2132,7 @@ function( R, S )
     #
     splittingmaps := function( R, S) 
         local   HomRS,  HomSR,  rs,  sr,  m,  n,  l,  zero,  j,  i,  
-                temp,  comp,  f,  fsr,  srf;
+                temp,  comp,  f,  fsr,  srf, k;
             
         HomRS := BasisVectors( Basis( Hom( R, S ) ) );
         HomSR := BasisVectors( Basis( Hom( S, R ) ) );
@@ -2158,7 +2158,7 @@ function( R, S )
                 if l > 1 then  # because hom^0*hom => error!
                     temp := PreCompose( HomRS[ i ], HomSR[ j ] );
                     comp := [];
-                    for i in [ 1..l-1] do
+                    for k in [ 1..l-1] do
                         Add( comp, temp );
                     od;
                     f := PreCompose( PreCompose( comp ), HomRS[ i ] );
