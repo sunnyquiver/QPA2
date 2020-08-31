@@ -1101,11 +1101,37 @@ function( A, vecspace_cat )
   
   AddEpimorphismFromSomeProjectiveObject( cat, ProjectiveCover );
   AddMonomorphismIntoSomeInjectiveObject( cat, InjectiveEnvelope );
-
-  # The object/morphism constructors check whether the input is well-defined or not.
-  # So if it has been created then it is well-defined
-  AddIsWellDefinedForObjects( cat, ReturnTrue );
-  AddIsWellDefinedForMorphisms( cat, ReturnTrue );
+  
+  ##
+  AddIsWellDefinedForObjects( cat,
+    function( R )
+      local A, relations;
+      
+      A := AlgebraOfRepresentation( R );
+      
+      relations := RelationsOfAlgebra( A );
+      
+      return ForAll( relations, rel -> IsZero( MapForAlgebraElement( R, rel ) ) );
+      
+  end );
+  
+  ##
+  AddIsWellDefinedForMorphisms( cat,
+    function( alpha )
+      local S, R, arrows;
+      
+      S := Source( alpha );
+      R := Range( alpha );
+      arrows := Arrows( QuiverOfRepresentation( S ) );
+      
+      return ForAll( arrows, arrow ->
+                            IsEqualForMorphisms(
+                              PreCompose( MapForArrow( S, arrow ), MapForVertex( alpha, Target( arrow ) ) ),
+                                PreCompose( MapForVertex( alpha, Source( arrow ) ), MapForArrow( R, arrow ) )
+                                               )
+                   );
+  
+  end );
 
   to_be_finalized := ValueOption( "FinalizeCategory" );
   if to_be_finalized <> false then
@@ -2106,7 +2132,7 @@ function( R, S )
     #
     splittingmaps := function( R, S) 
         local   HomRS,  HomSR,  rs,  sr,  m,  n,  l,  zero,  j,  i,  
-                temp,  comp,  f,  fsr,  srf;
+                temp,  comp,  f,  fsr,  srf, k;
             
         HomRS := BasisVectors( Basis( Hom( R, S ) ) );
         HomSR := BasisVectors( Basis( Hom( S, R ) ) );
@@ -2132,7 +2158,7 @@ function( R, S )
                 if l > 1 then  # because hom^0*hom => error!
                     temp := PreCompose( HomRS[ i ], HomSR[ j ] );
                     comp := [];
-                    for i in [ 1..l-1] do
+                    for k in [ 1..l-1] do
                         Add( comp, temp );
                     od;
                     f := PreCompose( PreCompose( comp ), HomRS[ i ] );
