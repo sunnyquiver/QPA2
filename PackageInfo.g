@@ -47,8 +47,8 @@ PackageDoc := rec(
 
 Dependencies := rec(
   GAP := "4.5",
-  NeededOtherPackages := [ [ "CAP", ">=2016.05.30" ],
-                           [ "ComplexesForCAP", ">=2018.09.15" ],
+  NeededOtherPackages := [ [ "CAP", ">=2020.02.16" ],
+                           [ "ComplexesCategories", ">=2020.07.24" ],
                            ],
   SuggestedOtherPackages := [],
   ExternalConditions := []

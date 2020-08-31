@@ -9,15 +9,14 @@ QPA version 1, but with the basic functionality reimplemented in a
 cleaner way.  So far, only a small part of the functionality from
 version 1 has been implemented in version 2.
 
-To use QPA2, you need the following non-standard packages:
+To use QPA2, you need the following not yet deposited package ComplexesComplexes,
+which can be obtained by cloning the `HigherHomologicalAlgebra` repository:
 
- * ComplexesForCAP, available at https://github.com/kamalsaleh/ComplexesForCAP
- * InfiniteLists (dependency of ComplexesForCAP),
-   available at https://github.com/oysteins/InfiniteLists
+    https://github.com/homalg-project/HigherHomologicalAlgebra
 
-Additionally, the package ComplexesForCAP depends on the package CAP
+Additionally, the package ComplexesCategories depends on the package CAP
 and other packages from the CAP project.  These packages are
-distributed with CAP, but ComplexesForCAP may depend on newer versions
+distributed with CAP, but ComplexesCategories may depend on newer versions
 than those that are distributed with GAP.  In that case, you need to
 get these packages from the source at
 
