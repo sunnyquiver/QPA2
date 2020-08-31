@@ -24,17 +24,17 @@ DeclareCategory( "IsVectorSpaceHomSpace", IsHomSpace );
 
 #! @BeginExampleSession
 #! gap> V := StandardVectorSpace( Rationals, 3 );
-#! Rationals^3
+#! <vector space of dimension 3 over Rationals>
 #! gap> W := StandardVectorSpace( Rationals, 2 );
-#! Rationals^2
+#! <vector space of dimension 2 over Rationals>
 #! gap> hom := Hom( V, W );
-#! Hom( Rationals^3, Rationals^2 );
+#! Hom(An object in vector spaces over Rationals, An object in vector spaces over Rationals)
 #! gap> IsVectorSpaceHomSpace( hom );
 #! true
 #! gap> Source( hom );
-#! Rationals^3
+#! <vector space of dimension 3 over Rationals>
 #! gap> Range( hom );
-#! Rationals^2
+#! <vector space of dimension 2 over Rationals>
 #! gap> Dimension( hom );
 #! 6
 #! gap> T := Basis( hom )[ 1 ] + 2 * Basis( hom )[ 3 ];
@@ -55,7 +55,7 @@ DeclareCategory( "IsQuiverRepresentationHomSpace", IsHomSpace );
 #! gap> R2 := QuiverRepresentation( kQ, [ 0, 2, 2 ], [ , [ 0, 1, 1, 0 ] ] );
 #! <0,2,2>
 #! gap> hom := Hom( R1, R2 );
-#! Hom( <1,2,1>, <0,2,2> )
+#! Hom(1,2,1, 0,2,2)
 #! gap> IsQuiverRepresentationHomSpace( hom );
 #! true
 #! @EndExampleSession
