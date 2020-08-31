@@ -2,11 +2,11 @@ QPA2: Quivers and path algebras, version 2
 
 This repository contains (what is going to be) version 2 of the GAP
 package QPA.  For information about QPA version 1, see
-http://www.math.ntnu.no/~oyvinso/QPA/
+http://folk.ntnu.no/oyvinso/QPA/
 
 QPA version 2 is intended to have roughly the same functionality as
 QPA version 1, but with the basic functionality reimplemented in a
-cleaner way.  So far, only a small part of the functionality from
+cleaner way.  So far, a lot but not all of the functionality from
 version 1 has been implemented in version 2.
 
 To use QPA2, you need the following not yet deposited package ComplexesComplexes,
@@ -31,5 +31,5 @@ available at http://www.math.ntnu.no/~oysteini/qpa2/doc/chap0.html
 If you encounter any problems or have questions regarding QPA2, you
 can either:
 
- * report an issue at https://github.com/oysteins/QPA2/issues/new, or
- * contact oysteini@math.ntnu.no.
+ * report an issue at https://github.com/sunnyquiver/QPA2/issues/new, or
+ * contact oyvind.solberg@ntnu.no.
