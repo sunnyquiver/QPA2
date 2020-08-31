@@ -349,7 +349,7 @@ function( T1, T2 )
          RightMatrixOfLinearTransformation( T1 ) = RightMatrixOfLinearTransformation( T2 );
 end );
 
-InstallMethod( \+, [ IsLinearTransformation, IsLinearTransformation ],
+InstallOtherMethod( \+, [ IsLinearTransformation, IsLinearTransformation ],
 function( T1, T2 )
   local mat1, mat2;
   if Source( T1 ) <> Source( T2 ) then
@@ -374,7 +374,7 @@ function( a, T )
            a * RightMatrixOfLinearTransformation( T ) );
 end );
 
-InstallMethod( IsZero, [ IsLinearTransformation ],
+InstallOtherMethod( IsZero, [ IsLinearTransformation ],
                T -> IsZero( RightMatrixOfLinearTransformation( T ) ) );
 
 InstallMethod( ImageElm, [ IsLinearTransformation, IsQPAVector ],
@@ -706,7 +706,7 @@ end
 );
 
 ##
-InstallMethod( InverseOp,
+InstallOtherMethod( InverseOp,
     [ IsLinearTransformation ],
 function( m )
   return LiftAlongMonomorphism( m, IdentityMorphism( Range( m ) ) );

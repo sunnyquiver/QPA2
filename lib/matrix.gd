@@ -54,11 +54,13 @@ DeclareOperation( "MatrixByCols", [ IsRing, IsDenseList, IsDenseList ] );
 #!  Construct an $<A>m</A> \times <A>n</A>$ zero matrix over the ring <A>R</A>.
 DeclareOperation( "MakeZeroMatrix", [ IsRing, IsInt, IsInt ] );
 
+if false then
 #! @Arguments R, m, n
 #! @Returns <Ref Filt="IsQPAMatrix"/>
 #! @Description
 #!  Construct an $<A>m</A> \times <A>n</A>$ identity matrix over the ring <A>R</A>.
 DeclareOperation( "IdentityMatrix", [ IsRing, IsInt ] );
+fi;
 
 #! @Arguments M
 #! @Description
@@ -70,17 +72,19 @@ DeclareProperty( "IsIdentityMatrix", IsQPAMatrix );
 #!  Returns <C>true</C> if <A>M</A> is a zero matrix, <C>false</C> otherwise.
 DeclareProperty( "IsZeroMatrix", IsQPAMatrix );
 
+if false then
 #! @Arguments M
 #! @Returns list of lists of ring elements
 #! @Description
 #!  Returns the rows of the matrix <A>M</A>, as a list of lists.
-DeclareOperation( "RowsOfMatrix", [ IsQPAMatrix ] );
+DeclareAttribute( "RowsOfMatrix", IsQPAMatrix );
+fi;
 
 #! @Arguments M
 #! @Returns list of lists of ring elements
 #! @Description
 #!  Returns the columns of the matrix <A>M</A>, as a list of lists.
-DeclareOperation( "ColsOfMatrix", [ IsQPAMatrix ] );
+DeclareAttribute( "ColsOfMatrix", IsQPAMatrix );
 
 #! @Arguments M
 #! @Description
