@@ -893,7 +893,7 @@ function( cat1, cat2 )
          and VectorSpaceCategory( cat1 ) = VectorSpaceCategory( cat2 );
 end );
 
-InstallMethod( CategoryOfQuiverRepresentationsOverVectorSpaceCategory,
+InstallMethodWithCache( CategoryOfQuiverRepresentationsOverVectorSpaceCategory,
                "for quiver algebra and vector space category",
                [ IsQuiverAlgebra, IsAbelianCategory ],
 function( A, vecspace_cat )
