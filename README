@@ -9,7 +9,7 @@ QPA version 1, but with the basic functionality reimplemented in a
 cleaner way.  So far, a lot but not all of the functionality from
 version 1 has been implemented in version 2.
 
-To use QPA2, you need the following not yet deposited package ComplexesComplexes,
+To use QPA2, you need the following not yet deposited package ComplexesCategories,
 which can be obtained by cloning the `HigherHomologicalAlgebra` repository:
 
     https://github.com/homalg-project/HigherHomologicalAlgebra
