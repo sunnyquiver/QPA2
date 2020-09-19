@@ -136,6 +136,88 @@ function( e )
   return e!.paths;
 end );
 
+# for the coefficients rings (similar to homalg rings)
+# fallback method
+#
+InstallOtherMethod( LaTeXStringForQPA,
+          [ IsRingElement ],
+  String
+);
+
+## for the field of rationals
+##
+InstallOtherMethod( LaTeXStringForQPA,
+          [ IsRat ],
+  function( r )
+    local n, d, s, l;
+    
+    n := NumeratorRat( r );
+    d := DenominatorRat( r );
+    
+    if IsOne( d ) then
+      return String( n );
+    fi;
+    
+    s := SignInt( n );
+    n := AbsInt( n );
+    
+    l := Concatenation( "\\frac{", String( n ), "}{", String( d ), "}" );
+    
+    if s = -1 then
+      l := Concatenation( "-", l );
+    fi;
+    
+    return l;
+    
+end );
+
+InstallMethod( LaTeXStringForQPA,
+          [ IsQuiverAlgebraElement ],
+  function( e )
+    local coeffs, paths, prod, string;
+    
+    if not IsPathAlgebraElement( e ) then
+      
+      e := Representative( e );
+      
+    fi;
+    
+    coeffs := List( Coefficients( e ), LaTeXStringForQPA );
+    
+    if IsEmpty( coeffs ) then
+      
+      return "0";
+      
+    elif coeffs[ 1 ] = "1" then
+      
+      coeffs[ 1 ] := "";
+      
+    fi;
+        
+    paths := List( Paths( e ), LaTeXStringForQPA );
+    
+    prod := ValueOption( "ScalarMultiplicationSymbol" );
+    
+    if prod = fail or not IsString( prod ) then
+      
+      prod := "";
+      
+    fi;
+    
+    string := ListN( coeffs, paths, { c, p } -> Concatenation( c, prod, "{", p, "}" ) );
+    
+    string := JoinStringsWithSeparator( string, "+" );
+    
+    string := ReplacedString( string, "+-", "-" );
+    
+    string := ReplacedString( string, Concatenation( "-1", prod, "{" ), "-{" );
+    
+    string := ReplacedString( string, Concatenation( "+1", prod, "{" ), "+{" );
+    
+    return string;
+    
+end );
+
 InstallMethod( IsLeftUniform, "for element of quiver algebra",
                [ IsQuiverAlgebraElement ],
 function( e )

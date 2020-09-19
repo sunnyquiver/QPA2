@@ -377,6 +377,17 @@ DeclareOperation( "CoefficientsOfPaths", [ IsList, IsQuiverAlgebraElement ] );
 #! @Label
 DeclareOperation( "CoefficientsOfPathsSorted", [ IsList, IsQuiverAlgebraElement ] );
 
+#! @Arguments e
+#! @Description
+#!  The operation uses the attribute <C>LabelAsLaTeXString</C> of primitive paths to compute
+#!  a LaTeX string for the algebra element <A>e</A>. One can pass optional values for <A>MultiplicationSymbol</A>
+#!  to specify the multiplication-symbol between the arrows of the paths, and <A>ScalarMultiplicationSymbol</A>
+#!  to specify the multiplication-symbol between scalars and paths.
+#! @Returns <C>IsString</C>
+DeclareOperation( "LaTeXStringForQPA", [ IsQuiverAlgebraElement ] );
+
+#! @InsertChunk Example_LaTeX_RightQuiver
+
 #! @Subsection Example
 
 #! Here is an example demonstrating use of the above functions:
