@@ -594,6 +594,60 @@ function( v )
   return v!.label;
 end );
 
+## fallback method
+InstallMethod( LabelAsLaTeXString,
+          [ IsPrimitivePath ],
+  LabelAsString
+);
+
+##
+InstallMethod( SetLabelsAsLaTeXStrings,
+          [ IsQuiver, IsList, IsList ],
+  function( quiver, vertices_labels, arrows_labels )
+    local vertices, n, arrows, i;
+    
+    vertices := Vertices( quiver );
+    
+    n := NumberOfVertices( quiver );
+    
+    for i in [ 1 .. n ] do
+      
+      SetLabelAsLaTeXString( vertices[ i ], vertices_labels[ i ] );
+      
+    od;
+    
+    arrows := Arrows( quiver );
+    
+    n := NumberOfArrows( quiver );
+    
+    for i in [ 1 .. n ] do
+      
+      SetLabelAsLaTeXString( arrows[ i ], arrows_labels[ i ] );
+      
+    od;
+    
+end );
+
+## For example when the vertices are integers, then
+## latex_string by the fallback method is the same as LabelAsString
+##
+InstallOtherMethod( SetLabelsAsLaTeXStrings,
+          [ IsQuiver, IsList ],
+  function( quiver, arrows_labels )
+    local arrows, n, i;
+    
+    arrows := Arrows( quiver );
+    
+    n := NumberOfArrows( quiver );
+    
+    for i in [ 1 .. n ] do
+      
+      SetLabelAsLaTeXString( arrows[ i ], arrows_labels[ i ] );
+      
+    od;
+    
+end );
+
 InstallMethod( TranslatePath,
                [ IsPrimitivePath, IsFunction ],
 function( p, f )
