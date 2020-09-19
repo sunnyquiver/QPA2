@@ -648,6 +648,34 @@ InstallOtherMethod( SetLabelsAsLaTeXStrings,
     
 end );
 
+##
+InstallMethod( LaTeXStringForQPA,
+          [ IsPrimitivePath ],
+  LabelAsLaTeXString
+);
+
+##
+InstallMethod( LaTeXStringForQPA,
+          [ IsPath ],
+  function( path )
+    local prod;
+    
+    prod := ValueOption( "MultiplicationSymbol" );
+    
+    if prod = fail or not IsString( prod ) then
+      
+      prod := "";
+      
+    else
+      
+      prod := Concatenation( "{", prod, "}" );
+      
+    fi;
+    
+    return JoinStringsWithSeparator( List( AsListLR( path ), LaTeXStringForQPA ), prod );
+    
+end );
+
 InstallMethod( TranslatePath,
                [ IsPrimitivePath, IsFunction ],
 function( p, f )
