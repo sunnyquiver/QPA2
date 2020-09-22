@@ -531,6 +531,28 @@ DeclareAttribute( "Label", IsPrimitivePath );
 #! @Returns <C>IsString</C>
 DeclareAttribute( "LabelAsString", IsPrimitivePath );
 
+#! @Arguments p
+#! @Description
+#!  The label of the primitive path <A>p</A>, as a LaTeX string (without enclosing dollar signs).
+#!  The fallback method for this operation is <C>LabelAsString</C>.
+#! @Returns <C>IsString</C>
+DeclareAttribute( "LabelAsLaTeXString", IsPrimitivePath );
+
+#! @Arguments Q, vertices, arrows
+#! @Description
+#!   The arguments are a quiver <A>Q</A> and two lists <A>vertices</A> and <A>arrows</A> of LaTeX strings for
+#!   vertices resp. arrows. The operation uses these lists to set the attribute <C>LabelAsLaTeXString</C> for
+#!   the vertices and arrows.
+DeclareOperation( "SetLabelsAsLaTeXStrings", [ IsQuiver, IsList, IsList ] );
+
+#! @Arguments p
+#! @Description
+#!  The operation uses the attribute <C>LabelAsLaTeXString</C> of primitive paths to compute
+#!  a LaTeX string for the path <A>p</A>. One can pass an optional value for <A>MultiplicationSymbol</A>
+#!  to specify the multiplication-symbol between the arrows of the path.
+#! @Returns <C>IsString</C>
+DeclareOperation( "LaTeXStringForQPA", [ IsPath ] );
+
 DeclareAttribute( "ArrowString", IsArrow );
 
 DeclareGlobalFunction( "QPA_LABEL_TO_STRING" );
