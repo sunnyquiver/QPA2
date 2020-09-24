@@ -108,3 +108,59 @@ CHAPTER 11: PROJECTIVE RESOLUTIONS AND THE BOUNDED DERIVED CATEGORY
 CHAPTER 13: DEGENERATION ORDER FOR MODULES IN FINITE TYPE
 
 [ everything from Degeneration order for modules in finite type ] -- no
+
+New functions:
+
+AllIndecModulesOfLengthAtMost -- no
+AllModulesOfLengthAtMost -- no
+AllSimpleSubmodulesOfModule -- no
+AllSubmodulesOfModule -- no
+BlocksOfAlgebra -- no
+BrauerAlgebra -- no
+BongartzTest -- no
+DecomposeModuleProbabilistic -- no
+DecomposeModuleViaCharPoly -- no
+DecomposeModuleViaTop -- no
+FrobeniusForm -- no
+FrobeniusLinearFunctional -- no
+FromIdentityToDoubleStarHomomorphism -- no
+LeftApproximationByAddM -- no
+MatrixOfHomomorphismBetweenProjectives -- no
+PreprojectiveAlgebra -- no
+ProjectiveResolutionOfSimpleModuleOverEndo -- no
+QuiverAlgebraOfAmodAeA -- no
+QuiverAlgebraOfeAe -- no
+RadicalRightApproximationByAddM -- no
+RestrictionViaAlgebraHomomorphismMap -- ?
+RightApproximationByAddM -- no
+
+
+Check for bugs fixed/code change in the functions:
+
+AlgebrasAsQuiverAlgebra
+AllSubmodulesOfModule
+BlockSplittingIdempotents
+Center
+Complex
+CotiltingModule
+DualOfAlgebraAsModuleOverEnvelopingAlgebra
+DualOfModule
+ExtOverAlgebra
+HaveFiniteCoresolutionInAddM
+HaveFiniteResolusionInAddM
+ImageProjectiveInclusion
+IsCotiltingModule
+IsFiniteTypeAlgebra
+IsSymmetricAlgebra
+ElementOfQuotientPathAlgebra
+LiftingMorphismFromProjective
+LiftTwoOrthogonalIdempotents
+Kernel  
+NthSyzygy
+Poset
+QuiverAlgebraOfAmodAeA
+RightModuleOverPathAlgebra
+SaveAlgebra
+StarOfModuleHomomorphism
+TauOfComplex
+
