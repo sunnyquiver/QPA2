@@ -883,8 +883,10 @@ end );
 InstallMethod( CategoryOfQuiverRepresentations, "for quiver algebra",
                [ IsQuiverAlgebra ],
 function( A )
+  local underlying_category_for_representations;
+  underlying_category_for_representations := UnderlyingCategoryForRepresentations( A : FinalizeCategory := true );
   return CategoryOfQuiverRepresentationsOverVectorSpaceCategory
-         ( A, UnderlyingCategoryForRepresentations( A ) );
+         ( A, underlying_category_for_representations );
 end );
 
 InstallMethod( \=, [ IsQuiverRepresentationCategory, IsQuiverRepresentationCategory ],
