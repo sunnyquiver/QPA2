@@ -6,6 +6,8 @@ BindGlobal( "FamilyOfQuiverAlgebras", CollectionsFamily( FamilyOfQuiverAlgebraEl
 DeclareRepresentation( "IsPathAlgebraElementRep", IsComponentObjectRep,
                        [ "algebra", "paths", "coefficients" ] );
 
+BindGlobal( "TypeOfPathAlgebraElements", NewType( FamilyOfQuiverAlgebraElements, IsAttributeStoringRep and IsPathAlgebraElement and IsPathAlgebraElementRep and HasAlgebraOfElement and HasPaths and HasCoefficientsAttr ) );
+
 InstallMethod( QuiverAlgebraElement,
                "for path algebra and homogeneous lists",
                [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ],
@@ -44,11 +46,21 @@ InstallMethod( QuiverAlgebraElementNC,
                "for path algebra and homogeneous lists",
                [ IsPathAlgebra, IsHomogeneousList, IsHomogeneousList ],
 function( algebra, coefficients, paths )
-  return Objectify( NewType( FamilyOfQuiverAlgebraElements,
-                             IsPathAlgebraElement and IsPathAlgebraElementRep ),
-                    rec( algebra := algebra,
-                         paths := paths,
-                         coefficients := coefficients ) );
+  local record, result;
+  
+  record := rec(
+    algebra := algebra,
+    paths := paths,
+    coefficients := coefficients,
+  );
+  
+  return ObjectifyWithAttributes(
+    record, TypeOfPathAlgebraElements,
+    AlgebraOfElement, algebra,
+    Paths, paths,
+    CoefficientsAttr, coefficients
+  );
+  
 end );
 
 InstallMethod( PathAsAlgebraElement, "for path algebra and path",
@@ -114,27 +126,9 @@ function( e )
   Print( String( e ) );
 end );
 
-InstallMethod( AlgebraOfElement, "for element of path algebra",
-               [ IsPathAlgebraElement and IsPathAlgebraElementRep ],
-function( e )
-  return e!.algebra;
-end );
-
-InstallMethod( CoefficientsAttr, "for element of path algebra",
-               [ IsPathAlgebraElement and IsPathAlgebraElementRep ],
-function( e )
-  return e!.coefficients;
-end );
-
 InstallMethod( Coefficients, "for element of path algebra",
                [ IsQuiverAlgebraElement ],
 CoefficientsAttr );
-
-InstallMethod( Paths, "for element of path algebra",
-               [ IsPathAlgebraElement and IsPathAlgebraElementRep ],
-function( e )
-  return e!.paths;
-end );
 
 # for the coefficients rings (similar to homalg rings)
 # fallback method
@@ -281,6 +275,14 @@ function( e1, e2 )
   local Cs1, Ps1, Cs2, Ps2, Cs, Ps, i, j, c1, c2, p1, p2;
   Cs1 := Coefficients( e1 ); Ps1 := Paths( e1 );
   Cs2 := Coefficients( e2 ); Ps2 := Paths( e2 );
+  
+  if IsEmpty( Cs1 ) then
+    return e2;
+  fi;
+  if IsEmpty( Cs2 ) then
+    return e1;
+  fi;
+  
   Cs := []; Ps := [];
   i := 1; j := 1;
   while i <= Length( Cs1 ) and j <= Length( Cs2 ) do
@@ -314,14 +316,30 @@ end );
 InstallMethod( \*, "for elements of path algebra", IsIdenticalObj,
                [ IsPathAlgebraElement, IsPathAlgebraElement ],
 function( e1, e2 )
-  local Cs, Ps, nonzeros;
-  Cs := List( Cartesian( Coefficients( e1 ), Coefficients( e2 ) ), c -> c[ 1 ] * c[ 2 ] );
-  Ps := List( Cartesian( Paths( e1 ), Paths( e2 ) ), p -> p[ 1 ] * p[ 2 ] );
-  nonzeros := PositionsProperty( Ps, p -> p <> fail );
-  return QuiverAlgebraElement
-         ( AlgebraOfElement( e1 ),
-           Cs{ nonzeros },
-           Ps{ nonzeros } );
+  local Cs, Ps, Cs1, Cs2, Ps1, Ps2, path, i, j;
+  
+  Cs1 := Coefficients( e1 ); Ps1 := Paths( e1 );
+  Cs2 := Coefficients( e2 ); Ps2 := Paths( e2 );
+  
+  if IsEmpty( Cs1 ) then
+    return e1;
+  fi;
+  if IsEmpty( Cs2 ) then
+    return e2;
+  fi;
+  
+  Cs := []; Ps := [];
+  for i in [ 1 .. Length( Cs1 ) ] do
+    for j in [ 1 .. Length( Cs2 ) ] do
+      path := Ps1[i] * Ps2[j];
+      if path <> fail then
+        Add( Cs, Cs1[i] * Cs2[j] );
+        Add( Ps, path );
+      fi;
+    od;
+  od;
+  
+  return QuiverAlgebraElement( AlgebraOfElement( e1 ), Cs, Ps );
 end );
 
 InstallMethod( \*, "for path and element of quiver algebra",
