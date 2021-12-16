@@ -275,6 +275,14 @@ function( e1, e2 )
   local Cs1, Ps1, Cs2, Ps2, Cs, Ps, i, j, c1, c2, p1, p2;
   Cs1 := Coefficients( e1 ); Ps1 := Paths( e1 );
   Cs2 := Coefficients( e2 ); Ps2 := Paths( e2 );
+  
+  if IsEmpty( Cs1 ) then
+    return e2;
+  fi;
+  if IsEmpty( Cs2 ) then
+    return e1;
+  fi;
+  
   Cs := []; Ps := [];
   i := 1; j := 1;
   while i <= Length( Cs1 ) and j <= Length( Cs2 ) do
@@ -312,6 +320,13 @@ function( e1, e2 )
   
   Cs1 := Coefficients( e1 ); Ps1 := Paths( e1 );
   Cs2 := Coefficients( e2 ); Ps2 := Paths( e2 );
+  
+  if IsEmpty( Cs1 ) then
+    return e1;
+  fi;
+  if IsEmpty( Cs2 ) then
+    return e2;
+  fi;
   
   Cs := []; Ps := [];
   for i in [ 1 .. Length( Cs1 ) ] do
