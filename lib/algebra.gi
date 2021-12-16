@@ -308,14 +308,23 @@ end );
 InstallMethod( \*, "for elements of path algebra", IsIdenticalObj,
                [ IsPathAlgebraElement, IsPathAlgebraElement ],
 function( e1, e2 )
-  local Cs, Ps, nonzeros;
-  Cs := List( Cartesian( Coefficients( e1 ), Coefficients( e2 ) ), c -> c[ 1 ] * c[ 2 ] );
-  Ps := List( Cartesian( Paths( e1 ), Paths( e2 ) ), p -> p[ 1 ] * p[ 2 ] );
-  nonzeros := PositionsProperty( Ps, p -> p <> fail );
-  return QuiverAlgebraElement
-         ( AlgebraOfElement( e1 ),
-           Cs{ nonzeros },
-           Ps{ nonzeros } );
+  local Cs, Ps, Cs1, Cs2, Ps1, Ps2, path, i, j;
+  
+  Cs1 := Coefficients( e1 ); Ps1 := Paths( e1 );
+  Cs2 := Coefficients( e2 ); Ps2 := Paths( e2 );
+  
+  Cs := []; Ps := [];
+  for i in [ 1 .. Length( Cs1 ) ] do
+    for j in [ 1 .. Length( Cs2 ) ] do
+      path := Ps1[i] * Ps2[j];
+      if path <> fail then
+        Add( Cs, Cs1[i] * Cs2[j] );
+        Add( Ps, path );
+      fi;
+    od;
+  od;
+  
+  return QuiverAlgebraElement( AlgebraOfElement( e1 ), Cs, Ps );
 end );
 
 InstallMethod( \*, "for path and element of quiver algebra",
