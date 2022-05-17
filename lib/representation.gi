@@ -1011,7 +1011,7 @@ function( A, vecspace_cat )
   coker := function( m )
     local map_for_arrow;
     map_for_arrow := function( a )
-      return CokernelFunctorial
+      return CokernelObjectFunctorial
              ( MapForVertex( m, Source( a ) ),
                MapForArrow( Range( m ), a ),
                MapForVertex( m, Target( a ) ) );
