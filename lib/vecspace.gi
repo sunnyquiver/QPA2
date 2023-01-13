@@ -758,7 +758,7 @@ InstallHandlingByNiceBasis( "IsSubspaceOfQPAVectorSpace",
        end ) );
 
 
-InstallMethod( NiceFreeLeftModule, [ IsSubspaceOfQPAVectorSpace ],
+InstallMethod( NiceFreeLeftModule, [ IsFreeLeftModule and IsSubspaceOfQPAVectorSpace ],
 function( V )
   local info;
   info := NiceFreeLeftModuleInfo( V );

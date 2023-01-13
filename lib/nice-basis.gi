@@ -35,7 +35,7 @@ InstallHandlingByNiceBasis( "IsSubspaceOfQuiverAlgebra",
        end ) );
 
 
-InstallMethod( NiceFreeLeftModule, [ IsSubspaceOfQuiverAlgebra ],
+InstallMethod( NiceFreeLeftModule, [ IsFreeLeftModule and IsSubspaceOfQuiverAlgebra ],
 function( V )
   local info;
   info := NiceFreeLeftModuleInfo( V );
