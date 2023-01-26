@@ -74,6 +74,7 @@ function( C )
         to_be_finalized;
     
   cat := CreateCapCategory( Concatenation( Name( C ), " / proj" ) );
+  cat!.category_as_first_argument := false;
   SetFilterObj( cat, IsStableCategoryModuloProjectives );
   SetOriginalCategory( cat, C );
   SetUnderlyingField( cat, UnderlyingField( C ) );

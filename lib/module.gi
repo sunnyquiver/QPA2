@@ -415,12 +415,14 @@ side -> function( rep_cat )
     A := algebras[ 1 ];
     B := algebras[ 2 ];
     cat := CreateCapCategory( Concatenation( "bimodules over ", String( A ), " and ", String( B ) ) );
+    cat!.category_as_first_argument := false;
     SetFilterObj( cat, IsQuiverBimoduleCategory );
   else
     A := rep_algebra^side;
     algebras := [ fail, fail ];
     algebras[ Int( side ) ] := A;
     cat := CreateCapCategory( Concatenation( String( side ), " modules over ", String( A ) ) );
+    cat!.category_as_first_argument := false;
     if side = LEFT then
       SetFilterObj( cat, IsLeftQuiverModuleCategory );
     else
