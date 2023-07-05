@@ -31,9 +31,11 @@ ReadPackage( "QPA", "lib/functor.gi" );
 ReadPackage( "QPA", "lib/dual.gi" );
 ReadPackage( "QPA", "lib/idempotent.gi" );
 ReadPackage( "QPA", "lib/decomposition.gi" );
-ReadPackage( "QPA", "lib/homologicalalgebra.gi" );
-ReadPackage( "QPA", "lib/complexity.gi" );
-ReadPackage( "QPA", "lib/ext.gi" );
+if IsPackageMarkedForLoading( "ComplexesCategories", ">=2020.07.24" ) then
+    ReadPackage( "QPA", "lib/homologicalalgebra.gi" );
+    ReadPackage( "QPA", "lib/complexity.gi" );
+    ReadPackage( "QPA", "lib/ext.gi" );
+fi;
 ReadPackage( "QPA", "lib/top.gi" );
 ReadPackage( "QPA", "lib/radical.gi" );
 ReadPackage( "QPA", "lib/socle.gi" );
@@ -43,5 +45,7 @@ ReadPackage( "QPA", "lib/nice-basis.gi" );
 ReadPackage( "QPA", "lib/combinatorial.gi" );
 #ReadPackage( "QPA", "lib/pathalgebrareptype.gi" );
 ReadPackage( "QPA", "lib/star.gi" );
-ReadPackage( "QPA", "lib/transpose.gi" );
+if IsPackageMarkedForLoading( "ComplexesCategories", ">=2020.07.24" ) then
+    ReadPackage( "QPA", "lib/transpose.gi" );
+fi;
 ReadPackage( "QPA", "lib/ARtheory.gi" );
