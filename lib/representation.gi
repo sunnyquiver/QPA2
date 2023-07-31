@@ -908,6 +908,7 @@ function( A, vecspace_cat )
   Q := QuiverOfAlgebra( A );
 
   cat := CreateCapCategory( Concatenation( "quiver representations over ", String( A ) ) );
+  cat!.category_as_first_argument := false;
   SetFilterObj( cat, IsQuiverRepresentationCategory );
   SetAlgebraOfCategory( cat, A );
   SetVectorSpaceCategory( cat, vecspace_cat );

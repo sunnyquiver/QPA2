@@ -415,6 +415,7 @@ function( F )
         injection_direct_sum,  projection_direct_sum;
 
   cat := CreateCapCategory( Concatenation( "vector spaces over ", String( F ) ) );
+  cat!.category_as_first_argument := false;
   SetFilterObj( cat, IsVectorSpaceCategory );
   SetUnderlyingField( cat, F );
 
