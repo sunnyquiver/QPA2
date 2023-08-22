@@ -908,7 +908,7 @@ function( A, vecspace_cat )
   Q := QuiverOfAlgebra( A );
 
   cat := CreateCapCategory( Concatenation( "quiver representations over ", String( A ) ) );
-  cat!.category_as_first_argument := false;
+  cat!.category_as_first_argument := true;
   SetFilterObj( cat, IsQuiverRepresentationCategory );
   SetAlgebraOfCategory( cat, A );
   SetVectorSpaceCategory( cat, vecspace_cat );
@@ -917,7 +917,7 @@ function( A, vecspace_cat )
   SetIsAbelianCategoryWithEnoughProjectives( cat, true );
   SetIsAbelianCategoryWithEnoughInjectives( cat, true );
 
-  equal_objects := function( R1, R2 )
+  equal_objects := function( category, R1, R2 )
     return AlgebraOfRepresentation( R1 ) = AlgebraOfRepresentation( R2 ) and
            DimensionVector( R1 ) = DimensionVector( R2 ) and
            ForAll( ListN( VectorSpacesOfRepresentation( R1 ),
@@ -931,7 +931,7 @@ function( A, vecspace_cat )
   end;
   AddIsEqualForObjects( cat, equal_objects );
 
-  equal_morphisms := function( m1, m2 )
+  equal_morphisms := function( category, m1, m2 )
     return ForAll( ListN( MapsOfRepresentationHomomorphism( m1 ),
                           MapsOfRepresentationHomomorphism( m2 ),
                           IsEqualForMorphisms),
@@ -939,14 +939,14 @@ function( A, vecspace_cat )
   end;
   AddIsEqualForMorphisms( cat, equal_morphisms );
 
-  zero_object := function()
+  zero_object := function( category )
     local zero;
     zero := ZeroObject( vecspace_cat );
     return QuiverRepresentation( cat, List( Vertices( Q ), v -> zero ), [] );
   end;
   AddZeroObject( cat, zero_object );
 
-  zero_morphism := function( R1, R2 )
+  zero_morphism := function( category, R1, R2 )
     return QuiverRepresentationHomomorphism
            ( R1, R2,
              ListN( VectorSpacesOfRepresentation( R1 ),
@@ -957,7 +957,7 @@ function( A, vecspace_cat )
 
   # TODO: need IsZeroForMorphisms?
 
-  identity_morphism := function( R )
+  identity_morphism := function( category, R )
     return QuiverRepresentationHomomorphism
            ( R, R,
              List( VectorSpacesOfRepresentation( R ),
@@ -965,7 +965,7 @@ function( A, vecspace_cat )
   end;
   AddIdentityMorphism( cat, identity_morphism );
 
-  pre_compose := function( m1, m2 )
+  pre_compose := function( category, m1, m2 )
     return QuiverRepresentationHomomorphism
            ( Source( m1 ), Range( m2 ),
              ListN( MapsOfRepresentationHomomorphism( m1 ),
@@ -974,7 +974,7 @@ function( A, vecspace_cat )
   end;
   AddPreCompose( cat, pre_compose );
 
-  addition := function( m1, m2 )
+  addition := function( category, m1, m2 )
     return QuiverRepresentationHomomorphism
            ( Source( m1 ), Range( m1 ),
              ListN( MapsOfRepresentationHomomorphism( m1 ),
@@ -983,7 +983,7 @@ function( A, vecspace_cat )
   end;
   AddAdditionForMorphisms( cat, addition );
 
-  additive_inverse := function( m )
+  additive_inverse := function( category, m )
     return QuiverRepresentationHomomorphism
            ( Source( m ), Range( m ),
              List( MapsOfRepresentationHomomorphism( m ),
@@ -991,7 +991,7 @@ function( A, vecspace_cat )
   end;
   AddAdditiveInverseForMorphisms( cat, additive_inverse );
 
-  kernel_emb := function( m )
+  kernel_emb := function( category, m )
     local emb_maps, ker_objs, map_for_arrow, ker;
     emb_maps := List( MapsOfRepresentationHomomorphism( m ),
                       KernelEmbedding );
@@ -1009,7 +1009,7 @@ function( A, vecspace_cat )
   end;
   AddKernelEmbedding( cat, kernel_emb );
 
-  coker := function( m )
+  coker := function( category, m )
     local map_for_arrow;
     map_for_arrow := function( a )
       return CokernelObjectFunctorial
@@ -1024,15 +1024,15 @@ function( A, vecspace_cat )
              List( Arrows( Q ),
                    map_for_arrow ) );
   end;
-  coker_proj := function( m )
+  coker_proj := function( category, m )
     return QuiverRepresentationHomomorphism
-           ( Range( m ), coker( m ),
+           ( Range( m ), coker( CapCategory( m ), m ),
              List( MapsOfRepresentationHomomorphism( m ),
                    CokernelProjection ) );
   end;
   AddCokernelProjection( cat, coker_proj );
 
-  mono_lift := function( i, test )
+  mono_lift := function( category, i, test )
     return QuiverRepresentationHomomorphism
            ( Source( test ), Source( i ),
              ListN( MapsOfRepresentationHomomorphism( i ),
@@ -1041,7 +1041,7 @@ function( A, vecspace_cat )
   end;
   AddLiftAlongMonomorphism( cat, mono_lift );
 
-  epi_colift := function( e, test )
+  epi_colift := function( category, e, test )
     return QuiverRepresentationHomomorphism
            ( Range( e ), Range( test ),
              ListN( MapsOfRepresentationHomomorphism( e ),
@@ -1050,7 +1050,7 @@ function( A, vecspace_cat )
   end;
   AddColiftAlongEpimorphism( cat, epi_colift );
 
-  proj_lift := function( pi, epsilon )
+  proj_lift := function( category, pi, epsilon )
     local P, A, B, top_basis, images;
     P := Source( pi );
     A := Range( pi );
@@ -1062,7 +1062,7 @@ function( A, vecspace_cat )
   end;
   AddProjectiveLift( cat, proj_lift );
 
-  direct_sum := function( summands )
+  direct_sum := function( category, summands )
     return QuiverRepresentation
            ( cat,
              List( Transpose( List( summands,
@@ -1074,7 +1074,7 @@ function( A, vecspace_cat )
   end;
   AddDirectSum( cat, direct_sum );
 
-  direct_sum_inj := function( summands, i, sum )
+  direct_sum_inj := function( category, summands, i, sum )
     local map_for_vertex;
     map_for_vertex := function( v )
       return InjectionOfCofactorOfDirectSumWithGivenDirectSum
@@ -1088,7 +1088,7 @@ function( A, vecspace_cat )
   end;
   AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, direct_sum_inj );
   
-  direct_sum_proj := function( summands, i, sum )
+  direct_sum_proj := function( category, summands, i, sum )
     local map_for_vertex;
     map_for_vertex := function( v )
       return ProjectionInFactorOfDirectSumWithGivenDirectSum
@@ -1102,12 +1102,12 @@ function( A, vecspace_cat )
   end;
   AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, direct_sum_proj );
   
-  AddEpimorphismFromSomeProjectiveObject( cat, ProjectiveCover );
-  AddMonomorphismIntoSomeInjectiveObject( cat, InjectiveEnvelope );
+  AddEpimorphismFromSomeProjectiveObject( cat, { category, m } -> ProjectiveCover( m ) );
+  AddMonomorphismIntoSomeInjectiveObject( cat, { category, m } -> InjectiveEnvelope( m ) );
   
   ##
   AddIsWellDefinedForObjects( cat,
-    function( R )
+    function( category, R )
       local A, relations;
       
       A := AlgebraOfRepresentation( R );
@@ -1120,7 +1120,7 @@ function( A, vecspace_cat )
   
   ##
   AddIsWellDefinedForMorphisms( cat,
-    function( alpha )
+    function( category, alpha )
       local S, R, arrows;
       
       S := Source( alpha );

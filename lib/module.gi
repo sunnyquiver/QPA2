@@ -415,14 +415,14 @@ side -> function( rep_cat )
     A := algebras[ 1 ];
     B := algebras[ 2 ];
     cat := CreateCapCategory( Concatenation( "bimodules over ", String( A ), " and ", String( B ) ) );
-    cat!.category_as_first_argument := false;
+    cat!.category_as_first_argument := true;
     SetFilterObj( cat, IsQuiverBimoduleCategory );
   else
     A := rep_algebra^side;
     algebras := [ fail, fail ];
     algebras[ Int( side ) ] := A;
     cat := CreateCapCategory( Concatenation( String( side ), " modules over ", String( A ) ) );
-    cat!.category_as_first_argument := false;
+    cat!.category_as_first_argument := true;
     if side = LEFT then
       SetFilterObj( cat, IsLeftQuiverModuleCategory );
     else
@@ -437,54 +437,54 @@ side -> function( rep_cat )
   SetIsAbelianCategoryWithEnoughInjectives( cat, true );
 
   AddIsEqualForObjects( cat,
-  function( M1, M2 )
+  function( category, M1, M2 )
     return IsEqualForObjects( _R( M1 ), _R( M2 ) );
   end );
 
   AddIsEqualForMorphisms( cat,
-  function( m1, m2 )
+  function( category, m1, m2 )
     return IsEqualForMorphisms( _r( m1 ), _r( m2 ) );
   end );
 
-  AddZeroObject( cat, function()
+  AddZeroObject( cat, function( category )
     return _M( ZeroObject( rep_cat ) );
   end );
-  AddZeroMorphism( cat, function( M1, M2 )
+  AddZeroMorphism( cat, function( category, M1, M2 )
     return _m( ZeroMorphism( _R( M1 ), _R( M2 ) ) );
   end );
-  AddIdentityMorphism( cat, M -> _m( IdentityMorphism( _R( M ) ) ) );
-  AddPreCompose( cat, function( m1, m2 )
+  AddIdentityMorphism( cat, { category, M } -> _m( IdentityMorphism( _R( M ) ) ) );
+  AddPreCompose( cat, function( category, m1, m2 )
     return _m( PreCompose( _r( m1 ), _r( m2 ) ) );
   end );
-  AddAdditionForMorphisms( cat, function( m1, m2 )
+  AddAdditionForMorphisms( cat, function( category, m1, m2 )
     return _m( AdditionForMorphisms( _r( m1 ), _r( m2 ) ) );
   end );
-  AddAdditiveInverseForMorphisms( cat, m -> _m( AdditiveInverseForMorphisms( _r( m ) ) ) );
-  AddKernelEmbedding( cat, m -> _m( KernelEmbedding( _r( m ) ) ) );
-  AddCokernelProjection( cat, m -> _m( CokernelProjection( _r( m ) ) ) );
-  AddLiftAlongMonomorphism( cat, function( i, test )
+  AddAdditiveInverseForMorphisms( cat, { category, m } -> _m( AdditiveInverseForMorphisms( _r( m ) ) ) );
+  AddKernelEmbedding( cat, { category, m } -> _m( KernelEmbedding( _r( m ) ) ) );
+  AddCokernelProjection( cat, { category, m } -> _m( CokernelProjection( _r( m ) ) ) );
+  AddLiftAlongMonomorphism( cat, function( category, i, test )
     return _m( LiftAlongMonomorphism( _r( i ), _r( test ) ) );
   end );
-  AddColiftAlongEpimorphism( cat, function( e, test )
+  AddColiftAlongEpimorphism( cat, function( category, e, test )
     return _m( ColiftAlongEpimorphism( _r( e ), _r( test ) ) );
   end );
-  AddProjectiveLift( cat, function( pi, epsilon )
+  AddProjectiveLift( cat, function( category, pi, epsilon )
     return _m( ProjectiveLift( _r( pi ), _r( epsilon ) ) );
   end );
-  AddDirectSum( cat, function( summands )
+  AddDirectSum( cat, function( category, summands )
     return _M( DirectSum( List( summands, _R ) ) );
   end );
-  AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, function( summands, i, sum )
+  AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, function( category, summands, i, sum )
     return _m( InjectionOfCofactorOfDirectSumWithGivenDirectSum
                ( List( summands, _R ), i, _R( sum ) ) );
   end );
-  AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, function( summands, i, sum )
+  AddProjectionInFactorOfDirectSumWithGivenDirectSum( cat, function( category, summands, i, sum )
     return _m( ProjectionInFactorOfDirectSumWithGivenDirectSum
                ( List( summands, _R ), i, _R( sum ) ) );
   end );
 
-  AddEpimorphismFromSomeProjectiveObject( cat, ProjectiveCover );
-  AddMonomorphismIntoSomeInjectiveObject( cat, InjectiveEnvelope );
+  AddEpimorphismFromSomeProjectiveObject( cat, { category, m } -> ProjectiveCover( m ) );
+  AddMonomorphismIntoSomeInjectiveObject( cat, { category, m } -> InjectiveEnvelope( m ) );
 
   Finalize( cat );
 
