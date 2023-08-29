@@ -415,38 +415,38 @@ function( F )
         injection_direct_sum,  projection_direct_sum;
 
   cat := CreateCapCategory( Concatenation( "vector spaces over ", String( F ) ) );
-  cat!.category_as_first_argument := false;
+  cat!.category_as_first_argument := true;
   SetFilterObj( cat, IsVectorSpaceCategory );
   SetUnderlyingField( cat, F );
 
   SetIsAbelianCategory( cat, true );
 
-  AddIsEqualForObjects( cat, \= );
-  AddIsEqualForMorphisms( cat, \= );
+  AddIsEqualForObjects( cat, { category, m1, m2 } -> m1 = m2 );
+  AddIsEqualForMorphisms( cat, { category, m1, m2 } -> m1 = m2 );
 
-  zero_object := function()
+  zero_object := function( category )
     return ZeroVectorSpace( F );
   end;
   AddZeroObject( cat, zero_object );
 
-  zero_morphism := function( V1, V2 )
+  zero_morphism := function( category, V1, V2 )
     return LinearTransformationByRightMatrix
            ( V1, V2, MakeZeroMatrix( F, Dimension( V1 ), Dimension( V2 ) ) );
   end;
   AddZeroMorphism( cat, zero_morphism );
 
-  is_zero_morphism := function( m )
+  is_zero_morphism := function( category, m )
     return IsZero( RightMatrixOfLinearTransformation( m ) );
   end;
   AddIsZeroForMorphisms( cat, is_zero_morphism );
 
-  identity_morphism := function( V )
+  identity_morphism := function( category, V )
     return LinearTransformationByRightMatrix
            ( V, V, IdentityMatrix( F, Dimension( V ) ) );
   end;
   AddIdentityMorphism( cat, identity_morphism );
 
-  pre_compose := function( m1, m2 )
+  pre_compose := function( category, m1, m2 )
     return LinearTransformationByRightMatrix
            ( Source( m1 ), Range( m2 ),
              RightMatrixOfLinearTransformation( m1 ) *
@@ -454,7 +454,7 @@ function( F )
   end;
   AddPreCompose( cat, pre_compose );
 
-  addition := function( m1, m2 )
+  addition := function( category, m1, m2 )
     return LinearTransformationByRightMatrix
            ( Source( m1 ), Range( m1 ),
              RightMatrixOfLinearTransformation( m1 ) +
@@ -462,13 +462,13 @@ function( F )
   end;
   AddAdditionForMorphisms( cat, addition );
 
-  additive_inverse := function( m )
+  additive_inverse := function( category, m )
     return LinearTransformationByRightMatrix
            ( Source( m ), Range( m ), - RightMatrixOfLinearTransformation( m ) );
   end;
   AddAdditiveInverseForMorphisms( cat, additive_inverse );
 
-  kernel_emb := function( m )
+  kernel_emb := function( category, m )
     local kernel_mat, dim;
     kernel_mat := NullspaceMat( RightMatrixOfLinearTransformation( m ) );
     dim := DimensionsMat( kernel_mat )[ 1 ];
@@ -478,7 +478,7 @@ function( F )
   end;
   AddKernelEmbedding( cat, kernel_emb );
 
-  coker_proj := function( m )
+  coker_proj := function( category, m )
     local mat, coker_mat, dim;
     mat := RightMatrixOfLinearTransformation( m );
     coker_mat := TransposedMat( NullspaceMat( TransposedMat( mat ) ) );
@@ -488,10 +488,10 @@ function( F )
   end;
   AddCokernelProjection( cat, coker_proj );
 
-  mono_lift := function( i, test )
+  mono_lift := function( category, i, test )
     local matrix;
     if IsZero( Source( i ) ) or IsZero( Source( test ) ) then
-      return zero_morphism( Source( test ), Source( i ) );
+      return zero_morphism( CapCategory( test ), Source( test ), Source( i ) );
     fi;
     matrix := List( Basis( Source( test ) ),
                     v -> AsList( PreImagesRepresentative( i, ImageElm( test, v ) ) ) );
@@ -501,10 +501,10 @@ function( F )
   end;
   AddLiftAlongMonomorphism( cat, mono_lift );
 
-  epi_colift := function( e, test )
+  epi_colift := function( category, e, test )
     local matrix;
     if IsZero( Range( e ) ) or IsZero( Range( test ) ) then
-      return zero_morphism( Range( e ), Range( test ) );
+      return zero_morphism( CapCategory( e ), Range( e ), Range( test ) );
     fi;
     matrix := List( Basis( Range( e ) ),
                     v -> AsList( ImageElm( test,
@@ -515,12 +515,12 @@ function( F )
   end;
   AddColiftAlongEpimorphism( cat, epi_colift );
 
-  direct_sum := function( summands )
+  direct_sum := function( category, summands )
     return StandardVectorSpace( F, Sum( List( summands, Dimension ) ) );
   end;
   AddDirectSum( cat, direct_sum );
 
-  injection_direct_sum := function( summands, i, sum )
+  injection_direct_sum := function( category, summands, i, sum )
     local n, summands_before, summands_after, dim_before, dim_after, dim_i,
           m1, m2, m3, matrix;
     n := Length( summands );
@@ -538,7 +538,7 @@ function( F )
   end;
   AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, injection_direct_sum );
 
-  projection_direct_sum := function( summands, i, sum )
+  projection_direct_sum := function( category, summands, i, sum )
     local n, summands_before, summands_after, dim_before, dim_after, dim_i,
           m1, m2, m3, matrix;
     n := Length( summands );
