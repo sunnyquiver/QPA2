@@ -3,6 +3,7 @@ PackageName := "QPA",
 Subtitle := "Quivers and Path Algebras",
 Version := "2.0-dev",
 Date := "28/06/2018",
+License := "GPL-2.0-or-later",
 
 PackageWWWHome := "http://www.math.ntnu.no/~oyvinso/QPA/",
 ArchiveURL := Concatenation( ~.PackageWWWHome, "qpa-", ~.Version ),
