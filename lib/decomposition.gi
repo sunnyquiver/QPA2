@@ -169,6 +169,9 @@ function( M1, M2 )
   R1 := UnderlyingRepresentation( M1 );
   R2 := UnderlyingRepresentation( M2 );
   maxcommon := MaximalCommonDirectSummand( R1, R2 );
+  if maxcommon = false then
+    return maxcommon;
+  fi;
   maxcommon[ 1 ] := List( maxcommon[ 1 ], m -> AsModule( side, m ) );
   maxcommon{ [ 2..3 ] } := List(  maxcommon{ [ 2..3 ] }, m -> AsModule( side, m ) );
   
