@@ -74,17 +74,17 @@ function( C )
         to_be_finalized;
     
   cat := CreateCapCategory( Concatenation( Name( C ), " / proj" ) );
-  cat!.category_as_first_argument := false;
+  cat!.category_as_first_argument := true;
   SetFilterObj( cat, IsStableCategoryModuloProjectives );
   SetOriginalCategory( cat, C );
   SetUnderlyingField( cat, UnderlyingField( C ) );
   
-  equal_objects := function( R1, R2 )
+  equal_objects := function( category, R1, R2 )
       return OriginalObject( R1 ) = OriginalObject( R2 );
   end;
   AddIsEqualForObjects( cat, equal_objects );
   
-  equal_morphisms := function( m1, m2 )
+  equal_morphisms := function( category, m1, m2 )
       local p;
       p := StableHomProjection( Hom( Source( m1 ), Range( m2 ) ) );
       
@@ -92,32 +92,32 @@ function( C )
   end;
   AddIsEqualForMorphisms( cat, equal_morphisms );
 
-  zero_object := function()
+  zero_object := function( category )
     return AsStableCategoryObject( ZeroObject( C ), cat );
   end;
   AddZeroObject( cat, zero_object );
 
-  zero_morphism := function( R1, R2 )
+  zero_morphism := function( category, R1, R2 )
     return AsStableCategoryMorphism( ZeroMorphism( OriginalObject( R1 ), OriginalObject( R2 ) ), cat );
   end;
   AddZeroMorphism( cat, zero_morphism );
 
-  identity_morphism := function( R )
+  identity_morphism := function( category, R )
     return AsStableCategoryMorphism( IdentityMorphism( OriginalObject( R ) ), cat ); 
   end;
   AddIdentityMorphism( cat, identity_morphism );
 
-  pre_compose := function( m1, m2 )
+  pre_compose := function( category, m1, m2 )
       return AsStableCategoryMorphism( PreCompose( OriginalMorphism( m1 ), OriginalMorphism( m2 ) ), cat );
   end;
   AddPreCompose( cat, pre_compose );
 
-  addition := function( m1, m2 )
+  addition := function( category, m1, m2 )
       return AsStableCategoryMorphism( AdditionForMorphisms( OriginalMorphism( m1 ), OriginalMorphism( m2 ) ), cat );
   end;
   AddAdditionForMorphisms( cat, addition );
 
-  additive_inverse := function( m )
+  additive_inverse := function( category, m )
       return AsStableCategoryMorphism( AdditiveInverseForMorphisms( OriginalMorphism( m ) ), cat );
   end;
   AddAdditiveInverseForMorphisms( cat, additive_inverse );
@@ -128,12 +128,12 @@ function( C )
   # ColiftAlongEpimorphism. 
   #
 
-  direct_sum := function( summands )
+  direct_sum := function( category, summands )
       return AsStableCategoryObject( DirectSum( List( summands, OriginalObject ) ), cat );
   end;
   AddDirectSum( cat, direct_sum );
 
-  direct_sum_inj := function( summands, i, sum )
+  direct_sum_inj := function( category, summands, i, sum )
       local   h;
       
       h := InjectionOfCofactorOfDirectSumWithGivenDirectSum
@@ -143,7 +143,7 @@ function( C )
   end;
   AddInjectionOfCofactorOfDirectSumWithGivenDirectSum( cat, direct_sum_inj );
   
-  direct_sum_proj := function( summands, i, sum )
+  direct_sum_proj := function( category, summands, i, sum )
       local   h;
       
       h := ProjectionInFactorOfDirectSumWithGivenDirectSum
