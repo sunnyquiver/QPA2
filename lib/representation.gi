@@ -2120,13 +2120,13 @@ function( R, S )
         mats := [];
         for i in [ 1..Length( dim_R ) ] do
             if dim_R[ i ] = 0 then
-                Add( mats, NullMat( 1, 1, K ) );
+                Add( mats, MakeZeroMatrix( K, 0, 0 ) );
             else
-                Add( mats, IdentityMat( dim_R[ i ], K ) );
+                Add( mats, MatrixByRows( K, IdentityMat( dim_R[ i ], K ) ) );
             fi;
         od;
         
-        return QuiverRepresentation( R, S, mats );
+        return QuiverRepresentationHomomorphism( R, S, mats );
     fi;
     #
     # Finds a homomorphism from  R  to  S  and corresponding homomorphism
