@@ -236,9 +236,9 @@ function( hom )
     Add( morphisms, morphisms_v );
   od;
   
-  return MorphismBetweenDirectSums( SumOfVertexHomSpaces( hom ),
+  return MorphismBetweenDirectSums( VertexHomSpaces( hom ),
                                     morphisms,
-                                    SumOfArrowHomSpaces( hom ) );
+                                    ArrowHomSpaces( hom ) );
 end );
 
 
