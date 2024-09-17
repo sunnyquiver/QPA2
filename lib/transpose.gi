@@ -41,16 +41,16 @@ function( h )
   M2 := Range( h );
   d0 := ProjectiveCover( M1 );
   kerd0 := KernelEmbedding( d0 );
-  d1prime := ProjectiveCover( kerd0 );
+  d1prime := ProjectiveCover( Source( kerd0 ) );
   d1 := PreCompose( d1prime, kerd0 );
     
   d0_2 := ProjectiveCover( M2 );
   kerd0_2 := KernelEmbedding( d0_2 );
-  d1prime_2 := ProjectiveCover( kerd0_2 );
+  d1prime_2 := ProjectiveCover( Source( kerd0_2 ) );
   d1_2 := PreCompose( d1prime_2, kerd0_2 ); 
     
   h0 := ProjectiveLift( PreCompose( d0, h ), d0_2 );
-  h1prime := KernelObjectFunctorialWithGivenKernelObjects( kerd0, d0, h0, d0_2, kerd0_2 );
+  h1prime := KernelObjectFunctorialWithGivenKernelObjects( Source( kerd0 ), d0, h0, d0_2, Source( kerd0_2 ) );
   h1 := ProjectiveLift( PreCompose( d1prime, h1prime ), d1prime_2 );
     
   starofmaps := List( [  d1_2, h0, h1, d1 ], m -> Hom( side, m, M ) );
