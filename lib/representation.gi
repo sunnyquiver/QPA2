@@ -902,8 +902,8 @@ function( A, vecspace_cat )
   local Q, cat, equal_objects, equal_morphisms, zero_object, 
         zero_morphism, identity_morphism, pre_compose, addition, 
         additive_inverse, kernel_emb, coker, coker_proj, mono_lift, 
-        epi_colift, proj_lift, direct_sum, direct_sum_inj, 
-        direct_sum_proj, to_be_finalized;
+        epi_colift, proj_lift, inj_colift, direct_sum, direct_sum_inj, 
+        direct_sum_proj, relations, S, R, arrows, to_be_finalized;
 
   Q := QuiverOfAlgebra( A );
 
@@ -1062,6 +1062,27 @@ function( A, vecspace_cat )
   end;
   AddProjectiveLift( cat, proj_lift );
 
+  inj_colift := function( category, nu, phi )
+    local dnu, dphi, P, dB, dA, top_basis, images, dh;
+  
+    if not IsMonomorphism( phi ) then
+      Error( "Entered morphism is not a monomorphism, cannot find injective colift.\n" );
+    fi;
+    dnu := DualOfRepresentationHomomorphism( nu );
+    dphi := DualOfRepresentationHomomorphism( phi );
+    P := Source( dnu );
+    dB := Source( dphi );
+    dA := Range( dphi );
+    top_basis := TopBasis( P );
+    images := List( top_basis,
+                    elm -> PreImagesRepresentative( dphi, ImageElm( dnu, elm ) ) );
+    dh := QuiverRepresentationHomomorphismByImages( P, dB, top_basis, images );
+    
+    return DualOfRepresentationHomomorphism( dh );
+  end;
+
+  AddInjectiveColift( cat, inj_colift );
+  
   direct_sum := function( category, summands )
     return QuiverRepresentation
            ( cat,
