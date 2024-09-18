@@ -184,29 +184,73 @@ InstallMethod( TensorProductOfHomomorphisms,
         [ IsQuiverRepresentationHomomorphism, IsQuiverRepresentationHomomorphism, IsQuiverRepresentation, IsQuiverRepresentation ],
         function( f, g, T1, T2 )
     
-    local   elementarytensor1,  elementarytensor2,  generatorsf,  
-            generatorsg,  generators,  images,  gf,  gg;
+  local pi, elementarytensor1, bastop, K, factors, M, N, dimM, dimN, 
+        basM, basN, VM, VN, basVM, basVN, mat, v, w, m, n, gens, 
+        generators, gen, temp, i, b, elementarytensor2, newgenerators, 
+        images, temp1, temp2;
     
     if ( TensorProductFactors( T1 ) <> [ Source( f ), Source( g ) ] ) or 
        ( TensorProductFactors( T2 ) <> [ Range( f ), Range( g ) ] ) then
         Error( "The entered homomorphisms and tensor products are inconsistent," );
-    fi;    
+    fi;
+    pi := TopProjection( T1 );
     elementarytensor1 := ElementaryTensorFunction( T1 );
+    bastop := Basis( Range( pi ) );
+    K := LeftActingDomain( T1 );
+    factors := TensorProductFactors( T1 );
+    M := factors[ 1 ];
+    N := factors[ 2 ];
+    dimM := Dimension( M );
+    dimN := Dimension( N );
+    basM := Basis( M );
+    basN := Basis( N );
+    VM := K^( dimM );
+    VN := K^( dimN );
+    basVM := Basis( VM );
+    basVN := Basis( VN );
+    mat := [];
+    for v in basVM do
+      for w in basVN do
+        m := LinearCombination( basM, v );
+        n := LinearCombination( basN, w );
+        Add( mat, Coefficients( bastop, ImageElm( pi, elementarytensor1( m, n ) ) ) );
+      od;
+    od;
+    gens := List( bastop, b -> SolutionMat( mat, Coefficients( bastop, b ) ) );
+    generators := [];
+    for gen in gens do
+      temp := [];
+      for i in [ 1..dimM * dimN ] do
+        if i mod dimN <> 0 then 
+          b := ( i mod dimN );
+        else
+          b := dimN;
+        fi;
+        if gen[ i ] <> Zero( gen[ i ] ) then 
+          Add( temp, [ gen[ i ], basM[ Int( Ceil( 1.0 * i / dimN ) ) ], basN[ b ] ] );
+        fi;
+      od;
+      Add( generators, temp );
+    od;
+    
     elementarytensor2 := ElementaryTensorFunction( T2 );
-    generatorsf := MinimalGeneratingSet( Source( f ) );
-    generatorsg := MinimalGeneratingSet( Source( g ) );
-    generators := [ ];
-    images := [ ];
-    for gf in generatorsf do
-        for gg in generatorsg do
-            Add( generators, elementarytensor1( gf, gg ) );
-            Add( images, elementarytensor2( ImageElm( f, gf ), ImageElm( g, gg ) ) );
-        od;
+    newgenerators := [];
+    images := [];
+    for gen in generators do
+      temp1 := Zero( T1 );
+      temp2 := Zero( T2 );
+      for m in gen do
+        temp1 := temp1 + m[ 1 ] * elementarytensor1( m[ 2 ], m[ 3 ] );
+        temp2 := temp2 + m[ 1 ] * elementarytensor2( ImageElm( f, m[ 2 ] ), ImageElm( g, m[ 3 ] ) );
+      od;
+      Add( newgenerators, temp1 );
+      Add( images, temp2 );
     od;
         
-    return QuiverRepresentationHomomorphismByImages( T1, T2, generators, images );
+    return QuiverRepresentationHomomorphismByImages( T1, T2, newgenerators, images );
 end
   );
+
 
 InstallMethod( TensorProductOfModules,
         "for two modules of (two) quivers",
