@@ -471,7 +471,7 @@ InstallMethod ( EpiMonoFactorizationOfMatrix,
   "for a matrix",
   [ IsField, IsMatrix ],
   function( F, mat )
-  local dims, V, rowspace, W, BW, epi, mono;
+  local dims, V, BV, rowspace, W, BW, epi, mono;
 
   dims := DimensionsMat( mat );
   if mat = Zero( mat ) then 
