@@ -93,4 +93,12 @@ DeclareAttribute( "ColsOfMatrix", IsQPAMatrix );
 #! @Returns IsQPAMatrix
 DeclareAttribute( "NullspaceMat", IsQPAMatrix );
 
+#! @Arguments F, mat
+#! @Description
+#!  Returns a two matrices over <A>F</A>, with the first one being an 
+#!  epimorphism and the second one being an monomorphism as linear maps
+#!  such that their product is <A>mat</A>. 
+#! @Returns a pair of IsMatrix
+DeclareOperation( "EpiMonoFactorizationOfMatrix", [ IsField, IsMatrix ] );
+
 #

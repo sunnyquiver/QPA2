@@ -467,3 +467,36 @@ function( M )
 end 
 );
 
+InstallMethod ( EpiMonoFactorizationOfMatrix, 
+  "for a matrix",
+  [ IsField, IsMatrix ],
+  function( F, mat )
+  local dims, V, rowspace, W, BW, epi, mono;
+
+  dims := DimensionsMat( mat );
+  if mat = Zero( mat ) then 
+    return [ ZeroMatrix( dims[ 1 ], 1, mat ), ZeroMatrix( 1, dims[ 2 ], mat ) ];
+  fi;
+  if Length( NullspaceMat( mat ) ) = 0 then 
+    return [ IdentityMatrix( dims[ 1 ], mat ), mat ];
+  fi;
+  if Length( NullspaceMat( TransposedMat( mat ) ) ) = 0 then
+    return [ mat, IdentityMatrix( dims[ 2 ], mat ) ];
+  fi;
+  # 
+  # The other case
+  #
+  V := F^dims[ 1 ];
+  BV := Basis( V );
+  rowspace := F^dims[ 2 ];
+  W := Subspace( rowspace, mat );
+  BW := Basis( W );
+  epi := List( Basis( V ), b -> Coefficients( BW, b * mat ) );
+  epi := epi * IdentityMatrix( Dimension( W ), mat );
+  mono := List( BW , b -> Coefficients( Basis( rowspace ), b ) );
+  mono := mono * IdentityMatrix( dims[ 2 ], mat );
+  
+  return [ epi, mono ];
+end );
+
+

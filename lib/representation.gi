@@ -2372,3 +2372,65 @@ function( R )
     return NaturalHomomorphismByIdeal( EndR, I );
 end
 );
+
+InstallMethod( EpiMonoFactorizationOfRepresentationHomomorphism,
+   "for a homomorphisms of representations",
+   [ IsQuiverRepresentationHomomorphism ],
+   function( f )
+
+  local R1, R2, A, F, Q, vertices, maps, factorization, dimvec, 
+        vectorspaces, basisvectorspaces, arrows, arrowmaps, matrices, 
+        i, map, mat, v, solution, temp, image, imagehom, 
+        imageprojection, imageinclusion;
+   
+   R1 := Source( f );
+   R2 := Range( f );
+
+   if IsMonomorphism( f ) then
+     return [ IdentityMorphism( Source( f ) ), f ];
+   fi;
+   if IsEpimorphism( f ) then
+      return [ f, IdentityMorphism( Range( f ) ) ];
+   fi;
+   #
+   # When <f> is not a monomorphism or an epimorphism
+   #
+   A := AlgebraOfRepresentation( R1 );
+   F := LeftActingDomain( A );
+   Q := QuiverOfAlgebra( A );
+   vertices := Vertices( Q );
+   maps := List( vertices, v -> MapForVertex( f, v ) );
+   maps := List( maps, m -> RowsOfMatrix( RightMatrixOfLinearTransformation( m ) ) );
+   factorization := List( maps, m -> EpiMonoFactorizationOfMatrix( F, m ) );
+   dimvec := List( factorization, f -> DimensionsMat( f[ 1 ] )[ 2 ] );
+   vectorspaces := List( dimvec, d -> F^d );
+   basisvectorspaces := List( vectorspaces, V -> Basis( V ) );
+
+   arrows := Arrows( Q );
+   arrowmaps := List( arrows, a -> 
+                                [ Position( vertices, Source( a ) ), Position( vertices, Target( a ) ) , 
+                                  RightMatrixOfLinearTransformation( MapForArrow( R1, a ) ) ] );
+   matrices := [];
+   for i in [ 1..Length( arrows ) ] do
+     map := arrowmaps[ i ];
+     mat := [];
+     for v in basisvectorspaces[ map[ 1 ] ] do
+       solution := SolutionMat( factorization[ map[ 1 ] ][ 1 ], v );
+       if solution = fail then
+         Error( "Something is wrong here.\n" );
+       else
+         temp := solution * RowsOfMatrix( map[ 3 ] ) * factorization[ map[ 2 ] ][ 1 ];
+       fi;
+       Add( mat, temp );
+     od;
+     Add( matrices, mat );
+   od;
+   
+   image := QuiverRepresentation( A, dimvec, matrices );
+   imagehom := List( factorization, f -> f[ 1 ] );
+   imageprojection := QuiverRepresentationHomomorphism( R1, image, imagehom );
+   imagehom := List( factorization, f -> f[ 2 ] );
+   imageinclusion := QuiverRepresentationHomomorphism( image, R2, imagehom );
+   
+   return [ imageprojection, imageinclusion ];
+end );

@@ -373,8 +373,13 @@ DeclareOperation( "MapForVertex",
 
 # DeclareOperation( "MatrixVectorMultiplication", [ IsQuiver ] );
 
-
-
+#! @Description
+#!  Given a QuiverRepresentationHomomorphism <A>f</A> it constructs an epimorphism-monomorphism 
+#!  factorization of <A>f</A>.The function is based on the same function for matrices. 
+#! @Returns a pair of IsQuiverRepresentationHomomorphism
+#! @Arguments f
+DeclareOperation( "EpiMonoFactorizationOfRepresentationHomomorphism", 
+                  [ IsQuiverRepresentationHomomorphism ] );
 #!
 DeclareOperation( "Transpose", [ IsDenseList ] );
 
