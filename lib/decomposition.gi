@@ -590,3 +590,88 @@ function( R )
     return [ Length( top ), List( DirectSumDecomposition( EndR/I ), Dimension ) ];
 end
   );
+
+#######################################################################
+##
+#O  DecomposeModuleViaCharPoly( <M> )
+##
+##  Given a module  M  over a finite dimensional quotient of a path 
+##  algebra over a finite field, this function tries to decompose the 
+##  entered module  M  by choosing random elements in the endomorphism
+##  ring of  M computing a factorization of their characteristic 
+##  polynomials. 
+##  
+InstallMethod( DecomposeModuleViaCharPoly, 
+   "for a path algebra matmodule",
+   [ IsQuiverModule ],
+   function( M ) 
+    
+  local K, side, dimM, num_vert, homMM, bashomMM, t, V, num_repeats, 
+        max_runs, p, h, matrices, charpolys, nonzero_vert, m, 
+        factorlist, numfactors, occurringprimes, multiplicities, 
+        maxmultiplicities, polys, mats, f, mat, i, homs;
+      
+    K := LeftActingDomain( M );
+    side := Side( M );
+    if not IsFinite( K ) then 
+        Error( "The entered module is not over a finite field.\n" );
+    fi;
+    dimM := DimensionVector( M );
+    num_vert := Length( DimensionVector( M ) );
+    if Sum( dimM ) < num_vert + 1 then 
+      return DecomposeModule( M );
+    fi;
+    homMM := Hom( M, M );
+    bashomMM := BasisVectors( Basis( homMM ) );
+    t := Length( bashomMM );
+    V := FullRowSpace( K, t );
+    num_vert := Length( DimensionVector( M ) );
+    num_repeats := 0;
+    max_runs := Int( 40 / Sum( dimM ) ) + 1 + 9;
+    repeat
+      num_repeats := num_repeats + 1;
+      p := Random( V );
+      h := LinearCombination( bashomMM, p );
+      matrices := MatricesOfModuleHomomorphism( h );
+      charpolys := [ ];
+      nonzero_vert := 0;
+      for m in matrices do
+        if not IsZero( m ) then 
+          nonzero_vert := nonzero_vert + 1;
+          Add(charpolys, CharacteristicPolynomial( RowsOfMatrix( m ) ) );
+        fi;
+      od;
+      factorlist := List( charpolys, Factors );
+      numfactors := List( factorlist, Length );
+      occurringprimes := Unique( Flat( factorlist ) );
+      if Length( occurringprimes ) > 1 then 
+        multiplicities := List( [ 1..Length( occurringprimes ) ], 
+                                j -> List( [1..nonzero_vert], i -> Length( Positions( factorlist[i], occurringprimes[ j ] ) ) ) );
+        maxmultiplicities := List( multiplicities, m -> Maximum( m ) );
+        polys := List( [ 1..Length( occurringprimes ) ], i -> occurringprimes[ i ]^maxmultiplicities[ i ] );
+        
+        mats := [];
+        for f in polys do
+          mat := [ ];
+          for i in [ 1..num_vert ] do
+            if dimM[ i ] = 0 then
+              Add( mat, MakeZeroMatrix( K, 0, 0 ) );
+            else
+              Add( mat, MatrixByRows( K, Value( f, RowsOfMatrix( matrices[ i ] ) ) ) );
+            fi;
+          od;
+          Add( mats, mat );
+        od;
+        homs := [ ];
+        for m in mats do
+          Add( homs, QuiverModuleHomomorphism( M, M, m ) );
+        od;
+
+        return Flat( List( List( homs, h -> KernelObject( h ) ), m -> DecomposeModuleViaCharPoly( m ) ) );
+      fi;
+    until 
+      num_repeats = max_runs;
+
+    return [ M ];
+end
+  );

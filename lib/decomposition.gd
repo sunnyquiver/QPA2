@@ -59,7 +59,7 @@ DeclareOperation( "CommonDirectSummand", [ IsQuiverRepresentation, IsQuiverRepre
 
 #! @BeginGroup
 #! @Description
-#!   Given a module  <A>M</A>  this function computes a list of 
+#!   Given a module  <A>M</A>  this function computes a list of indecomposable
 #!   modules  <M>L</M>  such that  <A>M</A>  is isomorphic to the direct 
 #!   sum of the modules on the list <M>L</M>. 
 #! @Returns a list of modules
@@ -67,6 +67,22 @@ DeclareOperation( "CommonDirectSummand", [ IsQuiverRepresentation, IsQuiverRepre
 DeclareOperation( "DecomposeModule", [ IsQuiverModule ] );
 #! @Arguments R
 DeclareOperation( "DecomposeRepresentation", [ IsQuiverRepresentation ] );
+#! @EndGroup
+
+
+#! @BeginGroup
+#! @Description
+#!   Given a module  <A>M</A>  this function computes a list of (possibly) 
+#!   indecomposable modules  <M>L</M>  such that  <A>M</A>  is isomorphic 
+#!   to the direct sum of the modules on the list <M>L</M>. This function 
+#!   is experimental, and it is based on using the characteristic polynomial
+#!   of randomly chosen endomorphisms of the module <A>M</A>. The underlying
+#!   algebra must be given over a finite field. 
+#! @Returns a list of modules
+#! @Arguments M
+DeclareOperation( "DecomposeModuleViaCharPoly", [ IsQuiverModule ] );
+##! @Arguments R
+#DeclareOperation( "DecomposeRepresentation", [ IsQuiverRepresentation ] );
 #! @EndGroup
 
 
