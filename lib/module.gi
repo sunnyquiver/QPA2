@@ -659,6 +659,15 @@ function( M )
 end
 );
 
+InstallMethod( MinimalGeneratingSet, "for a quiver module",
+               [ IsQuiverModule ],
+function( M )
+  local   f;
+
+  f := TopProjection( M );
+  return List( BasisVectors( Basis( Range( f ) ) ), x -> PreImagesRepresentative( f, x ) );
+end
+);
 
 
 InstallMethod ( AnnihilatorOfModule, 

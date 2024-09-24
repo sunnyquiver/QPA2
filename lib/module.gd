@@ -588,6 +588,12 @@ DeclareOperation( "IntersectionOfModules", [ IsDenseList ] );
 DeclareOperation( "FromEndMToHomMM", [ IsQuiverModule, IsMatrix ] );
 
 #! @Description
+#! Returns a list which is a minimal generating set for the module  <A>M</A>.
+#! @Returns IsList
+#! @Arguments M
+DeclareAttribute( "MinimalGeneratingSet", IsQuiverModule );
+
+#! @Description
 #! Returns the projective cover of the quiver module <A>M</A>. 
 #! @Returns IsQuiverModuleHomomorphism
 #! @Arguments M
