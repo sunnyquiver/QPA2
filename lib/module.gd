@@ -222,8 +222,7 @@ DeclareOperation( "QuiverBimodule", [ IsDenseList, IsDenseList, IsDenseList, IsL
 #!  In either cases it returns an error message. 
 #! @Returns <Ref Filt="IsRightQuiverModule"/> 
 #! @Arguments M
-DeclareOperation( "RightAlgebraModuleTo
-                  RightQuiverModule", [ IsRightAlgebraModuleElementCollection ] ); 
+DeclareOperation( "RightAlgebraModuleToRightQuiverModule", [ IsRightAlgebraModuleElementCollection ] ); 
 
 #! @Description
 #!  This function constructs a left quiver module over a (quotient of a) 
