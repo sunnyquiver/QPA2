@@ -646,6 +646,20 @@ function( e_RoM )
   return AsBimoduleElement( e_f );
 end );
 
+InstallMethod( TopProjection, "for a represenation",
+               [ IsQuiverModule ],
+function( M )
+  local repM, radinc;
+  
+  repM := UnderlyingRepresentation( M );
+  radinc := RadicalInclusion( repM );
+  radinc := AsModuleHomomorphism( Side( M ), radinc );
+  
+  return CokernelProjection( radinc );
+end
+);
+
+
 
 InstallMethod ( AnnihilatorOfModule, 
 "for a QuiverModule",
