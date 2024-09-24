@@ -87,6 +87,29 @@ function( M, N, f )
   return AsModuleHomomorphism( rm, M, N );
 end );
 
+InstallMethod( QuiverModuleHomomorphismByImages,
+    "for a module over a quotient of a path algebra",
+    [ IsQuiverModule, IsQuiverModule, IsList, IsList ], 0,
+    function( M, N, generators, images ) 
+       
+  local repM, repN, repgenerators, repimages, map;
+  
+  if not ForAll( generators, g -> g in M ) then 
+    Error( "Not all generators are in the source of the homomorphism,\n" );
+  fi;
+  if not ForAll( images, i -> i in N ) then 
+     Error( "Not all images are in the range of the homomorphism,\n" );
+  fi;
+  repM := UnderlyingRepresentation( M );
+  repN := UnderlyingRepresentation( N );
+  repgenerators := List( generators, g -> UnderlyingRepresentationElement( g ) );
+  repimages := List( images, g -> UnderlyingRepresentationElement( g ) );
+  map := QuiverRepresentationHomomorphismByImages( repM, repN, repgenerators, repimages );
+   
+  return AsModuleHomomorphism( Side( M ), map );
+end
+);
+
 InstallMethod( String,
                "for quiver module homomorphism",
                [ IsQuiverModuleHomomorphism ],

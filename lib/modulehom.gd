@@ -46,6 +46,15 @@ DeclareOperation( "QuiverModuleHomomorphism",
                   [ IsQuiverModule, IsQuiverModule, IsFunction ] );
 
 #! @Description
+#!  Create a homomorphism from <A>M</A> to <A>N</A>.
+#!  The action of the homomorphism is given by a set of generators for <A>M</A> and
+#!  a corresponding set of images in <A>N</A>.
+#! @Returns <Ref Filt="IsQuiverModuleHomomorphism"/>
+#! @Arguments M, N, generators, images
+DeclareOperation( "QuiverModuleHomomorphismByImages",
+                  [ IsQuiverModule, IsQuiverModule, IsList, IsList ] );
+
+#! @Description
 #!  The representation homomorphism <A>f</A> considered as a module homomorphism
 #!  from <A>M</A> to <A>N</A>.
 #! @Arguments f, M, N

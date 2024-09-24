@@ -400,7 +400,8 @@ end );
 
 InstallMethodWithSides( AsModuleCategory, [ IsQuiverRepresentationCategory ],
 side -> function( rep_cat )
-  local rep_algebra, Q, _R, _r, _M, _m, algebras, A, B, cat;
+  local rep_algebra, Q, _R, _r, _M, _m, algebras, A, B, cat, 
+        inj_colift;
 
   rep_algebra := AlgebraOfCategory( rep_cat );
   Q := QuiverOfAlgebra( rep_algebra );
@@ -471,6 +472,28 @@ side -> function( rep_cat )
   AddProjectiveLift( cat, function( category, pi, epsilon )
     return _m( ProjectiveLift( _r( pi ), _r( epsilon ) ) );
   end );
+  
+  inj_colift := function( category, nu, phi )
+    local dnu, dphi, P, dB, dA, top_basis, images, dh;
+  
+    if not IsMonomorphism( phi ) then
+      Error( "Entered morphism is not a monomorphism, cannot find injective colift.\n" );
+    fi;
+    dnu := DualOfModuleHomomorphism( nu );
+    dphi := DualOfModuleHomomorphism( phi );
+    P := Source( dnu );
+    dB := Source( dphi );
+    dA := Range( dphi );
+    top_basis := TopBasis( P );
+    images := List( top_basis,
+                    elm -> PreImagesRepresentative( dphi, ImageElm( dnu, elm ) ) );
+    dh := QuiverModuleHomomorphismByImages( P, dB, top_basis, images );
+    
+    return DualOfModuleHomomorphism( dh );
+  end;
+
+  AddInjectiveColift( cat, inj_colift );
+  
   AddDirectSum( cat, function( category, summands )
     return _M( DirectSum( List( summands, _R ) ) );
   end );
