@@ -18,7 +18,8 @@ end;
 
 latex_preamble := "\\usepackage{amsmath}\n";
 
-AutoDoc( "QPA" : 
+AutoDoc( rec(
+         gapdoc := rec( LaTeXOptions := rec( LateExtraPreamble := latex_preamble ) ),
          autodoc := rec( section_intros := [ [ "Quivers", "" ],
                                              [ "Quiver algebras", "" ],
                                              [ "Modules", "" ],
@@ -36,9 +37,8 @@ AutoDoc( "QPA" :
                                              [ "Functors", "" ],
                                              [ "Special quivers, algebras and modules", "" ],
                                              ] ),
-         scaffold := rec( TitlePage := rec( TitleComment := make_qpa_version_string() ),
-                          gapdoc_latex_options := rec( LateExtraPreamble := latex_preamble ) ),
+         scaffold := rec( TitlePage := rec( TitleComment := make_qpa_version_string() ) ),
          maketest := rec( commands := [ "LoadPackage( \"QPA\" );" ] )
-);
+));
 
 QUIT;
