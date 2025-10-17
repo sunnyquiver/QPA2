@@ -1,13 +1,7 @@
 DeclareCategory( "IsDirection", IsObject );
 DeclareCategory( "IsSide", IsObject );
 
-DeclareGlobalVariable( "LEFT" );
-DeclareGlobalVariable( "RIGHT" );
-DeclareGlobalVariable( "LEFT_RIGHT" );
-
 DeclareAttribute( "Opposite", IsDirection );
-
-DeclareGlobalVariable( "OPERATIONS_WITH_SIDE_VERSIONS" );
 
 DeclareOperation( "\^", [ IsOperation, IsSide ] );
 

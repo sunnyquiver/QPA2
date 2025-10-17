@@ -3,15 +3,15 @@ BindGlobal( "FamilyOfSides", NewFamily( "sides" ) );
 DeclareRepresentation( "IsSideRep", IsComponentObjectRep and IsAttributeStoringRep,
                        [ "name", "number" ] );
 
-InstallValue( LEFT,
+BindGlobal( "LEFT",
               Objectify( NewType( FamilyOfSides, IsDirection and IsSide and IsSideRep ),
                          rec( name := "LEFT", str := "left", number := 1 ) ) );
 
-InstallValue( RIGHT,
+BindGlobal( "RIGHT",
               Objectify( NewType( FamilyOfSides, IsDirection and IsSide and IsSideRep ),
                          rec( name := "RIGHT", str := "right", number := 2 ) ) );
 
-InstallValue( LEFT_RIGHT,
+BindGlobal( "LEFT_RIGHT",
               Objectify( NewType( FamilyOfSides, IsSide and IsSideRep ),
                          rec( name := "LEFT_RIGHT", str := "left-right", number := 3 ) ) );
 
@@ -26,7 +26,7 @@ function( d )
   fi;
 end );
 
-InstallValue( OPERATIONS_WITH_SIDE_VERSIONS, rec() );
+BindGlobal( "OPERATIONS_WITH_SIDE_VERSIONS", rec() );
 
 InstallMethod( String, "for side", [ IsSide ],
                side -> side!.str );
